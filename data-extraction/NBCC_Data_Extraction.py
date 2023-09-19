@@ -1,7 +1,6 @@
 ########################################################################################################################
 # IMPORTS
 ########################################################################################################################
-import pprint
 import re
 import pandas as pd
 from pypdf import PdfReader
@@ -51,7 +50,7 @@ def pdf_to_text(pdf: str) -> list[list[str]]:
 
 
 ########################################################################################################################
-# PANDAS OPERATIONS
+# PANDAS DATAFRAME CONVERSIONS
 ########################################################################################################################
 
 def dataframe_to_csv(dataframe: pd.DataFrame, filename: str) -> None:
@@ -64,6 +63,18 @@ def dataframe_to_csv(dataframe: pd.DataFrame, filename: str) -> None:
     assert ".csv" in filename
 
     dataframe.to_csv(f"output/{filename}")
+
+
+def dataframe_to_excel(dataframe: pd.DataFrame, filename: str) -> None:
+    """
+    Convert Pandas dataframe to excel file and save it to the output directory.
+
+    :param dataframe: The dataframe to save.
+    :param filename: The filename of the excel file (ensure to include the .xlsx extension).
+    """
+    assert ".xlsx" in filename
+
+    dataframe.to_excel(f"output/{filename}")
 
 
 ########################################################################################################################
@@ -125,4 +136,4 @@ def table_c2_extraction() -> pd.DataFrame:
 
 
 if __name__ == '__main__':
-    dataframe_to_csv(table_c2_extraction(), "table_c2.csv")
+    dataframe_to_excel(table_c2_extraction(), "table_c2.xlsx")
