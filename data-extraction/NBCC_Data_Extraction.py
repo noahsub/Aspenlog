@@ -49,9 +49,21 @@ def pdf_to_text(pdf: str) -> list[list[str]]:
     # Return the extracted text.
     return text
 
+
 ########################################################################################################################
 # PANDAS OPERATIONS
 ########################################################################################################################
+
+def dataframe_to_csv(dataframe: pd.DataFrame, filename: str) -> None:
+    """
+    Convert Pandas dataframe to csv file and save it to the output directory.
+
+    :param dataframe: The dataframe to save.
+    :param filename: The filename of the csv file (ensure to include the .csv extension).
+    """
+    assert ".csv" in filename
+
+    dataframe.to_csv(f"output/{filename}")
 
 
 ########################################################################################################################
@@ -78,7 +90,7 @@ def table_c2_extraction() -> pd.DataFrame:
             # Save location
             if "Region" in line or line in CANADIAN_PROVINCES_AND_TERRITORIES:
                 # processed.append(line)
-                processed.append([line] + [""]*16)
+                processed.append([line] + [""] * 16)
             # Save data
             elif data_regex.match(line):
                 # Separate numerical data from the location
@@ -113,4 +125,4 @@ def table_c2_extraction() -> pd.DataFrame:
 
 
 if __name__ == '__main__':
-    print(table_c2_extraction())
+    dataframe_to_csv(table_c2_extraction(), "table_c2.csv")
