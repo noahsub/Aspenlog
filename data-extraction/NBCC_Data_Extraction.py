@@ -136,4 +136,5 @@ def table_c2_extraction() -> pd.DataFrame:
 
 
 if __name__ == '__main__':
-    dataframe_to_excel(table_c2_extraction(), "table_c2.xlsx")
+    print(table_c2_extraction())
+    # dataframe_to_excel(table_c2_extraction(), "table_c2.xlsx")
