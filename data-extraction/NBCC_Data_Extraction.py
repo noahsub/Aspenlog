@@ -88,7 +88,7 @@ def table_c2_extraction() -> pd.DataFrame:
     :return: A Pandas dataframe containing the extracted data.
     """
     # The extracted text
-    text = pdf_to_text("NBCC2020-650-676_ROTATED.pdf")
+    text = pdf_to_text("NBCC2020-Table-C-2.pdf")
 
     # The regex used to extract data lines
     data_pattern = r".*\s(([-+]?[0-9]*\.?[0-9]+)\s){15}([-+]?[0-9]*\.?[0-9]+)"
