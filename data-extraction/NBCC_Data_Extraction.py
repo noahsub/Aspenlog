@@ -81,6 +81,36 @@ def dataframe_to_excel(dataframe: pd.DataFrame, filename: str) -> None:
 # DATA EXTRACTION
 ########################################################################################################################
 
+def table_c1_extraction() -> pd.DataFrame:
+    text = pdf_to_text("NBCC2020-Table-C-1.pdf")
+
+    data_pattern = r"^(-?\d+(\.\d+)?\s){7}-?\d+(\.\d+)?$"
+    data_regex = re.compile(data_pattern)
+
+    processed = []
+    for page in text:
+        for line in page:
+            if data_regex.match(line):
+                processed.append([float(x) for x in line.split(' ')])
+
+    layer_one_headers = ['q', 'V', 'q', 'V', 'q', 'V', 'q', 'V']
+    layer_two_headers = ['kPa', 'm/s', 'kPa', 'm/s', 'kPa', 'm/s', 'kPa', 'm/s']
+
+    assert len(layer_one_headers) == len(layer_two_headers) == 8
+    assert all([len(x) == 8 for x in processed])
+
+    # optional option to display all rows
+    pd.set_option('display.max_rows', None)
+
+    # save data in the form of a dataframe
+    dataframe = pd.DataFrame(processed)
+    header = [layer_one_headers, layer_two_headers]
+    dataframe.columns = header
+
+    # return the dataframe
+    return dataframe
+
+
 def table_c2_extraction() -> pd.DataFrame:
     """
     Extracts data from Table C2 in NBCC2022 pages 650 - 676 and stores them as a Pandas dataframe.
@@ -136,5 +166,6 @@ def table_c2_extraction() -> pd.DataFrame:
 
 
 if __name__ == '__main__':
+    print(table_c1_extraction())
     print(table_c2_extraction())
     # dataframe_to_excel(table_c2_extraction(), "table_c2.xlsx")
