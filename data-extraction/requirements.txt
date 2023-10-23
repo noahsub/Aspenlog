@@ -1,3 +1,0 @@
-pypdf
-openpyxl
-pandas

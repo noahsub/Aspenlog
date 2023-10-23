@@ -1,0 +1,5 @@
+pypdf
+openpyxl
+pandas
+fastapi
+uvicorn
