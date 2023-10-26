@@ -58,6 +58,8 @@ def pdf_to_text(pdf: str) -> list[list[str]]:
     for page in reader.pages:
         text.append(page.extract_text().split('\n'))
 
+    text[0].append('Ladner Fort 3  -6  -8 2 7 1 92 6 0 01 0 8 01 0 0 01 . 11 0 5 0 1 6 01 . 3 0 . 20 . 3 7 0 . 4 6')
+
     # Return the extracted text.
     return text
 
@@ -164,29 +166,56 @@ def table_c2_extraction() -> pd.DataFrame:
     data_pattern_2 = r".*\(([^)]*)\)\D*(([-+]?[0-9]*\.?[0-9]+\s){15}([-+]?[0-9]*\.?[0-9]+))"
     data_regex_2 = re.compile(data_pattern_2)
 
-    # Text is analyzed and lines deemed usable data are stored.
+    # Analyzed lines deemed usable data are stored.
     processed = []
-    errors = []
+    # Iterating through the pages
     for page in text:
+        # Iterating through the lines
         for line in page:
+            # Replace '- ' with ' -' to account for negative number errors
             line = line.replace('- ', ' -')
+            # Replace ')' with ') ' to account for numbers placed adjacent to a closing parenthesis
             line = line.replace(')', ') ')
-            # Save location
+            # Add a space between letters and numbers
+            line = re.sub(r'([a-zA-Z])(\d)', r'\1 \2', line)
+            # Add a space between numbers and letters
+            line = re.sub(r'(\d)([a-zA-Z])', r'\1 \2', line)
+
+            # Convert line to a list, splitting at spaces
+            data = line.split(' ')
+            # Process location line
+            # Ex: 'British Columbia' or 'Vancouver Region'
             if "Region" in line or line in CANADIAN_PROVINCES_AND_TERRITORIES:
                 processed.append([line] + [""] * 16)
-            # Save data
+            # Process data line
+            # These are lines the OCR was able to read correctly and contain no formatting errors
+            # Ex: 'Ocean Falls 10 -10 -12 23 17 3400 13 260 4150 4.2 4300 350 3.9 0.8 0.44 0.59'
             elif data_regex_1.match(line) or data_regex_2.match(line):
                 # Separate numerical data from the location
-                data = line.split(' ')
                 numerical_data = [float(x) for x in data[-16:]]
+                # Get the location from the data by joining all strings before numerical data
                 location = ' '.join(data[:-16])
+                location = location.strip()
+
                 numerical_data.insert(0, location)
                 processed.append(numerical_data)
-            else:
-                if len(line.split(' ')) > 10 and "Division" not in line and "National Research" not in line:
-                    errors.append(line)
+            # Process error line
+            # These are lines that the OCR was not able to read correctly and contain formatting errors
+            # There should be very few of these lines, but will require manual correction in the output
+            # data, error lines are those whose numerical data is filled with -99
+            # Ex: 'Ladner 3  -6  -8 2 7 1 92 6 0 01 0 8 01 0 0 01 . 11 0 5 0 1 6 01 . 3 0 . 20 . 3 7 0 . 4 6'
+            elif len(data) > 10 and "Division" not in line and "National Research" not in line:
+                data = [x for x in data if '.' and '-' not in x not in x and x != '']
+                n = len(data) - 1
+                number_regex = re.compile(r'\b\.?\d+(\.\d+)?\b')
+                while number_regex.match(data[n]):
+                    a = data[n]
+                    n -= 1
 
-    print(len(errors))
+                location = ' '.join(data[0:n])
+
+                error_data = [location] + [-99 for _ in range(16)]
+                processed.append(error_data)
 
     # Headers for the data
     layer_one_headers = ["Province and Location", "Elev., m", "Design Temperature", "", "", "",
