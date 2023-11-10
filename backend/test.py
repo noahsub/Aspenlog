@@ -1,9 +1,6 @@
 import uvicorn
 from fastapi import FastAPI
-from fastapi.responses import HTMLResponse
 from fastapi.responses import FileResponse
-
-import NBCC_Data_Extraction
 
 app = FastAPI()
 
