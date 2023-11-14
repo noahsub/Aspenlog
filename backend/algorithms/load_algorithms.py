@@ -20,7 +20,6 @@ def get_wind_exposure_factor(selection: WindExposureFactorSelections, building: 
                 cei = max((building.dimensions.height / 20) ** 0.2, 0.6 ** 0.2)
 
         case selection.ROUGH:
-            # TODO: is is supposed to be ce_rough > 0.7 or ce_open > 0.7
             ce = max(0.7 * (building.dimensions.height / 12) ** 0.3, 0.7)
 
             if building.h_opening != 0 and building.dimensions.height > 20:

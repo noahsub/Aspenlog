@@ -58,7 +58,7 @@ def pdf_to_text(pdf: str) -> list[list[str]]:
     for page in reader.pages:
         text.append(page.extract_text().split('\n'))
 
-    text[0].append('Ladner Fort 3  -6  -8 2 7 1 92 6 0 01 0 8 01 0 0 01 . 11 0 5 0 1 6 01 . 3 0 . 20 . 3 7 0 . 4 6')
+    # text[0].append('Ladner Fort 3  -6  -8 2 7 1 92 6 0 01 0 8 01 0 0 01 . 11 0 5 0 1 6 01 . 3 0 . 20 . 3 7 0 . 4 6')
 
     # Return the extracted text.
     return text
