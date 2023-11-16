@@ -58,8 +58,6 @@ def pdf_to_text(pdf: str) -> list[list[str]]:
     for page in reader.pages:
         text.append(page.extract_text().split('\n'))
 
-    # text[0].append('Ladner Fort 3  -6  -8 2 7 1 92 6 0 01 0 8 01 0 0 01 . 11 0 5 0 1 6 01 . 3 0 . 20 . 3 7 0 . 4 6')
-
     # Return the extracted text.
     return text
 
@@ -205,14 +203,17 @@ def table_c2_extraction() -> pd.DataFrame:
             # data, error lines are those whose numerical data is filled with -99
             # Ex: 'Ladner 3  -6  -8 2 7 1 92 6 0 01 0 8 01 0 0 01 . 11 0 5 0 1 6 01 . 3 0 . 20 . 3 7 0 . 4 6'
             elif len(data) > 10 and "Division" not in line and "National Research" not in line:
-                data = [x for x in data if '.' and '-' not in x not in x and x != '']
+                # data = [x for x in data if x not in {'.', '-', ''}]
+                data = [x for x in data if not any(y in {'.', '-'} for y in x) and x != '']
+                if len(data) == 0:
+                    break
                 n = len(data) - 1
                 number_regex = re.compile(r'\b\.?\d+(\.\d+)?\b')
                 while number_regex.match(data[n]):
-                    a = data[n]
+                    data.pop(n)
                     n -= 1
 
-                location = ' '.join(data[0:n])
+                location = ''.join(data)
 
                 error_data = [location] + [-99 for _ in range(16)]
                 processed.append(error_data)
@@ -244,7 +245,7 @@ def table_c2_extraction() -> pd.DataFrame:
 if __name__ == '__main__':
     print(table_c1_extraction())
     print(table_c2_extraction())
-    # dataframe_to_excel(table_c1_extraction(), "table_c1.xlsx")
-    # dataframe_to_csv(table_c1_extraction(), "table_c1.csv")
-    # dataframe_to_excel(table_c2_extraction(), "table_c2.xlsx")
-    # dataframe_to_csv(table_c2_extraction(), "table_c2.csv")
+    dataframe_to_excel(table_c1_extraction(), "table_c1.xlsx")
+    dataframe_to_csv(table_c1_extraction(), "table_c1.csv")
+    dataframe_to_excel(table_c2_extraction(), "table_c2.xlsx")
+    dataframe_to_csv(table_c2_extraction(), "table_c2.csv")
