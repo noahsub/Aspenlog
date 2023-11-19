@@ -7,8 +7,7 @@ def get_wind_topographic_factor(wind_load: WindLoad, ct: float = 1):
     wind_load.factor.ct = ct
 
 
-def get_wind_exposure_factor(wind_load: WindLoad, selection: WindExposureFactorSelections, building: Building,
-                             manual=None):
+def get_wind_exposure_factor(wind_load: WindLoad, selection: WindExposureFactorSelections, building: Building, manual=None):
     match selection:
         case selection.OPEN:
             wind_load.factor.ce = max((building.dimensions.height / 10) ** 0.2, 0.9)
