@@ -35,8 +35,3 @@ class Building:
         self.roof = roof
         self.hz_num = hz_num
         self.h_opening = h_opening
-
-
-
-
-
