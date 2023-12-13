@@ -3,3 +3,5 @@ openpyxl
 pandas
 fastapi
 uvicorn
+psycopg2
+python-dotenv
