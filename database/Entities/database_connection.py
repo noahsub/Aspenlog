@@ -1,6 +1,7 @@
 import os
 
 import psycopg2
+from sqlalchemy import create_engine
 from dotenv import load_dotenv
 
 
@@ -29,12 +30,40 @@ class DatabaseConnection:
         self.read_password = os.getenv('READ_PASSWORD')
         self.database_name = database_name
 
-    def get_cursor(self, priviledge: ):
+    def get_cursor(self, priviledge: str):
+        if priviledge == 'admin':
+            user, password = self.admin_username, self.admin_password
+        elif priviledge == 'write':
+            user, password = self.write_username, self.write_password
+        elif priviledge == 'read':
+            user, password = self.read_username, self.read_password
+        else:
+            raise ValueError(f"Invalid Priveledge: {priviledge}")
         try:
             connection = psycopg2.connect(
                 dbname=self.database_name,
-                user=
+                user=user,
+                password=password,
+                host=self.host,
+                port=self.port
             )
+        except:
+            # Idk what to put here
+            pass
+        return connection.get_cursor()
+
+    def get_engine(self, priviledge: str):
+        if priviledge == 'admin':
+            user, password = self.admin_username, self.admin_password
+        elif priviledge == 'write':
+            user, password = self.write_username, self.write_password
+        elif priviledge == 'read':
+            user, password = self.read_username, self.read_password
+        else:
+            raise ValueError(f"Invalid Priveledge: {priviledge}")
+
+        engine = create_engine(f'postgresql+psycopg2://{user}:{password}@{self.host}:{self.port}/{self.database_name}')
+        return engine
 
     def __str__(self):
         return (f"{'HOST:':<16} {self.host}\n"
