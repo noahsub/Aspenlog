@@ -5,3 +5,4 @@ fastapi
 uvicorn
 psycopg2
 python-dotenv
+sqlalchemy

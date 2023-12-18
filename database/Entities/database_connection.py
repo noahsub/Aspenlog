@@ -3,6 +3,7 @@ import os
 import psycopg2
 from sqlalchemy import create_engine
 from dotenv import load_dotenv
+from database.Constants.connection_constants import PrivilegeType
 
 
 class DatabaseConnection:
@@ -30,39 +31,36 @@ class DatabaseConnection:
         self.read_password = os.getenv('READ_PASSWORD')
         self.database_name = database_name
 
-    def get_cursor(self, priviledge: str):
-        if priviledge == 'admin':
-            user, password = self.admin_username, self.admin_password
-        elif priviledge == 'write':
-            user, password = self.write_username, self.write_password
-        elif priviledge == 'read':
-            user, password = self.read_username, self.read_password
-        else:
-            raise ValueError(f"Invalid Priveledge: {priviledge}")
-        try:
-            connection = psycopg2.connect(
-                dbname=self.database_name,
-                user=user,
-                password=password,
-                host=self.host,
-                port=self.port
-            )
-        except:
-            # Idk what to put here
-            pass
-        return connection.get_cursor()
+    def get_credentials(self, privilege):
+        privileges = {
+            PrivilegeType.ADMIN: (self.admin_username, self.admin_password),
+            PrivilegeType.WRITE: (self.write_username, self.write_password),
+            PrivilegeType.READ: (self.read_username, self.read_password)
+        }
+        user, password = privileges[privilege]
+        return user, password
 
-    def get_engine(self, priviledge: str):
-        if priviledge == 'admin':
-            user, password = self.admin_username, self.admin_password
-        elif priviledge == 'write':
-            user, password = self.write_username, self.write_password
-        elif priviledge == 'read':
-            user, password = self.read_username, self.read_password
-        else:
-            raise ValueError(f"Invalid Priveledge: {priviledge}")
+    def get_connection(self, privilege: PrivilegeType) -> psycopg2.extensions.connection:
+        user, password = self.get_credentials(privilege)
 
-        engine = create_engine(f'postgresql+psycopg2://{user}:{password}@{self.host}:{self.port}/{self.database_name}')
+        connection = psycopg2.connect(
+            dbname=self.database_name,
+            user=user,
+            password=password,
+            host=self.host,
+            port=self.port
+        )
+
+        return connection
+
+    @staticmethod
+    def get_cursor(connection: psycopg2.extensions.connection) -> psycopg2.extensions.cursor:
+        return connection.cursor()
+
+    def get_engine(self, privilege: PrivilegeType):
+        user, password = self.get_credentials(privilege)
+        connection_url = f'postgresql+psycopg2://{user}:{password}@{self.host}:{self.port}/{self.database_name}'
+        engine = create_engine(connection_url)
         return engine
 
     def __str__(self):
@@ -75,7 +73,6 @@ class DatabaseConnection:
                 f"{'READ USERNAME:':<16} {self.read_username}\n"
                 f"{'READ PASSWORD:':<16} {self.read_password}\n"
                 f"{'DATABASE:':<16} {self.database_name}")
-
 
 
 if __name__ == '__main__':
