@@ -3,6 +3,6 @@ openpyxl
 pandas
 fastapi
 uvicorn
-psycopg2
+psycopg2-binary
 python-dotenv
 sqlalchemy
