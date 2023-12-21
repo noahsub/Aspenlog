@@ -25,6 +25,14 @@ def create_climatic_data_table():
         BASE.metadata.create_all(bind=engine)
 
 
+def clean_climatic_data_table():
+    connection = DATABASE.get_connection(privilege=PrivilegeType.ADMIN)
+    cursor = DATABASE.get_cursor(connection)
+    cursor.execute('DELETE FROM "ClimaticData";')
+    cursor.execute('ALTER SEQUENCE "ClimaticData_ID_seq" RESTART WITH 1;')
+    connection.commit()
+
+
 def populate_climatic_data_table():
     engine = DATABASE.get_engine(privilege=PrivilegeType.ADMIN)
     session = sessionmaker(autocommit=False, autoflush=True, bind=engine)
@@ -85,4 +93,5 @@ def populate_climatic_data_table():
 
 if __name__ == "__main__":
     create_climatic_data_table()
+    clean_climatic_data_table()
     populate_climatic_data_table()
