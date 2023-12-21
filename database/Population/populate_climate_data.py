@@ -1,5 +1,9 @@
 import ast
 import csv
+import uuid
+
+from tqdm import tqdm
+from geopy.extra.rate_limiter import RateLimiter
 from sqlalchemy import inspect
 from sqlalchemy.orm import sessionmaker
 from config import get_file_path
@@ -7,6 +11,7 @@ from database.Constants.connection_constants import PrivilegeType
 from database.Entities.climatic_data import BASE, ClimaticData
 from database.Entities.database_connection import DatabaseConnection
 from database.Warnings.database_warnings import already_exists_warning
+from geopy.geocoders import Nominatim
 
 DATABASE = DatabaseConnection(database_name="NBCC-2020")
 
@@ -48,7 +53,7 @@ def populate_climatic_data_table():
         csv_reader = csv.reader(csv_file)
 
         # map column names to appropriate column index
-        for row in csv_reader:
+        for row in tqdm(csv_reader, "Populating Climatic Data"):
             column_mapping = {
                 'ProvinceAndLocation': 1,
                 'Elev_m': 2,
@@ -91,7 +96,30 @@ def populate_climatic_data_table():
         controller.commit()
 
 
+def update_location():
+    engine = DATABASE.get_engine(privilege=PrivilegeType.ADMIN)
+    session = sessionmaker(autocommit=False, autoflush=True, bind=engine)
+    controller = session()
+
+    geolocator = Nominatim(user_agent=str(uuid.uuid4()).replace('-', ''))
+    geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1)
+
+    for entry in tqdm(controller.query(ClimaticData).all(), desc="Updating Locations"):
+        location = entry.ProvinceAndLocation
+        location_info = geocode(location, timeout=10)
+
+        if location_info is None:
+            entry.Latitude = None
+            entry.Longitude = None
+        else:
+            entry.Latitude = location_info.latitude
+            entry.Longitude = location_info.longitude
+
+    controller.commit()
+
+
 if __name__ == "__main__":
     create_climatic_data_table()
     clean_climatic_data_table()
     populate_climatic_data_table()
+    update_location()
