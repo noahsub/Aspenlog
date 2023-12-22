@@ -1,7 +1,6 @@
 import ast
 import csv
 import uuid
-
 from tqdm import tqdm
 from geopy.extra.rate_limiter import RateLimiter
 from sqlalchemy import inspect
