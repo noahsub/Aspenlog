@@ -56,7 +56,7 @@ def get_snow_load(snow_load: SnowLoad, ls: float, ss: float, sr: float, manual=N
     if manual is not None:
         snow_load.s = manual
     else:
-        snow_load.s = ls * (ss * (snow_load.factor.cb * snow_load.factor.cw * snow_load.factor.cs * snow_load.factor.ca) * sr)
+        snow_load.s = ls * (ss * (snow_load.factor.cb * snow_load.factor.cw * snow_load.factor.cs * snow_load.factor.ca) + sr)
 
 
 
