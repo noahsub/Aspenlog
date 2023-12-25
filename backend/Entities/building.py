@@ -1,6 +1,7 @@
 import math
 from typing import Optional, Dict
 
+from backend.Constants.decision_constants import DefaultSelections
 from backend.Constants.materials import Materials
 
 
@@ -111,6 +112,25 @@ class Building:
 
         self.wp = None
 
+    def compute_dead_load(self, selection: DefaultSelections, wp: float):
+        match selection:
+            case selection.DEFAULT:
+                self.wp = wp
+            case selection.CUSTOM:
+                # ensure that all height zones have a valid material mapping
+                assert all([height_zone.wp_materials is not None and
+                            len(height_zone.wp_materials) <= len(Materials.get_materials_list())
+                            for height_zone in self.height_zones])
+                # compute dead load as weighted average based on material percentages and elevation
+                self.wp = 0
+                products = []
+                material_sum = 0
+                for height_zone in self.height_zones:
+                    product = sum(x * height_zone.elevation for x in height_zone.wp_materials.values())
+                    products.append(product)
+                    material_sum += sum(height_zone.wp_materials.values())
+                self.wp = sum(products) / material_sum
+
 
 if __name__ == '__main__':
     dimensions = Dimensions(height=86, width=50)
@@ -118,4 +138,3 @@ if __name__ == '__main__':
     roof = Roof(50, 50, 45)
     building = Building(dimensions, cladding, roof, 0)
     print([str(x) for x in building.height_zones])
-

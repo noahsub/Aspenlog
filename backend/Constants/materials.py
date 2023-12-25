@@ -12,5 +12,5 @@ class Materials(Enum):
     def get_materials_list(cls):
         materials_list = []
         for material in cls:
-            materials_list.append(material.value)
+            materials_list.append(material.name)
         return materials_list
