@@ -59,9 +59,9 @@ class Building:
     dimensions: Dimensions
     cladding: Cladding
     roof: Roof
-    hz_num: int
+    hz_num: Optional[int]
     h_opening: float
-    height_zones: list[HeightZone]
+    height_zones: Optional[list[HeightZone]]
     wp: Optional[float]
 
     def __init__(self, dimensions: Dimensions, cladding: Cladding, roof: Roof, h_opening: float):
@@ -69,48 +69,54 @@ class Building:
         self.cladding = cladding
         self.roof = roof
         self.h_opening = h_opening
-
-        # The default height per height zone is 20 meters
-        default_zone_height = 20
-
-        # we take the ceiling of the quotient of the building height divided by the default zone height
-
-        """
-        +---------+     ----+
-        |         | 6m      |
-        +---------+         |
-        |         |         |
-        |         | 20m     |
-        |         |         |
-        +---------+         |
-        |         |         |
-        |         | 20m     |
-        |         |         +---> 5 height zones
-        +---------+         |
-        |         |         |
-        |         | 20m     |
-        |         |         |
-        +---------+         |
-        |         |         |
-        |         | 20m     |
-        |         |         |
-        +---------+     ----+
-        """
-
-        self.hz_num = math.ceil(dimensions.height / default_zone_height)
-
-        self.height_zones = []
-        height_sum = 0
-        for i in range(1, self.hz_num + 1):
-            # the last height zone may be less than the default zone height, in which case we simply take the height of
-            # the building
-            if i == self.hz_num:
-                height_sum = dimensions.height
-            else:
-                height_sum += 20
-            self.height_zones.append(HeightZone(zone_num=i, elevation=height_sum))
-
+        self.hz_num = None
+        self.height_zones = None
         self.wp = None
+
+    def compute_height_zones(self, selection: DefaultSelections, height_zones: list[HeightZone] = None):
+        match selection:
+            case selection.DEFAULT:
+                # The default height per height zone is 20 meters
+                default_zone_height = 20
+
+                # we take the ceiling of the quotient of the building height divided by the default zone height
+
+                """
+                +---------+     ----+
+                |         | 6m      |
+                +---------+         |
+                |         |         |
+                |         | 20m     |
+                |         |         |
+                +---------+         |
+                |         |         |
+                |         | 20m     |
+                |         |         +---> 5 height zones
+                +---------+         |
+                |         |         |
+                |         | 20m     |
+                |         |         |
+                +---------+         |
+                |         |         |
+                |         | 20m     |
+                |         |         |
+                +---------+     ----+
+                """
+
+                self.hz_num = math.ceil(dimensions.height / default_zone_height)
+
+                self.height_zones = []
+                height_sum = 0
+                for i in range(1, self.hz_num + 1):
+                    # the last height zone may be less than the default zone height, in which case we simply take the
+                    # height of the building
+                    if i == self.hz_num:
+                        height_sum = dimensions.height
+                    else:
+                        height_sum += 20
+                    self.height_zones.append(HeightZone(zone_num=i, elevation=height_sum))
+            case selection.CUSTOM:
+                self.height_zones = height_zones
 
     def compute_dead_load(self, selection: DefaultSelections, wp: float):
         match selection:
