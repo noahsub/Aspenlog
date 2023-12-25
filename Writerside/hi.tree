@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE instance-profile
+        SYSTEM "https://resources.jetbrains.com/writerside/1.0/product-profile.dtd">
+
+<instance-profile id="hi" name="Help Instance"
+                 start-page="Overview.md">
+
+    <toc-element topic="Overview.md">
+        <toc-element topic="Scope.md"/>
+    </toc-element>
+    <toc-element topic="Repository.md"/>
+    <toc-element topic="Setup-and-Installation.md"/>
+    <toc-element topic="Backend-Development.md">
+        <toc-element topic="Snow-Load-Algorithm.md"/>
+        <toc-element topic="Wind-Load-Algorithm.md"/>
+        <toc-element topic="Constants.md"/>
+        <toc-element topic="Entities.md"/>
+        <toc-element topic="Testing.md"/>
+    </toc-element>
+    <toc-element topic="Data-Extraction.md">
+        <toc-element topic="Data-Extraction-Script.md"/>
+    </toc-element>
+    <toc-element topic="Database.md">
+        <toc-element topic="ad.md"/>
+        <toc-element topic="asdasd.md"/>
+        <toc-element topic="Database-Entities.md"/>
+        <toc-element topic="Connection-Constants.md"/>
+    </toc-element>
+</instance-profile>

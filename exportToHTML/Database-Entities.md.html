@@ -1,0 +1,33 @@
+<html>
+<head>
+<title>Database-Entities.md</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+Database-Entities.md</font>
+</center></td></tr></table>
+<pre><span class="s0"># </span><span class="s2">Database Entities</span>
+
+<span class="s0">## </span><span class="s2">climatic_data.py</span>
+<span class="s0">- </span><span class="s2">A SQLAlchemy Object Relational Mapping </span><span class="s1">(</span><span class="s2">ORM</span><span class="s1">) </span><span class="s2">class representing climatic data in the database.</span>
+<span class="s0">- </span><span class="s2">Fields</span><span class="s1">: </span><span class="s2">`ID`, `ProvinceAndLocation`, `Latitude`, `Longitude`, `Elev_m`, various temperature, rain, and snow load fields.</span>
+
+<span class="s0">## </span><span class="s2">database_connection.py</span>
+<span class="s0">- </span><span class="s2">Manages database connections with different privileges </span><span class="s1">(</span><span class="s2">admin, write, read</span><span class="s1">) </span><span class="s2">using credentials from environment variables.</span>
+<span class="s0">- </span><span class="s2">Provides functions to establish connections, get cursors, and create SQLAlchemy engines.</span>
+<span class="s0">- </span><span class="s2">Uses `psycopg2` for PostgreSQL connections and `sqlalchemy` for ORM functionalities.</span>
+
+<span class="s0">## </span><span class="s2">wind_speed_data.py</span>
+<span class="s0">- </span><span class="s2">A SQLAlchemy ORM class for storing wind speed data.</span>
+<span class="s0">- </span><span class="s2">Fields</span><span class="s1">: </span><span class="s2">`ID`, `q_KPa` </span><span class="s1">(</span><span class="s2">pressure in kilopascals</span><span class="s1">)</span><span class="s2">, `V_ms` </span><span class="s1">(</span><span class="s2">wind speed in meters per second</span><span class="s1">)</span><span class="s2">.</span>
+</pre>
+</body>
+</html>
