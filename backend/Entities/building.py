@@ -1,4 +1,7 @@
 import math
+from typing import Optional, Dict
+
+from backend.Constants.materials import Materials
 
 
 class Dimensions:
@@ -24,8 +27,9 @@ class Roof:
     l_roof: float
     slope: float
     wall_slope: int
+    wp: float
 
-    def __init__(self, w_roof: float, l_roof: float, slope: float):
+    def __init__(self, w_roof: float, l_roof: float, slope: float, wp: float):
         self.w_roof = w_roof
         self.l_roof = l_roof
         self.slope = slope
@@ -33,15 +37,18 @@ class Roof:
             self.wall_slope = 1
         else:
             self.wall_slope = 0
+        self.wp = wp
 
 
 class HeightZone:
     zone_num: int
     elevation: float
+    wp_materials: Optional[Dict[Materials, float]]
 
-    def __init__(self, zone_num: int, elevation: float = 0):
+    def __init__(self, zone_num: int, elevation: float):
         self.zone_num = zone_num
         self.elevation = elevation
+        self.wp_materials = None
 
     def __str__(self):
         return f"hz{self.zone_num}: {self.elevation}m"
@@ -54,6 +61,7 @@ class Building:
     hz_num: int
     h_opening: float
     height_zones: list[HeightZone]
+    wp: Optional[float]
 
     def __init__(self, dimensions: Dimensions, cladding: Cladding, roof: Roof, h_opening: float):
         self.dimensions = dimensions
@@ -100,6 +108,8 @@ class Building:
             else:
                 height_sum += 20
             self.height_zones.append(HeightZone(zone_num=i, elevation=height_sum))
+
+        self.wp = None
 
 
 if __name__ == '__main__':
