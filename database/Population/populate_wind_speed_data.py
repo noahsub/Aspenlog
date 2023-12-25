@@ -60,3 +60,4 @@ if __name__ == '__main__':
     create_wind_speed_data_table()
     clean_wind_speed_data_table()
     populate_wind_speed_data_table()
+    DATABASE.close()

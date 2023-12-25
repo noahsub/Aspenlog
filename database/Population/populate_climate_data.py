@@ -122,3 +122,4 @@ if __name__ == "__main__":
     clean_climatic_data_table()
     populate_climatic_data_table()
     update_location()
+    DATABASE.close()

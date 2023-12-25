@@ -1,6 +1,7 @@
 import os
 
 import psycopg2
+import sqlalchemy
 from sqlalchemy import create_engine
 from dotenv import load_dotenv
 from database.Constants.connection_constants import PrivilegeType
@@ -16,6 +17,9 @@ class DatabaseConnection:
     read_username: str
     read_password: str
     database_name: str
+    connections: list[psycopg2.extensions.connection]
+    cursors: list[psycopg2.extensions.cursor]
+    engines: list[sqlalchemy.Engine]
 
     def __init__(self, database_name: str):
         # Load the .env file
@@ -30,6 +34,10 @@ class DatabaseConnection:
         self.read_username = os.getenv('READ_USERNAME')
         self.read_password = os.getenv('READ_PASSWORD')
         self.database_name = database_name
+        # initialize connection, cursors, and engines lists
+        self.connections = []
+        self.cursors = []
+        self.engines = []
 
     def get_credentials(self, privilege):
         privileges = {
@@ -50,18 +58,33 @@ class DatabaseConnection:
             host=self.host,
             port=self.port
         )
-
+        self.connections.append(connection)
         return connection
 
-    @staticmethod
-    def get_cursor(connection: psycopg2.extensions.connection) -> psycopg2.extensions.cursor:
-        return connection.cursor()
+    def get_cursor(self, connection: psycopg2.extensions.connection) -> psycopg2.extensions.cursor:
+        cursor = connection.cursor()
+        self.cursors.append(cursor)
+        return cursor
 
-    def get_engine(self, privilege: PrivilegeType):
+    def get_engine(self, privilege: PrivilegeType) -> sqlalchemy.Engine:
         user, password = self.get_credentials(privilege)
         connection_url = f'postgresql+psycopg2://{user}:{password}@{self.host}:{self.port}/{self.database_name}'
         engine = create_engine(connection_url)
+        self.engines.append(engine)
         return engine
+
+    def close(self):
+        for cursor in self.cursors:
+            cursor.close()
+        self.cursors.clear()
+
+        for connection in self.connections:
+            connection.close()
+        self.connections.clear()
+
+        for engine in self.engines:
+            engine.dispose()
+        self.engines.clear()
 
     def __str__(self):
         return (f"{'HOST:':<16} {self.host}\n"
