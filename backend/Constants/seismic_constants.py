@@ -2,9 +2,9 @@ from enum import Enum
 
 
 class SiteClass(Enum):
-    A = 'a'
-    B = 'b'
-    C = 'c'
+    A = 'A'
+    B = 'B'
+    C = 'C'
     D = 'D'
     E = 'E'
 
