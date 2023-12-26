@@ -25,8 +25,6 @@ def haversine_distance(lat1, lon1, lat2, lon2):
     return distance
 
 
-
-
 class Location:
     address: str
     latitude: float
@@ -45,8 +43,8 @@ class Location:
     # S_1
     design_spectral_acceleration_1: float
 
-
     def __init__(self, address: str, site_designation: SiteDesignation, xv: int = None, xs: SiteClass = None):
+        self.address = address
         geolocator = Nominatim(user_agent=str(uuid.uuid4()).replace('-', ''))
         geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1)
         location_info = geocode(address, timeout=10)
@@ -83,6 +81,9 @@ class Location:
         self.snow_load = min_entry.SnowLoad_kPa_1_50_Sr
         self.rain_load = min_entry.SnowLoad_kPa_1_50_Ss
 
+        self.xv = None
+        self.xs = None
+
         match site_designation:
             case site_designation.XV:
                 self.site_designation = site_designation.XV
@@ -105,7 +106,8 @@ class Location:
 
         data = json.loads(response.text)
 
-        self.design_spectral_acceleration_0_2 = data.get('data', {}).get('NBC2020', {}).get('X148', [{}])[0].get('sa0p2')
+        self.design_spectral_acceleration_0_2 = data.get('data', {}).get('NBC2020', {}).get('X148', [{}])[0].get(
+            'sa0p2')
         self.design_spectral_acceleration_1 = data.get('data', {}).get('NBC2020', {}).get('X148', [{}])[0].get('sa1p0')
 
     def get_seismic_data_xs(self):
@@ -120,6 +122,20 @@ class Location:
 
         data = json.loads(response.text)
 
-        self.design_spectral_acceleration_0_2 = data.get('data', {}).get('NBC2020', {}).get(f'X{self.xs.value}', [{}])[0].get('sa0p2')
-        self.design_spectral_acceleration_1 = data.get('data', {}).get('NBC2020', {}).get(f'X{self.xs.value}', [{}])[0].get('sa1p0')
+        self.design_spectral_acceleration_0_2 = data.get('data', {}).get('NBC2020', {}).get(f'X{self.xs.value}', [{}])[
+            0].get('sa0p2')
+        self.design_spectral_acceleration_1 = data.get('data', {}).get('NBC2020', {}).get(f'X{self.xs.value}', [{}])[
+            0].get('sa1p0')
 
+    def __str__(self):
+        return (f"address: {self.address}\n"
+                f"latitude: {self.latitude}\n"
+                f"longitude: {self.longitude}\n"
+                f"site_designation: {self.site_designation}\n"
+                f"xv: {self.xv}\n"
+                f"xs: {self.xs}\n"
+                f"wind_velocity_pressure: {self.wind_velocity_pressure}\n"
+                f"snow_load: {self.snow_load}\n"
+                f"rain_load: {self.rain_load}\n"
+                f"design_spectral_acceleration_0_2: {self.design_spectral_acceleration_0_2}\n"
+                f"design_spectral_acceleration_1: {self.design_spectral_acceleration_1}")
