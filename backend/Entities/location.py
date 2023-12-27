@@ -139,18 +139,3 @@ class Location:
                 f"rain_load: {self.rain_load}\n"
                 f"design_spectral_acceleration_0_2: {self.design_spectral_acceleration_0_2}\n"
                 f"design_spectral_acceleration_1: {self.design_spectral_acceleration_1}")
-
-    def __dict__(self):
-        return {
-            "address": self.address,
-            "latitude": self.latitude,
-            "longitude": self.longitude,
-            "site_designation": self.site_designation,
-            "xv": self.xv,
-            "xs": self.xs,
-            "wind_velocity_pressure": self.wind_velocity_pressure,
-            "snow_load": self.snow_load,
-            "rain_load": self.rain_load,
-            "design_spectral_acceleration_0_2": self.design_spectral_acceleration_0_2,
-            "design_spectral_acceleration_1": self.design_spectral_acceleration_1
-        }

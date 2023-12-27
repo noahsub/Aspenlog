@@ -1,7 +1,7 @@
 # from backend.Constants.seismic_constants import SiteDesignation, SiteClass
 # from backend.Entities.location import Location
 #
-# LINE = '_'*80
+
 #
 # if __name__ == '__main__':
 #     print(LINE)
@@ -33,12 +33,14 @@ import json
 import os
 from enum import Enum
 
-
+import jsonpickle
 import typer
 from rich import print
 from backend.Constants.seismic_constants import SiteClass, SiteDesignation
 from backend.Entities.location import Location
 from rich.prompt import Prompt
+
+TERM_SIZE = os.get_terminal_size()
 
 
 def choice(prompt: str, options):
@@ -59,32 +61,55 @@ def create_save_file():
 
 
 def serialize(name: str, obj):
-    # save obj to save.json under name
+    # save obj to save.json under name using jsonpickle
     with open('save.json', 'r') as f:
         data = json.load(f)
-        data[name] = obj.__dict__
+        data[name] = jsonpickle.encode(obj)
     with open('save.json', 'w') as f:
-        json.dump(data, f)
+        json.dump(data, f, indent=4)
 
 
 def deserialize(name: str):
     # get obj from save.json under name
+    # it should not return the string representation, but the actual object
     with open('save.json', 'r') as f:
         data = json.load(f)
-        return data[name]
+        return jsonpickle.decode(data[name])
 
 
-def skip_step(step: int, func):
+def skip_step(step: int):
+    print_line()
     confirm = typer.confirm(f"Would you like to skip Step #{step}?")
     if confirm:
-        pass
+        match step:
+            case 0:
+                print_line()
+                print_obtained_values(deserialize('location'))
     else:
-        func()
+        match step:
+            case 0:
+                step_0()
+
+
+
+def print_obtained_values(obj):
+    print("[bold red]Obtained Values: [/bold red]")
+    lst = str(obj).split('\n')
+    for i in range(len(lst)):
+        print(f"  {lst[i]}")
+
+
+def print_line():
+    print('─' * (TERM_SIZE.columns - 1))
+
 
 LOCATION = None
 
+
 def step_0():
-    address = typer.prompt("Address")
+    global LOCATION
+    print_line()
+    address = Prompt.ask("[blue]Enter[/blue] Address")
     site_designation_type = choice(prompt="site designation type", options=SiteDesignation)
     match site_designation_type:
         case SiteDesignation.XV:
@@ -92,11 +117,15 @@ def step_0():
             LOCATION = Location(address=address, site_designation=SiteDesignation.XV, xv=xv)
         case SiteDesignation.XS:
             xs = choice(prompt="Site Class", options=SiteClass)
-            LOCATION = Location(address=address, site_designation=SiteDesignation.XS, xv=xs)
+            LOCATION = Location(address=address, site_designation=SiteDesignation.XS, xs=xs)
     serialize('location', LOCATION)
-
+    print_obtained_values(LOCATION)
 
 
 if __name__ == '__main__':
+    print_line()
+    print("ASPENLOG 2020 CONSOLE WALKTHROUGH")
+
     create_save_file()
-    skip_step(0, step_0)
+    skip_step(0)
+
