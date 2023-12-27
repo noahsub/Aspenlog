@@ -1,14 +1,23 @@
+from backend.Constants.wind_constants import GUST_FACTOR
+
+
 class WindFactor:
     ct: float
     ce: float
     cei: float
     cg: float
 
-    def __init__(self, ct: float, ce: float, cei: float, cg: float):
+    def __init__(self, ct: float, ce: float, cei: float):
         self.ct = ct
         self.ce = ce
         self.cei = cei
-        self.cg = cg
+        self.cg = GUST_FACTOR
+
+    def __str__(self):
+        return (f"ct: {self.ct}\n"
+                f"ce: {self.ce}\n"
+                f"cei: {self.cei}\n"
+                f"cg: {self.cg}")
 
 
 class WindPressure:
@@ -23,6 +32,12 @@ class WindPressure:
         self.pe_pos = pe_pos
         self.pe_neg = pe_neg
 
+    def __str__(self):
+        return (f"pi_pos: {self.pi_pos}\n"
+                f"pi_neg: {self.pi_neg}\n"
+                f"pe_pos: {self.pe_pos}\n"
+                f"pe_neg: {self.pe_neg}")
+
 
 class Zone:
     name: str
@@ -34,6 +49,13 @@ class Zone:
         self.name = name
         self.num = num
         self.pressure = pressure
+        self.wind_load = None
+
+    def __str__(self):
+        return (f"name: {self.name}\n"
+                f"num: {self.num}\n"
+                f"pressure: {self.pressure}\n"
+                f"wind_load: {self.wind_load}")
 
 
 class WindLoad:
@@ -61,3 +83,19 @@ class WindLoad:
             for zone in self.zones:
                 if zone.num == key:
                     return zone
+
+    def __str__(self):
+        factor_str = '\n  ' + '\n  '.join(str(self.factor).split('\n'))
+        pressure_str = '\n  ' + '\n  '.join(str(self.pressure).split('\n'))
+
+        zones_str = '\n'
+        for zone in self.zones:
+            zones_str += f"  zone {zone.num}\n"
+            zone_lst = str(zone).split('\n')
+            for i in zone_lst:
+                zones_str += f"    {i.lstrip(', ')}\n"
+        zones_str = zones_str[:-1]
+
+        return (f"factor: {factor_str}\n"
+                f"pressure: {pressure_str}\n"
+                f"zones: {zones_str}")

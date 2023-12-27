@@ -1,48 +1,22 @@
-# from backend.Constants.seismic_constants import SiteDesignation, SiteClass
-# from backend.Entities.location import Location
-#
-
-#
-# if __name__ == '__main__':
-#     print(LINE)
-#     print("ASPENLOG 2020 CONSOLE WALKTHROUGH")
-#     print(LINE)
-#
-#     # Step 0
-#     print("Step #0")
-#     print(LINE)
-#     address = input("Address: ")
-#     print("Select site designation type:")
-#     for i, type in enumerate(['Vs30 (Xv)', 'Site Class (Xs)']):
-#         print(f'\t{i}: {type}')
-#     location = None
-#     match int(input("Selection: ")):
-#         case 0:
-#             xv = int(input("Vs30 Value [140, 3000] m/s: "))
-#             location = Location(address=address, site_designation=SiteDesignation.XV, xv=xv)
-#         case 1:
-#             print("Select site class: ")
-#             site_class_mapping = {}
-#             for i, type in enumerate(SiteClass):
-#                 site_class_mapping[i] = type
-#                 print(f'\t{i}: {type.value}')
-#             location = Location(address=address, site_designation=SiteDesignation.XS, xs=site_class_mapping[int(input("Selection: "))])
-#     print("Obtained Values: ")
-#     print(location)
 import json
 import os
-from enum import Enum
 
 import jsonpickle
 import typer
 from rich import print
 
 from backend.Constants.decision_constants import DefaultSelections
+from backend.Constants.importance_factor_constants import WindImportanceFactor
 from backend.Constants.materials import Materials
 from backend.Constants.seismic_constants import SiteClass, SiteDesignation
+from backend.Constants.wind_constants import WindExposureFactorSelections, InternalPressureSelections
 from backend.Entities.building import Dimensions, HeightZone, Building, Cladding, Roof
 from backend.Entities.location import Location
 from rich.prompt import Prompt
+
+from backend.Entities.wind import WindFactor, WindLoad, WindPressure
+from backend.algorithms.wind_load_algorithms import get_wind_topographic_factor, get_wind_exposure_factor, \
+    get_internal_pressure, get_external_pressure
 
 TERM_SIZE = os.get_terminal_size()
 
@@ -102,22 +76,75 @@ def deserialize(name: str):
 
 
 def skip_step(step: int):
+    global LOCATION
+    global BUILDING
+    global WIND_LOAD
     print_line()
     confirm = confirm_choice(f"Would you like to skip Step {step}?")
     if confirm:
         match step:
             case 0:
                 print_line()
-                print_obtained_values(deserialize('location'))
+                LOCATION = deserialize('location')
+                print_obtained_values(LOCATION)
             case 1:
                 print_line()
-                print_obtained_values(deserialize('building'))
+                BUILDING = deserialize('building')
+                print_obtained_values(BUILDING)
+            case 2:
+                pass
+            case 3:
+                print_line()
+                WIND_LOAD = deserialize('wind_load')
+                print_obtained_values(WIND_LOAD)
+            case 4:
+                print_line()
+                WIND_LOAD = deserialize('wind_load')
+                print_obtained_values(WIND_LOAD)
+            case 5:
+                print_line()
+                WIND_LOAD = deserialize('wind_load')
+                print_obtained_values(WIND_LOAD)
+            case 6:
+                print_line()
+                WIND_LOAD = deserialize('wind_load')
+                print_obtained_values(WIND_LOAD)
+            case 7:
+                print_line()
+                WIND_LOAD = deserialize('wind_load')
+                print_obtained_values(WIND_LOAD)
+            case 8:
+                print_line()
+                WIND_LOAD = deserialize('wind_load')
+                print_obtained_values(WIND_LOAD)
+            case 9:
+                print_line()
+                WIND_LOAD = deserialize('wind_load')
+                print_obtained_values(WIND_LOAD)
+            case 10:
+                print_line()
+                WIND_LOAD = deserialize('wind_load')
+                print_obtained_values(WIND_LOAD)
     else:
         match step:
             case 0:
                 step_0()
             case 1:
                 step_1()
+            case 2:
+                step_2()
+            case 3:
+                step_3()
+            case 4:
+                step_4()
+            case 5:
+                step_5()
+            case 6:
+                step_6()
+            case 7:
+                step_7()
+            case 8:
+                step_8()
 
 
 def print_obtained_values(obj):
@@ -240,10 +267,98 @@ def step_1():
     print_obtained_values(BUILDING)
 
 
+def step_2():
+    print_step_heading(2)
+    print("Skipping step, importance factors saved as constants")
+
+
+WIND_LOAD = None
+WIND_FACTOR = None
+
+
+def step_3():
+    global WIND_LOAD
+    global WIND_FACTOR
+    print_step_heading(3)
+
+    WIND_FACTOR = WindFactor(ct=None, ce=None, cei=None)
+    WIND_LOAD = WindLoad(factor=WIND_FACTOR, pressure=None)
+
+    confirm_ct = confirm_choice("Would you like to use default value for topographic factor?")
+    if not confirm_ct:
+        ct = float(user_input("Topographic factor"))
+        get_wind_topographic_factor(WIND_LOAD, ct=ct)
+    else:
+        get_wind_topographic_factor(WIND_LOAD)
+
+    serialize('wind_load', WIND_LOAD)
+    print_obtained_values(WIND_LOAD)
+
+def step_4():
+    global WIND_LOAD
+    global WIND_FACTOR
+    global BUILDING
+    print_step_heading(4)
+
+    wind_exposure_selection = choice(prompt="Wind Exposure Factor", options=WindExposureFactorSelections)
+    if wind_exposure_selection == WindExposureFactorSelections.INTERMEDIATE:
+        value = float(user_input("Intermediate value for ce and cei"))
+        get_wind_exposure_factor(wind_load=WIND_LOAD, selection=wind_exposure_selection, building=BUILDING, manual=value)
+    else:
+        get_wind_exposure_factor(wind_load=WIND_LOAD, selection=wind_exposure_selection, building=BUILDING)
+
+    serialize('wind_load', WIND_LOAD)
+
+def step_5():
+    print_step_heading(5)
+    print("Skipping step, gust factor saved as a constant")
+
+def step_6():
+    global WIND_LOAD
+    global LOCATION
+    print_step_heading(6)
+
+    WIND_LOAD.pressure = WindPressure()
+
+    internal_pressure_selection = choice(prompt="Internal Pressure Selection", options=InternalPressureSelections)
+    wind_importance_factor = choice(prompt="Wind Importance Factor", options=WindImportanceFactor)
+    get_internal_pressure(wind_load=WIND_LOAD, selection=internal_pressure_selection, wind_importance_factor=wind_importance_factor, location=LOCATION)
+
+    serialize('wind_load', WIND_LOAD)
+
+def step_7():
+    global WIND_LOAD
+    global LOCATION
+    print_step_heading(7)
+
+    wind_importance_factor = choice(prompt="Wind Importance Factor", options=WindImportanceFactor)
+    get_external_pressure(wind_load=WIND_LOAD, wind_importance_factor=wind_importance_factor, location=LOCATION)
+
+    serialize('wind_load', WIND_LOAD)
+
+def step_8():
+    global WIND_LOAD
+    print_step_heading(8)
+    print_obtained_values(WIND_LOAD)
+
+def step_9():
+    print_step_heading(9)
+    print("Skipping step, redundant")
+
+def step_10():
+    # TODO: Requires refactor, need input from the civil engineering team
+    print_step_heading(10)
+    print("Skipping step, TODO")
+
+
+
+
+
 if __name__ == '__main__':
     print_line()
     print("ASPENLOG 2020 CONSOLE WALKTHROUGH")
 
     create_save_file()
-    skip_step(0)
-    skip_step(1)
+
+    for i in range(10):
+        skip_step(i)
