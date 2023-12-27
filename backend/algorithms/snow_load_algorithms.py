@@ -1,6 +1,6 @@
 import math
 
-from backend.Constants.importance_factor_constants import WindImportanceFactor
+from backend.Constants.importance_factor_constants import WindImportanceFactor, SnowImportanceFactor
 from backend.Constants.snow_constants import RoofType
 from backend.Constants.wind_constants import WindExposureFactorSelections
 from backend.Entities.building import Building
@@ -52,11 +52,11 @@ def get_basic_roof_now_load_factor(snow_load: SnowLoad, building: Building):
         snow_load.factor.cb = (1 / snow_load.factor.cw) * (1 - (1 - 0.8 * snow_load.factor.cw) * math.exp(-1 * ((lc * snow_load.factor.cw ** 2 - 70) / (100))))
 
 
-def get_snow_load(snow_load: SnowLoad, ls: float, ss: float, sr: float, manual=None):
+def get_snow_load(snow_load: SnowLoad, snow_importance_factor: SnowImportanceFactor, ss: float, sr: float, manual=None):
     if manual is not None:
         snow_load.s = manual
     else:
-        snow_load.s = ls * (ss * (snow_load.factor.cb * snow_load.factor.cw * snow_load.factor.cs * snow_load.factor.ca) + sr)
+        snow_load.s = snow_importance_factor.value * (ss * (snow_load.factor.cb * snow_load.factor.cw * snow_load.factor.cs * snow_load.factor.ca) + sr)
 
 
 

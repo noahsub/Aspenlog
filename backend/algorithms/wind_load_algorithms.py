@@ -1,5 +1,7 @@
+from backend.Constants.importance_factor_constants import WindImportanceFactor
 from backend.Constants.wind_constants import WindExposureFactorSelections, InternalPressureSelections
 from backend.Entities.building import Building
+from backend.Entities.location import Location
 from backend.Entities.wind import WindFactor, WindLoad
 
 
@@ -30,8 +32,8 @@ def get_wind_exposure_factor(wind_load: WindLoad, selection: WindExposureFactorS
             wind_load.factor.cei = manual
 
 
-def get_internal_pressure(wind_load: WindLoad, selection: InternalPressureSelections, lw: float, q: float):
-    internal_pressure = (lw * q * wind_load.factor.cei * wind_load.factor.ct * 2)
+def get_internal_pressure(wind_load: WindLoad, selection: InternalPressureSelections, wind_importance_factor: WindImportanceFactor, location: Location):
+    internal_pressure = (wind_importance_factor.value * location.wind_velocity_pressure * wind_load.factor.cei * wind_load.factor.ct * 2)
 
     match selection:
         case selection.ENCLOSED:
@@ -45,8 +47,8 @@ def get_internal_pressure(wind_load: WindLoad, selection: InternalPressureSelect
             wind_load.pressure.pi_neg = internal_pressure * -0.7
 
 
-def get_external_pressure(wind_load: WindLoad, lw: float, q: float):
-    external_pressure = (lw * q * wind_load.factor.ce * wind_load.factor.ct * wind_load.factor.cg)
+def get_external_pressure(wind_load: WindLoad, wind_importance_factor: WindImportanceFactor, location: Location):
+    external_pressure = (wind_importance_factor.value * location.wind_velocity_pressure * wind_load.factor.ce * wind_load.factor.ct * wind_load.factor.cg)
 
     for zone in wind_load.zones:
         match zone.name:
