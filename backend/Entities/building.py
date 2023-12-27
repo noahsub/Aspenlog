@@ -169,13 +169,25 @@ class Building:
                 self.wp = sum(products) / material_sum
 
     def __str__(self):
-        return (f"dimensions: {self.dimensions}\n"
-                f"cladding: {self.cladding}\n"
-                f"roof: {self.roof}\n"
+        dimensions_str = '\n  ' + '\n  '.join(str(self.dimensions).split('\n'))
+        cladding_str = '\n  ' + '\n  '.join(str(self.cladding).split('\n'))
+        roof_str = '\n  ' + '\n  '.join(str(self.roof).split('\n'))
+
+        height_zones_str = ''
+        for height_zone in self.height_zones:
+            height_zones_str += f"  height zone {height_zone.zone_num}\n"
+            height_zone_lst = str(height_zone).split('\n')
+            for i in height_zone_lst:
+                height_zones_str += f"    {i.lstrip(', ')}\n"
+        height_zones_str = height_zones_str[:-1]
+
+        return (f"dimensions: {dimensions_str}\n"
+                f"cladding: {cladding_str}\n"
+                f"roof: {roof_str}\n"
                 f"hz_num: {self.hz_num}\n"
                 f"num_floor: {self.num_floor}\n"
                 f"h_opening: {self.h_opening}\n"
-                f"height_zones: {self.height_zones}\n"
+                f"height_zones: {height_zones_str}\n"
                 f"wp: {self.wp}")
 
 
