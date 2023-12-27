@@ -4,19 +4,21 @@ import os
 import jsonpickle
 import typer
 from rich import print
+from rich.prompt import Prompt
 
 from backend.Constants.decision_constants import DefaultSelections
-from backend.Constants.importance_factor_constants import WindImportanceFactor
+from backend.Constants.importance_factor_constants import WindImportanceFactor, SnowImportanceFactor
 from backend.Constants.materials import Materials
 from backend.Constants.seismic_constants import SiteClass, SiteDesignation
+from backend.Constants.snow_constants import RoofType
 from backend.Constants.wind_constants import WindExposureFactorSelections, InternalPressureSelections
 from backend.Entities.building import Dimensions, HeightZone, Building, Cladding, Roof
 from backend.Entities.location import Location
-from rich.prompt import Prompt
-
+from backend.Entities.snow import SnowLoad, SnowFactor
 from backend.Entities.wind import WindFactor, WindLoad, WindPressure
-from backend.algorithms.wind_load_algorithms import get_wind_topographic_factor, get_wind_exposure_factor, \
-    get_internal_pressure, get_external_pressure
+from backend.algorithms import snow_load_algorithms, wind_load_algorithms
+from backend.algorithms.snow_load_algorithms import get_slope_factor, get_basic_roof_now_load_factor, get_snow_load
+from backend.algorithms.wind_load_algorithms import get_wind_topographic_factor, get_internal_pressure, get_external_pressure
 
 TERM_SIZE = os.get_terminal_size()
 
@@ -125,6 +127,26 @@ def skip_step(step: int):
                 print_line()
                 WIND_LOAD = deserialize('wind_load')
                 print_obtained_values(WIND_LOAD)
+            case 11:
+                print_line()
+                SNOW_LOAD = deserialize('snow_load')
+                print_obtained_values(SNOW_LOAD)
+            case 12:
+                print_line()
+                SNOW_LOAD = deserialize('snow_load')
+                print_obtained_values(SNOW_LOAD)
+            case 13:
+                print_line()
+                SNOW_LOAD = deserialize('snow_load')
+                print_obtained_values(SNOW_LOAD)
+            case 14:
+                print_line()
+                SNOW_LOAD = deserialize('snow_load')
+                print_obtained_values(SNOW_LOAD)
+            case 15:
+                print_line()
+                SNOW_LOAD = deserialize('snow_load')
+                print_obtained_values(SNOW_LOAD)
     else:
         match step:
             case 0:
@@ -145,6 +167,21 @@ def skip_step(step: int):
                 step_7()
             case 8:
                 step_8()
+            case 9:
+                step_9()
+            case 10:
+                step_10()
+            case 11:
+                step_11()
+            case 12:
+                step_12()
+            case 13:
+                step_13()
+            case 14:
+                step_14()
+            case 15:
+                step_15()
+
 
 
 def print_obtained_values(obj):
@@ -304,10 +341,10 @@ def step_4():
     wind_exposure_selection = choice(prompt="Wind Exposure Factor", options=WindExposureFactorSelections)
     if wind_exposure_selection == WindExposureFactorSelections.INTERMEDIATE:
         value = float(user_input("Intermediate value for ce and cei"))
-        get_wind_exposure_factor(wind_load=WIND_LOAD, selection=wind_exposure_selection, building=BUILDING,
+        wind_load_algorithms.get_wind_exposure_factor(wind_load=WIND_LOAD, selection=wind_exposure_selection, building=BUILDING,
                                  manual=value)
     else:
-        get_wind_exposure_factor(wind_load=WIND_LOAD, selection=wind_exposure_selection, building=BUILDING)
+        wind_load_algorithms.get_wind_exposure_factor(wind_load=WIND_LOAD, selection=wind_exposure_selection, building=BUILDING)
 
     serialize('wind_load', WIND_LOAD)
 
@@ -360,11 +397,63 @@ def step_10():
     print("Skipping step, TODO")
 
 
+SNOW_FACTOR = None
+SNOW_LOAD = None
+
+
+def step_11():
+    global SNOW_FACTOR
+    global SNOW_LOAD
+    global BUILDING
+    print_step_heading(11)
+
+    SNOW_FACTOR = SnowFactor(cs=None, cw=None, cb=None)
+    SNOW_LOAD = SnowLoad(factor=SNOW_FACTOR, s=None)
+    roof_type = choice("Roof Type", options=RoofType)
+    get_slope_factor(snow_load=SNOW_LOAD, selection=roof_type, building=BUILDING)
+    serialize('snow_load', SNOW_LOAD)
+
+
+def step_12():
+    print_step_heading(12)
+    print("Skipping step, accumulation factor saved as a constant")
+
+
+def step_13():
+    global SNOW_LOAD
+    print_step_heading(13)
+
+    importance_selection = choice(prompt="Importance Selection", options=WindImportanceFactor)
+    wind_exposure_factor_selection = choice(prompt="Wind Exposure Factor Selection",
+                                            options=WindExposureFactorSelections)
+    snow_load_algorithms.get_wind_exposure_factor(snow_load=SNOW_LOAD, importance_selection=importance_selection,
+                             wind_exposure_factor_selection=wind_exposure_factor_selection)
+    serialize('snow_load', SNOW_LOAD)
+
+def step_14():
+    global SNOW_LOAD
+    global BUILDING
+    print_step_heading(14)
+    print("Computing basic snow load factor")
+    get_basic_roof_now_load_factor(snow_load=SNOW_LOAD, building=BUILDING)
+    serialize('snow_load', SNOW_LOAD)
+
+def step_15():
+    global SNOW_LOAD
+    global LOCATION
+    print_step_heading(15)
+
+    snow_importance_factor = choice(prompt="Snow Importance Factor", options=SnowImportanceFactor)
+    get_snow_load(snow_load=SNOW_LOAD, snow_importance_factor=snow_importance_factor, location=LOCATION)
+    serialize('snow_load', SNOW_LOAD)
+    print_obtained_values(SNOW_LOAD)
+
+
 if __name__ == '__main__':
     print_line()
     print("ASPENLOG 2020 CONSOLE WALKTHROUGH")
 
     create_save_file()
 
-    for i in range(10):
+    for i in range(16):
         skip_step(i)

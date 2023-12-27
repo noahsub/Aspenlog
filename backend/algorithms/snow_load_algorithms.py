@@ -4,6 +4,7 @@ from backend.Constants.importance_factor_constants import WindImportanceFactor, 
 from backend.Constants.snow_constants import RoofType
 from backend.Constants.wind_constants import WindExposureFactorSelections
 from backend.Entities.building import Building
+from backend.Entities.location import Location
 from backend.Entities.snow import SnowLoad
 
 
@@ -25,6 +26,7 @@ def get_slope_factor(snow_load: SnowLoad, selection: RoofType, building: Buildin
                 snow_load.factor.cs = 0
 
 
+# TODO: Depreciated, simply use constant when initializing SnowFactor object
 def get_accumulation_factor(snow_load: SnowLoad):
     snow_load.factor.ca = 1
 
@@ -52,11 +54,9 @@ def get_basic_roof_now_load_factor(snow_load: SnowLoad, building: Building):
         snow_load.factor.cb = (1 / snow_load.factor.cw) * (1 - (1 - 0.8 * snow_load.factor.cw) * math.exp(-1 * ((lc * snow_load.factor.cw ** 2 - 70) / (100))))
 
 
-def get_snow_load(snow_load: SnowLoad, snow_importance_factor: SnowImportanceFactor, ss: float, sr: float, manual=None):
-    if manual is not None:
-        snow_load.s = manual
-    else:
-        snow_load.s = snow_importance_factor.value * (ss * (snow_load.factor.cb * snow_load.factor.cw * snow_load.factor.cs * snow_load.factor.ca) + sr)
+def get_snow_load(snow_load: SnowLoad, snow_importance_factor: SnowImportanceFactor, location: Location):
+        snow_load.s = snow_importance_factor.value * (location.rain_load * (snow_load.factor.cb * snow_load.factor.cw * snow_load.factor.cs * snow_load.factor.ca) + location.snow_load)
+
 
 
 
