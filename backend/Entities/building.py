@@ -173,7 +173,7 @@ class Building:
         cladding_str = '\n  ' + '\n  '.join(str(self.cladding).split('\n'))
         roof_str = '\n  ' + '\n  '.join(str(self.roof).split('\n'))
 
-        height_zones_str = ''
+        height_zones_str = '\n'
         for height_zone in self.height_zones:
             height_zones_str += f"  height zone {height_zone.zone_num}\n"
             height_zone_lst = str(height_zone).split('\n')

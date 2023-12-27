@@ -177,7 +177,8 @@ def step_1():
 
     global BUILDING
 
-    confirm_height_zone = confirm_choice("Default is 20 m per height zone, meaning number of height zones = ⌈H/20⌉. Are you ok with this?")
+    confirm_height_zone = confirm_choice(
+        "Default is 20 m per height zone, meaning number of height zones = ⌈H/20⌉. Are you ok with this?")
 
     num_floors = user_input("Number of floors")
 
@@ -237,11 +238,6 @@ def step_1():
 
     serialize('building', BUILDING)
     print_obtained_values(BUILDING)
-
-
-
-
-
 
 
 if __name__ == '__main__':
