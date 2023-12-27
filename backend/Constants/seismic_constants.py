@@ -8,7 +8,13 @@ class SiteClass(Enum):
     D = 'D'
     E = 'E'
 
+    def __str__(self):
+        return self.value
+
 
 class SiteDesignation(Enum):
     XV = 'xv'
     XS = 'xs'
+
+    def __str__(self):
+        return self.value
