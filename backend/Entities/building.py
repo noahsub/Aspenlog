@@ -13,6 +13,9 @@ class Dimensions:
 
     def __init__(self, width: float, height: float = None, height_eave: float = None, height_ridge: float = None):
         self.width = width
+        self.height = None
+        self.height_eave = None
+        self.height_ridge = None
         if height_eave is not None and height_ridge is not None:
             self.height_eave = height_eave
             self.height_ridge = height_ridge
@@ -20,10 +23,20 @@ class Dimensions:
         else:
             self.height = height
 
+    def __str__(self):
+        return (f"height: {self.height}\n"
+                f"height_eave: {self.height_eave}\n"
+                f"height_ridge: {self.height_ridge}\n"
+                f"width: {self.width}")
+
 
 class Cladding:
     c_top: float
     c_bot: float
+
+    def __str__(self):
+        return (f"c_top: {self.c_top}\n"
+                f"c_bot: {self.c_bot}")
 
     def __init__(self, c_top: float, c_bot: float):
         self.c_top = c_top
@@ -112,7 +125,7 @@ class Building:
                 +---------+     ----+
                 """
 
-                self.hz_num = math.ceil(dimensions.height / default_zone_height)
+                self.hz_num = math.ceil(self.dimensions.height / default_zone_height)
 
                 self.height_zones = []
                 height_sum = 0
@@ -120,14 +133,14 @@ class Building:
                     # the last height zone may be less than the default zone height, in which case we simply take the
                     # height of the building
                     if i == self.hz_num:
-                        height_sum = dimensions.height
+                        height_sum = self.dimensions.height
                     else:
                         height_sum += 20
                     self.height_zones.append(HeightZone(zone_num=i, elevation=height_sum))
             case selection.CUSTOM:
                 self.height_zones = height_zones
 
-    def compute_dead_load(self, selection: DefaultSelections, wp: float):
+    def compute_dead_load(self, selection: DefaultSelections, wp: float = None):
         match selection:
             case selection.DEFAULT:
                 self.wp = wp
