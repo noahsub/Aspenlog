@@ -6,12 +6,19 @@ from backend.Constants.materials import Materials
 
 
 class Dimensions:
-    height: float
+    height: Optional[float]
+    height_eave: Optional[float]
+    height_ridge: Optional[float]
     width: float
 
-    def __init__(self, height: float, width: float):
-        self.height = height
+    def __init__(self, width: float, height: float = None, height_eave: float = None, height_ridge: float = None):
         self.width = width
+        if height_eave is not None and height_ridge is not None:
+            self.height_eave = height_eave
+            self.height_ridge = height_ridge
+            self.height = (height_eave + height_ridge) / 2
+        else:
+            self.height = height
 
 
 class Cladding:
@@ -60,14 +67,16 @@ class Building:
     cladding: Cladding
     roof: Roof
     hz_num: Optional[int]
+    num_floor: int
     h_opening: float
     height_zones: Optional[list[HeightZone]]
     wp: Optional[float]
 
-    def __init__(self, dimensions: Dimensions, cladding: Cladding, roof: Roof, h_opening: float):
+    def __init__(self, dimensions: Dimensions, cladding: Cladding, roof: Roof, num_floor: int, h_opening: float):
         self.dimensions = dimensions
         self.cladding = cladding
         self.roof = roof
+        self.num_floor = num_floor
         self.h_opening = h_opening
         self.hz_num = None
         self.height_zones = None
