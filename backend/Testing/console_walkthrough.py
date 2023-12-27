@@ -38,6 +38,7 @@ import typer
 from rich import print
 
 from backend.Constants.decision_constants import DefaultSelections
+from backend.Constants.materials import Materials
 from backend.Constants.seismic_constants import SiteClass, SiteDesignation
 from backend.Entities.building import Dimensions, HeightZone, Building, Cladding, Roof
 from backend.Entities.location import Location
@@ -55,6 +56,18 @@ def choice(prompt: str, options):
     selection = int(input("Selection: "))
     print(f"  → [bold yellow]{mapping[selection]}[/bold yellow]")
     return mapping[selection]
+
+
+def multi_choice(prompt: str, options):
+    print(f"[bold green]Select[bold /green] [bold white]{prompt}[/bold white]: ")
+    mapping = {}
+    for i, option in enumerate(options):
+        mapping[i] = option
+        print(f"  [bold red]{i}[/bold red]: [white]{option.value}[/white]")
+    selections = input("Selections (comma-separated): ").split(',')
+    selected_options = [mapping[int(s)] for s in selections]
+    print(f"  → [bold yellow]{selected_options}[/bold yellow]")
+    return selected_options
 
 
 def user_input(prompt: str):
@@ -161,8 +174,6 @@ def step_1():
     else:
         height = int(user_input("Height of building in meters"))
         DIMENSIONS = Dimensions(width=width, height=height)
-    serialize('dimensions', DIMENSIONS)
-    print_obtained_values(DIMENSIONS)
 
     global BUILDING
 
@@ -174,8 +185,6 @@ def step_1():
     c_top = user_input("Top of cladding in meters")
     c_bop = user_input("Bottom of cladding in meters")
     CLADDING = Cladding(c_top=c_top, c_bot=c_bop)
-    serialize('cladding', CLADDING)
-    print_obtained_values(CLADDING)
 
     confirm_h_opening = confirm_choice("Does the building have Dominant Opening?")
     if not confirm_h_opening:
@@ -193,17 +202,34 @@ def step_1():
             BUILDING.height_zones.append(HeightZone(zone_num=i + 1, elevation=elevation))
         BUILDING.compute_height_zones(selection=DefaultSelections.CUSTOM, height_zones=BUILDING.height_zones)
     else:
+        print("User selected 'yes', skipping step")
         BUILDING.compute_height_zones(selection=DefaultSelections.DEFAULT)
 
     print_step_heading(1.3)
-    w_roof = user_input("Smaller Plan dimension of the roof in meters")
-    l_roof = user_input("Larger Plan dimension of the roof in meters")
-    slope = user_input("Slope of the roof in degrees")
+    w_roof = float(user_input("Smaller Plan dimension of the roof in meters"))
+    l_roof = float(user_input("Larger Plan dimension of the roof in meters"))
+    slope = float(user_input("Slope of the roof in degrees"))
 
     global ROOF
     ROOF = Roof(w_roof=w_roof, l_roof=l_roof, slope=slope, wp=None)
 
     print_step_heading(1.4)
+
+    confirm_material = confirm_choice(prompt="The material will be applied to all height zones?")
+    if confirm_material:
+        wp = float(user_input("Material Load"))
+        BUILDING.compute_dead_load(selection=DefaultSelections.DEFAULT, wp=wp)
+    else:
+        for height_zone in BUILDING.height_zones:
+            height_zone.wp_materials = {}
+            materials = multi_choice(prompt=f"Material for height zone {height_zone.zone_num}", options=Materials)
+            for material in materials:
+                wp = float(user_input(f"Material Load for {material.value}"))
+                height_zone.wp_materials[material] = wp
+        BUILDING.compute_dead_load(selection=DefaultSelections.CUSTOM)
+
+
+
 
 
 
