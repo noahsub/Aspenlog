@@ -7,18 +7,23 @@ from rich import print
 from rich.prompt import Prompt
 
 from backend.Constants.decision_constants import DefaultSelections
-from backend.Constants.importance_factor_constants import WindImportanceFactor, SnowImportanceFactor
+from backend.Constants.importance_factor_constants import WindImportanceFactor, SnowImportanceFactor, \
+    SeismicImportanceFactor
 from backend.Constants.materials import Materials
 from backend.Constants.seismic_constants import SiteClass, SiteDesignation
 from backend.Constants.snow_constants import RoofType
 from backend.Constants.wind_constants import WindExposureFactorSelections, InternalPressureSelections
 from backend.Entities.building import Dimensions, HeightZone, Building, Cladding, Roof
 from backend.Entities.location import Location
+from backend.Entities.seismic import SeismicFactor, SeismicLoad
 from backend.Entities.snow import SnowLoad, SnowFactor
 from backend.Entities.wind import WindFactor, WindLoad, WindPressure
 from backend.algorithms import snow_load_algorithms, wind_load_algorithms
+from backend.algorithms.seismic_load_algorithms import get_seismic_factor_values, get_floor_mapping, get_height_factor, \
+    get_horizontal_force_factor, get_specified_laterial_earthquake_force
 from backend.algorithms.snow_load_algorithms import get_slope_factor, get_basic_roof_now_load_factor, get_snow_load
-from backend.algorithms.wind_load_algorithms import get_wind_topographic_factor, get_internal_pressure, get_external_pressure
+from backend.algorithms.wind_load_algorithms import get_wind_topographic_factor, get_internal_pressure, \
+    get_external_pressure
 
 TERM_SIZE = os.get_terminal_size()
 
@@ -81,8 +86,11 @@ def skip_step(step: int):
     global LOCATION
     global BUILDING
     global WIND_LOAD
+    global SNOW_LOAD
+    global SEISMIC_LOAD
     print_line()
     confirm = confirm_choice(f"Would you like to skip Step {step}?")
+    # TODO: match statements need to be refactored, they are too long and contain duplicate code
     if confirm:
         match step:
             case 0:
@@ -147,6 +155,31 @@ def skip_step(step: int):
                 print_line()
                 SNOW_LOAD = deserialize('snow_load')
                 print_obtained_values(SNOW_LOAD)
+            case 16:
+                print_line()
+                SEISMIC_LOAD = deserialize('seismic_load')
+                print_obtained_values(SEISMIC_LOAD)
+            case 17:
+                print_line()
+                SEISMIC_LOAD = deserialize('seismic_load')
+                print_obtained_values(SEISMIC_LOAD)
+            case 18:
+                print_line()
+                SEISMIC_LOAD = deserialize('seismic_load')
+                print_obtained_values(SEISMIC_LOAD)
+            case 19:
+                print_line()
+                SEISMIC_LOAD = deserialize('seismic_load')
+                print_obtained_values(SEISMIC_LOAD)
+            case 20:
+                print_line()
+                SEISMIC_LOAD = deserialize('seismic_load')
+                print_obtained_values(SEISMIC_LOAD)
+            case 21:
+                print_line()
+                SEISMIC_LOAD = deserialize('seismic_load')
+                print_obtained_values(SEISMIC_LOAD)
+
     else:
         match step:
             case 0:
@@ -181,7 +214,18 @@ def skip_step(step: int):
                 step_14()
             case 15:
                 step_15()
-
+            case 16:
+                step_16()
+            case 17:
+                step_17()
+            case 18:
+                step_18()
+            case 19:
+                step_19()
+            case 20:
+                step_20()
+            case 21:
+                step_21()
 
 
 def print_obtained_values(obj):
@@ -232,11 +276,11 @@ def step_1():
     confirm_eave = confirm_choice("Does the building have eave?")
     width = int(user_input("Width of building in meters"))
     if confirm_eave:
-        height_eave = int(user_input("Eave height in meters"))
-        height_ridge = int(user_input("Ridge height in meters"))
+        height_eave = float(user_input("Eave height in meters"))
+        height_ridge = float(user_input("Ridge height in meters"))
         DIMENSIONS = Dimensions(width=width, height_eave=height_eave, height_ridge=height_ridge)
     else:
-        height = int(user_input("Height of building in meters"))
+        height = float(user_input("Height of building in meters"))
         DIMENSIONS = Dimensions(width=width, height=height)
 
     global BUILDING
@@ -244,7 +288,7 @@ def step_1():
     confirm_height_zone = confirm_choice(
         "Default is 20 m per height zone, meaning number of height zones = ⌈H/20⌉. Are you ok with this?")
 
-    num_floors = user_input("Number of floors")
+    num_floors = int(user_input("Number of floors"))
 
     global CLADDING
     c_top = user_input("Top of cladding in meters")
@@ -341,10 +385,12 @@ def step_4():
     wind_exposure_selection = choice(prompt="Wind Exposure Factor", options=WindExposureFactorSelections)
     if wind_exposure_selection == WindExposureFactorSelections.INTERMEDIATE:
         value = float(user_input("Intermediate value for ce and cei"))
-        wind_load_algorithms.get_wind_exposure_factor(wind_load=WIND_LOAD, selection=wind_exposure_selection, building=BUILDING,
-                                 manual=value)
+        wind_load_algorithms.get_wind_exposure_factor(wind_load=WIND_LOAD, selection=wind_exposure_selection,
+                                                      building=BUILDING,
+                                                      manual=value)
     else:
-        wind_load_algorithms.get_wind_exposure_factor(wind_load=WIND_LOAD, selection=wind_exposure_selection, building=BUILDING)
+        wind_load_algorithms.get_wind_exposure_factor(wind_load=WIND_LOAD, selection=wind_exposure_selection,
+                                                      building=BUILDING)
 
     serialize('wind_load', WIND_LOAD)
 
@@ -427,8 +473,9 @@ def step_13():
     wind_exposure_factor_selection = choice(prompt="Wind Exposure Factor Selection",
                                             options=WindExposureFactorSelections)
     snow_load_algorithms.get_wind_exposure_factor(snow_load=SNOW_LOAD, importance_selection=importance_selection,
-                             wind_exposure_factor_selection=wind_exposure_factor_selection)
+                                                  wind_exposure_factor_selection=wind_exposure_factor_selection)
     serialize('snow_load', SNOW_LOAD)
+
 
 def step_14():
     global SNOW_LOAD
@@ -437,6 +484,7 @@ def step_14():
     print("Computing basic snow load factor")
     get_basic_roof_now_load_factor(snow_load=SNOW_LOAD, building=BUILDING)
     serialize('snow_load', SNOW_LOAD)
+
 
 def step_15():
     global SNOW_LOAD
@@ -449,11 +497,88 @@ def step_15():
     print_obtained_values(SNOW_LOAD)
 
 
+def step_16():
+    global BUILDING
+    print_step_heading(16)
+
+    print(BUILDING.wp)
+
+
+SEISMIC_FACTOR = None
+SEISMIC_LOAD = None
+
+
+def step_17():
+    global SEISMIC_FACTOR
+    global SEISMIC_LOAD
+    print_step_heading(17)
+
+    SEISMIC_FACTOR = SeismicFactor()
+    SEISMIC_LOAD = SeismicLoad(factor=SEISMIC_FACTOR, ax=None, sp=None, vp=None, vp_snow=None)
+
+    confirm_ar = confirm_choice("Would you like to use default value of 1 for Ar?")
+    if not confirm_ar:
+        ar = float(user_input("Ar"))
+        get_seismic_factor_values(seismic_load=SEISMIC_LOAD, ar=ar)
+    confirm_rp = confirm_choice("Would you like to use default value of 2.5 for Rp?")
+    if not confirm_rp:
+        rp = float(user_input("Rp"))
+        get_seismic_factor_values(seismic_load=SEISMIC_LOAD, rp=rp)
+    confirm_cp = confirm_choice("Would you like to use default value of 1 for Cp?")
+    if not confirm_cp:
+        cp = float(user_input("Cp"))
+        get_seismic_factor_values(seismic_load=SEISMIC_LOAD, cp=cp)
+
+    serialize('seismic_load', SEISMIC_LOAD)
+
+
+def step_18():
+    global BUILDING
+
+    print(f"BUILDING {BUILDING.dimensions.height}")
+    print(f"BUILDING {BUILDING.num_floor}")
+
+    floor_mapping = get_floor_mapping(building=BUILDING)
+    print(floor_mapping)
+
+
+def step_19():
+    global SEISMIC_LOAD
+    global BUILDING
+    print_step_heading(19)
+
+    floor = int(user_input("Floor number"))
+    get_height_factor(seismic_load=SEISMIC_LOAD, building=BUILDING, floor=floor)
+    serialize('seismic_load', SEISMIC_LOAD)
+
+
+def step_20():
+    global SEISMIC_LOAD
+    print_step_heading(20)
+
+    get_horizontal_force_factor(seismic_load=SEISMIC_LOAD)
+    serialize('seismic_load', SEISMIC_LOAD)
+
+
+def step_21():
+    global SEISMIC_LOAD
+    global SNOW_LOAD
+    global BUILDING
+    global LOCATION
+    print_step_heading(21)
+
+    seismic_importance_factor = choice(prompt="Seismic Importance Factor", options=SeismicImportanceFactor)
+    get_specified_laterial_earthquake_force(seismic_load=SEISMIC_LOAD, snow_load=SNOW_LOAD, building=BUILDING,
+                                            location=LOCATION, seismic_importance_factor=seismic_importance_factor)
+    serialize('seismic_load', SEISMIC_LOAD)
+    print_obtained_values(SEISMIC_LOAD)
+
+
 if __name__ == '__main__':
     print_line()
     print("ASPENLOG 2020 CONSOLE WALKTHROUGH")
 
     create_save_file()
 
-    for i in range(16):
+    for i in range(22):
         skip_step(i)
