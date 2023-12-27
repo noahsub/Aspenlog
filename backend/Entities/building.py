@@ -60,6 +60,13 @@ class Roof:
             self.wall_slope = 0
         self.wp = wp
 
+    def __str__(self):
+        return (f"w_roof: {self.w_roof}\n"
+                f"l_roof: {self.l_roof}\n"
+                f"slope: {self.slope}\n"
+                f"wall_slope: {self.wall_slope}\n"
+                f"wp: {self.wp}")
+
 
 class HeightZone:
     zone_num: int
@@ -72,7 +79,9 @@ class HeightZone:
         self.wp_materials = None
 
     def __str__(self):
-        return f"hz{self.zone_num}: {self.elevation}m"
+        return (f"zone_num: {self.zone_num}\n,"
+                f"elevation: {self.elevation}\n,"
+                f"wp_materials: {self.wp_materials}")
 
 
 class Building:
@@ -158,6 +167,16 @@ class Building:
                     products.append(product)
                     material_sum += sum(height_zone.wp_materials.values())
                 self.wp = sum(products) / material_sum
+
+    def __str__(self):
+        return (f"dimensions: {self.dimensions}\n"
+                f"cladding: {self.cladding}\n"
+                f"roof: {self.roof}\n"
+                f"hz_num: {self.hz_num}\n"
+                f"num_floor: {self.num_floor}\n"
+                f"h_opening: {self.h_opening}\n"
+                f"height_zones: {self.height_zones}\n"
+                f"wp: {self.wp}")
 
 
 if __name__ == '__main__':
