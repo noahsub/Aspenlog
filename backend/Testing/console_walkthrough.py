@@ -111,7 +111,7 @@ def skip_step(step: int):
                 print_obtained_values(deserialize('location'))
             case 1:
                 print_line()
-                # TODO Print obtained values for step 1
+                print_obtained_values(deserialize('building'))
     else:
         match step:
             case 0:
@@ -214,12 +214,14 @@ def step_1():
     ROOF = Roof(w_roof=w_roof, l_roof=l_roof, slope=slope, wp=None)
 
     print_step_heading(1.4)
-
     confirm_material = confirm_choice(prompt="The material will be applied to all height zones?")
+
     if confirm_material:
         wp = float(user_input("Material Load"))
         BUILDING.compute_dead_load(selection=DefaultSelections.DEFAULT, wp=wp)
     else:
+        print_step_heading(1.5)
+        print_step_heading(1.6)
         for height_zone in BUILDING.height_zones:
             height_zone.wp_materials = {}
             materials = multi_choice(prompt=f"Material for height zone {height_zone.zone_num}", options=Materials)
@@ -227,6 +229,15 @@ def step_1():
                 wp = float(user_input(f"Material Load for {material.value}"))
                 height_zone.wp_materials[material] = wp
         BUILDING.compute_dead_load(selection=DefaultSelections.CUSTOM)
+
+    print_step_heading(1.7)
+    wp_roof = float(user_input("Uniform dead load for roof"))
+    ROOF.wp = wp_roof
+    BUILDING.roof = ROOF
+
+    serialize('building', BUILDING)
+    print_obtained_values(BUILDING)
+
 
 
 
