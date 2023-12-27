@@ -294,6 +294,7 @@ def step_3():
     serialize('wind_load', WIND_LOAD)
     print_obtained_values(WIND_LOAD)
 
+
 def step_4():
     global WIND_LOAD
     global WIND_FACTOR
@@ -303,15 +304,18 @@ def step_4():
     wind_exposure_selection = choice(prompt="Wind Exposure Factor", options=WindExposureFactorSelections)
     if wind_exposure_selection == WindExposureFactorSelections.INTERMEDIATE:
         value = float(user_input("Intermediate value for ce and cei"))
-        get_wind_exposure_factor(wind_load=WIND_LOAD, selection=wind_exposure_selection, building=BUILDING, manual=value)
+        get_wind_exposure_factor(wind_load=WIND_LOAD, selection=wind_exposure_selection, building=BUILDING,
+                                 manual=value)
     else:
         get_wind_exposure_factor(wind_load=WIND_LOAD, selection=wind_exposure_selection, building=BUILDING)
 
     serialize('wind_load', WIND_LOAD)
 
+
 def step_5():
     print_step_heading(5)
     print("Skipping step, gust factor saved as a constant")
+
 
 def step_6():
     global WIND_LOAD
@@ -322,9 +326,11 @@ def step_6():
 
     internal_pressure_selection = choice(prompt="Internal Pressure Selection", options=InternalPressureSelections)
     wind_importance_factor = choice(prompt="Wind Importance Factor", options=WindImportanceFactor)
-    get_internal_pressure(wind_load=WIND_LOAD, selection=internal_pressure_selection, wind_importance_factor=wind_importance_factor, location=LOCATION)
+    get_internal_pressure(wind_load=WIND_LOAD, selection=internal_pressure_selection,
+                          wind_importance_factor=wind_importance_factor, location=LOCATION)
 
     serialize('wind_load', WIND_LOAD)
+
 
 def step_7():
     global WIND_LOAD
@@ -336,22 +342,22 @@ def step_7():
 
     serialize('wind_load', WIND_LOAD)
 
+
 def step_8():
     global WIND_LOAD
     print_step_heading(8)
     print_obtained_values(WIND_LOAD)
 
+
 def step_9():
     print_step_heading(9)
     print("Skipping step, redundant")
+
 
 def step_10():
     # TODO: Requires refactor, need input from the civil engineering team
     print_step_heading(10)
     print("Skipping step, TODO")
-
-
-
 
 
 if __name__ == '__main__':

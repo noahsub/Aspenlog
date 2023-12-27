@@ -56,17 +56,17 @@ def get_external_pressure(wind_load: WindLoad, wind_importance_factor: WindImpor
                 wind_load.get_zone('roof_interior').pressure.pe_pos = external_pressure * 0
                 wind_load.get_zone('roof_interior').pressure.pe_neg = external_pressure * -1
             case 'roof_edge':
-                wind_load.get_zone('roof_interior').pressure.pe_pos = external_pressure * 0
-                wind_load.get_zone('roof_interior').pressure.pe_neg = external_pressure * -1.5
+                wind_load.get_zone('roof_edge').pressure.pe_pos = external_pressure * 0
+                wind_load.get_zone('roof_edge').pressure.pe_neg = external_pressure * -1.5
             case 'roof_corner':
-                wind_load.get_zone('roof_interior').pressure.pe_pos = external_pressure * 0
-                wind_load.get_zone('roof_interior').pressure.pe_neg = external_pressure * -2.3
+                wind_load.get_zone('roof_corner').pressure.pe_pos = external_pressure * 0
+                wind_load.get_zone('roof_corner').pressure.pe_neg = external_pressure * -2.3
             case 'wall_centre':
-                wind_load.get_zone('roof_interior').pressure.pe_pos = external_pressure * 0.9
-                wind_load.get_zone('roof_interior').pressure.pe_neg = external_pressure * -0.9
+                wind_load.get_zone('wall_centre').pressure.pe_pos = external_pressure * 0.9
+                wind_load.get_zone('wall_centre').pressure.pe_neg = external_pressure * -0.9
             case 'wall_corner':
-                wind_load.get_zone('roof_interior').pressure.pe_pos = external_pressure * 0.9
-                wind_load.get_zone('roof_interior').pressure.pe_neg = external_pressure * -1.2
+                wind_load.get_zone('wall_corner').pressure.pe_pos = external_pressure * 0.9
+                wind_load.get_zone('wall_corner').pressure.pe_neg = external_pressure * -1.2
 
         zone.pressure.pi_pos = wind_load.pressure.pi_pos
         zone.pressure.pi_neg = wind_load.pressure.pi_neg
