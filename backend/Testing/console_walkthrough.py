@@ -65,46 +65,98 @@ SEISMIC_FACTOR = None
 # The seismic load
 SEISMIC_LOAD = None
 
+
 ########################################################################################################################
-# PRINTING AND INPUT FUNCTIONS
+# USER INPUT FUNCTIONS
 ########################################################################################################################
 
 def choice(prompt: str, options):
     """
-    Allows
-    :param prompt:
-    :param options:
-    :return:
+    Prompts the user to select an option from a list of options
+    :param prompt: The prompt to display to the user
+    :param options: The list of options
+    :return: The selected option
     """
+    # Print the prompt
     print(f"[bold green]Select[bold /green] [bold white]{prompt}[/bold white]: ")
+    # Create a mapping from the index to the option
     mapping = {}
     for i, option in enumerate(options):
         mapping[i] = option
         print(f"  [bold red]{i}[/bold red]: [white]{option.value}[/white]")
+    # Get the user's selection
     selection = int(input("Selection: "))
+    # Print the user's selection
     print(f"  → [bold yellow]{mapping[selection]}[/bold yellow]")
+    # Return the selected option
     return mapping[selection]
 
 
 def multi_choice(prompt: str, options):
+    """
+    Prompts the user to select multiple options from a list of options
+    :param prompt: The prompt to display to the user
+    :param options: The list of options
+    :return: The selected options
+    """
+    # Print the prompt
     print(f"[bold green]Select[bold /green] [bold white]{prompt}[/bold white]: ")
+    # Create a mapping from the index to the option
     mapping = {}
     for i, option in enumerate(options):
         mapping[i] = option
         print(f"  [bold red]{i}[/bold red]: [white]{option.value}[/white]")
+    # Get the user's selection
     selections = input("Selections (comma-separated): ").split(',')
     selected_options = [mapping[int(s)] for s in selections]
+    # Print the user's selection
     print(f"  → [bold yellow]{selected_options}[/bold yellow]")
+    # Return the selected options
     return selected_options
 
 
 def user_input(prompt: str):
+    """
+    Prompts the user to enter a value
+    :param prompt: The prompt to display to the user
+    :return: The user's input
+    """
     return Prompt.ask(f"[blue]Enter[/blue] {prompt}")
 
 
 def confirm_choice(prompt: str):
+    """
+    Prompts the user to confirm a choice
+    :param prompt: The prompt to display to the user
+    :return: The user's choice
+    """
     return typer.confirm(f"{prompt}")
 
+
+########################################################################################################################
+# PRINTING FUNCTIONS
+########################################################################################################################
+
+def print_obtained_values(obj):
+    print("[bold red]Obtained Values: [/bold red]")
+    lst = str(obj).split('\n')
+    for i in range(len(lst)):
+        print(f"  {lst[i]}")
+
+
+def print_line():
+    print('─' * (TERM_SIZE - 1))
+
+
+def print_step_heading(step: float):
+    print_line()
+    print(f"[bold red]STEP {step}[/bold red]")
+    print_line()
+
+
+########################################################################################################################
+# JSON FUNCTIONS
+########################################################################################################################
 
 def create_save_file():
     if not os.path.exists('save.json'):
@@ -129,7 +181,17 @@ def deserialize(name: str):
         return jsonpickle.decode(data[name])
 
 
+########################################################################################################################
+# STEPS
+########################################################################################################################
+
 def skip_step(step: int):
+    """
+    Skips a step
+    :param step: The step to skip
+    :return: None
+    """
+    # Global variables
     global LOCATION
     global BUILDING
     global WIND_LOAD
@@ -138,6 +200,7 @@ def skip_step(step: int):
     print_line()
     confirm = confirm_choice(f"Would you like to skip Step {step}?")
     # TODO: match statements need to be refactored, they are too long and contain duplicate code
+    # If the user chooses to skip the step, then we load the step data from the save file
     if confirm:
         match step:
             case 0:
@@ -226,7 +289,7 @@ def skip_step(step: int):
                 print_line()
                 SEISMIC_LOAD = deserialize('seismic_load')
                 print_obtained_values(SEISMIC_LOAD)
-
+    # If the user chooses not to skip the step, then we run the step
     else:
         match step:
             case 0:
@@ -275,24 +338,11 @@ def skip_step(step: int):
                 step_21()
 
 
-def print_obtained_values(obj):
-    print("[bold red]Obtained Values: [/bold red]")
-    lst = str(obj).split('\n')
-    for i in range(len(lst)):
-        print(f"  {lst[i]}")
-
-
-def print_line():
-    print('─' * (TERM_SIZE - 1))
-
-
-def print_step_heading(step: float):
-    print_line()
-    print(f"[bold red]STEP {step}[/bold red]")
-    print_line()
-
-
 def step_0():
+    """
+    Step 0: Obtain reference 1-in-50 yr wind velocity pressure, snow load, rain load, seismic parameters
+    :return: None
+    """
     global LOCATION
     print_step_heading(0)
     address = user_input("Address")
@@ -309,6 +359,10 @@ def step_0():
 
 
 def step_1():
+    """
+    Step 1: Building dimension & height zone, material selection -> compute dead load
+    :return: None
+    """
     global DIMENSIONS
     print_step_heading(1.1)
     confirm_eave = confirm_choice("Does the building have eave?")
@@ -387,11 +441,19 @@ def step_1():
 
 
 def step_2():
+    """
+    Step 2: Input Importance Category
+    :return: None
+    """
     print_step_heading(2)
     print("Skipping step, importance factors saved as constants")
 
 
 def step_3():
+    """
+    Step 3: Input Topographic Factor
+    :return: None
+    """
     global WIND_LOAD
     global WIND_FACTOR
     print_step_heading(3)
@@ -411,6 +473,10 @@ def step_3():
 
 
 def step_4():
+    """
+    Step 4: Input Wind Exposure Factor
+    :return: None
+    """
     global WIND_LOAD
     global WIND_FACTOR
     global BUILDING
@@ -430,11 +496,19 @@ def step_4():
 
 
 def step_5():
+    """
+    Step 5: Input Gust Factor
+    :return: None
+    """
     print_step_heading(5)
     print("Skipping step, gust factor saved as a constant")
 
 
 def step_6():
+    """
+    Step 6: Input Internal Pressure
+    :return:
+    """
     global WIND_LOAD
     global LOCATION
     print_step_heading(6)
@@ -450,6 +524,10 @@ def step_6():
 
 
 def step_7():
+    """
+    Step 7: Input External Pressure
+    :return: None
+    """
     global WIND_LOAD
     global LOCATION
     print_step_heading(7)
@@ -461,23 +539,39 @@ def step_7():
 
 
 def step_8():
+    """
+    Step 8: Check # of variables stored
+    :return: None
+    """
     global WIND_LOAD
     print_step_heading(8)
     print_obtained_values(WIND_LOAD)
 
 
 def step_9():
+    """
+    Step 9: Display Output in User Interface
+    :return: None
+    """
     print_step_heading(9)
     print("Skipping step, redundant")
 
 
 def step_10():
+    """
+    Step 10: Repeat Step1) to 10) for different values of H based on the # of height zones in step 1)
+    :return:
+    """
     # TODO: Requires refactor, need input from the civil engineering team
     print_step_heading(10)
     print("Skipping step, TODO")
 
 
 def step_11():
+    """
+    Step 11: Obtain Slope Factor Cs
+    :return: None
+    """
     global SNOW_FACTOR
     global SNOW_LOAD
     global BUILDING
@@ -491,11 +585,19 @@ def step_11():
 
 
 def step_12():
+    """
+    Step 12: Display Accumulation Factor Ca
+    :return: None
+    """
     print_step_heading(12)
     print("Skipping step, accumulation factor saved as a constant")
 
 
 def step_13():
+    """
+    Step 13: Obtain Wind Exposure Factor Cw
+    :return: None
+    """
     global SNOW_LOAD
     print_step_heading(13)
 
@@ -508,6 +610,10 @@ def step_13():
 
 
 def step_14():
+    """
+    Step 14: Obtain Basic Snow Load Factor Cb
+    :return: None
+    """
     global SNOW_LOAD
     global BUILDING
     print_step_heading(14)
@@ -517,6 +623,10 @@ def step_14():
 
 
 def step_15():
+    """
+    Step 15: Obtain Snow Load S
+    :return:
+    """
     global SNOW_LOAD
     global LOCATION
     print_step_heading(15)
@@ -528,6 +638,10 @@ def step_15():
 
 
 def step_16():
+    """
+    Step 16: Check Wp
+    :return:
+    """
     global BUILDING
     print_step_heading(16)
 
@@ -535,6 +649,10 @@ def step_16():
 
 
 def step_17():
+    """
+    Step 17: User Select values for Ar and Rp: choose either 1 or 2.5. For Cp: display as 1
+    :return: None
+    """
     global SEISMIC_FACTOR
     global SEISMIC_LOAD
     print_step_heading(17)
@@ -559,6 +677,10 @@ def step_17():
 
 
 def step_18():
+    """
+    Step 18: Create a df for each floor elevation based on Step 1) N_floor and H  2)hz_num
+    :return: None
+    """
     global BUILDING
 
     print(f"BUILDING {BUILDING.dimensions.height}")
@@ -569,6 +691,10 @@ def step_18():
 
 
 def step_19():
+    """
+    Step 19: Calculate Ax, do not display this to user
+    :return: None
+    """
     global SEISMIC_LOAD
     global BUILDING
     print_step_heading(19)
@@ -579,6 +705,10 @@ def step_19():
 
 
 def step_20():
+    """
+    Step 20: Calculate Sp
+    :return: None
+    """
     global SEISMIC_LOAD
     print_step_heading(20)
 
@@ -587,6 +717,10 @@ def step_20():
 
 
 def step_21():
+    """
+    Step 21: Calculate Vp
+    :return: None
+    """
     global SEISMIC_LOAD
     global SNOW_LOAD
     global BUILDING
@@ -599,6 +733,10 @@ def step_21():
     serialize('seismic_load', SEISMIC_LOAD)
     print_obtained_values(SEISMIC_LOAD)
 
+
+########################################################################################################################
+# MAIN
+########################################################################################################################
 
 if __name__ == '__main__':
     print_line()
