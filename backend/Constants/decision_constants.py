@@ -1,6 +1,6 @@
 ########################################################################################################################
-# connection_constants.py
-# This file contains the constants and enums pertaining to the connection of a database
+# decision_constants.py
+# This file contains the constants and enums pertaining to the decision-making process
 #
 # This code may not be reproduced, disclosed, or used without the specific written permission of the owners
 # Author(s): https://github.com/noahsub
@@ -9,18 +9,18 @@
 ########################################################################################################################
 # IMPORTS
 ########################################################################################################################
-
 from enum import Enum
 
 
 ########################################################################################################################
 # ENUMS
-# ######################################################################################################################
+########################################################################################################################
 
-class PrivilegeType(Enum):
+class DefaultSelections(Enum):
     """
-    Enum for the privilege types
+    Enum for the default selections
     """
-    ADMIN: str = 'admin'
-    WRITE: str = 'write'
-    READ: str = 'read'
+    # Default choice
+    DEFAULT: str = 'default'
+    # Custom choice
+    CUSTOM: str = 'custom'

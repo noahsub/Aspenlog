@@ -1,6 +1,6 @@
 ########################################################################################################################
-# connection_constants.py
-# This file contains the constants and enums pertaining to the connection of a database
+# seismic_constants.py
+# This file contains the constants and enums pertaining to seismic
 #
 # This code may not be reproduced, disclosed, or used without the specific written permission of the owners
 # Author(s): https://github.com/noahsub
@@ -15,12 +15,22 @@ from enum import Enum
 
 ########################################################################################################################
 # ENUMS
-# ######################################################################################################################
+########################################################################################################################
 
-class PrivilegeType(Enum):
+class SiteClass(Enum):
     """
-    Enum for the privilege types
+    Enum for the site classes
     """
-    ADMIN: str = 'admin'
-    WRITE: str = 'write'
-    READ: str = 'read'
+    A = 'A'
+    B = 'B'
+    C = 'C'
+    D = 'D'
+    E = 'E'
+
+
+class SiteDesignation(Enum):
+    """
+    Enum for the site designations
+    """
+    XV = 'xv'
+    XS = 'xs'
