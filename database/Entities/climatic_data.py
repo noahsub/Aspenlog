@@ -1,16 +1,47 @@
+########################################################################################################################
+# climatic_data.py
+# This file contains the class for the climatic data
+#
+# This code may not be reproduced, disclosed, or used without the specific written permission of the owners
+# Author(s): https://github.com/noahsub
+########################################################################################################################
+
+########################################################################################################################
+# IMPORTS
+########################################################################################################################
+
 from sqlalchemy import Column, Integer, Float, String
 from sqlalchemy.orm import declarative_base
 
+########################################################################################################################
+# GLOBALS
+########################################################################################################################
+
+# Required for SQLAlchemy to use the ORM
 BASE = declarative_base()
 
 
+########################################################################################################################
+# ClIMATIC DATA CLASS
+########################################################################################################################
+
 class ClimaticData(BASE):
+    """
+    Class for the climatic data
+    """
+    # The name of the table
     __tablename__ = 'ClimaticData'
+    # The ID of the entry
     ID = Column(Integer, primary_key=True)
+    # The name of the location
     ProvinceAndLocation = Column(String(255))
+    # The latitude of the location
     Latitude = Column(Float)
+    # The longitude of the location
     Longitude = Column(Float)
+    # The elevation of the location
     Elev_m = Column(Integer)
+    # Climatic columns
     Jan_2_5_percent_C = Column(Float)
     Jan_1_percent_C = Column(Float)
     July_Dry_C = Column(Float)

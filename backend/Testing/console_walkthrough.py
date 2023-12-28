@@ -1,11 +1,22 @@
+########################################################################################################################
+# console_walkthrough.py
+# This file contains a walkthrough of the ASPENLOG 2020 application in console format. It is meant to be used for
+# testing purposes only.
+#
+# This code may not be reproduced, disclosed, or used without the specific written permission of the owners
+# Author(s): https://github.com/noahsub
+########################################################################################################################
+
+########################################################################################################################
+# IMPORTS
+########################################################################################################################
+
 import json
 import os
-
 import jsonpickle
 import typer
 from rich import print
 from rich.prompt import Prompt
-
 from backend.Constants.decision_constants import DefaultSelections
 from backend.Constants.importance_factor_constants import WindImportanceFactor, SnowImportanceFactor, \
     SeismicImportanceFactor
@@ -20,15 +31,51 @@ from backend.Entities.snow import SnowLoad, SnowFactor
 from backend.Entities.wind import WindFactor, WindLoad, WindPressure
 from backend.algorithms import snow_load_algorithms, wind_load_algorithms
 from backend.algorithms.seismic_load_algorithms import get_seismic_factor_values, get_floor_mapping, get_height_factor, \
-    get_horizontal_force_factor, get_specified_laterial_earthquake_force
+    get_horizontal_force_factor, get_specified_lateral_earthquake_force
 from backend.algorithms.snow_load_algorithms import get_slope_factor, get_basic_roof_now_load_factor, get_snow_load
 from backend.algorithms.wind_load_algorithms import get_wind_topographic_factor, get_internal_pressure, \
     get_external_pressure
 
-TERM_SIZE = os.get_terminal_size()
+########################################################################################################################
+# GLOBALS
+########################################################################################################################
 
+# The space available in the console
+TERM_SIZE = 80
+# The location of the building
+LOCATION = None
+# The dimensions of the building
+DIMENSIONS = None
+# The cladding of the building
+CLADDING = None
+# The roof of the building
+ROOF = None
+# The building
+BUILDING = None
+# The wind load
+WIND_LOAD = None
+# The wind load factor
+WIND_FACTOR = None
+# The snow load factor
+SNOW_FACTOR = None
+# The snow load
+SNOW_LOAD = None
+# The seismic load factor
+SEISMIC_FACTOR = None
+# The seismic load
+SEISMIC_LOAD = None
+
+########################################################################################################################
+# PRINTING AND INPUT FUNCTIONS
+########################################################################################################################
 
 def choice(prompt: str, options):
+    """
+    Allows
+    :param prompt:
+    :param options:
+    :return:
+    """
     print(f"[bold green]Select[bold /green] [bold white]{prompt}[/bold white]: ")
     mapping = {}
     for i, option in enumerate(options):
@@ -236,16 +283,13 @@ def print_obtained_values(obj):
 
 
 def print_line():
-    print('─' * (TERM_SIZE.columns - 1))
+    print('─' * (TERM_SIZE - 1))
 
 
 def print_step_heading(step: float):
     print_line()
     print(f"[bold red]STEP {step}[/bold red]")
     print_line()
-
-
-LOCATION = None
 
 
 def step_0():
@@ -262,12 +306,6 @@ def step_0():
             LOCATION = Location(address=address, site_designation=SiteDesignation.XS, xs=xs)
     serialize('location', LOCATION)
     print_obtained_values(LOCATION)
-
-
-DIMENSIONS = None
-CLADDING = None
-ROOF = None
-BUILDING = None
 
 
 def step_1():
@@ -351,10 +389,6 @@ def step_1():
 def step_2():
     print_step_heading(2)
     print("Skipping step, importance factors saved as constants")
-
-
-WIND_LOAD = None
-WIND_FACTOR = None
 
 
 def step_3():
@@ -443,10 +477,6 @@ def step_10():
     print("Skipping step, TODO")
 
 
-SNOW_FACTOR = None
-SNOW_LOAD = None
-
-
 def step_11():
     global SNOW_FACTOR
     global SNOW_LOAD
@@ -502,10 +532,6 @@ def step_16():
     print_step_heading(16)
 
     print(BUILDING.wp)
-
-
-SEISMIC_FACTOR = None
-SEISMIC_LOAD = None
 
 
 def step_17():
@@ -568,8 +594,8 @@ def step_21():
     print_step_heading(21)
 
     seismic_importance_factor = choice(prompt="Seismic Importance Factor", options=SeismicImportanceFactor)
-    get_specified_laterial_earthquake_force(seismic_load=SEISMIC_LOAD, snow_load=SNOW_LOAD, building=BUILDING,
-                                            location=LOCATION, seismic_importance_factor=seismic_importance_factor)
+    get_specified_lateral_earthquake_force(seismic_load=SEISMIC_LOAD, snow_load=SNOW_LOAD, building=BUILDING,
+                                           location=LOCATION, seismic_importance_factor=seismic_importance_factor)
     serialize('seismic_load', SEISMIC_LOAD)
     print_obtained_values(SEISMIC_LOAD)
 

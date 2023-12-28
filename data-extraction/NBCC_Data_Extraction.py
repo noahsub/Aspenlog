@@ -7,7 +7,6 @@
 #   - Table C2: Design Wind Pressures for Main Wind-Force Resisting Systems
 #
 # This code may not be reproduced, disclosed, or used without the specific written permission of the owners
-# Owners: University of Toronto, SEEDA
 # Author(s): https://github.com/noahsub
 ########################################################################################################################
 
