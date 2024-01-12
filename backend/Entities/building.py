@@ -27,54 +27,6 @@ from backend.Constants.materials import Materials
 ########################################################################################################################
 
 
-class Roof:
-    """
-    Represents the roof of a building
-    """
-    # Smaller Plan dimension of the roof (m)
-    w_roof: float
-    # Larger Plan dimension of the roof (m)
-    l_roof: float
-    # Slope of the roof (degrees)
-    slope: float
-    # Wall slope of the roof
-    wall_slope: int
-    # Uniform dead load for roof (kPa)
-    wp: float
-
-    def __init__(self, w_roof: float, l_roof: float, slope: float, wp: float):
-        """
-        Constructor for Roof class
-        :param w_roof: Smaller Plan dimension of the roof (m)
-        :param l_roof: Larger Plan dimension of the roof (m)
-        :param slope: Slope of the roof (degrees)
-        :param wp: Uniform dead load for roof (kPa)
-        """
-        # Set physical dimensions of the roof
-        self.w_roof = w_roof
-        self.l_roof = l_roof
-        self.slope = slope
-        # Set the wall slope based on the angle of the roof
-        if 30 <= slope <= 70:
-            self.wall_slope = 1
-        else:
-            self.wall_slope = 0
-        # Set the uniform dead load for the roof
-        self.wp = wp
-
-    def __str__(self):
-        """
-        String representation of the Roof class
-        :return:
-        """
-        # Print each attribute and its value on a new line
-        return (f"w_roof: {self.w_roof}\n"
-                f"l_roof: {self.l_roof}\n"
-                f"slope: {self.slope}\n"
-                f"wall_slope: {self.wall_slope}\n"
-                f"wp: {self.wp}")
-
-
 class HeightZone:
     """
     Represents a height zone of a building
