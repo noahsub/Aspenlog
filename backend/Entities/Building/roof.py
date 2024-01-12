@@ -65,10 +65,10 @@ class RoofBuilderInterface:
     def get_w_roof(self) -> float:
         pass
 
-    def get_l_roof(self) -> float
+    def get_l_roof(self) -> float:
         pass
 
-    def get_slope(self) -> float
+    def get_slope(self) -> float:
         pass
 
     def get_wall_slope(self) -> float:
@@ -137,13 +137,6 @@ class RoofBuilder(RoofBuilderInterface):
 class RoofDirector:
     @staticmethod
     def construct_roof(builder: RoofBuilderInterface):
-        assert builder.get_l_roof() is not None
-        assert builder.get_w_roof() is not None
-        assert builder.get_slope() is not None
-
-        if 30 <= builder.get_slope() <= 70:
-            builder.set_wall_slope(1)
-        else:
-            builder.set_wall_slope(0)
+        raise NotImplementedError
 
 

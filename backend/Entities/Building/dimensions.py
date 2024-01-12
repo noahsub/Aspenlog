@@ -137,32 +137,9 @@ class EaveRidgeDimensionsBuilder(DimensionsBuilderInterface):
 class DimensionsDirector:
     @staticmethod
     def construct_basic_dimensions(builder: DimensionsBuilderInterface):
-        """
-        The width and the height of the building should have already been set within the client code, hence this
-        function only checks that the height and width have been set and that the eave and ridge heights have not been.
-        :param builder: The builder object to be used to construct the dimensions
-        :return:
-        """
-        assert builder.get_height() is not None
-        assert builder.get_width() is not None
-        assert builder.get_height_eave() is None
-        assert builder.get_height_ridge() is None
-        pass
+        raise NotImplementedError
 
     @staticmethod
     def construct_eave_ridge_dimensions(builder: DimensionsBuilderInterface):
-        """
-        The width and the eave and ridge heights of the building should have already been set within the client code,
-        this function, computes the height of the building using the eave and ridge heights.
-        :param builder:
-        :return:
-        """
-        # Checks that everything has been set except for the height of the building.
-        assert builder.get_height() is None
-        assert builder.get_width() is not None
-        assert builder.get_height_eave() is not None
-        assert builder.get_height_ridge() is not None
-
-        # Compute the height of the building using the eave and ridge heights.
-        builder.set_height((builder.get_height_eave() + builder.get_height_ridge()) / 2)
+        raise NotImplementedError
 

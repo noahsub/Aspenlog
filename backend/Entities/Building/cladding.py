@@ -104,7 +104,4 @@ class CladdingBuilder(CladdingBuilderInterface):
 class CladdingDirector:
     @staticmethod
     def construct_cladding(builder: CladdingBuilderInterface):
-        # The c_top and c_bot of the building should have already been set within the client code, hence this function
-        # only checks that the c_top and c_bot have been set.
-        assert builder.get_c_top() is not None
-        assert builder.get_c_bot() is not None
+        raise NotImplementedError
