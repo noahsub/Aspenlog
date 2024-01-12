@@ -1,13 +1,16 @@
+from typing import Optional
+
+
 class SeismicFactor:
     """
     This class is used to store the seismic factor information
     """
     # Element or component force amplification factor
-    ar: float
+    ar: Optional[float]
     # Element of component response modification factor
-    rp: float
+    rp: Optional[float]
     # Element of component factor
-    cp: float
+    cp: Optional[float]
 
     def __init__(self):
         # Set the attributes
