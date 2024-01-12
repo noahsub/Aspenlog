@@ -1,12 +1,6 @@
 ########################################################################################################################
 # building.py
-# This file contains classes that represent a building and its components
-# Classes include:
-#   - Dimensions: represents the dimensions of a building
-#   - Cladding: represents the cladding of a building
-#   - Roof: represents the roof of a building
-#   - HeightZone: represents a height zone of a building
-#   - Building: represents a building
+# This file contains classes that represent a building
 #
 # This code may not be reproduced, disclosed, or used without the specific written permission of the owners
 # Author(s): https://github.com/noahsub
@@ -17,9 +11,13 @@
 ########################################################################################################################
 
 import math
-from typing import Optional, Dict
+from typing import Optional
 from backend.Constants.decision_constants import DefaultSelections
 from backend.Constants.materials import Materials
+from backend.Entities.Building.cladding import Cladding
+from backend.Entities.Building.dimensions import Dimensions
+from backend.Entities.Building.height_zone import HeightZone
+from backend.Entities.Building.roof import Roof
 
 
 ########################################################################################################################
@@ -36,39 +34,29 @@ class Building:
     Represents a building
     """
     # Dimensions of the building
-    dimensions: Dimensions
+    dimensions: Optional[Dimensions]
     # Cladding of the building
-    cladding: Cladding
+    cladding: Optional[Cladding]
     # Roof of the building
-    roof: Roof
+    roof: Optional[Roof]
     # Number of height zones in the building
     hz_num: Optional[int]
     # Number of floors in the building
-    num_floor: int
+    num_floor: Optional[int]
     # Height of the opening in the building
-    h_opening: float
+    h_opening: Optional[float]
     # Height zones of the building
     height_zones: Optional[list[HeightZone]]
     # Dead load for the building
     wp: Optional[float]
 
-    def __init__(self, dimensions: Dimensions, cladding: Cladding, roof: Roof, num_floor: int, h_opening: float):
-        """
-        Constructor for Building class
-        :param dimensions: Dimensions of the building
-        :param cladding: Cladding of the building
-        :param roof: Roof of the building
-        :param num_floor: Number of floors in the building
-        :param h_opening: Dominant opening of the building
-        """
-        # Set the attributes
-        self.dimensions = dimensions
-        self.cladding = cladding
-        self.roof = roof
-        self.num_floor = num_floor
-        self.h_opening = h_opening
-        # Initialize to None for string representation purposes
+    def __init__(self):
+        self.dimensions = None
+        self.cladding = None
+        self.roof = None
         self.hz_num = None
+        self.num_floor = None
+        self.h_opening = None
         self.height_zones = None
         self.wp = None
 
@@ -184,10 +172,128 @@ class Building:
                 f"height_zones: {height_zones_str}\n"
                 f"wp: {self.wp}")
 
-# Sample Usage
-# if __name__ == '__main__':
-#     dimensions = Dimensions(height=86, width=50)
-#     cladding = Cladding(2, 2)
-#     roof = Roof(50, 50, 45)
-#     building = Building(dimensions, cladding, roof, 0)
-#     print([str(x) for x in building.height_zones])
+
+class BuildingBuilderInterface:
+    """
+    Builder interface for the Building class
+    """
+
+    def reset(self):
+        pass
+
+    def set_dimensions(self, dimensions: Dimensions):
+        pass
+
+    def set_cladding(self, cladding: Cladding):
+        pass
+
+    def set_roof(self, roof: Roof):
+        pass
+
+    def set_hz_num(self, hz_num: int):
+        pass
+
+    def set_num_floor(self, num_floor: int):
+        pass
+
+    def set_h_opening(self, h_opening: float):
+        pass
+
+    def set_height_zones(self, height_zones: list[HeightZone]):
+        pass
+
+    def set_wp(self, wp: float):
+        pass
+
+    def get_dimensions(self) -> Dimensions:
+        pass
+
+    def get_cladding(self) -> Cladding:
+        pass
+
+    def get_roof(self) -> Roof:
+        pass
+
+    def get_hz_num(self) -> int:
+        pass
+
+    def get_num_floor(self) -> int:
+        pass
+
+    def get_h_opening(self) -> float:
+        pass
+
+    def get_height_zones(self) -> list[HeightZone]:
+        pass
+
+    def get_wp(self) -> float:
+        pass
+
+
+class BuildingBuilder(BuildingBuilderInterface):
+    building: Building
+
+    def __init__(self):
+        self.reset()
+
+    def reset(self):
+        self.building = Building()
+
+    def set_dimensions(self, dimensions: Dimensions):
+        self.building.dimensions = dimensions
+
+    def set_cladding(self, cladding: Cladding):
+        self.building.cladding = cladding
+
+    def set_roof(self, roof: Roof):
+        self.building.roof = roof
+
+    def set_hz_num(self, hz_num: int):
+        self.building.hz_num = hz_num
+
+    def set_num_floor(self, num_floor: int):
+        self.building.num_floor = num_floor
+
+    def set_h_opening(self, h_opening: float):
+        self.building.h_opening = h_opening
+
+    def set_height_zones(self, height_zones: list[HeightZone]):
+        self.building.height_zones = height_zones
+
+    def set_wp(self, wp: float):
+        self.building.wp = wp
+
+    def get_dimensions(self) -> Dimensions:
+        return self.building.dimensions
+
+    def get_cladding(self) -> Cladding:
+        return self.building.cladding
+
+    def get_roof(self) -> Roof:
+        return self.building.roof
+
+    def get_hz_num(self) -> int:
+        return self.building.hz_num
+
+    def get_num_floor(self) -> int:
+        return self.building.num_floor
+
+    def get_h_opening(self) -> float:
+        return self.building.h_opening
+
+    def get_height_zones(self) -> list[HeightZone]:
+        return self.building.height_zones
+
+    def get_wp(self) -> float:
+        return self.building.wp
+
+    def get_building(self) -> Building:
+        building = self.building
+        self.reset()
+        return building
+
+
+class BuilderDirector:
+    @staticmethod
+    def construct_building(builder: BuildingBuilderInterface):
+        raise NotImplementedError
