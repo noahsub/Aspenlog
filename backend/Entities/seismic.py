@@ -11,39 +11,6 @@
 # SUBCLASSES
 ########################################################################################################################
 
-class SeismicFactor:
-    """
-    This class is used to store the seismic factor information
-    """
-    # Element or component force amplification factor
-    ar: float
-    # Element of component response modification factor
-    rp: float
-    # Element of component factor
-    cp: float
-
-    def __init__(self, ar: float = 1, rp: float = 2.5, cp: float = 1):
-        """
-        Constructor for the SeismicFactor class
-        :param ar: Element or component force amplification factor
-        :param rp: Element of component response modification factor
-        :param cp: Element of component factor
-        """
-        # Set the attributes
-        self.ar = ar
-        self.rp = rp
-        self.cp = cp
-
-    def __str__(self):
-        """
-        Returns a string representation of the SeismicFactor object
-        :return:
-        """
-        # Print each attribute and its value on a new line
-        return (f"ar: {self.ar}\n"
-                f"rp: {self.rp}\n"
-                f"cp: {self.cp}")
-
 
 ########################################################################################################################
 # MAIN CLASS
