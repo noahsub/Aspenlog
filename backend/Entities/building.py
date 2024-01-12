@@ -27,34 +27,6 @@ from backend.Constants.materials import Materials
 ########################################################################################################################
 
 
-class Cladding:
-    """
-    Represents the cladding of a building
-    """
-    # Height of the tallest part of the cladding components (i.e. where it ends)
-    c_top: float
-    # Height of the lowest part of the cladding components (i.e. where it starts)
-    c_bot: float
-
-    def __init__(self, c_top: float, c_bot: float):
-        """
-        Constructor for Cladding class
-        :param c_top: Height of the tallest part of the cladding components (i.e. where it ends)
-        :param c_bot: Height of the lowest part of the cladding components (i.e. where it starts)
-        """
-        self.c_top = c_top
-        self.c_bot = c_bot
-
-    def __str__(self):
-        """
-        String representation of the Cladding class
-        :return:
-        """
-        # Print each attribute and its value on a new line
-        return (f"c_top: {self.c_top}\n"
-                f"c_bot: {self.c_bot}")
-
-
 class Roof:
     """
     Represents the roof of a building

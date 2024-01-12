@@ -33,7 +33,7 @@ class Dimensions:
                 f"width: {self.width}")
 
 
-class DimensionsBuilder:
+class DimensionsBuilderInterface:
     """
     Builder interface for the Dimensions class
     """
@@ -66,7 +66,7 @@ class DimensionsBuilder:
         pass
 
 
-class BasicDimensionsBuilder(DimensionsBuilder):
+class BasicDimensionsBuilder(DimensionsBuilderInterface):
     dimensions: Dimensions
 
     def __init__(self):
@@ -97,7 +97,7 @@ class BasicDimensionsBuilder(DimensionsBuilder):
         return dimensions
 
 
-class EaveRidgeDimensionsBuilder(DimensionsBuilder):
+class EaveRidgeDimensionsBuilder(DimensionsBuilderInterface):
     dimensions: Dimensions
 
     def __init__(self):
@@ -136,7 +136,7 @@ class EaveRidgeDimensionsBuilder(DimensionsBuilder):
 
 class DimensionsDirector:
     @staticmethod
-    def construct_basic_dimensions(builder: DimensionsBuilder):
+    def construct_basic_dimensions(builder: DimensionsBuilderInterface):
         """
         The width and the height of the building should have already been set within the client code, hence this
         function only checks that the height and width have been set and that the eave and ridge heights have not been.
@@ -150,15 +150,14 @@ class DimensionsDirector:
         pass
 
     @staticmethod
-    def construct_eave_ridge_dimensions(self, builder: DimensionsBuilder):
+    def construct_eave_ridge_dimensions(builder: DimensionsBuilderInterface):
         """
         The width and the eave and ridge heights of the building should have already been set within the client code,
         this function, computes the height of the building using the eave and ridge heights.
-        :param self:
         :param builder:
         :return:
         """
-        # Checks thats everything has been set except for the height of the building.
+        # Checks that everything has been set except for the height of the building.
         assert builder.get_height() is None
         assert builder.get_width() is not None
         assert builder.get_height_eave() is not None
