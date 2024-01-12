@@ -26,55 +26,6 @@ from backend.Constants.materials import Materials
 # SUBCLASSES
 ########################################################################################################################
 
-class Dimensions:
-    """
-    Represents the dimensions of a building
-    """
-    # height of the building
-    height: Optional[float]
-    # height of the eave
-    height_eave: Optional[float]
-    # height of the ridge
-    height_ridge: Optional[float]
-    # width of the building
-    width: float
-
-    def __init__(self, width: float, height: float = None, height_eave: float = None, height_ridge: float = None):
-        """
-        Constructor for Dimensions class
-        :param width: Width of the building
-        :param height: Height of the building
-        :param height_eave: Height of the eave
-        :param height_ridge: Height of the ridge
-        """
-        # Set the width of the building
-        self.width = width
-
-        # Initialize to None for string representation purposes
-        self.height = None
-        self.height_eave = None
-        self.height_ridge = None
-
-        # If the eave and ridge heights are provided, set the height to the average of the two
-        if height_eave is not None and height_ridge is not None:
-            self.height_eave = height_eave
-            self.height_ridge = height_ridge
-            self.height = (height_eave + height_ridge) / 2
-        # Otherwise, simply set the height to the provided height
-        else:
-            self.height = height
-
-    def __str__(self):
-        """
-        String representation of the Dimensions class
-        :return:
-        """
-        # Print each attribute and its value on a new line
-        return (f"height: {self.height}\n"
-                f"height_eave: {self.height_eave}\n"
-                f"height_ridge: {self.height_ridge}\n"
-                f"width: {self.width}")
-
 
 class Cladding:
     """
