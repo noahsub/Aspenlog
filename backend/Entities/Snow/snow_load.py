@@ -29,3 +29,52 @@ class SnowLoad:
         return (f"factor: {factor_str}\n"
                 f"s: {self.s}")
 
+
+class SnowLoadBuilderInterface:
+    def reset(self):
+        pass
+
+    def set_factor(self, factor: SnowFactor) -> None:
+        pass
+
+    def set_s(self, s: float) -> None:
+        pass
+
+    def get_factor(self) -> SnowFactor:
+        pass
+
+    def get_s(self) -> float:
+        pass
+
+
+class SnowLoadBuilder(SnowLoadBuilderInterface):
+    snow_load: SnowLoad
+
+    def __init__(self):
+        self.reset()
+
+    def reset(self):
+        self.snow_load = SnowLoad()
+
+    def set_factor(self, factor: SnowFactor) -> None:
+        self.snow_load.factor = factor
+
+    def set_s(self, s: float) -> None:
+        self.snow_load.s = s
+
+    def get_factor(self) -> SnowFactor:
+        return self.snow_load.factor
+
+    def get_s(self) -> float:
+        return self.snow_load.s
+
+    def get_snow_load(self) -> SnowLoad:
+        snow_load = self.snow_load
+        self.reset()
+        return snow_load
+
+
+class SnowLoadDirector:
+    @staticmethod
+    def construct_snow_load(builder: SnowLoadBuilderInterface):
+        raise NotImplementedError
