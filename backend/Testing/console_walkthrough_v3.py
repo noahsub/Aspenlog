@@ -7,13 +7,14 @@ import os
 from typing import List, Dict
 
 import jsonpickle
+import rich
 import typer
 from rich import print
 from rich.prompt import Prompt
 
 from backend.Constants.materials import Materials
 from backend.Constants.seismic_constants import SiteDesignation, SiteClass
-from backend.Entities.Building.building import BuildingBuilder, BuildingDefaultHeightDefaultMaterialBuilder, \
+from backend.Entities.Building.building import BuildingDefaultHeightDefaultMaterialBuilder, \
     BuildingDefaultHeightCustomMaterialBuilder, BuildingCustomHeightDefaultMaterialBuilder, \
     BuildingCustomHeightCustomMaterialBuilder
 from backend.Entities.Building.cladding import CladdingBuilder, CladdingBuilderInterface, Cladding
@@ -146,6 +147,25 @@ def deserialize(name: str):
         data = json.load(f)
         return jsonpickle.decode(data[name])
 
+
+def check_save(name: str, func, *args):
+    try:
+        data = deserialize(name)
+        rich.print(f"Found [bold red]{name}[/bold red] with the value [bold red]{data}[/bold red]")
+        confirm_save = confirm_choice(f"Would you like to keep it?")
+        if confirm_save:
+            return data
+        else:
+            obj = func(*args)
+            serialize(name, obj)
+            return obj
+    except:
+        obj = func(*args)
+        serialize(name, obj)
+        return obj
+
+
+
 ########################################################################################################################
 # FUNCTIONS
 ########################################################################################################################
@@ -162,7 +182,8 @@ def location_data(address: str, site_designation: SiteDesignation, seismic_value
     location_builder.set_seismic_data(seismic_value)
     return location_builder.get_location()
 
-def building_dimensions(building_builder: BuildingBuilder, width: float, height: float=None, eave_height=None, ridge_height=None):
+
+def building_dimensions(width: float, height: float = None, eave_height=None, ridge_height=None):
     if eave_height is None and ridge_height is None:
         dimensions_builder = BasicDimensionsBuilder()
         dimensions_builder.set_height(height)
@@ -175,13 +196,15 @@ def building_dimensions(building_builder: BuildingBuilder, width: float, height:
         dimensions_builder.compute_height()
     return dimensions_builder.get_dimensions()
 
-def building_cladding(building_builder: BuildingBuilder, c_top: float, c_bot: float):
+
+def building_cladding(c_top: float, c_bot: float):
     cladding_builder = CladdingBuilder()
     cladding_builder.set_c_top(c_top)
     cladding_builder.set_c_bot(c_bot)
     return cladding_builder.get_cladding()
 
-def building_roof(building_builder: BuildingBuilder, w_roof: float, l_roof: float, slope: float, uniform_dead_load: float):
+
+def building_roof(w_roof: float, l_roof: float, slope: float, uniform_dead_load: float):
     roof_builder = RoofBuilder()
     roof_builder.set_w_roof(w_roof)
     roof_builder.set_l_roof(l_roof)
@@ -190,7 +213,9 @@ def building_roof(building_builder: BuildingBuilder, w_roof: float, l_roof: floa
     roof_builder.set_wp(uniform_dead_load)
     return roof_builder.get_roof()
 
-def building(dimensions: Dimensions, cladding: Cladding, roof: Roof, material_load: List[MaterialZone] | float, height_zones: List[HeightZone] = None):
+
+def building(dimensions: Dimensions, cladding: Cladding, roof: Roof, material_load: List[MaterialZone] | float,
+             height_zones: List[HeightZone] = None):
     # Case default height zones and simple material load
     if height_zones is None and isinstance(material_load, (float, int)):
         building_builder = BuildingDefaultHeightDefaultMaterialBuilder()
@@ -227,20 +252,62 @@ def building(dimensions: Dimensions, cladding: Cladding, roof: Roof, material_lo
         raise NotImplementedError
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 ########################################################################################################################
 # MAIN
 ########################################################################################################################
 
 if __name__ == '__main__':
+    create_save_file()
+
+    # address
+    address = check_save('address', user_input, 'address')
+
+    # site designation
+    site_designation = check_save('site_designation', choice, 'site designation type', SiteDesignation)
+
+    # seismic_value
+    seismic_value = None
+    if site_designation == SiteDesignation.XV:
+        seismic_value = check_save('seismic_value_xv', user_input, 'xv value')
+    else:
+        seismic_value = check_save('seismic_value_xs', user_input, 'site class')
+
+    location = location_data(address=address, site_designation=site_designation, seismic_value=seismic_value)
+
+    # eave_height
+    eave_height = None
+    ridge_height = None
+    height = None
+    width = None
+
+    confirm_eave_ridge_choice = check_save('confirm_eave_ridge_choice', confirm_choice, "Does the building have eave and ridge?")
+
+    if confirm_eave_ridge_choice:
+        eave_height = check_save('eave_height', user_input, "eave height")
+        ridge_height = check_save('ridge height', user_input, "ridge height")
+    else:
+        height = check_save('height', user_input, "height")
+    width = check_save('width', user_input, "width")
+
+    confirm_height_zone = check_save('confirm_height_zone', confirm_choice, "Default is 20 m per height zone, meaning number of height zones = ⌈H/20⌉. Are you ok with this?")
+
+    num_floor = check_save('num_floor', user_input, 'number of floors')
+
+    top_cladding = check_save('c_top', user_input, 'top of cladding')
+
+    dominant_opening = check_save('dominant_opening', confirm_choice, 'Does the building have Dominant Opening?')
+
+    if dominant_opening:
+        mid_height = check_save('mid_height', user_input, 'mid-height of the dominant opening')
+    else:
+        mid_height = 0
+        serialize('mid_height', mid_height)
+
+    bottom_cladding = check_save('c_bot', user_input, 'bottom of cladding')
+
+    if not confirm_height_zone:
+        custom_num_height_zones = check_save('custom_num_height_zones', user_input, 'number of height zones')
+        height_zones = []
+        for i in range(custom_num_height_zones):
+            height_zones.append(HeightZone(zone_num=i + 1, elevation=i * 20))
+

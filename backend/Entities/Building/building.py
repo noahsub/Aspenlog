@@ -16,7 +16,7 @@ from backend.Constants.decision_constants import DefaultSelections
 from backend.Constants.materials import Materials
 from backend.Entities.Building.cladding import Cladding
 from backend.Entities.Building.dimensions import Dimensions
-from backend.Entities.Building.height_zone import HeightZone, HeightZoneBuilder
+from backend.Entities.Building.height_zone import HeightZone
 from backend.Entities.Building.material_zone import MaterialZone
 from backend.Entities.Building.roof import Roof
 
@@ -316,6 +316,11 @@ class BuildingDefaultHeightCustomMaterialBuilder(BuildingBuilderInterface):
         self.building.wp = 0
         products = []
         material_sum = 0
+        for height_zone, material_zone in self.building.zones.items():
+            product = sum(x.respected_percentage * height_zone.elevation for x in material_zone.materials_list)
+            products.append(product)
+            material_sum += sum([x.respected_percentage for x in material_zone.materials_list])
+        self.building.wp = sum(products) / material_sum
 
     def get_dimensions(self) -> Dimensions:
         return self.building.dimensions
@@ -446,6 +451,14 @@ class BuildingCustomHeightCustomMaterialBuilder(BuildingBuilderInterface):
         assert len(self.building.zones.keys()) == len(material_zones)
         for i, height_zone in enumerate(self.building.zones.keys()):
             self.building.zones[height_zone] = material_zones[i]
+        self.building.wp = 0
+        products = []
+        material_sum = 0
+        for height_zone, material_zone in self.building.zones.items():
+            product = sum(x.respected_percentage * height_zone.elevation for x in material_zone.materials_list)
+            products.append(product)
+            material_sum += sum([x.respected_percentage for x in material_zone.materials_list])
+        self.building.wp = sum(products) / material_sum
 
     def get_dimensions(self) -> Dimensions:
         return self.building.dimensions
