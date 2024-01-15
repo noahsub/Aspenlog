@@ -56,7 +56,7 @@ class RoofBuilderInterface:
     def set_slope(self, slope: float):
         pass
 
-    def set_wall_slope(self, wall_slope: int):
+    def compute_wall_slope(self):
         pass
 
     def set_wp(self, wp: float):
@@ -103,8 +103,12 @@ class RoofBuilder(RoofBuilderInterface):
     def set_slope(self, slope: float):
         self.roof.slope = slope
 
-    def set_wall_slope(self, wall_slope: int):
-        self.roof.wall_slope = wall_slope
+    def compute_wall_slope(self):
+        assert self.roof.slope is not None
+        if 30 <= self.roof.slope <= 70:
+            self.roof.wall_slope = 1
+        else:
+            self.roof.wall_slope = 0
 
     def set_wp(self, wp: float):
         self.roof.wp = wp

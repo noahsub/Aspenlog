@@ -115,6 +115,11 @@ class EaveRidgeDimensionsBuilder(DimensionsBuilderInterface):
     def set_width(self, width: float):
         self.dimensions.width = width
 
+    def compute_height(self):
+        assert self.dimensions.height_eave is not None
+        assert self.dimensions.height_ridge is not None
+        self.dimensions.height = (self.dimensions.height_eave + self.dimensions.height_ridge) / 2
+
     def get_height_eave(self):
         return self.dimensions.height_eave
 
