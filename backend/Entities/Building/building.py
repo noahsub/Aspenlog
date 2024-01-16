@@ -166,6 +166,8 @@ class BuildingDefaultHeightDefaultMaterialBuilder(BuildingBuilderInterface):
     def generate_height_zones(self):
         assert self.building.dimensions is not None
 
+        self.building.zones = dict()
+
         # The default height per height zone is 20 meters
         default_zone_height = 20
 
@@ -266,6 +268,8 @@ class BuildingDefaultHeightCustomMaterialBuilder(BuildingBuilderInterface):
 
     def generate_height_zones(self):
         assert self.building.dimensions is not None
+
+        self.building.zones = dict()
 
         # The default height per height zone is 20 meters
         default_zone_height = 20
@@ -377,6 +381,9 @@ class BuildingCustomHeightDefaultMaterialBuilder(BuildingBuilderInterface):
 
     def generate_height_zones(self, height_zones: List[HeightZone]):
         assert self.building.dimensions is not None
+
+        self.building.zones = dict()
+
         for height_zone in height_zones:
             self.building.zones[height_zone] = None
 
@@ -441,6 +448,9 @@ class BuildingCustomHeightCustomMaterialBuilder(BuildingBuilderInterface):
 
     def generate_height_zones(self, height_zones: List[HeightZone]):
         assert self.building.dimensions is not None
+
+        self.building.zones = dict()
+
         for height_zone in height_zones:
             self.building.zones[height_zone] = None
 

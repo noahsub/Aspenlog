@@ -226,7 +226,7 @@ def building_roof(w_roof: float, l_roof: float, slope: float, uniform_dead_load:
     return roof_builder.get_roof()
 
 
-def building(dimensions: Dimensions, cladding: Cladding, roof: Roof, material_load: List[MaterialZone] | float,
+def building(dimensions: Dimensions, cladding: Cladding, roof: Roof, num_floor: int, h_opening: float, material_load: List[MaterialZone] | float,
              height_zones: List[HeightZone] = None):
     # Case default height zones and simple material load
     if height_zones is None and isinstance(material_load, (float, int)):
@@ -234,32 +234,44 @@ def building(dimensions: Dimensions, cladding: Cladding, roof: Roof, material_lo
         building_builder.set_dimensions(dimensions)
         building_builder.set_cladding(cladding)
         building_builder.set_roof(roof)
+        building_builder.set_num_floor(num_floor)
+        building_builder.set_h_opening(h_opening)
         building_builder.generate_height_zones()
         building_builder.set_wp(material_load)
+        return building_builder.get_building()
     # Case default height zones and custom material load
     elif height_zones is None and not isinstance(material_load, (float, int)):
         building_builder = BuildingDefaultHeightCustomMaterialBuilder()
         building_builder.set_dimensions(dimensions)
         building_builder.set_cladding(cladding)
         building_builder.set_roof(roof)
+        building_builder.set_num_floor(num_floor)
+        building_builder.set_h_opening(h_opening)
         building_builder.generate_height_zones()
         building_builder.generate_material_zones(material_load)
+        return building_builder.get_building()
     # Case custom height zones and simple material load
     elif height_zones is not None and isinstance(material_load, (float, int)):
         building_builder = BuildingCustomHeightDefaultMaterialBuilder()
         building_builder.set_dimensions(dimensions)
         building_builder.set_cladding(cladding)
         building_builder.set_roof(roof)
+        building_builder.set_num_floor(num_floor)
+        building_builder.set_h_opening(h_opening)
         building_builder.generate_height_zones(height_zones)
         building_builder.set_wp(material_load)
+        return building_builder.get_building()
     # Case custom height zones and custom material load
     elif height_zones is not None and not isinstance(material_load, (float, int)):
         building_builder = BuildingCustomHeightCustomMaterialBuilder()
         building_builder.set_dimensions(dimensions)
         building_builder.set_cladding(cladding)
         building_builder.set_roof(roof)
+        building_builder.set_num_floor(num_floor)
+        building_builder.set_h_opening(h_opening)
         building_builder.generate_height_zones(height_zones)
         building_builder.generate_material_zones(material_load)
+        return building_builder.get_building()
     else:
         raise NotImplementedError
 
@@ -280,7 +292,7 @@ if __name__ == '__main__':
     # seismic_value
     seismic_value = None
     if site_designation == SiteDesignation.XV:
-        seismic_value = check_save('seismic_value_xv', user_input, 'xv value')
+        seismic_value = int(check_save('seismic_value_xv', user_input, 'xv value'))
     else:
         seismic_value = check_save('seismic_value_xs', user_input, 'site class')
 
@@ -295,51 +307,53 @@ if __name__ == '__main__':
     confirm_eave_ridge_choice = check_save('confirm_eave_ridge_choice', confirm_choice, "Does the building have eave and ridge?")
 
     if confirm_eave_ridge_choice:
-        eave_height = check_save('eave_height', user_input, "eave height")
-        ridge_height = check_save('ridge height', user_input, "ridge height")
+        eave_height = float(check_save('eave_height', user_input, "eave height"))
+        ridge_height = float(check_save('ridge height', user_input, "ridge height"))
     else:
-        height = check_save('height', user_input, "height")
-    width = check_save('width', user_input, "width")
+        height = float(check_save('height', user_input, "height"))
+    width = float(check_save('width', user_input, "width"))
 
     confirm_height_zone = check_save('confirm_height_zone', confirm_choice, "Default is 20 m per height zone, meaning number of height zones = ⌈H/20⌉. Are you ok with this?")
 
-    num_floor = check_save('num_floor', user_input, 'number of floors')
+    num_floor = int(check_save('num_floor', user_input, 'number of floors'))
 
-    top_cladding = check_save('c_top', user_input, 'top of cladding')
+    top_cladding = float(check_save('c_top', user_input, 'top of cladding'))
 
     dominant_opening = check_save('dominant_opening', confirm_choice, 'Does the building have Dominant Opening?')
 
     if dominant_opening:
-        mid_height = check_save('mid_height', user_input, 'mid-height of the dominant opening')
+        mid_height = float(check_save('mid_height', user_input, 'mid-height of the dominant opening'))
     else:
-        mid_height = 0
+        mid_height = 0.0
         serialize('mid_height', mid_height)
 
-    bottom_cladding = check_save('c_bot', user_input, 'bottom of cladding')
+    bottom_cladding = float(check_save('c_bot', user_input, 'bottom of cladding'))
 
-    height_zones = []
+    height_zones = None
     if not confirm_height_zone:
         custom_num_height_zones = int(check_save('custom_num_height_zones', user_input, 'number of height zones'))
         if check_save_simple('height_zones') and confirm_choice(f"Would you like to keep them?"):
             height_zones = deserialize('height_zones')
         else:
+            height_zones = []
             for i in range(custom_num_height_zones):
                 height_zones.append(HeightZone(zone_num=i + 1, elevation=float(user_input(f"Elevation of height zone {i + 1}"))))
         serialize('height_zones', height_zones)
 
-    w_roof = check_save('w_roof', user_input, 'smaller plan dimension of the roof')
-    l_roof = check_save('l_roof', user_input, 'larger plan dimension of the roof')
-    slope = check_save('slope', user_input, 'slope of the roof')
+    w_roof = float(check_save('w_roof', user_input, 'smaller plan dimension of the roof'))
+    l_roof = float(check_save('l_roof', user_input, 'larger plan dimension of the roof'))
+    slope = float(check_save('slope', user_input, 'slope of the roof'))
 
     confirm_material = check_save('confirm_material', confirm_choice, 'The material will be applied to all height zones?')
-    material_zones = []
+    material_zones = None
     if confirm_material:
-        wp = check_save('wp', user_input, 'material load')
+        wp = float(check_save('wp', user_input, 'material load'))
     else:
         custom_num_material_zones = int(check_save('custom_num_material_zones', user_input, 'number of material zones'))
         if check_save_simple('material_zones') and confirm_choice(f"Would you like to keep them?"):
             material_zones = deserialize('material_zones')
         else:
+            material_zones = []
             for i in range(custom_num_material_zones):
                 finished_materials = False
                 materials_list = []
@@ -351,13 +365,23 @@ if __name__ == '__main__':
                 material_zones.append(MaterialZone(materials_list))
         serialize('material_zones', material_zones)
 
-    wp_roof = check_save('wp_roof', user_input, 'uniform dead load for roof')
+    wp_roof = float(check_save('wp_roof', user_input, 'uniform dead load for roof'))
 
     location = location_data(address=address, site_designation=site_designation, seismic_value=seismic_value)
     dimensions = building_dimensions(width=width, height=height, eave_height=eave_height, ridge_height=ridge_height)
     cladding = building_cladding(c_top=top_cladding, c_bot=bottom_cladding)
-    roof = building_roof(w_roof=w_roof, l_roof=l_roof)
+    roof = building_roof(w_roof=w_roof, l_roof=l_roof, slope=slope, uniform_dead_load=wp_roof)
 
+    building = building(dimensions=dimensions, cladding=cladding, roof=roof, num_floor=num_floor, h_opening=mid_height, material_load=material_zones, height_zones=height_zones)
+
+    print_line()
+    print("LOCATION")
+    print_line()
+    print(location)
+    print_line()
+    print("BUILDING")
+    print_line()
+    print(building)
 
 
 
