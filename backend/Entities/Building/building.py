@@ -90,6 +90,13 @@ class Building:
                 f"zones: {zones_str}\n"
                 f"wp: {self.wp}")
 
+    def get_zone(self, zone_num: int):
+        for height_zone, material in self.zones.items():
+            if height_zone.zone_num == zone_num:
+                return height_zone, material
+        # TODO: Custom error required
+        raise IndexError
+
 
 class BuildingBuilderInterface:
     """

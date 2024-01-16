@@ -18,6 +18,7 @@ from enum import Enum
 
 # The wind gust factor
 GUST_FACTOR = 2.5
+INTERNAL_GUST_EFFECT_FACTOR = 2
 
 ########################################################################################################################
 # ENUMS

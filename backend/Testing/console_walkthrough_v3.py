@@ -12,6 +12,7 @@ import typer
 from rich import print
 from rich.prompt import Prompt
 
+from backend.Constants.importance_factor_constants import ImportanceFactor
 from backend.Constants.materials import Materials
 from backend.Constants.seismic_constants import SiteDesignation, SiteClass
 from backend.Entities.Building.building import BuildingDefaultHeightDefaultMaterialBuilder, \
@@ -298,6 +299,12 @@ if __name__ == '__main__':
 
     location = location_data(address=address, site_designation=site_designation, seismic_value=seismic_value)
 
+    print_line()
+    print("LOCATION")
+    print_line()
+    print(location)
+    print_line()
+
     # eave_height
     eave_height = None
     ridge_height = None
@@ -367,7 +374,6 @@ if __name__ == '__main__':
 
     wp_roof = float(check_save('wp_roof', user_input, 'uniform dead load for roof'))
 
-    location = location_data(address=address, site_designation=site_designation, seismic_value=seismic_value)
     dimensions = building_dimensions(width=width, height=height, eave_height=eave_height, ridge_height=ridge_height)
     cladding = building_cladding(c_top=top_cladding, c_bot=bottom_cladding)
     roof = building_roof(w_roof=w_roof, l_roof=l_roof, slope=slope, uniform_dead_load=wp_roof)
@@ -375,13 +381,13 @@ if __name__ == '__main__':
     building = building(dimensions=dimensions, cladding=cladding, roof=roof, num_floor=num_floor, h_opening=mid_height, material_load=material_zones, height_zones=height_zones)
 
     print_line()
-    print("LOCATION")
-    print_line()
-    print(location)
-    print_line()
     print("BUILDING")
     print_line()
     print(building)
+    print_line()
+
+    importance_category = check_save('importance_category', choice, 'importance category', ImportanceFactor)
+
 
 
 
