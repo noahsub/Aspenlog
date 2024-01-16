@@ -5,6 +5,7 @@
 # This code may not be reproduced, disclosed, or used without the specific written permission of the owners
 # Author(s): https://github.com/noahsub
 ########################################################################################################################
+from copy import copy, deepcopy
 
 ########################################################################################################################
 # IMPORTS
@@ -139,7 +140,7 @@ def get_internal_pressure(wind_factor: WindFactor, wind_pressure_builder: WindPr
             wind_pressure_builder.set_pi_neg(internal_pressure * -0.7)
 
 
-def get_external_pressure(wind_factor: WindFactor, wind_pressure_builder: WindPressureBuilder, importance_factor: ImportanceFactor, limit_state: LimitState, location: Location):
+def get_external_pressure(wind_factor: WindFactor, wind_pressure_builder: WindPressureBuilder, wind_load_builder: WindLoadBuilder, importance_factor: ImportanceFactor, limit_state: LimitState, location: Location):
     wind_importance_factor = None
     match importance_factor:
         case importance_factor.LOW:
@@ -170,8 +171,13 @@ def get_external_pressure(wind_factor: WindFactor, wind_pressure_builder: WindPr
     # A = (Iw * q * Ce * Ct * Cg) * X where, x is the cpi_pos or cpi_neg value
     external_pressure = (wind_importance_factor.value * location.wind_velocity_pressure * wind_factor.ce * wind_factor.ct * wind_factor.cg)
 
+
+    if wind_load_builder.get_zones() is None:
+        pass
+
     # Apply calculation to each zone
-    for zone in wind_load.zones:
+    for zone in wind_load_builder.get_zones():
+        zone_wind_pressure_builder = deepcopy(wind_pressure_builder)
         # Different cases based on the zone type
         match zone.name:
             # If zone is roof interior, set pe_pos = A * 0 and pe_neg = A * -1

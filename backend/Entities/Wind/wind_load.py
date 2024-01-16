@@ -23,23 +23,6 @@ class WindLoad:
         # Set the zones
         self.zones = None
 
-    def get_zone(self, key):
-        """
-        Function to get a zone by name or number
-        :param key: The name or number of the zone
-        :return:
-        """
-        # If the key is a string, search by name
-        if type(key) == str:
-            for zone in self.zones:
-                if zone.name == key:
-                    return zone
-        # If the key is an int, search by number
-        elif type(key) == int:
-            for zone in self.zones:
-                if zone.num == key:
-                    return zone
-
     def __str__(self):
         """
         Returns a string representation of the WindLoad object
@@ -90,6 +73,9 @@ class WindLoadBuilderInterface:
     def get_zones(self) -> set[Zone]:
         pass
 
+    def get_zone(self, key: int | str) -> Zone:
+        pass
+
 
 class WindLoadBuilder(WindLoadBuilderInterface):
     """
@@ -123,6 +109,24 @@ class WindLoadBuilder(WindLoadBuilderInterface):
 
     def get_zones(self) -> set[Zone]:
         return self.wind_load.zones
+
+    def get_zone(self, key: int | str) -> Zone:
+        """
+        Function to get a zone by name or number
+        :param key: The name or number of the zone
+        :return:
+        """
+
+        # If the key is a string, search by name
+        if isinstance(key, str):
+            for zone in self.wind_load.zones:
+                if zone.name == key:
+                    return zone
+        # If the key is an int, search by number
+        elif isinstance(key, int):
+            for zone in self.wind_load.zones:
+                if zone.num == key:
+                    return zone
 
     def get_wind_load(self):
         wind_load = self.wind_load
