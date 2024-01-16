@@ -15,6 +15,10 @@ class MaterialComposition:
         return (f"material: {self.material}\n,"
                 f"respected percentage: {self.respected_percentage}\n")
 
+    def __repr__(self):
+        return (f"material: {self.material}\n,"
+                f"respected percentage: {self.respected_percentage}\n")
+
 
 class MaterialZone:
     """
@@ -31,4 +35,12 @@ class MaterialZone:
         :return:
         """
         # Print each attribute and its value on a new line
-        return f"materials list: {self.materials_list}\n"
+        return f"materials list: {[str(x) for x in self.materials_list]}\n"
+
+    def __repr__(self):
+        """
+        String representation of the MaterialZone class
+        :return:
+        """
+        # Print each attribute and its value on a new line
+        return f"materials list: {[str(x) for x in self.materials_list]}\n"

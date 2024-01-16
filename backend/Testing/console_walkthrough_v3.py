@@ -21,7 +21,7 @@ from backend.Entities.Building.cladding import CladdingBuilder, CladdingBuilderI
 from backend.Entities.Building.dimensions import DimensionsBuilderInterface, BasicDimensionsBuilder, \
     EaveRidgeDimensionsBuilder, Dimensions
 from backend.Entities.Building.height_zone import HeightZone
-from backend.Entities.Building.material_zone import MaterialZone
+from backend.Entities.Building.material_zone import MaterialZone, MaterialComposition
 from backend.Entities.Building.roof import RoofBuilder, RoofBuilderInterface, Roof
 from backend.Entities.Location.location import LocationBuilderInterface, LocationXvBuilder, LocationXsBuilder
 
@@ -151,7 +151,10 @@ def deserialize(name: str):
 def check_save(name: str, func, *args):
     try:
         data = deserialize(name)
-        rich.print(f"Found [bold red]{name}[/bold red] with the value [bold red]{data}[/bold red]")
+        if isinstance(data, list):
+            rich.print(f"Found [bold red]{name}[/bold red] with the value [bold red]{[str(x) for x in data]}[/bold red]")
+        else:
+            rich.print(f"Found [bold red]{name}[/bold red] with the value [bold red]{str(data)}[/bold red]")
         confirm_save = confirm_choice(f"Would you like to keep it?")
         if confirm_save:
             return data
@@ -164,7 +167,16 @@ def check_save(name: str, func, *args):
         serialize(name, obj)
         return obj
 
-
+def check_save_simple(name: str):
+    try:
+        data = deserialize(name)
+        if isinstance(data, list):
+            rich.print(f"Found [bold red]{name}[/bold red] with the value [bold red]{[str(x) for x in data]}[/bold red]")
+        else:
+            rich.print(f"Found [bold red]{name}[/bold red] with the value [bold red]{str(data)}[/bold red]")
+        return True
+    except:
+        return False
 
 ########################################################################################################################
 # FUNCTIONS
@@ -305,9 +317,48 @@ if __name__ == '__main__':
 
     bottom_cladding = check_save('c_bot', user_input, 'bottom of cladding')
 
+    height_zones = []
     if not confirm_height_zone:
-        custom_num_height_zones = check_save('custom_num_height_zones', user_input, 'number of height zones')
-        height_zones = []
-        for i in range(custom_num_height_zones):
-            height_zones.append(HeightZone(zone_num=i + 1, elevation=i * 20))
+        custom_num_height_zones = int(check_save('custom_num_height_zones', user_input, 'number of height zones'))
+        if check_save_simple('height_zones') and confirm_choice(f"Would you like to keep them?"):
+            height_zones = deserialize('height_zones')
+        else:
+            for i in range(custom_num_height_zones):
+                height_zones.append(HeightZone(zone_num=i + 1, elevation=float(user_input(f"Elevation of height zone {i + 1}"))))
+        serialize('height_zones', height_zones)
+
+    w_roof = check_save('w_roof', user_input, 'smaller plan dimension of the roof')
+    l_roof = check_save('l_roof', user_input, 'larger plan dimension of the roof')
+    slope = check_save('slope', user_input, 'slope of the roof')
+
+    confirm_material = check_save('confirm_material', confirm_choice, 'The material will be applied to all height zones?')
+    material_zones = []
+    if confirm_material:
+        wp = check_save('wp', user_input, 'material load')
+    else:
+        custom_num_material_zones = int(check_save('custom_num_material_zones', user_input, 'number of material zones'))
+        if check_save_simple('material_zones') and confirm_choice(f"Would you like to keep them?"):
+            material_zones = deserialize('material_zones')
+        else:
+            for i in range(custom_num_material_zones):
+                finished_materials = False
+                materials_list = []
+                k = 1
+                while not finished_materials:
+                    materials_list.append(MaterialComposition(material=choice(f"material {k} for height zone {i + 1}", Materials), respected_percentage=float(user_input("respected percentage"))))
+                    finished_materials = not confirm_choice("Would you like to add another material for the current height zone?")
+                    k += 1
+                material_zones.append(MaterialZone(materials_list))
+        serialize('material_zones', material_zones)
+
+    wp_roof = check_save('wp_roof', user_input, 'uniform dead load for roof')
+
+    location = location_data(address=address, site_designation=site_designation, seismic_value=seismic_value)
+    dimensions = building_dimensions(width=width, height=height, eave_height=eave_height, ridge_height=ridge_height)
+    cladding = building_cladding(c_top=top_cladding, c_bot=bottom_cladding)
+    roof = building_roof(w_roof=w_roof, l_roof=l_roof)
+
+
+
+
 
