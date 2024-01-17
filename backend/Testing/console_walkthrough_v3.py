@@ -326,7 +326,7 @@ d88P     888  "Y8888P"  888        8888888888 888    Y888 88888888 "Y88888P"   "
     if site_designation == SiteDesignation.XV:
         seismic_value = int(check_save('seismic_value_xv', user_input, 'xv value'))
     else:
-        seismic_value = check_save('seismic_value_xs', user_input, 'site class')
+        seismic_value = check_save('seismic_value_xs', choice, 'site class', SiteClass)
 
     print("Collecting information from database and external APIs...")
 
@@ -391,7 +391,7 @@ d88P     888  "Y8888P"  888        8888888888 888    Y888 88888888 "Y88888P"   "
     if confirm_material:
         wp = float(check_save('wp', user_input, 'material load'))
     else:
-        custom_num_material_zones = int(check_save('custom_num_material_zones', user_input, 'number of material zones'))
+        custom_num_material_zones = int(check_save('custom_num_material_zones', user_input, 'number of material zones (same as number of height zones)'))
         if check_save_simple('material_zones') and confirm_choice(f"Would you like to keep them?"):
             material_zones = deserialize('material_zones')
         else:
