@@ -13,8 +13,7 @@ class Zone:
     num: Optional[int]
     # The wind pressure
     pressure: Optional[WindPressure]
-    # The wind load
-    wind_load: Optional[float]
+    # TODO: IMPLEMENT ZONE WIDTH
 
     def __init__(self):
         """
@@ -37,10 +36,10 @@ class Zone:
         :return:
         """
         # Print each attribute and its value on a new line
+
         return (f"name: {self.name}\n"
                 f"num: {self.num}\n"
-                f"pressure: {self.pressure}\n"
-                f"wind_load: {self.wind_load}")
+                f"pressure: {self.pressure}\n")
 
 
 class ZoneBuilderInterface:
@@ -60,9 +59,6 @@ class ZoneBuilderInterface:
     def set_pressure(self, pressure: WindPressure):
         pass
 
-    def set_wind_load(self, wind_load: float):
-        pass
-
     def get_name(self) -> str:
         pass
 
@@ -70,9 +66,6 @@ class ZoneBuilderInterface:
         pass
 
     def get_pressure(self) -> WindPressure:
-        pass
-
-    def get_wind_load(self) -> float:
         pass
 
 
@@ -94,9 +87,6 @@ class ZoneBuilder(ZoneBuilderInterface):
     def set_pressure(self, pressure: WindPressure):
         self.zone.pressure = pressure
 
-    def set_wind_load(self, wind_load: float):
-        self.zone.wind_load = wind_load
-
     def get_name(self) -> str:
         return self.zone.name
 
@@ -105,9 +95,6 @@ class ZoneBuilder(ZoneBuilderInterface):
 
     def get_pressure(self) -> WindPressure:
         return self.zone.pressure
-
-    def get_wind_load(self) -> float:
-        return self.zone.wind_load
 
     def get_zone(self):
         zone = self.zone

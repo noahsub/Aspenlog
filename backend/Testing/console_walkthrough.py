@@ -485,11 +485,11 @@ def step_4():
     wind_exposure_selection = choice(prompt="Wind Exposure Factor", options=WindExposureFactorSelections)
     if wind_exposure_selection == WindExposureFactorSelections.INTERMEDIATE:
         value = float(user_input("Intermediate value for ce and cei"))
-        wind_load_algorithms.get_wind_exposure_factor(wind_load=WIND_LOAD, selection=wind_exposure_selection,
+        wind_load_algorithms.get_wind_exposure_factor(wind_load=WIND_LOAD, wind_exposure_factor_selection=wind_exposure_selection,
                                                       building=BUILDING,
                                                       manual=value)
     else:
-        wind_load_algorithms.get_wind_exposure_factor(wind_load=WIND_LOAD, selection=wind_exposure_selection,
+        wind_load_algorithms.get_wind_exposure_factor(wind_load=WIND_LOAD, wind_exposure_factor_selection=wind_exposure_selection,
                                                       building=BUILDING)
 
     serialize('wind_load', WIND_LOAD)
@@ -517,7 +517,7 @@ def step_6():
 
     internal_pressure_selection = choice(prompt="Internal Pressure Selection", options=InternalPressureSelections)
     wind_importance_factor = choice(prompt="Wind Importance Factor", options=WindImportanceFactor)
-    get_internal_pressure(wind_load=WIND_LOAD, selection=internal_pressure_selection,
+    get_internal_pressure(wind_load=WIND_LOAD, internal_pressure_selection=internal_pressure_selection,
                           wind_importance_factor=wind_importance_factor, location=LOCATION)
 
     serialize('wind_load', WIND_LOAD)

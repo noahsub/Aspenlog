@@ -13,6 +13,10 @@ class WindPressure:
     pe_pos: Optional[float]
     # Negative external pressure
     pe_neg: Optional[float]
+    # POS value for user display
+    pos: Optional[float]
+    # NEG value for user display
+    neg: Optional[float]
 
     def __init__(self):
         """
@@ -27,6 +31,8 @@ class WindPressure:
         self.pi_neg = None
         self.pe_pos = None
         self.pe_neg = None
+        self.pos = None
+        self.neg = None
 
     def __str__(self):
         """
@@ -37,7 +43,9 @@ class WindPressure:
         return (f"pi_pos: {self.pi_pos}\n"
                 f"pi_neg: {self.pi_neg}\n"
                 f"pe_pos: {self.pe_pos}\n"
-                f"pe_neg: {self.pe_neg}")
+                f"pe_neg: {self.pe_neg}\n"
+                f"pos: {self.pos}\n"
+                f"neg: {self.neg}")
 
 
 class WindPressureBuilderInterface:
@@ -60,6 +68,12 @@ class WindPressureBuilderInterface:
     def set_pe_neg(self, pe_neg: float):
         pass
 
+    def set_pos(self):
+        pass
+
+    def set_neg(self):
+        pass
+
     def get_pi_pos(self) -> float:
         pass
 
@@ -70,6 +84,12 @@ class WindPressureBuilderInterface:
         pass
 
     def get_pe_neg(self) -> float:
+        pass
+
+    def get_pos(self) -> float:
+        pass
+
+    def get_neg(self) -> float:
         pass
 
 
@@ -126,6 +146,16 @@ class WindPressureBuilder(WindPressureBuilderInterface):
         """
         self.wind_pressure.pe_neg = pe_neg
 
+    def set_pos(self):
+        assert self.wind_pressure.pe_pos is not None
+        assert self.wind_pressure.pi_neg is not None
+        self.wind_pressure.pos = self.wind_pressure.pe_pos - self.wind_pressure.pi_neg
+
+    def set_neg(self):
+        assert self.wind_pressure.pe_neg is not None
+        assert self.wind_pressure.pi_pos is not None
+        self.wind_pressure.neg = self.wind_pressure.pe_neg - self.wind_pressure.pi_pos
+
     def get_pi_pos(self) -> float:
         """
         Returns the positive internal pressure
@@ -153,6 +183,20 @@ class WindPressureBuilder(WindPressureBuilderInterface):
         :return: The negative external pressure
         """
         return self.wind_pressure.pe_neg
+
+    def get_pos(self) -> float:
+        """
+        Returns the positive pressure
+        :return: The positive pressure
+        """
+        return self.wind_pressure.pos
+
+    def get_neg(self) -> float:
+        """
+        Returns the negative pressure
+        :return: The negative pressure
+        """
+        return self.wind_pressure.neg
 
     def get_wind_pressure(self) -> WindPressure:
         """

@@ -11,15 +11,12 @@ class WindLoad:
     """
     # The wind factor
     factor: Optional[WindFactor]
-    # The wind pressure
-    pressure: Optional[WindPressure]
     # The zones
-    zones: Optional[set[Zone]]
+    zones: Optional[list[Zone]]
 
     def __init__(self):
         # Set the attributes
         self.factor = None
-        self.pressure = None
         # Set the zones
         self.zones = None
 
@@ -30,7 +27,7 @@ class WindLoad:
         """
         # Special formatting for subclasses
         factor_str = '\n  ' + '\n  '.join(str(self.factor).split('\n'))
-        pressure_str = '\n  ' + '\n  '.join(str(self.pressure).split('\n'))
+        # pressure_str = '\n  ' + '\n  '.join(str(self.pressure).split('\n'))
 
         # Special formatting for zones
         zones_str = '\n'
@@ -43,7 +40,6 @@ class WindLoad:
 
         # Print each attribute and its value on a new line
         return (f"factor: {factor_str}\n"
-                f"pressure: {pressure_str}\n"
                 f"zones: {zones_str}")
 
 
@@ -58,19 +54,13 @@ class WindLoadBuilderInterface:
     def set_factor(self, factor: WindFactor):
         pass
 
-    def set_pressure(self, pressure: WindPressure):
-        pass
-
-    def set_zones(self, zones: set[Zone]):
+    def set_zones(self, zones: list[Zone]):
         pass
 
     def get_factor(self) -> WindFactor:
         pass
 
-    def get_pressure(self) -> WindPressure:
-        pass
-
-    def get_zones(self) -> set[Zone]:
+    def get_zones(self) -> list[Zone]:
         pass
 
     def get_zone(self, key: int | str) -> Zone:
@@ -95,19 +85,13 @@ class WindLoadBuilder(WindLoadBuilderInterface):
     def set_factor(self, factor: WindFactor):
         self.wind_load.factor = factor
 
-    def set_pressure(self, pressure: WindPressure):
-        self.wind_load.pressure = pressure
-
-    def set_zones(self, zones: set[Zone]):
+    def set_zones(self, zones: list[Zone]):
         self.wind_load.zones = zones
 
     def get_factor(self) -> WindFactor:
         return self.wind_load.factor
 
-    def get_pressure(self) -> WindPressure:
-        return self.wind_load.pressure
-
-    def get_zones(self) -> set[Zone]:
+    def get_zones(self) -> list[Zone]:
         return self.wind_load.zones
 
     def get_zone(self, key: int | str) -> Zone:

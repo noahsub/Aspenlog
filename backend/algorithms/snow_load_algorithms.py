@@ -14,9 +14,6 @@ import math
 from backend.Constants.importance_factor_constants import WindImportanceFactor, SnowImportanceFactor
 from backend.Constants.snow_constants import RoofType
 from backend.Constants.wind_constants import WindExposureFactorSelections
-from backend.Entities.building import Building
-from backend.Entities.location import Location
-from backend.Entities.snow import SnowLoad
 
 
 ########################################################################################################################

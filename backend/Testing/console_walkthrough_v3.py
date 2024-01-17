@@ -12,9 +12,11 @@ import typer
 from rich import print
 from rich.prompt import Prompt
 
-from backend.Constants.importance_factor_constants import ImportanceFactor
+from backend.Constants.importance_factor_constants import ImportanceFactor, LimitState
 from backend.Constants.materials import Materials
 from backend.Constants.seismic_constants import SiteDesignation, SiteClass
+from backend.Constants.snow_constants import RoofType
+from backend.Constants.wind_constants import WindExposureFactorSelections, InternalPressureSelections
 from backend.Entities.Building.building import BuildingDefaultHeightDefaultMaterialBuilder, \
     BuildingDefaultHeightCustomMaterialBuilder, BuildingCustomHeightDefaultMaterialBuilder, \
     BuildingCustomHeightCustomMaterialBuilder
@@ -25,6 +27,11 @@ from backend.Entities.Building.height_zone import HeightZone
 from backend.Entities.Building.material_zone import MaterialZone, MaterialComposition
 from backend.Entities.Building.roof import RoofBuilder, RoofBuilderInterface, Roof
 from backend.Entities.Location.location import LocationBuilderInterface, LocationXvBuilder, LocationXsBuilder
+from backend.Entities.Wind.wind_factor import WindFactorBuilder
+from backend.Entities.Wind.wind_load import WindLoadBuilder
+from backend.Entities.Wind.wind_pressure import WindPressureBuilder
+from backend.algorithms.wind_load_algorithms import get_wind_topographic_factor, get_wind_exposure_factor, \
+    get_wind_gust_factor, get_internal_pressure, get_external_pressure
 
 ########################################################################################################################
 # GLOBALS
@@ -297,7 +304,11 @@ if __name__ == '__main__':
     else:
         seismic_value = check_save('seismic_value_xs', user_input, 'site class')
 
+    print("Collecting information from database and external APIs...")
+
     location = location_data(address=address, site_designation=site_designation, seismic_value=seismic_value)
+
+
 
     print_line()
     print("LOCATION")
@@ -387,6 +398,55 @@ if __name__ == '__main__':
     print_line()
 
     importance_category = check_save('importance_category', choice, 'importance category', ImportanceFactor)
+    limit_state = check_save('limit state', choice, 'limit state', LimitState)
+
+    for height_zone in building.zones.keys():
+        wind_factor_builder = WindFactorBuilder()
+
+        confirm_topographic_factor = check_save(f'confirm_topographic_factor_{height_zone.zone_num}', confirm_choice, 'Would you like to use a custom topographic factor (default 1)?')
+        topographic_factor = None
+        if confirm_topographic_factor:
+            topographic_factor = float(check_save(f'topographic_factor_{height_zone.zone_num}', user_input, 'topographic factor'))
+            get_wind_topographic_factor(wind_factor_builder, topographic_factor)
+        else:
+            topographic_factor = 1
+            get_wind_topographic_factor(wind_factor_builder)
+            serialize(f'topographic_factor_{height_zone.zone_num}', topographic_factor)
+
+        exposure_factor_selection = check_save(f'exposure_factor_selection_{height_zone.zone_num}', choice, 'exposure factor selection', WindExposureFactorSelections)
+        if exposure_factor_selection == WindExposureFactorSelections.INTERMEDIATE:
+            manual_ce_cei = float(check_save(f"exposure_factor_manual_value_{height_zone.zone_num}", user_input, "single value for both ce and cei"))
+            get_wind_exposure_factor(wind_factor_builder, exposure_factor_selection, building, height_zone.zone_num, manual_ce_cei)
+        else:
+            get_wind_exposure_factor(wind_factor_builder, exposure_factor_selection, building, height_zone.zone_num)
+
+        get_wind_gust_factor(wind_factor_builder)
+
+        wind_factor = wind_factor_builder.get_wind_factor()
+        wind_pressure_builder = WindPressureBuilder()
+        internal_pressure_selection = check_save(f'internal_pressure_selection_{height_zone.zone_num}', choice, 'internal pressure selection',  InternalPressureSelections)
+
+        get_internal_pressure(wind_factor, wind_pressure_builder, internal_pressure_selection, importance_category, limit_state, location)
+
+        wind_load_builder = WindLoadBuilder()
+        get_external_pressure(wind_factor, wind_pressure_builder, wind_load_builder, importance_category, limit_state, location)
+
+        wind_load = wind_load_builder.get_wind_load()
+
+        print_line()
+        print(f"WIND LOAD FOR HEIGHT ZONE {height_zone.zone_num}")
+        print(wind_load)
+        print_line()
+
+    roof_type = check_save('roof_type', choice, 'roof type', RoofType)
+
+
+
+
+
+
+
+
 
 
 
