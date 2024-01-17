@@ -324,14 +324,21 @@ class BuildingDefaultHeightCustomMaterialBuilder(BuildingBuilderInterface):
         assert len(self.building.zones.keys()) == len(material_zones)
         for i, height_zone in enumerate(self.building.zones.keys()):
             self.building.zones[height_zone] = material_zones[i]
-        self.building.wp = 0
-        products = []
-        material_sum = 0
+
+    def compute_wp(self):
+        assert all(x is not None for x in self.building.zones.values())
+        total_weighted_sum = 0
+        total_weight = 0
         for height_zone, material_zone in self.building.zones.items():
-            product = sum(x.respected_percentage * height_zone.elevation for x in material_zone.materials_list)
-            products.append(product)
-            material_sum += sum([x.respected_percentage for x in material_zone.materials_list])
-        self.building.wp = sum(products) / material_sum
+            for material in material_zone.materials_list:
+                total_weighted_sum += material.weight * (material.respected_percentage / 100)
+                total_weight += material.weight
+
+        weighted_average = 0
+        if total_weight != 0:
+            weighted_average = total_weighted_sum / total_weight
+
+        self.building.wp = weighted_average
 
     def get_dimensions(self) -> Dimensions:
         return self.building.dimensions
@@ -468,14 +475,21 @@ class BuildingCustomHeightCustomMaterialBuilder(BuildingBuilderInterface):
         assert len(self.building.zones.keys()) == len(material_zones)
         for i, height_zone in enumerate(self.building.zones.keys()):
             self.building.zones[height_zone] = material_zones[i]
-        self.building.wp = 0
-        products = []
-        material_sum = 0
+
+    def compute_wp(self):
+        assert all(x is not None for x in self.building.zones.values())
+        total_weighted_sum = 0
+        total_weight = 0
         for height_zone, material_zone in self.building.zones.items():
-            product = sum(x.respected_percentage * height_zone.elevation for x in material_zone.materials_list)
-            products.append(product)
-            material_sum += sum([x.respected_percentage for x in material_zone.materials_list])
-        self.building.wp = sum(products) / material_sum
+            for material in material_zone.materials_list:
+                total_weighted_sum += material.weight * (material.respected_percentage / 100)
+                total_weight += material.weight
+
+        weighted_average = 0
+        if total_weight != 0:
+            weighted_average = total_weighted_sum / total_weight
+
+        self.building.wp = weighted_average
 
     def get_dimensions(self) -> Dimensions:
         return self.building.dimensions

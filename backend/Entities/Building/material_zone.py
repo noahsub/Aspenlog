@@ -6,18 +6,22 @@ from backend.Constants.materials import Materials
 class MaterialComposition:
     material: Materials
     respected_percentage: float
+    weight: float
 
-    def __init__(self, material: Materials, respected_percentage: float):
+    def __init__(self, material: Materials, respected_percentage: float, weight: float):
         self.material = material
         self.respected_percentage = respected_percentage
+        self.weight = weight
 
     def __str__(self):
         return (f"material: {self.material}\n,"
-                f"respected percentage: {self.respected_percentage}\n")
+                f"respected percentage: {self.respected_percentage}\n,"
+                f"weight: {self.weight}\n")
 
     def __repr__(self):
         return (f"material: {self.material}\n,"
-                f"respected percentage: {self.respected_percentage}\n")
+                f"respected percentage: {self.respected_percentage}\n,"
+                f"weight: {self.weight}\n")
 
 
 class MaterialZone:

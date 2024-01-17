@@ -266,6 +266,7 @@ def building(dimensions: Dimensions, cladding: Cladding, roof: Roof, num_floor: 
         building_builder.set_h_opening(h_opening)
         building_builder.generate_height_zones()
         building_builder.generate_material_zones(material_load)
+        building_builder.compute_wp()
         return building_builder.get_building()
     # Case custom height zones and simple material load
     elif height_zones is not None and isinstance(material_load, (float, int)):
@@ -288,6 +289,7 @@ def building(dimensions: Dimensions, cladding: Cladding, roof: Roof, num_floor: 
         building_builder.set_h_opening(h_opening)
         building_builder.generate_height_zones(height_zones)
         building_builder.generate_material_zones(material_load)
+        building_builder.compute_wp()
         return building_builder.get_building()
     else:
         raise NotImplementedError
@@ -401,7 +403,7 @@ d88P     888  "Y8888P"  888        8888888888 888    Y888 88888888 "Y88888P"   "
                 materials_list = []
                 k = 1
                 while not finished_materials:
-                    materials_list.append(MaterialComposition(material=choice(f"material {k} for height zone {i + 1}", Materials), respected_percentage=float(user_input("respected percentage"))))
+                    materials_list.append(MaterialComposition(material=choice(f"material {k} for height zone {i + 1}", Materials), respected_percentage=float(user_input("respected percentage")), weight=float(user_input("weight"))))
                     finished_materials = not confirm_choice("Would you like to add another material for the current height zone?")
                     k += 1
                 material_zones.append(MaterialZone(materials_list))
