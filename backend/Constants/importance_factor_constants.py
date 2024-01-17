@@ -17,6 +17,18 @@ from enum import Enum
 # ENUMS
 ########################################################################################################################
 
+class ImportanceFactor(Enum):
+    LOW: str = 'LOW'
+    NORMAL: str = 'NORMAL'
+    HIGH: str = 'HIGH'
+    POST_DISASTER: str = 'POST_DISASTER'
+
+
+class LimitState(Enum):
+    ULS: str = 'ULS'
+    SLS: str = 'SLS'
+
+
 class WindImportanceFactor(Enum):
     """
     Enum for the wind importance factors
