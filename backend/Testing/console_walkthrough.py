@@ -604,8 +604,8 @@ def step_13():
     importance_selection = choice(prompt="Importance Selection", options=WindImportanceFactor)
     wind_exposure_factor_selection = choice(prompt="Wind Exposure Factor Selection",
                                             options=WindExposureFactorSelections)
-    snow_load_algorithms.get_wind_exposure_factor(snow_load=SNOW_LOAD, importance_selection=importance_selection,
-                                                  wind_exposure_factor_selection=wind_exposure_factor_selection)
+    snow_load_algorithms.get_wind_exposure_factor_snow(snow_load=SNOW_LOAD, importance_selection=importance_selection,
+                                                       wind_exposure_factor_selection=wind_exposure_factor_selection)
     serialize('snow_load', SNOW_LOAD)
 
 

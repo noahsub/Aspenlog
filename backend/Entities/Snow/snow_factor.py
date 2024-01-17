@@ -101,6 +101,11 @@ class SnowFactorBuilder(SnowFactorBuilderInterface):
     def get_cb(self) -> float:
         return self.snow_factor.cb
 
+    def get_snow_factor(self):
+        snow_factor = self.snow_factor
+        self.reset()
+        return snow_factor
+
 
 class SnowFactorDirector:
     @staticmethod

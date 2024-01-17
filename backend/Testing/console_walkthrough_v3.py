@@ -4,6 +4,7 @@
 
 import json
 import os
+import pprint
 from typing import List, Dict
 
 import jsonpickle
@@ -12,6 +13,7 @@ import typer
 from rich import print
 from rich.prompt import Prompt
 
+import backend.algorithms.snow_load_algorithms
 from backend.Constants.importance_factor_constants import ImportanceFactor, LimitState
 from backend.Constants.materials import Materials
 from backend.Constants.seismic_constants import SiteDesignation, SiteClass
@@ -27,9 +29,16 @@ from backend.Entities.Building.height_zone import HeightZone
 from backend.Entities.Building.material_zone import MaterialZone, MaterialComposition
 from backend.Entities.Building.roof import RoofBuilder, RoofBuilderInterface, Roof
 from backend.Entities.Location.location import LocationBuilderInterface, LocationXvBuilder, LocationXsBuilder
+from backend.Entities.Seismic.seismic_factor import SeismicFactorBuilder
+from backend.Entities.Seismic.seismic_load import SeismicLoadBuilder
+from backend.Entities.Snow.snow_factor import SnowFactorBuilder
+from backend.Entities.Snow.snow_load import SnowLoadBuilder
 from backend.Entities.Wind.wind_factor import WindFactorBuilder
 from backend.Entities.Wind.wind_load import WindLoadBuilder
 from backend.Entities.Wind.wind_pressure import WindPressureBuilder
+from backend.algorithms.seismic_load_algorithms import get_seismic_factor_values, get_floor_mapping, get_height_factor, \
+    get_horizontal_force_factor, get_specified_lateral_earthquake_force
+from backend.algorithms.snow_load_algorithms import get_slope_factor, get_accumulation_factor, get_wind_exposure_factor_snow, get_basic_roof_snow_load_factor, get_snow_load
 from backend.algorithms.wind_load_algorithms import get_wind_topographic_factor, get_wind_exposure_factor, \
     get_wind_gust_factor, get_internal_pressure, get_external_pressure
 
@@ -289,6 +298,21 @@ def building(dimensions: Dimensions, cladding: Cladding, roof: Roof, num_floor: 
 ########################################################################################################################
 
 if __name__ == '__main__':
+    title = """
+       d8888  .d8888b.  8888888b.  8888888888 888b    888 888      .d88888b.   .d8888b.  
+      d88888 d88P  Y88b 888   Y88b 888        8888b   888 888     d88P" "Y88b d88P  Y88b 
+     d88P888 Y88b.      888    888 888        88888b  888 888     888     888 888    888 
+    d88P 888  "Y888b.   888   d88P 8888888    888Y88b 888 888     888     888 888        
+   d88P  888     "Y88b. 8888888P"  888        888 Y88b888 888     888     888 888  88888 
+  d88P   888       "888 888        888        888  Y88888 888     888     888 888    888 
+ d8888888888 Y88b  d88P 888        888        888   Y8888 888     Y88b. .d88P Y88b  d88P 
+d88P     888  "Y8888P"  888        8888888888 888    Y888 88888888 "Y88888P"   "Y8888P88                                                                                                                                                                                                                                                                                            
+    """
+    print_line()
+    print(title)
+    print("2020 CONSOLE EDITION V3")
+    print_line()
+
     create_save_file()
 
     # address
@@ -399,6 +423,7 @@ if __name__ == '__main__':
 
     importance_category = check_save('importance_category', choice, 'importance category', ImportanceFactor)
     limit_state = check_save('limit state', choice, 'limit state', LimitState)
+    exposure_factor_selection = None
 
     for height_zone in building.zones.keys():
         wind_factor_builder = WindFactorBuilder()
@@ -439,16 +464,63 @@ if __name__ == '__main__':
         print_line()
 
     roof_type = check_save('roof_type', choice, 'roof type', RoofType)
+    snow_factor_builder = SnowFactorBuilder()
+    get_slope_factor(snow_factor_builder, roof_type, building)
+    get_accumulation_factor(snow_factor_builder)
+    get_wind_exposure_factor_snow(snow_factor_builder, importance_category, exposure_factor_selection)
+    get_basic_roof_snow_load_factor(snow_factor_builder, building)
+    snow_load_builder = SnowLoadBuilder()
+    get_snow_load(snow_factor_builder, snow_load_builder, importance_category, limit_state, location)
 
+    snow_load = snow_load_builder.get_snow_load()
+    print_line()
+    print(f"SNOW LOAD")
+    print(snow_load)
+    print_line()
 
+    seismic_factor_builder = SeismicFactorBuilder()
+    ar = None
+    confirm_ar = check_save('confirm_ar', confirm_choice, 'Would you like to use the default ar value of 1?')
+    if confirm_ar:
+        ar = 1
+        serialize('ar', ar)
+    else:
+        ar = float(check_save('ar', user_input, 'ar'))
 
+    rp = None
+    confirm_rp = check_save('confirm_rp', confirm_choice, 'Would you like to use the default rp value of 2.5?')
+    if confirm_rp:
+        rp = 2.5
+        serialize('rp', rp)
+    else:
+        rp = float(check_save('rp', user_input, 'rp'))
 
+    cp = None
+    confirm_cp = check_save('confirm_cp', confirm_choice, 'Would you like to use the default cp value of 1?')
+    if confirm_cp:
+        cp = 1
+        serialize('cp', cp)
+    else:
+        cp = float(check_save('cp', user_input, 'cp'))
 
+    get_seismic_factor_values(seismic_factor_builder, ar, rp, cp)
+    floor_mapping = get_floor_mapping(building)
+    pprint.pprint(floor_mapping)
+    seismic_load_builder = SeismicLoadBuilder()
 
+    floor_choice = int(check_save('floor_num', user_input, 'floor number used to compute ax'))
+    get_height_factor(seismic_load_builder, building, floor_choice)
+    get_horizontal_force_factor(seismic_factor_builder, seismic_load_builder)
+    get_specified_lateral_earthquake_force(seismic_load_builder, snow_load, building, location, importance_category)
 
+    seismic_load = seismic_load_builder.get_seismic_load()
 
+    print_line()
+    print(f"SEISMIC LOAD")
+    print(seismic_load)
+    print_line()
 
-
+    print("PROGRAM TERMINATING...")
 
 
 
