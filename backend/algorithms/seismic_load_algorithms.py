@@ -11,6 +11,7 @@
 ########################################################################################################################
 
 from backend.Constants.importance_factor_constants import SeismicImportanceFactor, ImportanceFactor
+from backend.Constants.load_constants import LoadTypes
 from backend.Entities.Building.building import Building
 from backend.Entities.Location.location import Location
 from backend.Entities.Seismic.seismic_factor import SeismicFactorBuilder
@@ -102,17 +103,6 @@ def get_specified_lateral_earthquake_force(seismic_load_builder: SeismicLoadBuil
     :param seismic_importance_factor: The seismic importance factor to be used in the computation
     :return: None
     """
-    seismic_importance_factor = None
-    match importance_factor:
-        case ImportanceFactor.LOW:
-            seismic_importance_factor = SeismicImportanceFactor.SLS_LOW
-        case ImportanceFactor.NORMAL:
-            seismic_importance_factor = SeismicImportanceFactor.SLS_NORMAL
-        case ImportanceFactor.HIGH:
-            seismic_importance_factor = SeismicImportanceFactor.SLS_HIGH
-        case ImportanceFactor.POST_DISASTER:
-            seismic_importance_factor = SeismicImportanceFactor.SLS_POST_DISASTER
+    seismic_importance_factor = importance_factor.get_importance_factor_uls(LoadTypes.SEISMIC)
     # Vp=0.3*S_0.2*Ie*Sp*Wp
-    seismic_load_builder.set_vp(0.3 * location.design_spectral_acceleration_0_2 * seismic_importance_factor.value * seismic_load_builder.get_sp() * building.wp)
-    # Vp_snow=0.3*S_0.2*Ie*Wp_snow where Wp_snow=S+Wp
-    seismic_load_builder.set_vp_snow(0.3 * location.design_spectral_acceleration_0_2 * seismic_importance_factor.value * (snow_load.s + building.wp))
+    seismic_load_builder.set_vp(0.3 * location.design_spectral_acceleration_0_2 * seismic_importance_factor * seismic_load_builder.get_sp() * building.wp)

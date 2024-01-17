@@ -12,6 +12,8 @@
 
 from enum import Enum
 
+from backend.Constants.load_constants import LoadTypes
+
 
 ########################################################################################################################
 # ENUMS
@@ -22,6 +24,76 @@ class ImportanceFactor(Enum):
     NORMAL: str = 'NORMAL'
     HIGH: str = 'HIGH'
     POST_DISASTER: str = 'POST_DISASTER'
+
+    def get_importance_factor_uls(self, load_type: LoadTypes):
+        match self:
+            case self.LOW:
+                match load_type:
+                    case LoadTypes.WIND:
+                        return WindImportanceFactor.ULS_LOW.value
+                    case LoadTypes.SNOW:
+                        return SnowImportanceFactor.ULS_LOW.value
+                    case LoadTypes.SEISMIC:
+                        return SeismicImportanceFactor.ULS_LOW.value
+            case self.NORMAL:
+                match load_type:
+                    case LoadTypes.WIND:
+                        return WindImportanceFactor.ULS_NORMAL.value
+                    case LoadTypes.SNOW:
+                        return SnowImportanceFactor.ULS_NORMAL.value
+                    case LoadTypes.SEISMIC:
+                        return SeismicImportanceFactor.ULS_NORMAL.value
+            case self.HIGH:
+                match load_type:
+                    case LoadTypes.WIND:
+                        return WindImportanceFactor.ULS_HIGH.value
+                    case LoadTypes.SNOW:
+                        return SnowImportanceFactor.ULS_HIGH.value
+                    case LoadTypes.SEISMIC:
+                        return SeismicImportanceFactor.ULS_HIGH.value
+            case self.POST_DISASTER:
+                match load_type:
+                    case LoadTypes.WIND:
+                        return WindImportanceFactor.ULS_POST_DISASTER.value
+                    case LoadTypes.SNOW:
+                        return SnowImportanceFactor.ULS_POST_DISASTER.value
+                    case LoadTypes.SEISMIC:
+                        return SeismicImportanceFactor.ULS_POST_DISASTER.value
+
+    def get_importance_factor_sls(self, load_type: LoadTypes):
+        match self:
+            case self.LOW:
+                match load_type:
+                    case LoadTypes.WIND:
+                        return WindImportanceFactor.SLS_LOW.value
+                    case LoadTypes.SNOW:
+                        return SnowImportanceFactor.SLS_LOW.value
+                    case LoadTypes.SEISMIC:
+                        return SeismicImportanceFactor.SLS_LOW.value
+            case self.NORMAL:
+                match load_type:
+                    case LoadTypes.WIND:
+                        return WindImportanceFactor.SLS_NORMAL.value
+                    case LoadTypes.SNOW:
+                        return SnowImportanceFactor.SLS_NORMAL.value
+                    case LoadTypes.SEISMIC:
+                        return SeismicImportanceFactor.SLS_NORMAL.value
+            case self.HIGH:
+                match load_type:
+                    case LoadTypes.WIND:
+                        return WindImportanceFactor.SLS_HIGH.value
+                    case LoadTypes.SNOW:
+                        return SnowImportanceFactor.SLS_HIGH.value
+                    case LoadTypes.SEISMIC:
+                        return SeismicImportanceFactor.SLS_HIGH.value
+            case self.POST_DISASTER:
+                match load_type:
+                    case LoadTypes.WIND:
+                        return WindImportanceFactor.SLS_POST_DISASTER.value
+                    case LoadTypes.SNOW:
+                        return SnowImportanceFactor.SLS_POST_DISASTER.value
+                    case LoadTypes.SEISMIC:
+                        return SeismicImportanceFactor.SLS_POST_DISASTER.value
 
 
 class LimitState(Enum):

@@ -13,6 +13,7 @@
 import math
 from backend.Constants.importance_factor_constants import WindImportanceFactor, SnowImportanceFactor, ImportanceFactor, \
     LimitState
+from backend.Constants.load_constants import LoadTypes
 from backend.Constants.snow_constants import RoofType, ACCUMULATION_FACTOR
 from backend.Constants.wind_constants import WindExposureFactorSelections
 from backend.Entities.Building.building import Building
@@ -103,7 +104,7 @@ def get_basic_roof_snow_load_factor(snow_factor_builder: SnowFactorBuilder, buil
         snow_factor_builder.set_cb((1 / snow_factor_builder.get_cw()) * (1 - (1 - 0.8 * snow_factor_builder.get_cw()) * math.exp(-1 * ((ic * snow_factor_builder.get_cw() ** 2 - 70) / (100)))))
 
 
-def get_snow_load(snow_factor_builder: SnowFactorBuilder, snow_load_builder: SnowLoadBuilder, importance_factor: ImportanceFactor, limit_state: LimitState, location: Location):
+def get_snow_load(snow_factor_builder: SnowFactorBuilder, snow_load_builder: SnowLoadBuilder, importance_factor: ImportanceFactor, location: Location):
     """
     This function sets the snow load
     :param snow_load: A SnowLoad object, responsible for storing the snow load information
@@ -111,32 +112,9 @@ def get_snow_load(snow_factor_builder: SnowFactorBuilder, snow_load_builder: Sno
     :param location: A Location object, responsible for storing the location information
     :return: None
     """
-    snow_importance_factor = None
-    match importance_factor:
-        case importance_factor.LOW:
-            match limit_state:
-                case limit_state.ULS:
-                    snow_importance_factor = SnowImportanceFactor.ULS_LOW
-                case limit_state.SLS:
-                    snow_importance_factor = SnowImportanceFactor.SLS_LOW
-        case importance_factor.NORMAL:
-            match limit_state:
-                case limit_state.ULS:
-                    snow_importance_factor = SnowImportanceFactor.ULS_NORMAL
-                case limit_state.SLS:
-                    snow_importance_factor = SnowImportanceFactor.SLS_NORMAL
-        case importance_factor.HIGH:
-            match limit_state:
-                case limit_state.ULS:
-                    snow_importance_factor = SnowImportanceFactor.ULS_HIGH
-                case limit_state.SLS:
-                    snow_importance_factor = SnowImportanceFactor.SLS_HIGH
-        case importance_factor.POST_DISASTER:
-            match limit_state:
-                case limit_state.ULS:
-                    snow_importance_factor = SnowImportanceFactor.ULS_POST_DISASTER
-                case limit_state.SLS:
-                    snow_importance_factor = SnowImportanceFactor.SLS_POST_DISASTER
+    snow_importance_factor_uls = importance_factor.get_importance_factor_uls(LoadTypes.SNOW)
+    snow_importance_factor_sls = importance_factor.get_importance_factor_sls(LoadTypes.SNOW)
 
-    snow_load_builder.set_s(snow_importance_factor.value * (location.rain_load * (snow_factor_builder.get_cb() * snow_factor_builder.get_cw() * snow_factor_builder.get_cs() * snow_factor_builder.get_ca()) + location.snow_load))
+    snow_load_builder.set_s_uls(snow_importance_factor_uls * (location.rain_load * (snow_factor_builder.get_cb() * snow_factor_builder.get_cw() * snow_factor_builder.get_cs() * snow_factor_builder.get_ca()) + location.snow_load))
+    snow_load_builder.set_s_sls(snow_importance_factor_sls * (location.rain_load * (snow_factor_builder.get_cb() * snow_factor_builder.get_cw() * snow_factor_builder.get_cs() * snow_factor_builder.get_ca()) + location.snow_load))
     snow_load_builder.set_factor(snow_factor_builder.get_snow_factor())

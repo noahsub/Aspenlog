@@ -424,7 +424,6 @@ d88P     888  "Y8888P"  888        8888888888 888    Y888 88888888 "Y88888P"   "
     print_line()
 
     importance_category = check_save('importance_category', choice, 'importance category', ImportanceFactor)
-    limit_state = check_save('limit state', choice, 'limit state', LimitState)
     exposure_factor_selection = None
 
     for height_zone in building.zones.keys():
@@ -453,10 +452,10 @@ d88P     888  "Y8888P"  888        8888888888 888    Y888 88888888 "Y88888P"   "
         wind_pressure_builder = WindPressureBuilder()
         internal_pressure_selection = check_save(f'internal_pressure_selection_{height_zone.zone_num}', choice, 'internal pressure selection',  InternalPressureSelections)
 
-        get_internal_pressure(wind_factor, wind_pressure_builder, internal_pressure_selection, importance_category, limit_state, location)
+        get_internal_pressure(wind_factor, wind_pressure_builder, internal_pressure_selection, importance_category, location)
 
         wind_load_builder = WindLoadBuilder()
-        get_external_pressure(wind_factor, wind_pressure_builder, wind_load_builder, importance_category, limit_state, location)
+        get_external_pressure(wind_factor, wind_pressure_builder, wind_load_builder, importance_category, location)
 
         wind_load = wind_load_builder.get_wind_load()
 
@@ -472,7 +471,7 @@ d88P     888  "Y8888P"  888        8888888888 888    Y888 88888888 "Y88888P"   "
     get_wind_exposure_factor_snow(snow_factor_builder, importance_category, exposure_factor_selection)
     get_basic_roof_snow_load_factor(snow_factor_builder, building)
     snow_load_builder = SnowLoadBuilder()
-    get_snow_load(snow_factor_builder, snow_load_builder, importance_category, limit_state, location)
+    get_snow_load(snow_factor_builder, snow_load_builder, importance_category, location)
 
     snow_load = snow_load_builder.get_snow_load()
     print_line()
