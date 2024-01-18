@@ -321,6 +321,9 @@ class BuildingDefaultHeightCustomMaterialBuilder(BuildingBuilderInterface):
             self.building.zones[HeightZone(zone_num=i, elevation=height_sum)] = None
 
     def generate_material_zones(self, material_zones: List[MaterialZone]):
+
+        print(self.building.zones.keys())
+
         assert len(self.building.zones.keys()) == len(material_zones)
         for i, height_zone in enumerate(self.building.zones.keys()):
             self.building.zones[height_zone] = material_zones[i]

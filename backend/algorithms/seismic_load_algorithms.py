@@ -33,15 +33,11 @@ def get_seismic_factor_values(seismic_factor_builder: SeismicFactorBuilder, ar: 
     :return: None
     """
     # if ar parameter is present, override default value
-    if ar:
-        seismic_factor_builder.set_ar(ar)
+    seismic_factor_builder.set_ar(ar)
     # if rp parameter is present, override default value
-    if rp:
-        seismic_factor_builder.set_rp(rp)
+    seismic_factor_builder.set_rp(rp)
     # if cp parameter is present, override default value
-    if cp:
-        seismic_factor_builder.set_cp(cp)
-
+    seismic_factor_builder.set_cp(cp)
 
 def get_floor_mapping(building: Building):
     """
@@ -68,7 +64,7 @@ def get_floor_mapping(building: Building):
     return floor_mapping
 
 
-def get_height_factor(seismic_load_builder: SeismicLoadBuilder, building: Building, floor: int):
+def get_height_factor(seismic_load_builder: SeismicLoadBuilder, building: Building, zone_num: int):
     """
     This function calculates the height factor
     :param seismic_load: A SeismicLoad object, responsible for storing the seismic load information
@@ -76,8 +72,9 @@ def get_height_factor(seismic_load_builder: SeismicLoadBuilder, building: Buildi
     :param floor: The floor number to be used in the computation
     :return: None
     """
-    # Ax=1+2*hx_n/H
-    seismic_load_builder.set_ax(1 + 2 * floor / building.dimensions.height)
+    height_zone = building.get_zone(zone_num)[0]
+    # Ax=1+2*H_hz_num/H
+    seismic_load_builder.set_ax(1 + 2 * (height_zone.elevation / building.dimensions.height))
 
 
 def get_horizontal_force_factor(seismic_factor_builder: SeismicFactorBuilder, seismic_load_builder: SeismicLoadBuilder):
