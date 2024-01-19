@@ -11,6 +11,7 @@
 ########################################################################################################################
 
 from backend.Constants.importance_factor_constants import SeismicImportanceFactor, ImportanceFactor
+from backend.Constants.load_constants import LoadTypes
 from backend.Entities.Building.building import Building
 from backend.Entities.Location.location import Location
 from backend.Entities.Seismic.seismic_factor import SeismicFactorBuilder
@@ -32,15 +33,11 @@ def get_seismic_factor_values(seismic_factor_builder: SeismicFactorBuilder, ar: 
     :return: None
     """
     # if ar parameter is present, override default value
-    if ar:
-        seismic_factor_builder.set_ar(ar)
+    seismic_factor_builder.set_ar(ar)
     # if rp parameter is present, override default value
-    if rp:
-        seismic_factor_builder.set_rp(rp)
+    seismic_factor_builder.set_rp(rp)
     # if cp parameter is present, override default value
-    if cp:
-        seismic_factor_builder.set_cp(cp)
-
+    seismic_factor_builder.set_cp(cp)
 
 def get_floor_mapping(building: Building):
     """
@@ -67,7 +64,7 @@ def get_floor_mapping(building: Building):
     return floor_mapping
 
 
-def get_height_factor(seismic_load_builder: SeismicLoadBuilder, building: Building, floor: int):
+def get_height_factor(seismic_load_builder: SeismicLoadBuilder, building: Building, zone_num: int):
     """
     This function calculates the height factor
     :param seismic_load: A SeismicLoad object, responsible for storing the seismic load information
@@ -75,8 +72,9 @@ def get_height_factor(seismic_load_builder: SeismicLoadBuilder, building: Buildi
     :param floor: The floor number to be used in the computation
     :return: None
     """
-    # Ax=1+2*hx_n/H
-    seismic_load_builder.set_ax(1 + 2 * floor / building.dimensions.height)
+    height_zone = building.get_zone(zone_num)[0]
+    # Ax=1+2*H_hz_num/H
+    seismic_load_builder.set_ax(1 + 2 * (height_zone.elevation / building.dimensions.height))
 
 
 def get_horizontal_force_factor(seismic_factor_builder: SeismicFactorBuilder, seismic_load_builder: SeismicLoadBuilder):
@@ -102,17 +100,6 @@ def get_specified_lateral_earthquake_force(seismic_load_builder: SeismicLoadBuil
     :param seismic_importance_factor: The seismic importance factor to be used in the computation
     :return: None
     """
-    seismic_importance_factor = None
-    match importance_factor:
-        case ImportanceFactor.LOW:
-            seismic_importance_factor = SeismicImportanceFactor.SLS_LOW
-        case ImportanceFactor.NORMAL:
-            seismic_importance_factor = SeismicImportanceFactor.SLS_NORMAL
-        case ImportanceFactor.HIGH:
-            seismic_importance_factor = SeismicImportanceFactor.SLS_HIGH
-        case ImportanceFactor.POST_DISASTER:
-            seismic_importance_factor = SeismicImportanceFactor.SLS_POST_DISASTER
+    seismic_importance_factor = importance_factor.get_importance_factor_uls(LoadTypes.SEISMIC)
     # Vp=0.3*S_0.2*Ie*Sp*Wp
-    seismic_load_builder.set_vp(0.3 * location.design_spectral_acceleration_0_2 * seismic_importance_factor.value * seismic_load_builder.get_sp() * building.wp)
-    # Vp_snow=0.3*S_0.2*Ie*Wp_snow where Wp_snow=S+Wp
-    seismic_load_builder.set_vp_snow(0.3 * location.design_spectral_acceleration_0_2 * seismic_importance_factor.value * (snow_load.s + building.wp))
+    seismic_load_builder.set_vp(0.3 * location.design_spectral_acceleration_0_2 * seismic_importance_factor * seismic_load_builder.get_sp() * building.wp)

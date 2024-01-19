@@ -12,6 +12,7 @@ from copy import copy, deepcopy
 ########################################################################################################################
 
 from backend.Constants.importance_factor_constants import WindImportanceFactor, ImportanceFactor, LimitState
+from backend.Constants.load_constants import LoadTypes
 from backend.Constants.wind_constants import WindExposureFactorSelections, InternalPressureSelections, \
     INTERNAL_GUST_EFFECT_FACTOR
 from backend.Entities.Building.building import Building
@@ -85,7 +86,7 @@ def get_wind_gust_factor(wind_factor_builder: WindFactorBuilder):
     wind_factor_builder.set_cg()
 
 
-def get_internal_pressure(wind_factor: WindFactor, wind_pressure_builder: WindPressureBuilder, internal_pressure_selection: InternalPressureSelections, importance_factor: ImportanceFactor, limit_state: LimitState, location: Location):
+def get_internal_pressure(wind_factor: WindFactor, wind_pressure_builder: WindPressureBuilder, internal_pressure_selection: InternalPressureSelections, importance_factor: ImportanceFactor, location: Location):
     """
     This function sets the internal pressure
     :param wind_load: A WindLoad object, responsible for storing the wind load information
@@ -95,82 +96,43 @@ def get_internal_pressure(wind_factor: WindFactor, wind_pressure_builder: WindPr
     :return:
     """
 
-    wind_importance_factor = None
-    match importance_factor:
-        case importance_factor.LOW:
-            match limit_state:
-                case limit_state.ULS:
-                    wind_importance_factor = WindImportanceFactor.ULS_LOW
-                case limit_state.SLS:
-                    wind_importance_factor = WindImportanceFactor.SLS_LOW
-        case importance_factor.NORMAL:
-            match limit_state:
-                case limit_state.ULS:
-                    wind_importance_factor = WindImportanceFactor.ULS_NORMAL
-                case limit_state.SLS:
-                    wind_importance_factor = WindImportanceFactor.SLS_NORMAL
-        case importance_factor.HIGH:
-            match limit_state:
-                case limit_state.ULS:
-                    wind_importance_factor = WindImportanceFactor.ULS_HIGH
-                case limit_state.SLS:
-                    wind_importance_factor = WindImportanceFactor.SLS_HIGH
-        case importance_factor.POST_DISASTER:
-            match limit_state:
-                case limit_state.ULS:
-                    wind_importance_factor = WindImportanceFactor.ULS_POST_DISASTER
-                case limit_state.SLS:
-                    wind_importance_factor = WindImportanceFactor.SLS_POST_DISASTER
+    wind_importance_factor_uls = importance_factor.get_importance_factor_uls(LoadTypes.WIND)
+    wind_importance_factor_sls = importance_factor.get_importance_factor_sls(LoadTypes.WIND)
+
 
     # A = (Iw * q * Cei * Ct * Cgi) * X where, x is the cpi_pos or cpi_neg value
-    internal_pressure = (wind_importance_factor.value * location.wind_velocity_pressure * wind_factor.cei * wind_factor.ct * INTERNAL_GUST_EFFECT_FACTOR)
+    internal_pressure_uls = (wind_importance_factor_uls * location.wind_velocity_pressure * wind_factor.cei * wind_factor.ct * INTERNAL_GUST_EFFECT_FACTOR)
+    internal_pressure_sls = (wind_importance_factor_sls * location.wind_velocity_pressure * wind_factor.cei * wind_factor.ct * INTERNAL_GUST_EFFECT_FACTOR)
 
     # Different cases based on the internal pressure selection
     match internal_pressure_selection:
         # If internal pressure is enclosed, set pi_pos = A * 0 and pi_neg = A * -0.15
         case internal_pressure_selection.ENCLOSED:
-            wind_pressure_builder.set_pi_pos(internal_pressure * 0)
-            wind_pressure_builder.set_pi_neg(internal_pressure * -0.15)
+            wind_pressure_builder.set_pi_pos_uls(internal_pressure_uls * 0)
+            wind_pressure_builder.set_pi_neg_uls(internal_pressure_uls * -0.15)
+            wind_pressure_builder.set_pi_pos_sls(internal_pressure_sls * 0)
+            wind_pressure_builder.set_pi_neg_sls(internal_pressure_sls * -0.15)
         # If internal pressure is partially enclosed, set pi_pos = A * 0.3 and pi_neg = A * -0.45
         case internal_pressure_selection.PARTIALLY_ENCLOSED:
-            wind_pressure_builder.set_pi_pos(internal_pressure * 0.3)
-            wind_pressure_builder.set_pi_neg(internal_pressure * -0.45)
+            wind_pressure_builder.set_pi_pos_uls(internal_pressure_uls * 0.3)
+            wind_pressure_builder.set_pi_neg_uls(internal_pressure_uls * -0.45)
+            wind_pressure_builder.set_pi_pos_sls(internal_pressure_sls * 0.3)
+            wind_pressure_builder.set_pi_neg_sls(internal_pressure_sls * -0.45)
         # If internal pressure is open, set pi_pos = A * 0.7 and pi_neg = A * -0.7
         case internal_pressure_selection.LARGE_OPENINGS:
-            wind_pressure_builder.set_pi_pos(internal_pressure * 0.7)
-            wind_pressure_builder.set_pi_neg(internal_pressure * -0.7)
+            wind_pressure_builder.set_pi_pos_uls(internal_pressure_uls * 0.7)
+            wind_pressure_builder.set_pi_neg_uls(internal_pressure_uls * -0.7)
+            wind_pressure_builder.set_pi_pos_sls(internal_pressure_sls * 0.7)
+            wind_pressure_builder.set_pi_neg_sls(internal_pressure_sls * -0.7)
 
 
-def get_external_pressure(wind_factor: WindFactor, wind_pressure_builder: WindPressureBuilder, wind_load_builder: WindLoadBuilder, importance_factor: ImportanceFactor, limit_state: LimitState, location: Location):
-    wind_importance_factor = None
-    match importance_factor:
-        case importance_factor.LOW:
-            match limit_state:
-                case limit_state.ULS:
-                    wind_importance_factor = WindImportanceFactor.ULS_LOW
-                case limit_state.SLS:
-                    wind_importance_factor = WindImportanceFactor.SLS_LOW
-        case importance_factor.NORMAL:
-            match limit_state:
-                case limit_state.ULS:
-                    wind_importance_factor = WindImportanceFactor.ULS_NORMAL
-                case limit_state.SLS:
-                    wind_importance_factor = WindImportanceFactor.SLS_NORMAL
-        case importance_factor.HIGH:
-            match limit_state:
-                case limit_state.ULS:
-                    wind_importance_factor = WindImportanceFactor.ULS_HIGH
-                case limit_state.SLS:
-                    wind_importance_factor = WindImportanceFactor.SLS_HIGH
-        case importance_factor.POST_DISASTER:
-            match limit_state:
-                case limit_state.ULS:
-                    wind_importance_factor = WindImportanceFactor.ULS_POST_DISASTER
-                case limit_state.SLS:
-                    wind_importance_factor = WindImportanceFactor.SLS_POST_DISASTER
+def get_external_pressure(wind_factor: WindFactor, wind_pressure_builder: WindPressureBuilder, wind_load_builder: WindLoadBuilder, importance_factor: ImportanceFactor, location: Location):
+    wind_importance_factor_uls = importance_factor.get_importance_factor_uls(LoadTypes.WIND)
+    wind_importance_factor_sls = importance_factor.get_importance_factor_sls(LoadTypes.WIND)
 
     # A = (Iw * q * Ce * Ct * Cg) * X where, x is the cpi_pos or cpi_neg value
-    external_pressure = (wind_importance_factor.value * location.wind_velocity_pressure * wind_factor.ce * wind_factor.ct * wind_factor.cg)
+    external_pressure_uls = (wind_importance_factor_uls * location.wind_velocity_pressure * wind_factor.ce * wind_factor.ct * wind_factor.cg)
+    external_pressure_sls = (wind_importance_factor_sls * location.wind_velocity_pressure * wind_factor.ce * wind_factor.ct * wind_factor.cg)
 
     zone_types = [(1, 'roof_interior'), (2, 'roof_edge'), (3, 'roof_corner'), (4, 'wall_centre'), (5, 'wall_corner')]
     zones = []
@@ -185,27 +147,39 @@ def get_external_pressure(wind_factor: WindFactor, wind_pressure_builder: WindPr
         match zone_type[1]:
             # If zone is roof interior, set pe_pos = A * 0 and pe_neg = A * -1
             case 'roof_interior':
-                zone_wind_pressure_builder.set_pe_pos(external_pressure * 0)
-                zone_wind_pressure_builder.set_pe_neg(external_pressure * -1)
+                zone_wind_pressure_builder.set_pe_pos_uls(external_pressure_uls * 0)
+                zone_wind_pressure_builder.set_pe_neg_uls(external_pressure_uls * -1)
+                zone_wind_pressure_builder.set_pe_pos_sls(external_pressure_sls * 0)
+                zone_wind_pressure_builder.set_pe_neg_sls(external_pressure_sls * -1)
             # If zone is roof edge, set pe_pos = A * 0 and pe_neg = A * -1.5
             case 'roof_edge':
-                zone_wind_pressure_builder.set_pe_pos(external_pressure * 0)
-                zone_wind_pressure_builder.set_pe_neg(external_pressure * -1.5)
+                zone_wind_pressure_builder.set_pe_pos_uls(external_pressure_uls * 0)
+                zone_wind_pressure_builder.set_pe_neg_uls(external_pressure_uls * -1.5)
+                zone_wind_pressure_builder.set_pe_pos_sls(external_pressure_sls * 0)
+                zone_wind_pressure_builder.set_pe_neg_sls(external_pressure_sls * -1.5)
             # If zone is roof corner, set pe_pos = A * 0 and pe_neg = A * -2.3
             case 'roof_corner':
-                zone_wind_pressure_builder.set_pe_pos(external_pressure * 0)
-                zone_wind_pressure_builder.set_pe_neg(external_pressure * -2.3)
+                zone_wind_pressure_builder.set_pe_pos_uls(external_pressure_uls * 0)
+                zone_wind_pressure_builder.set_pe_neg_uls(external_pressure_uls * -2.3)
+                zone_wind_pressure_builder.set_pe_pos_sls(external_pressure_sls * 0)
+                zone_wind_pressure_builder.set_pe_neg_sls(external_pressure_sls * -2.3)
             # If zone is wall centre, set pe_pos = A * 0.9 and pe_neg = A * -0.9
             case 'wall_centre':
-                zone_wind_pressure_builder.set_pe_pos(external_pressure * 0.9)
-                zone_wind_pressure_builder.set_pe_neg(external_pressure * -0.9)
+                zone_wind_pressure_builder.set_pe_pos_uls(external_pressure_uls * 0.9)
+                zone_wind_pressure_builder.set_pe_neg_uls(external_pressure_uls * -0.9)
+                zone_wind_pressure_builder.set_pe_pos_sls(external_pressure_sls * 0.9)
+                zone_wind_pressure_builder.set_pe_neg_sls(external_pressure_sls * -0.9)
             # If zone is wall corner, set pe_pos = A * 0.9 and pe_neg = A * -1.2
             case 'wall_corner':
-                zone_wind_pressure_builder.set_pe_pos(external_pressure * 0.9)
-                zone_wind_pressure_builder.set_pe_neg(external_pressure * -1.2)
+                zone_wind_pressure_builder.set_pe_pos_uls(external_pressure_uls * 0.9)
+                zone_wind_pressure_builder.set_pe_neg_uls(external_pressure_uls * -1.2)
+                zone_wind_pressure_builder.set_pe_pos_sls(external_pressure_sls * 0.9)
+                zone_wind_pressure_builder.set_pe_neg_sls(external_pressure_sls * -1.2)
 
-        zone_wind_pressure_builder.set_pos()
-        zone_wind_pressure_builder.set_neg()
+        zone_wind_pressure_builder.set_pos_uls()
+        zone_wind_pressure_builder.set_neg_uls()
+        zone_wind_pressure_builder.set_pos_sls()
+        zone_wind_pressure_builder.set_neg_sls()
         pressure = zone_wind_pressure_builder.get_wind_pressure()
         zone_builder.set_pressure(pressure)
 

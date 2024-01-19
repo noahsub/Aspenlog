@@ -105,10 +105,15 @@ def populate_wind_speed_data_table():
         # Commit the changes
         controller.commit()
 
+# ONLY RUN IF DATABASE NEEDS TO BE REPOPULATED
+if __name__ == '__main__':
+    print("WARNING: This script will repopulate the WindSpeedData table. If the database is already populated, this will delete existing data and repopulate the table, meaning any manual changes will be lost.")
+    choice = input("Are you sure you want to continue? (y/n): ")
+    if choice.lower() == 'y':
+        create_wind_speed_data_table()
+        clean_wind_speed_data_table()
+        populate_wind_speed_data_table()
+        DATABASE.close()
+    else:
+        exit(0)
 
-# Example Usage
-# if __name__ == '__main__':
-#     create_wind_speed_data_table()
-#     clean_wind_speed_data_table()
-#     populate_wind_speed_data_table()
-#     DATABASE.close()

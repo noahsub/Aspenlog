@@ -1,4 +1,5 @@
 import json
+import re
 import uuid
 import requests
 from typing import Optional
@@ -9,6 +10,7 @@ from sqlalchemy.orm import sessionmaker
 from backend.Constants.location_constants import EARTH_RADIUS
 from backend.Constants.seismic_constants import SiteClass, SiteDesignation
 from database.Constants.connection_constants import PrivilegeType
+from database.Entities.canadian_postal_code_data import CanadianPostalCodeData
 from database.Entities.climatic_data import ClimaticData
 from database.Entities.database_connection import DatabaseConnection
 
@@ -86,17 +88,36 @@ class Location:
         assert self.address is not None
         address = self.address
 
-        geolocator = Nominatim(user_agent=str(uuid.uuid4()).replace('-', ''))
-        geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1)
-        location_info = geocode(address, timeout=10)
+        # extract canadian postal code from address using regex, if it exists
+        # also detect postal codes with no space
+        postal_code = re.search(r"\b[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d\b", address)
+        if postal_code:
+            postal_code = postal_code.group(0)
+            # capitalize all letters in the postal code
+            postal_code = postal_code.upper()
+            # ensure that there is a space between the first 3 characters and the last 3 characters
+            if len(postal_code) == 6:
+                postal_code = postal_code[:3] + " " + postal_code[3:]
+            # get the data from the database
+            database = DatabaseConnection(database_name="NBCC-2020")
+            engine = database.get_engine(privilege=PrivilegeType.ADMIN)
+            session = sessionmaker(autocommit=False, autoflush=True, bind=engine)
+            controller = session()
+            location_info = controller.query(CanadianPostalCodeData).filter_by(postal_code=postal_code).first()
+            self.latitude = location_info.latitude
+            self.longitude = location_info.longitude
+        else:
+            geolocator = Nominatim(user_agent=str(uuid.uuid4()).replace('-', ''))
+            geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1)
+            location_info = geocode(address, timeout=10)
 
-        # Ensure function is given a valid location
-        # TODO: Make custom error for this
-        assert location_info is not None
+            # Ensure function is given a valid location
+            # TODO: Make custom error for this
+            assert location_info is not None
 
-        # Set the latitude and longitude
-        self.latitude = location_info.latitude
-        self.longitude = location_info.longitude
+            # Set the latitude and longitude
+            self.latitude = location_info.latitude
+            self.longitude = location_info.longitude
 
     def get_seismic_data_xv(self):
         """

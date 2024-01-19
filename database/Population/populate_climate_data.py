@@ -175,10 +175,16 @@ def update_location():
     # Commit the changes
     controller.commit()
 
-# Example usage
-# if __name__ == "__main__":
-#     create_climatic_data_table()
-#     clean_climatic_data_table()
-#     populate_climatic_data_table()
-#     update_location()
-#     DATABASE.close()
+
+# ONLY RUN IF DATABASE NEEDS TO BE REPOPULATED
+if __name__ == "__main__":
+    print("WARNING: This script will populate the ClimaticData table. If the database is already populated, this will delete existing data and repopulate the table, meaning any manual changes will be lost.")
+    choice = input("Are you sure you want to continue? (y/n): ")
+    if choice.lower() == 'y':
+        create_climatic_data_table()
+        clean_climatic_data_table()
+        populate_climatic_data_table()
+        update_location()
+        DATABASE.close()
+    else:
+        exit(0)

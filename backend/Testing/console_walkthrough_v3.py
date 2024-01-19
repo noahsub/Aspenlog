@@ -5,6 +5,7 @@
 import json
 import os
 import pprint
+from copy import deepcopy
 from typing import List, Dict
 
 import jsonpickle
@@ -390,6 +391,7 @@ d88P     888  "Y8888P"  888        8888888888 888    Y888 88888888 "Y88888P"   "
 
     confirm_material = check_save('confirm_material', confirm_choice, 'The material will be applied to all height zones?')
     material_zones = None
+    wp = None
     if confirm_material:
         wp = float(check_save('wp', user_input, 'material load'))
     else:
@@ -415,16 +417,20 @@ d88P     888  "Y8888P"  888        8888888888 888    Y888 88888888 "Y88888P"   "
     cladding = building_cladding(c_top=top_cladding, c_bot=bottom_cladding)
     roof = building_roof(w_roof=w_roof, l_roof=l_roof, slope=slope, uniform_dead_load=wp_roof)
 
-    building = building(dimensions=dimensions, cladding=cladding, roof=roof, num_floor=num_floor, h_opening=mid_height, material_load=material_zones, height_zones=height_zones)
+    material_load = material_zones
+    if material_zones is None:
+        material_load = wp
+
+    building = building(dimensions=dimensions, cladding=cladding, roof=roof, num_floor=num_floor, h_opening=mid_height, material_load=material_load, height_zones=height_zones)
 
     print_line()
     print("BUILDING")
+    print("~ LOAD CALCULATIONS HAVE NOT TAKEN PLACE YET ~")
     print_line()
     print(building)
     print_line()
 
     importance_category = check_save('importance_category', choice, 'importance category', ImportanceFactor)
-    limit_state = check_save('limit state', choice, 'limit state', LimitState)
     exposure_factor_selection = None
 
     for height_zone in building.zones.keys():
@@ -453,12 +459,13 @@ d88P     888  "Y8888P"  888        8888888888 888    Y888 88888888 "Y88888P"   "
         wind_pressure_builder = WindPressureBuilder()
         internal_pressure_selection = check_save(f'internal_pressure_selection_{height_zone.zone_num}', choice, 'internal pressure selection',  InternalPressureSelections)
 
-        get_internal_pressure(wind_factor, wind_pressure_builder, internal_pressure_selection, importance_category, limit_state, location)
+        get_internal_pressure(wind_factor, wind_pressure_builder, internal_pressure_selection, importance_category, location)
 
         wind_load_builder = WindLoadBuilder()
-        get_external_pressure(wind_factor, wind_pressure_builder, wind_load_builder, importance_category, limit_state, location)
+        get_external_pressure(wind_factor, wind_pressure_builder, wind_load_builder, importance_category, location)
 
         wind_load = wind_load_builder.get_wind_load()
+        height_zone.wind_load = wind_load
 
         print_line()
         print(f"WIND LOAD FOR HEIGHT ZONE {height_zone.zone_num}")
@@ -472,7 +479,7 @@ d88P     888  "Y8888P"  888        8888888888 888    Y888 88888888 "Y88888P"   "
     get_wind_exposure_factor_snow(snow_factor_builder, importance_category, exposure_factor_selection)
     get_basic_roof_snow_load_factor(snow_factor_builder, building)
     snow_load_builder = SnowLoadBuilder()
-    get_snow_load(snow_factor_builder, snow_load_builder, importance_category, limit_state, location)
+    get_snow_load(snow_factor_builder, snow_load_builder, importance_category, location)
 
     snow_load = snow_load_builder.get_snow_load()
     print_line()
@@ -506,21 +513,26 @@ d88P     888  "Y8888P"  888        8888888888 888    Y888 88888888 "Y88888P"   "
         cp = float(check_save('cp', user_input, 'cp'))
 
     get_seismic_factor_values(seismic_factor_builder, ar, rp, cp)
+
     floor_mapping = get_floor_mapping(building)
-    pprint.pprint(floor_mapping)
-    seismic_load_builder = SeismicLoadBuilder()
 
-    floor_choice = int(check_save('floor_num', user_input, 'floor number used to compute ax'))
-    get_height_factor(seismic_load_builder, building, floor_choice)
-    get_horizontal_force_factor(seismic_factor_builder, seismic_load_builder)
-    get_specified_lateral_earthquake_force(seismic_load_builder, snow_load, building, location, importance_category)
+    print("FLOOR MAPPING")
+    for x, y in floor_mapping.items():
+        print(f"floor {x} : height zone {y}")
 
-    seismic_load = seismic_load_builder.get_seismic_load()
+    for height_zone in building.zones.keys():
+        zone_seismic_factor_builder = deepcopy(seismic_factor_builder)
+        seismic_load_builder = SeismicLoadBuilder()
+        get_height_factor(seismic_load_builder, building, height_zone.zone_num)
+        get_horizontal_force_factor(zone_seismic_factor_builder, seismic_load_builder)
+        get_specified_lateral_earthquake_force(seismic_load_builder, snow_load, building, location, importance_category)
+        seismic_load = seismic_load_builder.get_seismic_load()
+        height_zone.seismic_load = seismic_load
 
-    print_line()
-    print(f"SEISMIC LOAD")
-    print(seismic_load)
-    print_line()
+        print_line()
+        print(f"SEISMIC LOAD FOR HEIGHT ZONE {height_zone.zone_num}")
+        print(seismic_load)
+        print_line()
 
     print("PROGRAM TERMINATING...")
 
