@@ -30,3 +30,8 @@ class RoofType(Enum):
     """
     UNOBSTRUCTED_SLIPPERY_ROOF: str = 'unobstructed_slippery_roof'
     OTHER: str = 'other'
+
+
+class WindDirection(Enum):
+    UPWIND: str = 'upwind'
+    DOWNWIND: str = 'downwind'

@@ -90,11 +90,10 @@ def get_horizontal_force_factor(seismic_factor_builder: SeismicFactorBuilder, se
     seismic_load_builder.set_factor(seismic_factor)
 
 
-def get_specified_lateral_earthquake_force(seismic_load_builder: SeismicLoadBuilder, snow_load: SnowLoad, building: Building, location: Location, importance_factor: ImportanceFactor):
+def get_specified_lateral_earthquake_force(seismic_load_builder: SeismicLoadBuilder, building: Building, location: Location, importance_factor: ImportanceFactor):
     """
     This function calculates the specified lateral earthquake force
     :param seismic_load: A SeismicLoad object, responsible for storing the seismic load information
-    :param snow_load: A SnowLoad object, responsible for storing the snow load information
     :param building: A Building object, responsible for storing the building information
     :param location: A Location object, responsible for storing the location information
     :param seismic_importance_factor: The seismic importance factor to be used in the computation
