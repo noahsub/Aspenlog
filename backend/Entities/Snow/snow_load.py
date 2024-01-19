@@ -28,8 +28,8 @@ class SnowLoad:
 
         # Print each attribute and its value on a new line
         return (f"factor: {factor_str}\n"
-                f"s: {self.s_uls}\n"
-                f"s: {self.s_sls}")
+                f"s_uls: {self.s_uls}\n"
+                f"s_sls: {self.s_sls}")
 
 
 class SnowLoadBuilderInterface:

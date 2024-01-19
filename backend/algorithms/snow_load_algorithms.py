@@ -14,7 +14,7 @@ import math
 from backend.Constants.importance_factor_constants import WindImportanceFactor, SnowImportanceFactor, ImportanceFactor, \
     LimitState
 from backend.Constants.load_constants import LoadTypes
-from backend.Constants.snow_constants import RoofType, ACCUMULATION_FACTOR
+from backend.Constants.snow_constants import RoofType, ACCUMULATION_FACTOR, WindDirection
 from backend.Constants.wind_constants import WindExposureFactorSelections
 from backend.Entities.Building.building import Building
 from backend.Entities.Location.location import Location
@@ -60,8 +60,17 @@ def get_slope_factor(snow_factor_builder: SnowFactorBuilder, selection: RoofType
                 snow_factor_builder.set_cs(0)
 
 
-def get_accumulation_factor(snow_factor_builder: SnowFactorBuilder):
-    snow_factor_builder.set_ca(ACCUMULATION_FACTOR)
+def get_accumulation_factor(snow_factor_builder: SnowFactorBuilder, wind_direction: WindDirection, building: Building):
+    roof_slope = building.roof.slope
+    if wind_direction == WindDirection.DOWNWIND:
+        if 15 <= roof_slope <= 20:
+            snow_factor_builder.set_ca(0.25 + roof_slope/20)
+        elif 20 <= roof_slope <= 90:
+            snow_factor_builder.set_ca(1.25)
+        else:
+            snow_factor_builder.set_ca(ACCUMULATION_FACTOR)
+    elif wind_direction == WindDirection.UPWIND:
+        snow_factor_builder.set_ca(0)
 
 
 def get_wind_exposure_factor_snow(snow_factor_builder: SnowFactorBuilder, importance_factor: ImportanceFactor, wind_exposure_factor_selection: WindExposureFactorSelections):

@@ -18,7 +18,7 @@ import backend.algorithms.snow_load_algorithms
 from backend.Constants.importance_factor_constants import ImportanceFactor, LimitState
 from backend.Constants.materials import Materials
 from backend.Constants.seismic_constants import SiteDesignation, SiteClass
-from backend.Constants.snow_constants import RoofType
+from backend.Constants.snow_constants import RoofType, WindDirection
 from backend.Constants.wind_constants import WindExposureFactorSelections, InternalPressureSelections
 from backend.Entities.Building.building import BuildingDefaultHeightDefaultMaterialBuilder, \
     BuildingDefaultHeightCustomMaterialBuilder, BuildingCustomHeightDefaultMaterialBuilder, \
@@ -473,18 +473,33 @@ d88P     888  "Y8888P"  888        8888888888 888    Y888 88888888 "Y88888P"   "
         print_line()
 
     roof_type = check_save('roof_type', choice, 'roof type', RoofType)
-    snow_factor_builder = SnowFactorBuilder()
-    get_slope_factor(snow_factor_builder, roof_type, building)
-    get_accumulation_factor(snow_factor_builder)
-    get_wind_exposure_factor_snow(snow_factor_builder, importance_category, exposure_factor_selection)
-    get_basic_roof_snow_load_factor(snow_factor_builder, building)
-    snow_load_builder = SnowLoadBuilder()
-    get_snow_load(snow_factor_builder, snow_load_builder, importance_category, location)
+    snow_factor_builder_downwind = SnowFactorBuilder()
+    snow_factor_builder_upwind = SnowFactorBuilder()
 
-    snow_load = snow_load_builder.get_snow_load()
+    # downwind snow_load
+    get_slope_factor(snow_factor_builder_downwind, roof_type, building)
+    get_accumulation_factor(snow_factor_builder_downwind, WindDirection.DOWNWIND, building)
+    get_wind_exposure_factor_snow(snow_factor_builder_downwind, importance_category, exposure_factor_selection)
+    get_basic_roof_snow_load_factor(snow_factor_builder_downwind, building)
+    snow_load_builder_downwind = SnowLoadBuilder()
+    get_snow_load(snow_factor_builder_downwind, snow_load_builder_downwind, importance_category, location)
+
+    # upwind snow_load
+    get_slope_factor(snow_factor_builder_upwind, roof_type, building)
+    get_accumulation_factor(snow_factor_builder_upwind, WindDirection.UPWIND, building)
+    get_wind_exposure_factor_snow(snow_factor_builder_upwind, importance_category, exposure_factor_selection)
+    get_basic_roof_snow_load_factor(snow_factor_builder_upwind, building)
+    snow_load_builder_upwind = SnowLoadBuilder()
+    get_snow_load(snow_factor_builder_upwind, snow_load_builder_upwind, importance_category, location)
+
+    snow_load_downwind = snow_load_builder_downwind.get_snow_load()
+    snow_load_upwind = snow_load_builder_upwind.get_snow_load()
     print_line()
-    print(f"SNOW LOAD")
-    print(snow_load)
+    print(f"SNOW LOAD DOWNWIND")
+    print(snow_load_downwind)
+
+    print(f"SNOW LOAD UPWIND")
+    print(snow_load_upwind)
     print_line()
 
     seismic_factor_builder = SeismicFactorBuilder()
@@ -525,7 +540,7 @@ d88P     888  "Y8888P"  888        8888888888 888    Y888 88888888 "Y88888P"   "
         seismic_load_builder = SeismicLoadBuilder()
         get_height_factor(seismic_load_builder, building, height_zone.zone_num)
         get_horizontal_force_factor(zone_seismic_factor_builder, seismic_load_builder)
-        get_specified_lateral_earthquake_force(seismic_load_builder, snow_load, building, location, importance_category)
+        get_specified_lateral_earthquake_force(seismic_load_builder, building, location, importance_category)
         seismic_load = seismic_load_builder.get_seismic_load()
         height_zone.seismic_load = seismic_load
 
