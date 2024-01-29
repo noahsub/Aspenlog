@@ -530,7 +530,7 @@ d88P     888  "Y8888P"  888        8888888888 888    Y888 88888888 "Y88888P"   "
     get_seismic_factor_values(seismic_factor_builder, ar, rp, cp)
 
     floor_mapping = get_floor_mapping(building)
-
+    
     print("FLOOR MAPPING")
     for x, y in floor_mapping.items():
         print(f"floor {x} : height zone {y}")
