@@ -81,6 +81,7 @@ def valid_password(password: str) -> bool:
 
     return True
 
+
 def signup(username: str, first_name: str, last_name: str, password: str, email: str):
     if not all([valid_username(username), valid_email(email), valid_password(password)]):
         return
@@ -111,17 +112,5 @@ def login(username: str, password: str):
     return False
 
 
-# def generate_matrix():
-#     return [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
-#
-# def get_row(matrix: List[List[int]], row_num: int):
-#     return matrix[row_num]
-#
-# def get_item(row_num, column_num):
-#     matrix = generate_matrix()
-#     row = get_row(matrix=matrix, row_num=1)
-#     return row[column_num]
-
-
 if __name__ == '__main__':
-    pass
+    print(login(username="potato", password="^^Potato12"))
