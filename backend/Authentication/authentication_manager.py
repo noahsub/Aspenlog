@@ -112,5 +112,4 @@ def login(username: str, password: str):
     return False
 
 
-if __name__ == '__main__':
-    print(login(username="potato", password="^^Potato12"))
+
