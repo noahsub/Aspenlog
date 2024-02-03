@@ -1,14 +1,28 @@
+import os
 from datetime import datetime
-from typing import List
 
 import bcrypt
+from dotenv import load_dotenv
+from fastapi import Depends, status, HTTPException
+from fastapi.security import OAuth2PasswordBearer
+from jose import jwt, JWTError
 from sqlalchemy.orm import sessionmaker
+
+from config import get_file_path
 from database.Constants.connection_constants import PrivilegeType
 from database.Entities.authentication_data import AuthenticationData
 from database.Entities.database_connection import DatabaseConnection
 from database.Population import populate_authentication_data
 from database.Warnings.database_warnings import not_valid_password_warning, email_taken_warning, username_taken_warning, \
     username_not_valid_warning
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
+
+# Secret key to sign and verify JWT tokens
+# Get secret key from environment variable from data/EnvironmentVariables/.env
+load_dotenv(dotenv_path=get_file_path(relative_path="data/EnvironmentVariables/.env"))
+SECRET_KEY = os.getenv('API_SECRET_KEY')
+ALGORITHM = "HS256"
 
 
 def hash_password(password: str) -> tuple[bytes, bytes]:
@@ -84,13 +98,15 @@ def valid_password(password: str) -> bool:
 
 def signup(username: str, first_name: str, last_name: str, password: str, email: str):
     if not all([valid_username(username), valid_email(email), valid_password(password)]):
-        return
+        return False
 
     hashed_password, salt = hash_password(password)
     authentication_data = AuthenticationData(username=username, first_name=first_name, last_name=last_name,
                                              hashed_password=hashed_password, salt=salt, email=email,
                                              signup_date=datetime.now())
     populate_authentication_data.add_entry(authentication_data)
+
+    return True
 
 
 def login(username: str, password: str):
@@ -107,9 +123,24 @@ def login(username: str, password: str):
     hashed_password = bcrypt.hashpw(password=password.encode('utf-8'), salt=authentication_data.salt)
 
     if hashed_password == authentication_data.hashed_password:
-        return True
+        token_data = {"sub": username}
+        token = jwt.encode(token_data, SECRET_KEY, algorithm=ALGORITHM)
+        return {"token_type": "bearer", "access_token": token}
 
     return False
 
 
-
+def decode_token(token: str = Depends(oauth2_scheme)):
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        username: str = payload.get("sub")
+        if username is None:
+            raise credentials_exception
+        return username
+    except JWTError:
+        raise credentials_exception
