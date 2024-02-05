@@ -42,6 +42,24 @@ class WindLoad:
         return (f"factor: {factor_str}\n"
                 f"zones: {zones_str}")
 
+    def get_zone(self, key: int | str) -> Zone:
+        """
+        Function to get a zone by name or number
+        :param key: The name or number of the zone
+        :return:
+        """
+
+        # If the key is a string, search by name
+        if isinstance(key, str):
+            for zone in self.zones:
+                if zone.name == key:
+                    return zone
+        # If the key is an int, search by number
+        elif isinstance(key, int):
+            for zone in self.zones:
+                if zone.num == key:
+                    return zone
+
 
 class WindLoadBuilderInterface:
     """
