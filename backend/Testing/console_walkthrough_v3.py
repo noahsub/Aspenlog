@@ -554,7 +554,7 @@ d88P     888  "Y8888P"  888        8888888888 888    Y888 88888888 "Y88888P"   "
     print("WALL LOAD COMBINATIONS")
     uls_for_wall = check_save('uls_for_wall', choice, 'ULS for wall', ULSWallLoadCombinationTypes)
     sls_for_wall = check_save('sls_for_wall', choice, 'SLS for wall', SLSWallLoadCombinationTypes)
-    print(compute_wall_load_combinations(building, uls_for_wall, sls_for_wall))
+    print(compute_wall_load_combinations(building, ,uls_for_wall, sls_for_wall))
 
     print("PROGRAM TERMINATING...")
 
