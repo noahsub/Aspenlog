@@ -2,30 +2,31 @@ body{
     background-color: #f7f4ef;
 }
 
-.navbar{
-    background-color: #f3f0ec !important;
+#navbar {
+    background-color: #efece7 !important; /* Replace #yourColor with your desired color */
+    padding: 0 30px;
+    border-bottom: 5px solid #ccac81
 }
 
-#navbar{
-    background-color: red !important;
+.dropdown-menu{
+    background-color: #efece7;
 }
 
 .btn-primary {
-    display: block;
-    width: 100%;
+    width: 20%;
     margin: 0 auto;
     border: transparent;
-    background-color: #d6b689;
+    background-color: #9bca6d;
     border-radius: 25px;
     font-weight: bold;
 }
 
-.btn-primary:hover {
-    background-color: #61523D;
+iframe{
+    border: none !important;
 }
 
-.btn-primary:active{
-    background-color: red;
+.btn-primary:hover {
+    background-color: #85b05a;
 }
 
 label{
@@ -41,10 +42,6 @@ a {
 
 a:focus {
     color: #9d661b;
-}
-
-p {
-    font-weight: bold;
 }
 
 .form-control{
