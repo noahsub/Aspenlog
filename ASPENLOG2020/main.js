@@ -2,11 +2,14 @@ const path = require('path');
 const { app, BrowserWindow } = require('electron');
 
 const { ipcMain } = require('electron');
+const keytar = require('keytar');
 
-let token;
+ipcMain.handle('store-token', async (event, token) => {
+    await keytar.setPassword('YourAppName', 'AccountName', token);
+});
 
-ipcMain.on('token', (event, arg) => {
-    token = arg;
+ipcMain.handle('get-token', async () => {
+    return await keytar.getPassword('YourAppName', 'AccountName');
 });
 
 

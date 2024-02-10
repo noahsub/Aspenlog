@@ -17,8 +17,9 @@ body{
     margin: 0 auto;
     border: transparent;
     background-color: #9bca6d;
-    border-radius: 25px;
+    border-radius: 12px;
     font-weight: bold;
+    filter: drop-shadow(2px 2px 2px #cccccc);
 }
 
 iframe{
@@ -64,4 +65,27 @@ a:focus {
     font-weight: normal !important;
     color: red !important;
     text-align: center;
+}
+
+.btn-secondary{
+    background-color: #f7f4ef;
+    color: #818687;
+    border: transparent;
+    border-radius: 12px;
+    font-weight: bold;
+    filter: drop-shadow(2px 2px 2px #cccccc);
+}
+
+
+.btn-secondary:hover{
+    background-color: #ccac81;
+}
+
+.btn-secondary:focus{
+    background-color: #ccac81;
+}
+
+.btn-secondary.selected{
+    background-color: #9ac86c;
+    color: white;
 }

@@ -22,7 +22,7 @@ document.getElementById('signin').addEventListener('click', function(event) {
         })
         .then(result => {
             const token = result.access_token;
-            window.api.sendToken(token);
+            window.api.invoke('store-token', token);  // Store the token
             window.location.href = 'input.html';
         })
         .catch(error => {

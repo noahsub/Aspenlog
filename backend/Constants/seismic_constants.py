@@ -27,6 +27,20 @@ class SiteClass(Enum):
     D = 'D'
     E = 'E'
 
+    @staticmethod
+    def get_key_from_value(value):
+        match value:
+            case 'A':
+                return SiteClass.A
+            case 'B':
+                return SiteClass.B
+            case 'C':
+                return SiteClass.C
+            case 'D':
+                return SiteClass.D
+            case 'E':
+                return SiteClass.E
+
 
 class SiteDesignation(Enum):
     """
@@ -34,3 +48,13 @@ class SiteDesignation(Enum):
     """
     XV = 'xv'
     XS = 'xs'
+
+    @staticmethod
+    def get_key_from_value(value):
+        match value:
+            case 'xv':
+                return SiteDesignation.XV
+            case 'xs':
+                return SiteDesignation.XS
+
+

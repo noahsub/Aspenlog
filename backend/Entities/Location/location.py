@@ -164,11 +164,13 @@ class Location:
         # Convert the data to json
         data = json.loads(response.text)
 
+        # example data
+        # {'data': {'NBC2020': {'XC': [{'sa0p2': 0.658, 'sa1p0': 0.209}]}}}
+
+
         # Assign the data to the attributes
-        self.design_spectral_acceleration_0_2 = data.get('data', {}).get('NBC2020', {}).get(f'X{self.xs.value}', [{}])[
-            0].get('sa0p2')
-        self.design_spectral_acceleration_1 = data.get('data', {}).get('NBC2020', {}).get(f'X{self.xs.value}', [{}])[
-            0].get('sa1p0')
+        self.design_spectral_acceleration_0_2 = data['data']['NBC2020']['XC'][0]['sa0p2']
+        self.design_spectral_acceleration_1 = data['data']['NBC2020']['XC'][0]['sa1p0']
 
     def get_climatic_data(self):
         # Connect to the database

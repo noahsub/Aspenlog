@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, status, Depends
 
-from backend.Authentication.authentication_manager import signup, login, decode_token
+from backend.API.Managers.authentication_manager import signup, login, decode_token
 
 authentication_router = APIRouter()
 
