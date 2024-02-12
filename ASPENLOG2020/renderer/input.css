@@ -22,12 +22,26 @@ body{
     filter: drop-shadow(2px 2px 2px #cccccc);
 }
 
+.btn-danger {
+    width: 10%;
+    margin: 0 auto;
+    border: transparent;
+    background-color: #e64f4f;
+    border-radius: 12px;
+    font-weight: bold;
+    filter: drop-shadow(2px 2px 2px #cccccc);
+}
+
 iframe{
     border: none !important;
 }
 
 .btn-primary:hover {
     background-color: #85b05a;
+}
+
+.btn-danger:hover {
+    background-color: #c54242;
 }
 
 label{
@@ -74,6 +88,8 @@ a:focus {
     border-radius: 12px;
     font-weight: bold;
     filter: drop-shadow(2px 2px 2px #cccccc);
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 
@@ -88,4 +104,16 @@ a:focus {
 .btn-secondary.selected{
     background-color: #9ac86c;
     color: white;
+}
+
+.table tr td, .table tr th {
+    border: 1px solid #d9d9d9;
+}
+
+.table th {
+    background-color: #f7f4ef;
+}
+
+.table td {
+    background-color: #f7f4ef;
 }

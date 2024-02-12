@@ -8,11 +8,15 @@ window.onload = function() {
     setMap(43.66074, -79.39661, 'Myhal Centre, Toronto, Ontario, Canada');
 
     toggleMenuColors('#site-designation-selection');
+    toggleMenuColors('#eave-and-ridge-selection');
+    toggleMenuColors('#number-height-zone-selection');
 
 
     var siteDesignationSelectionOptions = document.querySelectorAll('#site-designation-selection .btn input');
-    for (var i = 0; i < siteDesignationSelectionOptions.length; i++) {
-        siteDesignationSelectionOptions[i].addEventListener('change', function() {
+    for (var i = 0; i < siteDesignationSelectionOptions.length; i++)
+    {
+        siteDesignationSelectionOptions[i].addEventListener('change', function()
+        {
             if (this.checked) {
                 if (this.id === 'xs_option')
                 {
@@ -24,6 +28,54 @@ window.onload = function() {
                 }
             }
         });
+    }
+
+    var eaveAndRidgeSelectionOptions = document.querySelectorAll('#eave-and-ridge-selection .btn input');
+    for (var i = 0; i < eaveAndRidgeSelectionOptions.length; i++)
+    {
+        eaveAndRidgeSelectionOptions[i].addEventListener('change', function()
+        {
+            if (this.id === 'eave-and-ridge-yes-option')
+            {
+                eaveAndRidgeCase();
+            }
+            if (this.id === 'eave-and-ridge-no-option')
+            {
+                standardDimensionsCase();
+            }
+        });
+    }
+
+    var numberHeightZoneOptions = document.querySelectorAll('#number-height-zone-selection .btn input');
+    for (var i = 0; i < numberHeightZoneOptions.length; i++)
+    {
+        numberHeightZoneOptions[i].addEventListener('change', function()
+        {
+            if (this.id === 'number-height-zone-yes-option')
+            {
+                defaultHeightZoneNumberCase();
+            }
+            if (this.id === 'number-height-zone-no-option')
+            {
+                nonDefaultHeightZoneNumberCase();
+            }
+        });
+    }
+}
+
+function addRow() {
+    var table = document.getElementById("height-zone-elevation-table");
+    var row = table.insertRow(-1);
+    var cell1 = row.insertCell(0);
+    var cell2 = row.insertCell(1);
+    cell1.innerHTML = table.rows.length - 1;
+    cell2.contentEditable = "true";
+}
+
+function removeRow() {
+    var table = document.getElementById("height-zone-elevation-table");
+    if (table.rows.length > 2) {
+        table.deleteRow(-1);
     }
 }
 
@@ -66,6 +118,71 @@ function xsCase()
         .then(data => {
             document.getElementById('site-designation-sub-selection-container').innerHTML = data;
             toggleMenuColors('#xs-type-selection');
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+}
+
+function standardDimensionsCase()
+{
+    fetch('subPages/standard_dimensions.html')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('dimensions-container').innerHTML = data;
+            toggleMenuColors('#eave-and-ridge-selection');
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+}
+
+function eaveAndRidgeCase()
+{
+    fetch('subPages/eave_and_ridge_dimensions.html')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('dimensions-container').innerHTML = data;
+            toggleMenuColors('#eave-and-ridge-selection');
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+}
+
+function nonDefaultHeightZoneNumberCase()
+{
+    fetch('subPages/non_default_height_zone_number.html')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('height-zone-elevation-container').innerHTML = data;
+            toggleMenuColors('#number-height-zone-selection');
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+}
+
+function defaultHeightZoneNumberCase()
+{
+    fetch('subPages/default_height_zone_number.html')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('height-zone-elevation-container').innerHTML = data;
+            toggleMenuColors('#number-height-zone-selection');
+            var height = document.getElementById('height').value;
+            // if height is not null or empty string
+            if (height) {
+                var numHeightZones = Math.ceil(height / 20);
+                for (var j = 1; j < numHeightZones + 1; j++) {
+                    var table = document.getElementById("height-zone-elevation-table");
+                    var row = table.insertRow(-1);
+                    var cell1 = row.insertCell(0);
+                    var cell2 = row.insertCell(1);
+                    cell1.innerHTML = j + 1; // Height Zone starts from 1
+                    cell2.innerHTML = j * 20; // Elevation increases by 20 for each zone
+                }
+            }
         })
         .catch((error) => {
             console.error('Error:', error);

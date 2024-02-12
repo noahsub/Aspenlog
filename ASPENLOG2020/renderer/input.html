@@ -31,7 +31,7 @@
     </div>
 </nav>
 <div style="padding: 40px">
-    <h3>1. Site Details</h3>
+    <h3>Site Details</h3>
     <div class="row gx-5"> <!-- Increase gutter width for space between columns -->
         <div class="col-md-6">
 <!--            <iframe width="100%" height="100%" id="map" src="https://www.openstreetmap.org/export/embed.html?bbox=-79.3990543484688%2C43.65844737822922%2C-79.39652234315874%2C43.66096802495045&amp;layer=mapnik&amp;marker=43.65970771481757%2C-79.39778834581375" style="border: 1px solid black"></iframe>-->
@@ -51,10 +51,10 @@
                 <p>Select the site designation in accordance with Article 4.1.8.4. of the NBC 2020. Further guidance is available in the Commentary entitled Design for Seismic Effects in the Structural Commentaries (User’s Guide – NBC 2020: Part 4 of Division B)</p>
                 <div class="btn-group btn-group-toggle" id="site-designation-selection" data-toggle="buttons">
                     <label class="btn btn-secondary">
-                        <input type="radio" name="options" id="vs30_option" autocomplete="off"> Vs30 value measured in situ between 140 - 3000 m/s
+                        <input type="radio" name="site-designation-selection" id="vs30_option" autocomplete="off"> Vs30 value measured in situ between 140 - 3000 m/s
                     </label>
                     <label class="btn btn-secondary">
-                        <input type="radio" name="options" id="xs_option" autocomplete="off"> Site Class (Xs)
+                        <input type="radio" name="site-designation-selection" id="xs_option" autocomplete="off"> Site Class (Xs)
                     </label>
                 </div>
             </div>
@@ -92,7 +92,41 @@
     </div>
 </div>
 <div style="padding: 40px">
-    <h3>2. Building Dimension</h3>
+    <h3>Building</h3>
+    <div class="row gx-5 ">
+        <div class="mb-3">
+            <label for="width">Width</label>
+            <input type="number" id="width" class="form-control"/>
+        </div>
+        <div class="mb-3">
+            <label for="eave-and-ridge-selection" style="display: block">Eave and Ridge</label>
+            <p>Does the building have eave and ridge?</p>
+            <div class="btn-group btn-group-toggle" id="eave-and-ridge-selection" data-toggle="buttons">
+                <label class="btn btn-secondary">
+                    <input type="radio" name="eave-and-ridge-selection" id="eave-and-ridge-yes-option" autocomplete="off"> Yes
+                </label>
+                <label class="btn btn-secondary">
+                    <input type="radio" name="eave-and-ridge-selection" id="eave-and-ridge-no-option" autocomplete="off"> No
+                </label>
+            </div>
+        </div>
+        <div class="mb-3" id="dimensions-container">
+        </div>
+        <div class="mb-3">
+            <label for="width">Number of Height Zones</label>
+            <p>The height of each zone is set to 20 meters by default. Meaning, the total number of height zones is calculated as the ceiling of H/20. Does this configuration meet your requirements?</p>
+            <div class="btn-group btn-group-toggle" id="number-height-zone-selection" data-toggle="buttons">
+                <label class="btn btn-secondary">
+                    <input type="radio" name="eave-and-ridge-selection" id="number-height-zone-yes-option" autocomplete="off"> Yes
+                </label>
+                <label class="btn btn-secondary">
+                    <input type="radio" name="eave-and-ridge-selection" id="number-height-zone-no-option" autocomplete="off"> No
+                </label>
+            </div>
+        </div>
+        <div class="mb-3" id="height-zone-elevation-container">
+        </div>
+    </div>
 </div>
 
 </body>
