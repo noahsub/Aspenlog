@@ -1,0 +1,30 @@
+{
+  "name": "aspenlog2020",
+  "productName": "ASPENLOG2020",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "github.com/noahsub",
+  "license": "ISC",
+  "dependencies": {
+    "bootstrap": "^5.3.2",
+    "jquery": "^3.7.1",
+    "keytar": "^7.9.0"
+  },
+  "devDependencies": {
+    "electron": "^28.2.2",
+    "electron-builder": "^24.9.1",
+    "electron-reloader": "^1.2.3"
+  },
+  "build": {
+    "appId": "aspenlog2020",
+    "win": {
+      "target": [
+        "nsis"
+      ]
+    }
+  }
+}
