@@ -15,7 +15,7 @@ ipcMain.handle('get-token', async () => {
 
 function createMainWindow() {
     const mainWindow = new BrowserWindow({
-        title: 'ASPENLOG2020',
+        title: 'frontend',
         width: 1280,
         height: 720,
         webPreferences: {
@@ -41,7 +41,7 @@ function createMainWindow() {
 
     mainWindow.loadFile(path.join(__dirname, './renderer/login.html'));
 
-    mainWindow.webContents.openDevTools()
+    // mainWindow.webContents.openDevTools()
 }
 
 app.whenReady().then(() => {
