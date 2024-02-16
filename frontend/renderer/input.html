@@ -169,6 +169,20 @@
             <label for="a-roof">Roof Slope (°)</label>
             <input type="number" id="a-roof" class="form-control"/>
         </div>
+        <div class="mb-3">
+            <label for="single-material-selection">Materials</label>
+            <p>Will the material be applied to all height zones?</p>
+            <div class="btn-group btn-group-toggle" id="single-material-selection" data-toggle="buttons">
+                <label class="btn btn-secondary">
+                    <input type="radio" name="single-material-selection" id="single-material-yes-option" autocomplete="off"> Yes
+                </label>
+                <label class="btn btn-secondary">
+                    <input type="radio" name="single-material-selection" id="single-material-no-option" autocomplete="off"> No
+                </label>
+            </div>
+        </div>
+        <div class="mb-3" id="material-container">
+        </div>
     </div>
 </div>
 </body>

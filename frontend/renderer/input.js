@@ -13,6 +13,7 @@ window.onload = function() {
     toggleMenuColors('#eave-and-ridge-selection');
     toggleMenuColors('#number-height-zone-selection');
     toggleMenuColors('#dominant-opening-selection');
+    toggleMenuColors('#single-material-selection');
 
 
     var siteDesignationSelectionOptions = document.querySelectorAll('#site-designation-selection .btn input');
@@ -59,6 +60,22 @@ window.onload = function() {
             if (this.id === 'dominant-opening-yes-option') {
                 dominantOpeningCase();
             }
+            else{
+                document.getElementById('dominant-opening-container').innerHTML = "";
+            }
+        });
+    }
+
+    var materialOptions = document.querySelectorAll('#single-material-selection .btn input');
+    for (var i = 0; i < materialOptions.length; i++) {
+        materialOptions[i].addEventListener('change', function() {
+            if (this.id === 'single-material-yes-option') {
+                singleMaterialCase();
+            }
+
+            if (this.id === 'single-material-no-option') {
+                multipleMaterialCase();
+            }
         });
     }
 }
@@ -96,14 +113,67 @@ function clearHeightZoneElevationTable()
     }
 }
 
+function clearMaterialTable()
+{
+    var table = document.getElementById("material-table");
+    while (table.rows.length !== 1)
+    {
+        table.deleteRow(-1);
+    }
+}
+
+
 function heightChange()
 {
     if (document.getElementById('number-height-zone-yes-option').checked) {
-        console.log("attempting");
         clearHeightZoneElevationTable();
         populateDefaultHeightZoneElevation();
     } else if (document.getElementById('number-height-zone-no-option').checked) {
         // Your code here
+    }
+    if (document.getElementById('material-table') !== null)
+    {
+        heightZoneChange();
+    }
+}
+
+function materialWeightChange()
+{
+    if (document.getElementById('single-material-yes-option').checked === true)
+    {
+        var weight = document.getElementById('material-weight').value;
+        clearMaterialTable();
+        // iterate through the rows in the height zone elevation table
+        var table = document.getElementById("height-zone-elevation-table");
+        for (var i = 1; i < table.rows.length; i++)
+        {
+            addMaterialRow(weight);
+        }
+    }
+}
+
+function heightZoneChange()
+{
+    if (document.getElementById('single-material-yes-option').checked === true)
+    {
+        var weight = document.getElementById('material-weight').value;
+        clearMaterialTable();
+        // iterate through the rows in the height zone elevation table
+        var table = document.getElementById("height-zone-elevation-table");
+        for (var i = 1; i < table.rows.length; i++)
+        {
+            addMaterialRow(weight);
+        }
+    }
+
+    else if (document.getElementById('single-material-no-option').checked === true)
+    {
+        clearMaterialTable();
+        var table = document.getElementById("height-zone-elevation-table");
+        for (var i = 1; i < table.rows.length; i++)
+        {
+            addMaterialRowEditable();
+        }
     }
 }
 
@@ -124,9 +194,49 @@ function addHeightZoneElevationRow(elevation) {
     cell2.innerHTML = elevation;
 }
 
+function addMaterialRow(weight)
+{
+    var table = document.getElementById("material-table");
+    var row = table.insertRow(-1);
+    var cell1 = row.insertCell(0);
+    var cell2 = row.insertCell(1);
+    if (table.rows.length === 1)
+    {
+        cell1.innerHTML = 1;
+    }
+
+    else
+    {
+        cell1.innerHTML = table.rows.length - 1;
+    }
+    cell2.innerHTML = weight;
+}
+
 function addHeightZoneElevationRowEditable()
 {
     var table = document.getElementById("height-zone-elevation-table");
+
+    console.log(table.rows.length);
+
+    var row = table.insertRow(-1);
+    var cell1 = row.insertCell(0);
+    var cell2 = row.insertCell(1);
+    if (table.rows.length === 1)
+    {
+        cell1.innerHTML = 1;
+    }
+
+    else
+    {
+        cell1.innerHTML = table.rows.length - 1;
+    }
+    cell2.innerHTML = "0";
+    cell2.contentEditable = "true";
+}
+
+function addMaterialRowEditable()
+{
+    var table = document.getElementById("material-table");
     var row = table.insertRow(-1);
     var cell1 = row.insertCell(0);
     var cell2 = row.insertCell(1);
@@ -146,7 +256,7 @@ function addHeightZoneElevationRowEditable()
 function removeHeightZoneElevationRow()
 {
     var table = document.getElementById("height-zone-elevation-table");
-    if (table.rows.length > 2) {
+    if (table.rows.length > 1) {
         table.deleteRow(-1);
     }
 }
@@ -225,6 +335,12 @@ function nonDefaultHeightZoneNumberCase() {
             document.getElementById('height-zone-elevation-container').innerHTML = data;
             toggleMenuColors('#number-height-zone-selection');
             document.addEventListener('input', heightChange);
+            // add click event listener for button with id add-height-zone-button
+            document.getElementById('add-height-zone-button').addEventListener('click', addHeightZoneElevationRowEditable);
+            document.getElementById('add-height-zone-button').addEventListener('click', heightZoneChange);
+            // add click event listener for button with id remove-height-zone-button
+            document.getElementById('remove-height-zone-button').addEventListener('click', removeHeightZoneElevationRow);
+            document.getElementById('remove-height-zone-button').addEventListener('click', heightZoneChange);
         })
         .catch((error) => {
             console.error('Error:', error);
@@ -257,6 +373,34 @@ function dominantOpeningCase() {
             console.error('Error:', error);
         });
 
+}
+
+
+function singleMaterialCase()
+{
+    fetch('subPages/single_material.html')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('material-container').innerHTML = data;
+            heightZoneChange();
+            document.addEventListener('input', materialWeightChange);
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+}
+
+function multipleMaterialCase()
+{
+    fetch('subPages/multiple_material.html')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('material-container').innerHTML = data;
+            heightZoneChange();
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
 }
 
 function toggleMenuColors(toggleMenu) {
