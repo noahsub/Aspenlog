@@ -106,6 +106,10 @@ a:focus {
     color: white;
 }
 
+.table{
+
+}
+
 .table tr td, .table tr th {
     border: 1px solid #d9d9d9;
 }
