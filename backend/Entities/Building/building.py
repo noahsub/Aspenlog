@@ -12,8 +12,7 @@
 
 import math
 from typing import Optional, Dict, List
-from backend.Constants.decision_constants import DefaultSelections
-from backend.Constants.materials import Materials
+
 from backend.Entities.Building.cladding import Cladding
 from backend.Entities.Building.dimensions import Dimensions
 from backend.Entities.Building.height_zone import HeightZone
@@ -47,9 +46,7 @@ class Building:
     # Height of the opening in the building
     h_opening: Optional[float]
     # Height zones of the building
-    zones: Optional[Dict[HeightZone, Optional[MaterialZone]]]
-    # Dead load for the building
-    wp: Optional[float]
+    height_zones: Optional[List[HeightZone]]
 
     def __init__(self):
         self.dimensions = None
@@ -58,8 +55,7 @@ class Building:
         self.hz_num = None
         self.num_floor = None
         self.h_opening = None
-        self.zones = None
-        self.wp = None
+        self.height_zones = None
 
     def __str__(self):
         """
@@ -73,7 +69,7 @@ class Building:
 
         # Special formatting for height zones
         zones_str = '\n'
-        for zone in self.zones:
+        for zone in self.height_zones:
             zones_str += f"  height zone {zone.zone_num}\n"
             zone_lst = str(zone).split('\n')
             for i in zone_lst:
@@ -87,13 +83,12 @@ class Building:
                 f"hz_num: {self.hz_num}\n"
                 f"num_floor: {self.num_floor}\n"
                 f"h_opening: {self.h_opening}\n"
-                f"zones: {zones_str}\n"
-                f"wp: {self.wp}")
+                f"zones: {zones_str}\n")
 
-    def get_zone(self, zone_num: int):
-        for height_zone, material in self.zones.items():
+    def get_height_zone(self, zone_num: int):
+        for height_zone in self.height_zones:
             if height_zone.zone_num == zone_num:
-                return height_zone, material
+                return height_zone
         # TODO: Custom error required
         raise IndexError
 
@@ -139,10 +134,10 @@ class BuildingBuilderInterface:
     def get_h_opening(self) -> float:
         pass
 
-    def get_zones(self) -> Dict[HeightZone, Optional[MaterialZone]]:
+    def get_height_zones(self) -> Dict[HeightZone, Optional[MaterialZone]]:
         pass
 
-    def get_wp(self) -> float:
+    def set_material_load(self, material_load: List[MaterialZone] | float):
         pass
 
 
@@ -173,7 +168,7 @@ class BuildingDefaultHeightDefaultMaterialBuilder(BuildingBuilderInterface):
     def generate_height_zones(self):
         assert self.building.dimensions is not None
 
-        self.building.zones = dict()
+        self.building.height_zones = dict()
 
         # The default height per height zone is 20 meters
         default_zone_height = 20
@@ -215,133 +210,17 @@ class BuildingDefaultHeightDefaultMaterialBuilder(BuildingBuilderInterface):
             else:
                 height_sum += 20
 
-            self.building.zones[HeightZone(zone_num=i, elevation=height_sum)] = None
+            self.building.height_zones.append(HeightZone(zone_num=i, elevation=height_sum))
 
-    def set_wp(self, wp: float):
-        self.building.wp = wp
+    def set_material_load(self, material_load: List[MaterialZone] | float):
+        if isinstance(material_load, list):
+            assert len(material_load) == len(self.building.height_zones)
+            for i in range(len(self.building.height_zones)):
+                self.building.get_height_zone(i + 1).wp = material_load[i]
 
-    def get_dimensions(self) -> Dimensions:
-        return self.building.dimensions
-
-    def get_cladding(self) -> Cladding:
-        return self.building.cladding
-
-    def get_roof(self) -> Roof:
-        return self.building.roof
-
-    def get_hz_num(self) -> int:
-        return self.building.hz_num
-
-    def get_num_floor(self) -> int:
-        return self.building.num_floor
-
-    def get_h_opening(self) -> float:
-        return self.building.h_opening
-
-    def get_zones(self) -> Dict[HeightZone, Optional[MaterialZone]]:
-        return self.building.zones
-
-    def get_wp(self) -> float:
-        return self.building.wp
-
-    def get_building(self) -> Building:
-        building = self.building
-        self.reset()
-        return building
-
-class BuildingDefaultHeightCustomMaterialBuilder(BuildingBuilderInterface):
-    building: Building
-
-    def __init__(self):
-        self.reset()
-
-    def reset(self):
-        self.building = Building()
-
-    def set_dimensions(self, dimensions: Dimensions):
-        self.building.dimensions = dimensions
-
-    def set_cladding(self, cladding: Cladding):
-        self.building.cladding = cladding
-
-    def set_roof(self, roof: Roof):
-        self.building.roof = roof
-
-    def set_num_floor(self, num_floor: int):
-        self.building.num_floor = num_floor
-
-    def set_h_opening(self, h_opening: float):
-        self.building.h_opening = h_opening
-
-    def generate_height_zones(self):
-        assert self.building.dimensions is not None
-
-        self.building.zones = dict()
-
-        # The default height per height zone is 20 meters
-        default_zone_height = 20
-
-        # we take the ceiling of the quotient of the building height divided by the default zone height
-
-        """
-        +---------+     ----+
-        |         | 6m      |
-        +---------+         |
-        |         |         |
-        |         | 20m     |
-        |         |         |
-        +---------+         |
-        |         |         |
-        |         | 20m     |
-        |         |         +---> 5 height zones
-        +---------+         |
-        |         |         |
-        |         | 20m     |
-        |         |         |
-        +---------+         |
-        |         |         |
-        |         | 20m     |
-        |         |         |
-        +---------+     ----+
-        """
-
-        self.building.hz_num = math.ceil(self.building.dimensions.height / default_zone_height)
-
-        # compute the elevation of each height zone
-        self.building.height_zones = []
-        height_sum = 0
-        for i in range(1, self.building.hz_num + 1):
-            # the last height zone may be less than the default zone height, in which case we simply take the
-            # height of the building
-            if i == self.building.hz_num:
-                height_sum = self.building.dimensions.height
-            else:
-                height_sum += 20
-
-            self.building.zones[HeightZone(zone_num=i, elevation=height_sum)] = None
-
-    def generate_material_zones(self, material_zones: List[MaterialZone]):
-
-        print(self.building.zones.keys())
-
-        assert len(self.building.zones.keys()) == len(material_zones)
-        for i, height_zone in enumerate(self.building.zones.keys()):
-            self.building.zones[height_zone] = material_zones[i]
-
-    def compute_wp(self):
-        assert all(x is not None for x in self.building.zones.values())
-        total_weighted_sum = 0
-        total_weight = 0
-        for height_zone, material_zone in self.building.zones.items():
-            for material in material_zone.materials_list:
-                total_weighted_sum += material.weight * (material.respected_percentage / 100)
-                total_weight += material.weight
-
-        weighted_average = 0
-        if total_weight != 0:
-            weighted_average = total_weighted_sum / total_weight
-
-        self.building.wp = weighted_average
+        elif isinstance(material_load, float):
+            for height_zone in self.building.height_zones:
+                height_zone.wp = material_load
 
     def get_dimensions(self) -> Dimensions:
         return self.building.dimensions
@@ -361,16 +240,14 @@ class BuildingDefaultHeightCustomMaterialBuilder(BuildingBuilderInterface):
     def get_h_opening(self) -> float:
         return self.building.h_opening
 
-    def get_zones(self) -> Dict[HeightZone, Optional[MaterialZone]]:
-        return self.building.zones
-
-    def get_wp(self) -> float:
-        return self.building.wp
+    def get_height_zones(self) -> List[HeightZone]:
+        return self.building.height_zones
 
     def get_building(self) -> Building:
         building = self.building
         self.reset()
         return building
+
 
 class BuildingCustomHeightDefaultMaterialBuilder(BuildingBuilderInterface):
     building: Building
@@ -399,16 +276,13 @@ class BuildingCustomHeightDefaultMaterialBuilder(BuildingBuilderInterface):
     def generate_height_zones(self, height_zones: List[HeightZone]):
         assert self.building.dimensions is not None
 
-        self.building.zones = dict()
+        self.building.height_zones = dict()
 
         for height_zone in height_zones:
-            self.building.zones[height_zone] = None
+            self.building.height_zones[height_zone] = None
 
         highest_height_zone = max(height_zones, key=lambda x: x.elevation)
         assert highest_height_zone.elevation <= self.building.dimensions.height
-
-    def set_wp(self, wp: float):
-        self.building.wp = wp
 
     def get_dimensions(self) -> Dimensions:
         return self.building.dimensions
@@ -428,100 +302,24 @@ class BuildingCustomHeightDefaultMaterialBuilder(BuildingBuilderInterface):
     def get_h_opening(self) -> float:
         return self.building.h_opening
 
-    def get_zones(self) -> Dict[HeightZone, Optional[MaterialZone]]:
-        return self.building.zones
-
-    def get_wp(self) -> float:
-        return self.building.wp
+    def get_height_zones(self) -> List[HeightZone]:
+        return self.building.height_zones
 
     def get_building(self) -> Building:
         building = self.building
         self.reset()
         return building
 
-class BuildingCustomHeightCustomMaterialBuilder(BuildingBuilderInterface):
-    building: Building
+    def set_material_load(self, material_load: List[MaterialZone] | float):
+        if isinstance(material_load, list):
+            assert len(material_load) == len(self.building.height_zones)
+            for i in range(len(self.building.height_zones)):
+                self.building.get_height_zone(i + 1).wp = material_load[i]
 
-    def __init__(self):
-        self.reset()
+        elif isinstance(material_load, float):
+            for height_zone in self.building.height_zones:
+                height_zone.wp = material_load
 
-    def reset(self):
-        self.building = Building()
-
-    def set_dimensions(self, dimensions: Dimensions):
-        self.building.dimensions = dimensions
-
-    def set_cladding(self, cladding: Cladding):
-        self.building.cladding = cladding
-
-    def set_roof(self, roof: Roof):
-        self.building.roof = roof
-
-    def set_num_floor(self, num_floor: int):
-        self.building.num_floor = num_floor
-
-    def set_h_opening(self, h_opening: float):
-        self.building.h_opening = h_opening
-
-    def generate_height_zones(self, height_zones: List[HeightZone]):
-        assert self.building.dimensions is not None
-
-        self.building.zones = dict()
-
-        for height_zone in height_zones:
-            self.building.zones[height_zone] = None
-
-        highest_height_zone = max(height_zones, key=lambda x: x.elevation)
-        assert highest_height_zone.elevation <= self.building.dimensions.height
-
-    def generate_material_zones(self, material_zones: List[MaterialZone]):
-        assert len(self.building.zones.keys()) == len(material_zones)
-        for i, height_zone in enumerate(self.building.zones.keys()):
-            self.building.zones[height_zone] = material_zones[i]
-
-    def compute_wp(self):
-        assert all(x is not None for x in self.building.zones.values())
-        total_weighted_sum = 0
-        total_weight = 0
-        for height_zone, material_zone in self.building.zones.items():
-            for material in material_zone.materials_list:
-                total_weighted_sum += material.weight * (material.respected_percentage / 100)
-                total_weight += material.weight
-
-        weighted_average = 0
-        if total_weight != 0:
-            weighted_average = total_weighted_sum / total_weight
-
-        self.building.wp = weighted_average
-
-    def get_dimensions(self) -> Dimensions:
-        return self.building.dimensions
-
-    def get_cladding(self) -> Cladding:
-        return self.building.cladding
-
-    def get_roof(self) -> Roof:
-        return self.building.roof
-
-    def get_hz_num(self) -> int:
-        return self.building.hz_num
-
-    def get_num_floor(self) -> int:
-        return self.building.num_floor
-
-    def get_h_opening(self) -> float:
-        return self.building.h_opening
-
-    def get_zones(self) -> Dict[HeightZone, Optional[MaterialZone]]:
-        return self.building.zones
-
-    def get_wp(self) -> float:
-        return self.building.wp
-
-    def get_building(self) -> Building:
-        building = self.building
-        self.reset()
-        return building
 
 class BuilderDirector:
     @staticmethod

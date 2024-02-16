@@ -5,22 +5,23 @@
 # This code may not be reproduced, disclosed, or used without the specific written permission of the owners
 # Author(s): https://github.com/noahsub
 ########################################################################################################################
-from copy import copy, deepcopy
+from copy import deepcopy
 
-########################################################################################################################
-# IMPORTS
-########################################################################################################################
-
-from backend.Constants.importance_factor_constants import WindImportanceFactor, ImportanceFactor, LimitState
+from backend.Constants.importance_factor_constants import ImportanceFactor
 from backend.Constants.load_constants import LoadTypes
 from backend.Constants.wind_constants import WindExposureFactorSelections, InternalPressureSelections, \
     INTERNAL_GUST_EFFECT_FACTOR
 from backend.Entities.Building.building import Building
 from backend.Entities.Location.location import Location
 from backend.Entities.Wind.wind_factor import WindFactorBuilder, WindFactor
-from backend.Entities.Wind.wind_load import WindLoad, WindLoadBuilder
+from backend.Entities.Wind.wind_load import WindLoadBuilder
 from backend.Entities.Wind.wind_pressure import WindPressureBuilder
 from backend.Entities.Wind.zone import ZoneBuilder
+
+
+########################################################################################################################
+# IMPORTS
+########################################################################################################################
 
 
 ########################################################################################################################
@@ -30,7 +31,6 @@ from backend.Entities.Wind.zone import ZoneBuilder
 def get_wind_topographic_factor(wind_factor_builder: WindFactorBuilder, ct: float = 1):
     """
     This function sets the topographic factor
-    :param wind_load: A WindLoad object, responsible for storing the wind load information
     :param ct: Topographic factor
     :return: None
     """
@@ -42,14 +42,13 @@ def get_wind_exposure_factor(wind_factor_builder: WindFactorBuilder, wind_exposu
                              building: Building, zone_num: int, manual: float = None):
     """
     This function sets the exposure factor
-    :param wind_load:
     :param wind_exposure_factor_selection:
     :param building:
     :param manual:
     :return: None
     """
 
-    height_zone = building.get_zone(zone_num)[0]
+    height_zone = building.get_height_zone(zone_num)
 
     # Different cases based on the wind exposure factor
     match wind_exposure_factor_selection:
@@ -89,9 +88,7 @@ def get_wind_gust_factor(wind_factor_builder: WindFactorBuilder):
 def get_internal_pressure(wind_factor: WindFactor, wind_pressure_builder: WindPressureBuilder, internal_pressure_selection: InternalPressureSelections, importance_factor: ImportanceFactor, location: Location):
     """
     This function sets the internal pressure
-    :param wind_load: A WindLoad object, responsible for storing the wind load information
     :param internal_pressure_selection: The internal pressure to use in the computation
-    :param wind_importance_factor: The wind importance factor to use in the computation
     :param location: A Location object, responsible for storing the location information
     :return:
     """
