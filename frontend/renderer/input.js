@@ -14,6 +14,7 @@ window.onload = function() {
     toggleMenuColors('#number-height-zone-selection');
     toggleMenuColors('#dominant-opening-selection');
     toggleMenuColors('#single-material-selection');
+    toggleMenuColors('#importance-category-selection');
 
 
     var siteDesignationSelectionOptions = document.querySelectorAll('#site-designation-selection .btn input');
@@ -129,10 +130,11 @@ function heightChange()
         clearHeightZoneElevationTable();
         populateDefaultHeightZoneElevation();
     } else if (document.getElementById('number-height-zone-no-option').checked) {
-        // Your code here
+        // pass
     }
     if (document.getElementById('material-table') !== null)
     {
+        console.log('line 136');
         heightZoneChange();
     }
 }
@@ -154,6 +156,7 @@ function materialWeightChange()
 
 function heightZoneChange()
 {
+    console.log('hzc triggered');
     if (document.getElementById('single-material-yes-option').checked === true)
     {
         var weight = document.getElementById('material-weight').value;
@@ -310,6 +313,7 @@ function standardDimensionsCase() {
         .then(data => {
             document.getElementById('dimensions-container').innerHTML = data;
             toggleMenuColors('#eave-and-ridge-selection');
+            document.getElementById('height').addEventListener('input', heightChange);
         })
         .catch((error) => {
             console.error('Error:', error);
@@ -322,6 +326,8 @@ function eaveAndRidgeCase() {
         .then(data => {
             document.getElementById('dimensions-container').innerHTML = data;
             toggleMenuColors('#eave-and-ridge-selection');
+            document.getElementById('eave-height').addEventListener('input', heightChange);
+            document.getElementById('ridge-height').addEventListener('input', heightChange);
         })
         .catch((error) => {
             console.error('Error:', error);
@@ -334,12 +340,15 @@ function nonDefaultHeightZoneNumberCase() {
         .then(data => {
             document.getElementById('height-zone-elevation-container').innerHTML = data;
             toggleMenuColors('#number-height-zone-selection');
-            document.addEventListener('input', heightChange);
+            // document.getElementById('height').addEventListener('input', heightChange);
+            // document.addEventListener('input', heightChange);
             // add click event listener for button with id add-height-zone-button
             document.getElementById('add-height-zone-button').addEventListener('click', addHeightZoneElevationRowEditable);
+            console.log('ling 342');
             document.getElementById('add-height-zone-button').addEventListener('click', heightZoneChange);
             // add click event listener for button with id remove-height-zone-button
             document.getElementById('remove-height-zone-button').addEventListener('click', removeHeightZoneElevationRow);
+            console.log('ling 346');
             document.getElementById('remove-height-zone-button').addEventListener('click', heightZoneChange);
         })
         .catch((error) => {
@@ -355,7 +364,8 @@ function defaultHeightZoneNumberCase() {
             toggleMenuColors('#number-height-zone-selection');
             clearHeightZoneElevationTable();
             populateDefaultHeightZoneElevation();
-            document.addEventListener('input', heightChange);
+            // document.getElementById('height').addEventListener('input', heightChange);
+            // document.addEventListener('input', heightChange);
         })
         .catch((error) => {
             console.error('Error:', error);
@@ -382,8 +392,9 @@ function singleMaterialCase()
         .then(response => response.text())
         .then(data => {
             document.getElementById('material-container').innerHTML = data;
+            console.log('ling 389');
             heightZoneChange();
-            document.addEventListener('input', materialWeightChange);
+            document.getElementById('material-weight').addEventListener('input', materialWeightChange);
         })
         .catch((error) => {
             console.error('Error:', error);
@@ -396,6 +407,7 @@ function multipleMaterialCase()
         .then(response => response.text())
         .then(data => {
             document.getElementById('material-container').innerHTML = data;
+            console.log('line 400');
             heightZoneChange();
         })
         .catch((error) => {
