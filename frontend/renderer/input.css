@@ -122,3 +122,16 @@ a:focus {
 .table td {
     background-color: #f7f4ef;
 }
+
+.right-align {
+    text-align: right;
+}
+
+#next_button{
+    width: 10%;
+}
+
+#next-warning{
+    color: red;
+    font-weight: bold;
+}

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>ASPENLOG 2020</title>
@@ -8,6 +9,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 </head>
+
 <body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
@@ -99,7 +101,7 @@
             <div class="mb-3">
                 <label for="width">Building Width (m)</label>
                 <p>Use width of the widest part of the building.</p>
-                <input type="number" id="width" class="form-control"/>
+                <input type="number" id="width" class="form-control" />
             </div>
             <div class="mb-3">
                 <label for="eave-and-ridge-selection" style="display: block">Eave and Ridge</label>
@@ -118,17 +120,17 @@
             <div class="mb-3">
                 <label for="num-floors">Number of Floors</label>
                 <p>This will be used in seismic calculation</p>
-                <input type="number" id="num-floors" class="form-control"/>
+                <input type="number" id="num-floors" class="form-control" />
             </div>
             <div class="mb-3">
                 <label for="top-cladding">Top of Cladding (m)</label>
                 <p>Use height of the tallest part of the cladding components (i.e. where it ends)</p>
-                <input type="number" id="top-cladding" class="form-control"/>
+                <input type="number" id="top-cladding" class="form-control" />
             </div>
             <div class="mb-3">
                 <label for="bottom-cladding">Bottom of Cladding (m)</label>
                 <p>Use height of the lowest part of the cladding components (i.e. where it starts)</p>
-                <input type="number" id="bottom-cladding" class="form-control"/>
+                <input type="number" id="bottom-cladding" class="form-control" />
             </div>
             <div class="mb-3">
                 <label for="dominant-opening-selection">Dominant Opening</label>
@@ -146,19 +148,19 @@
             </div>
             <div class="mb-3">
                 <label for="w-roof">Smaller Plan Dimension of the Roof (m)</label>
-                <input type="number" id="w-roof" class="form-control"/>
+                <input type="number" id="w-roof" class="form-control" />
             </div>
             <div class="mb-3">
                 <label for="l-roof">Larger Plan Dimension of the Roof (m)</label>
-                <input type="number" id="l-roof" class="form-control"/>
+                <input type="number" id="l-roof" class="form-control" />
             </div>
             <div class="mb-3">
                 <label for="a-roof">Roof Slope (°)</label>
-                <input type="number" id="a-roof" class="form-control"/>
+                <input type="number" id="a-roof" class="form-control" />
             </div>
             <div class="mb-3">
                 <label for="roof-uniform-dead-load">Roof Uniform Dead Load (kPa)</label>
-                <input type="number" id="roof-uniform-dead-load" class="form-control"/>
+                <input type="number" id="roof-uniform-dead-load" class="form-control" />
             </div>
             <div class="mb-3">
                 <label for="importance-category-selection" style="display: block">Importance Category</label>
@@ -209,7 +211,12 @@
             </div>
         </div>
     </div>
+    <div class="right-align">
+        <p id="next-warning"></p>
+        <button class="btn btn-primary" id="next-button">Next</button>
+    </div>
 </div>
 </body>
+
 </html>
 <script src="input.js"></script>
