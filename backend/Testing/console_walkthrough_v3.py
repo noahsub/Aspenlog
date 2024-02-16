@@ -4,9 +4,8 @@
 
 import json
 import os
-import pprint
 from copy import deepcopy
-from typing import List, Dict
+from typing import List
 
 import jsonpickle
 import rich
@@ -14,24 +13,21 @@ import typer
 from rich import print
 from rich.prompt import Prompt
 
-import backend.algorithms.snow_load_algorithms
-from backend.Constants.importance_factor_constants import ImportanceFactor, LimitState
-from backend.Constants.materials import Materials
+from backend.Constants.importance_factor_constants import ImportanceFactor
 from backend.Constants.roof_load_combination_constants import ULSRoofLoadCombinationTypes, SLSRoofLoadCombinationTypes
 from backend.Constants.seismic_constants import SiteDesignation, SiteClass
 from backend.Constants.snow_constants import RoofType, WindDirection
 from backend.Constants.wall_load_combination_constants import ULSWallLoadCombinationTypes, SLSWallLoadCombinationTypes
 from backend.Constants.wind_constants import WindExposureFactorSelections, InternalPressureSelections
 from backend.Entities.Building.building import BuildingDefaultHeightDefaultMaterialBuilder, \
-    BuildingDefaultHeightCustomMaterialBuilder, BuildingCustomHeightDefaultMaterialBuilder, \
-    BuildingCustomHeightCustomMaterialBuilder
-from backend.Entities.Building.cladding import CladdingBuilder, CladdingBuilderInterface, Cladding
-from backend.Entities.Building.dimensions import DimensionsBuilderInterface, BasicDimensionsBuilder, \
+    BuildingCustomHeightDefaultMaterialBuilder
+from backend.Entities.Building.cladding import CladdingBuilder, Cladding
+from backend.Entities.Building.dimensions import BasicDimensionsBuilder, \
     EaveRidgeDimensionsBuilder, Dimensions
 from backend.Entities.Building.height_zone import HeightZone
-from backend.Entities.Building.material_zone import MaterialZone, MaterialComposition
-from backend.Entities.Building.roof import RoofBuilder, RoofBuilderInterface, Roof
-from backend.Entities.Location.location import LocationBuilderInterface, LocationXvBuilder, LocationXsBuilder
+from backend.Entities.Building.material_zone import MaterialZone
+from backend.Entities.Building.roof import RoofBuilder, Roof
+from backend.Entities.Location.location import LocationXvBuilder, LocationXsBuilder
 from backend.Entities.Seismic.seismic_factor import SeismicFactorBuilder
 from backend.Entities.Seismic.seismic_load import SeismicLoadBuilder
 from backend.Entities.Snow.snow_factor import SnowFactorBuilder
@@ -43,7 +39,8 @@ from backend.algorithms.load_combination_algorithms import compute_wall_load_com
     compute_roof_load_combinations
 from backend.algorithms.seismic_load_algorithms import get_seismic_factor_values, get_floor_mapping, get_height_factor, \
     get_horizontal_force_factor, get_specified_lateral_earthquake_force
-from backend.algorithms.snow_load_algorithms import get_slope_factor, get_accumulation_factor, get_wind_exposure_factor_snow, get_basic_roof_snow_load_factor, get_snow_load
+from backend.algorithms.snow_load_algorithms import get_slope_factor, get_accumulation_factor, \
+    get_wind_exposure_factor_snow, get_basic_roof_snow_load_factor, get_snow_load
 from backend.algorithms.wind_load_algorithms import get_wind_topographic_factor, get_wind_exposure_factor, \
     get_wind_gust_factor, get_internal_pressure, get_external_pressure
 
@@ -248,10 +245,14 @@ def building_roof(w_roof: float, l_roof: float, slope: float, uniform_dead_load:
     return roof_builder.get_roof()
 
 
-def building(dimensions: Dimensions, cladding: Cladding, roof: Roof, num_floor: int, h_opening: float, material_load: List[MaterialZone] | float,
+def building(dimensions: Dimensions, cladding: Cladding, roof: Roof, num_floor: int, h_opening: float, material_load: List[float] | float,
              height_zones: List[HeightZone] = None):
+
+    print(height_zones)
+    print(material_load)
+
     # Case default height zones and simple material load
-    if height_zones is None and isinstance(material_load, (float, int)):
+    if height_zones is None and isinstance(material_load, (list, float)):
         building_builder = BuildingDefaultHeightDefaultMaterialBuilder()
         building_builder.set_dimensions(dimensions)
         building_builder.set_cladding(cladding)
@@ -259,22 +260,10 @@ def building(dimensions: Dimensions, cladding: Cladding, roof: Roof, num_floor: 
         building_builder.set_num_floor(num_floor)
         building_builder.set_h_opening(h_opening)
         building_builder.generate_height_zones()
-        building_builder.set_wp(material_load)
-        return building_builder.get_building()
-    # Case default height zones and custom material load
-    elif height_zones is None and not isinstance(material_load, (float, int)):
-        building_builder = BuildingDefaultHeightCustomMaterialBuilder()
-        building_builder.set_dimensions(dimensions)
-        building_builder.set_cladding(cladding)
-        building_builder.set_roof(roof)
-        building_builder.set_num_floor(num_floor)
-        building_builder.set_h_opening(h_opening)
-        building_builder.generate_height_zones()
-        building_builder.generate_material_zones(material_load)
-        building_builder.compute_wp()
+        building_builder.set_material_load(material_load)
         return building_builder.get_building()
     # Case custom height zones and simple material load
-    elif height_zones is not None and isinstance(material_load, (float, int)):
+    elif height_zones is not None and isinstance(material_load, (list, float)):
         building_builder = BuildingCustomHeightDefaultMaterialBuilder()
         building_builder.set_dimensions(dimensions)
         building_builder.set_cladding(cladding)
@@ -282,19 +271,7 @@ def building(dimensions: Dimensions, cladding: Cladding, roof: Roof, num_floor: 
         building_builder.set_num_floor(num_floor)
         building_builder.set_h_opening(h_opening)
         building_builder.generate_height_zones(height_zones)
-        building_builder.set_wp(material_load)
-        return building_builder.get_building()
-    # Case custom height zones and custom material load
-    elif height_zones is not None and not isinstance(material_load, (float, int)):
-        building_builder = BuildingCustomHeightCustomMaterialBuilder()
-        building_builder.set_dimensions(dimensions)
-        building_builder.set_cladding(cladding)
-        building_builder.set_roof(roof)
-        building_builder.set_num_floor(num_floor)
-        building_builder.set_h_opening(h_opening)
-        building_builder.generate_height_zones(height_zones)
-        building_builder.generate_material_zones(material_load)
-        building_builder.compute_wp()
+        building_builder.set_material_load(material_load)
         return building_builder.get_building()
     else:
         raise NotImplementedError
@@ -394,26 +371,34 @@ d88P     888  "Y8888P"  888        8888888888 888    Y888 88888888 "Y88888P"   "
     slope = float(check_save('slope', user_input, 'slope of the roof'))
 
     confirm_material = check_save('confirm_material', confirm_choice, 'The material will be applied to all height zones?')
-    material_zones = None
+    material_list = None
     wp = None
     if confirm_material:
         wp = float(check_save('wp', user_input, 'material load'))
     else:
-        custom_num_material_zones = int(check_save('custom_num_material_zones', user_input, 'number of material zones (same as number of height zones)'))
-        if check_save_simple('material_zones') and confirm_choice(f"Would you like to keep them?"):
-            material_zones = deserialize('material_zones')
+        # custom_num_material_zones = int(check_save('custom_num_material_zones', user_input, 'number of material zones (same as number of height zones)'))
+        # if check_save_simple('material_zones') and confirm_choice(f"Would you like to keep them?"):
+        #     material_zones = deserialize('material_zones')
+        # else:
+        #     material_zones = []
+        #     for i in range(custom_num_material_zones):
+        #         finished_materials = False
+        #         materials_list = []
+        #         k = 1
+        #         while not finished_materials:
+        #             materials_list.append(MaterialComposition(material=choice(f"material {k} for height zone {i + 1}", Materials), respected_percentage=float(user_input("respected percentage")), weight=float(user_input("weight"))))
+        #             finished_materials = not confirm_choice("Would you like to add another material for the current height zone?")
+        #             k += 1
+        #         material_zones.append(MaterialZone(materials_list))
+        # serialize('material_zones', material_zones)
+        num_materials = int(check_save('num_materials', user_input, 'number of materials (same as number of height zones)'))
+        if check_save_simple('material_list') and confirm_choice(f"Would you like to keep them?"):
+            material_list = deserialize('material_list')
         else:
-            material_zones = []
-            for i in range(custom_num_material_zones):
-                finished_materials = False
-                materials_list = []
-                k = 1
-                while not finished_materials:
-                    materials_list.append(MaterialComposition(material=choice(f"material {k} for height zone {i + 1}", Materials), respected_percentage=float(user_input("respected percentage")), weight=float(user_input("weight"))))
-                    finished_materials = not confirm_choice("Would you like to add another material for the current height zone?")
-                    k += 1
-                material_zones.append(MaterialZone(materials_list))
-        serialize('material_zones', material_zones)
+            material_list = []
+            for i in range(num_materials):
+                material_list.append(float(user_input(f"material load for height zone {i + 1}")))
+            serialize('material_list', material_list)
 
     wp_roof = float(check_save('wp_roof', user_input, 'uniform dead load for roof'))
 
@@ -421,8 +406,8 @@ d88P     888  "Y8888P"  888        8888888888 888    Y888 88888888 "Y88888P"   "
     cladding = building_cladding(c_top=top_cladding, c_bot=bottom_cladding)
     roof = building_roof(w_roof=w_roof, l_roof=l_roof, slope=slope, uniform_dead_load=wp_roof)
 
-    material_load = material_zones
-    if material_zones is None:
+    material_load = material_list
+    if material_list is None:
         material_load = wp
 
     building = building(dimensions=dimensions, cladding=cladding, roof=roof, num_floor=num_floor, h_opening=mid_height, material_load=material_load, height_zones=height_zones)
@@ -437,7 +422,7 @@ d88P     888  "Y8888P"  888        8888888888 888    Y888 88888888 "Y88888P"   "
     importance_category = check_save('importance_category', choice, 'importance category', ImportanceFactor)
     exposure_factor_selection = None
 
-    for height_zone in building.zones.keys():
+    for height_zone in building.height_zones:
         wind_factor_builder = WindFactorBuilder()
 
         confirm_topographic_factor = check_save(f'confirm_topographic_factor_{height_zone.zone_num}', confirm_choice, 'Would you like to use a custom topographic factor (default 1)?')
@@ -539,12 +524,12 @@ d88P     888  "Y8888P"  888        8888888888 888    Y888 88888888 "Y88888P"   "
     for x, y in floor_mapping.items():
         print(f"floor {x} : height zone {y}")
 
-    for height_zone in building.zones.keys():
+    for height_zone in building.height_zones:
         zone_seismic_factor_builder = deepcopy(seismic_factor_builder)
         seismic_load_builder = SeismicLoadBuilder()
         get_height_factor(seismic_load_builder, building, height_zone.zone_num)
         get_horizontal_force_factor(zone_seismic_factor_builder, seismic_load_builder)
-        get_specified_lateral_earthquake_force(seismic_load_builder, building, location, importance_category)
+        get_specified_lateral_earthquake_force(seismic_load_builder, building, height_zone.zone_num, location, importance_category)
         seismic_load = seismic_load_builder.get_seismic_load()
         height_zone.seismic_load = seismic_load
 
@@ -556,7 +541,8 @@ d88P     888  "Y8888P"  888        8888888888 888    Y888 88888888 "Y88888P"   "
     print("WALL LOAD COMBINATIONS")
     uls_for_wall = check_save('uls_for_wall', choice, 'ULS for wall', ULSWallLoadCombinationTypes)
     sls_for_wall = check_save('sls_for_wall', choice, 'SLS for wall', SLSWallLoadCombinationTypes)
-    print(compute_wall_load_combinations(building, snow_load_downwind, uls_for_wall, sls_for_wall))
+    zone_num = user_input('Enter the zone number for which you want to compute the wall load combinations')
+    print(compute_wall_load_combinations(building, zone_num, snow_load_downwind, uls_for_wall, sls_for_wall))
 
     print("ROOF LOAD COMBINATIONS")
     uls_for_roof = check_save('uls_for_roof', choice, 'ULS for roof', ULSRoofLoadCombinationTypes)

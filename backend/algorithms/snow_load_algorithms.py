@@ -11,8 +11,8 @@
 ########################################################################################################################
 
 import math
-from backend.Constants.importance_factor_constants import WindImportanceFactor, SnowImportanceFactor, ImportanceFactor, \
-    LimitState
+
+from backend.Constants.importance_factor_constants import ImportanceFactor
 from backend.Constants.load_constants import LoadTypes
 from backend.Constants.snow_constants import RoofType, ACCUMULATION_FACTOR, WindDirection
 from backend.Constants.wind_constants import WindExposureFactorSelections
@@ -29,7 +29,6 @@ from backend.Entities.Snow.snow_load import SnowLoadBuilder
 def get_slope_factor(snow_factor_builder: SnowFactorBuilder, selection: RoofType, building: Building):
     """
     This function sets the slope factor
-    :param snow_load: A SnowLoad object, responsible for storing the snow load information
     :param selection: The roof type
     :param building: A Building object, responsible for storing the building information
     :return:
@@ -76,8 +75,6 @@ def get_accumulation_factor(snow_factor_builder: SnowFactorBuilder, wind_directi
 def get_wind_exposure_factor_snow(snow_factor_builder: SnowFactorBuilder, importance_factor: ImportanceFactor, wind_exposure_factor_selection: WindExposureFactorSelections):
     """
     This function sets the wind exposure factor
-    :param snow_load: A SnowLoad object, responsible for storing the snow load information
-    :param importance_selection: The importance factor to use in the computation
     :param wind_exposure_factor_selection: The wind exposure factor to use in the computation
     :return:
     """
@@ -99,7 +96,6 @@ def get_wind_exposure_factor_snow(snow_factor_builder: SnowFactorBuilder, import
 def get_basic_roof_snow_load_factor(snow_factor_builder: SnowFactorBuilder, building: Building):
     """
     This function sets the basic roof snow load factor
-    :param snow_load: A SnowLoad object, responsible for storing the snow load information
     :param building: A Building object, responsible for storing the building information
     :return: None
     """
@@ -116,8 +112,6 @@ def get_basic_roof_snow_load_factor(snow_factor_builder: SnowFactorBuilder, buil
 def get_snow_load(snow_factor_builder: SnowFactorBuilder, snow_load_builder: SnowLoadBuilder, importance_factor: ImportanceFactor, location: Location):
     """
     This function sets the snow load
-    :param snow_load: A SnowLoad object, responsible for storing the snow load information
-    :param snow_importance_factor: The snow importance factor to use in the computation
     :param location: A Location object, responsible for storing the location information
     :return: None
     """

@@ -1,5 +1,4 @@
 from typing import Optional
-
 from backend.Entities.Seismic.seismic_load import SeismicLoad
 from backend.Entities.Wind.wind_load import WindLoad
 
@@ -14,12 +13,14 @@ class HeightZone:
     elevation: float
     wind_load: Optional[WindLoad]
     seismic_load: Optional[SeismicLoad]
+    wp: Optional[float]
 
     def __init__(self, zone_num: int, elevation: float):
         self.zone_num = zone_num
         self.elevation = elevation
         self.wind_load = None
         self.seismic_load = None
+        self.wp = None
 
     def __str__(self):
         """
@@ -30,7 +31,8 @@ class HeightZone:
         return (f"zone_num: {self.zone_num}\n,"
                 f"elevation: {self.elevation}\n"
                 f"wind_load: {str(self.wind_load)}\n"
-                f"seismic_load: {str(self.seismic_load)}")
+                f"seismic_load: {str(self.seismic_load)}\n"
+                f"wp: {self.wp}")
 
     def __repr__(self):
         """
@@ -41,4 +43,5 @@ class HeightZone:
         return (f"zone_num: {self.zone_num}\n,"
                 f"elevation: {self.elevation}\n"
                 f"wind_load: {str(self.wind_load)}\n"
-                f"seismic_load: {str(self.seismic_load)}")
+                f"seismic_load: {str(self.seismic_load)}\n"
+                f"wp: {self.wp}")
