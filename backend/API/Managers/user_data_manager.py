@@ -1,3 +1,5 @@
+import jsonpickle
+
 from backend.Entities.User.user import User
 
 ALL_USER_DATA = dict()
@@ -56,10 +58,6 @@ def set_user_importance_category(username, importance_category):
     ALL_USER_DATA[username].set_importance_category(importance_category)
 
 
-def get_user_data(username):
-    return ALL_USER_DATA.get(username)
-
-
 def get_user_profile(username):
     return ALL_USER_DATA.get(username).get_profile()
 
@@ -102,3 +100,7 @@ def get_user_building(username):
 
 def get_user_importance_category(username):
     return ALL_USER_DATA.get(username).get_importance_category()
+
+
+def get_user_data(username):
+    return jsonpickle.encode(ALL_USER_DATA.get(username), indent=4)

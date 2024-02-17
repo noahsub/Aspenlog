@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 from openpyxl.worksheet.dimensions import Dimension
 
@@ -12,20 +12,31 @@ from backend.Entities.User.profile import Profile
 
 class User:
     username: str
-    profile: Profile
-    location: Location
-    dimensions: Dimension
-    cladding: Cladding
-    roof: Roof
-    num_floors: int
-    mid_height: float
-    material_load: Dict[int, float]
-    height_zones: List[HeightZone]
-    building: Building
-    importance_category: str
+    profile: Optional[Profile]
+    location: Optional[Location]
+    dimensions: Optional[Dimension]
+    cladding: Optional[Cladding]
+    roof: Optional[Roof]
+    num_floors: Optional[int]
+    mid_height: Optional[float]
+    material_load: Optional[Dict[int, float]]
+    height_zones: Optional[List[HeightZone]]
+    building: Optional[Building]
+    importance_category: Optional[str]
 
     def __init__(self, username: str):
         self.username = username
+        self.profile = None
+        self.location = None
+        self.dimensions = None
+        self.cladding = None
+        self.roof = None
+        self.num_floors = None
+        self.mid_height = None
+        self.material_load = None
+        self.height_zones = None
+        self.building = None
+        self.importance_category = None
 
     def set_profile(self, profile: Profile):
         self.profile = profile
