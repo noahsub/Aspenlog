@@ -52,6 +52,10 @@ def set_user_building(username, building):
     ALL_USER_DATA[username].set_building(building)
 
 
+def set_user_importance_category(username, importance_category):
+    ALL_USER_DATA[username].set_importance_category(importance_category)
+
+
 def get_user_data(username):
     return ALL_USER_DATA.get(username)
 
@@ -94,3 +98,7 @@ def get_user_height_zones(username):
 
 def get_user_building(username):
     return ALL_USER_DATA.get(username).get_building()
+
+
+def get_user_importance_category(username):
+    return ALL_USER_DATA.get(username).get_importance_category()

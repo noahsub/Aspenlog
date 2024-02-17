@@ -22,6 +22,7 @@ class User:
     material_load: Dict[int, float]
     height_zones: List[HeightZone]
     building: Building
+    importance_category: str
 
     def __init__(self, username: str):
         self.username = username
@@ -56,6 +57,10 @@ class User:
     def set_building(self, building: Building):
         self.building = building
 
+    def set_importance_category(self, importance_category: str):
+        assert importance_category in {'LOW', 'NORMAL', 'HIGH', 'POST_DISASTER'}
+        self.importance_category = importance_category
+
     def get_username(self):
         return self.username
 
@@ -88,3 +93,6 @@ class User:
 
     def get_building(self):
         return self.building
+
+    def get_importance_category(self):
+        return self.importance_category
