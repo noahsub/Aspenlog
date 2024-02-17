@@ -104,6 +104,24 @@ window.onload = function()
     }
 }
 
+function getFloatValue(id)
+{
+    let element = document.getElementById(id);
+    return element ? parseFloat(element.value) : null;
+}
+
+function getIntValue(id)
+{
+    let element = document.getElementById(id);
+    return element ? parseInt(element.value) : null;
+}
+
+function getStrValue(id)
+{
+    let element = document.getElementById(id);
+    return element ? element.value : null;
+}
+
 function populateDefaultHeightZoneElevation()
 {
     var height = null;
@@ -489,6 +507,13 @@ document.getElementById('location_button').addEventListener('click', function()
     // disable button
     document.getElementById('location_button').disabled = true;
 
+    document.getElementById('location_button').classList.add('skeleton-loader');
+    document.getElementById('wind-velocity-pressure').classList.add('skeleton-loader');
+    document.getElementById('ground-snow-load').classList.add('skeleton-loader');
+    document.getElementById('rain-load').classList.add('skeleton-loader');
+    document.getElementById('design-spectral-acceleration-0-2').classList.add('skeleton-loader');
+    document.getElementById('design-spectral-acceleration-1').classList.add('skeleton-loader');
+
     var address = document.getElementById('address').value;
 
     var siteDesignation = null;
@@ -580,6 +605,13 @@ document.getElementById('location_button').addEventListener('click', function()
                 .finally(() =>
                 {
                     document.getElementById('location_button').disabled = false;
+
+                    document.getElementById('location_button').classList.remove('skeleton-loader');
+                    document.getElementById('wind-velocity-pressure').classList.remove('skeleton-loader');
+                    document.getElementById('ground-snow-load').classList.remove('skeleton-loader');
+                    document.getElementById('rain-load').classList.remove('skeleton-loader');
+                    document.getElementById('design-spectral-acceleration-0-2').classList.remove('skeleton-loader');
+                    document.getElementById('design-spectral-acceleration-1').classList.remove('skeleton-loader');
                 });
         });
 });
@@ -743,8 +775,251 @@ document.getElementById('next-button').addEventListener('click', function()
 
     // TODO: if no check
 
+    else if (document.getElementById('height-zone-elevation-table').rows.length !== document.getElementById('material-table').rows.length)
+    {
+        document.getElementById('next-warning').innerText = "The number of height zones in both tables must be the same";
+    }
+
     else
     {
-        document.getElementById('next-warning').innerText = "All checks passed";
+        document.getElementById('next-button').classList.add('skeleton-loader');
+        window.api.invoke('get-token') // Retrieve the token
+            .then((token) =>
+            {
+                // LOCATION
+                let address = document.getElementById('address').value;
+                let siteDesignation = null;
+                let seismicValue = null;
+                if (document.getElementById('vs30_option').checked)
+                {
+                    siteDesignation = 'xv';
+                    seismicValue = document.getElementById('vs30').value;
+                }
+
+                if (document.getElementById('xs_option').checked)
+                {
+                    siteDesignation = 'xs';
+                    if (document.getElementById('xs-A-option').checked)
+                    {
+                        seismicValue = 'A';
+                    }
+                    else if (document.getElementById('xs-B-option').checked)
+                    {
+                        seismicValue = 'B';
+                    }
+                    else if (document.getElementById('xs-C-option').checked)
+                    {
+                        seismicValue = 'C';
+                    }
+                    else if (document.getElementById('xs-D-option').checked)
+                    {
+                        seismicValue = 'D';
+                    }
+                    else if (document.getElementById('xs-E-option').checked)
+                    {
+                        seismicValue = 'E';
+                    }
+                }
+
+                const myHeaders = new Headers();
+                myHeaders.append("Content-Type", "application/json");
+                myHeaders.append("Accept", "application/json");
+                myHeaders.append("Authorization", `Bearer ${token}`);
+
+                const raw = JSON.stringify(
+                    {
+                        "address": `${address}`,
+                        "site_designation": `${siteDesignation}`,
+                        "seismic_value": `${seismicValue}`
+                    });
+
+                const requestOptions = {
+                    method: "POST",
+                    headers: myHeaders,
+                    body: raw,
+                    redirect: "follow"
+                };
+
+                fetch("http://localhost:42613/location", requestOptions)
+                    .then((response) =>
+                    {
+                        // DIMENSIONS
+                        if (response.status === 200)
+                        {
+                            console.log('dimensions reached');
+
+                            let width = getFloatValue('width');
+                            let eaveHeight = getFloatValue('eave-height');
+                            let ridgeHeight = getFloatValue('ridge-height');
+                            let height = getFloatValue('height');
+
+                            const myHeaders = new Headers();
+                            myHeaders.append("Content-Type", "application/json");
+                            myHeaders.append("Accept", "application/json");
+                            myHeaders.append("Authorization", `Bearer ${token}`);
+
+                            const raw = JSON.stringify(
+                                {
+                                    "width": width,
+                                    "height": height,
+                                    "eave_height": eaveHeight,
+                                    "ridge_height": ridgeHeight
+                                });
+
+                            console.log(raw);
+
+                            const requestOptions = {
+                                method: "POST",
+                                headers: myHeaders,
+                                body: raw,
+                                redirect: "follow"
+                            };
+
+                            fetch("http://localhost:42613/dimensions", requestOptions)
+                                .then((response) =>
+                                {
+                                    // CLADDING
+                                    if (response.status === 200)
+                                    {
+                                        let cTop = getFloatValue('top-cladding');
+                                        let cBot = getFloatValue('bottom-cladding');
+
+                                        const myHeaders = new Headers();
+                                        myHeaders.append("Content-Type", "application/json");
+                                        myHeaders.append("Accept", "application/json");
+                                        myHeaders.append("Authorization", `Bearer ${token}`);
+
+                                        const raw = JSON.stringify(
+                                            {
+                                                "c_top": cTop,
+                                                "c_bot": cBot
+                                            });
+
+                                        const requestOptions = {
+                                            method: "POST",
+                                            headers: myHeaders,
+                                            body: raw,
+                                            redirect: "follow"
+                                        };
+
+                                        fetch("http://localhost:42613/cladding", requestOptions)
+                                            .then((response) =>
+                                            {
+                                                // ROOF
+                                                if (response.status === 200)
+                                                {
+                                                    let wRoof = getFloatValue('w-roof');
+                                                    let lRoof = getFloatValue('l-roof');
+                                                    let aRoof = getFloatValue('a-roof');
+                                                    let roofUniformDeadLoad = getFloatValue('roof-uniform-dead-load');
+
+                                                    const myHeaders = new Headers();
+                                                    myHeaders.append("Content-Type", "application/json");
+                                                    myHeaders.append("Accept", "application/json");
+                                                    myHeaders.append("Authorization", `Bearer ${token}`);
+
+                                                    const raw = JSON.stringify(
+                                                        {
+                                                            "w_roof": wRoof,
+                                                            "l_roof": lRoof,
+                                                            "slope": aRoof,
+                                                            "uniform_dead_load": roofUniformDeadLoad
+                                                        });
+
+                                                    const requestOptions = {
+                                                        method: "POST",
+                                                        headers: myHeaders,
+                                                        body: raw,
+                                                        redirect: "follow"
+                                                    };
+
+                                                    fetch("http://localhost:42613/roof", requestOptions)
+                                                        .then((response) =>
+                                                        {
+                                                            if (response.status === 200)
+                                                            {
+                                                                let numFloors = getIntValue('num-floors');
+                                                                let midHeight = getFloatValue('mid-height');
+
+                                                                if (midHeight === null)
+                                                                {
+                                                                    midHeight = 0;
+                                                                }
+
+                                                                // list of tuples of the form (height, elevation, load)
+                                                                var zones = [];
+                                                                // iterate through height zone elevation table data rows
+                                                                var heightZoneElevationTable = document.getElementById("height-zone-elevation-table");
+                                                                var materialTable = document.getElementById("material-table");
+
+                                                                for (var i = 1; i < heightZoneElevationTable.rows.length; i++)
+                                                                {
+                                                                    let zoneNum = parseInt(heightZoneElevationTable.rows[i].cells[0].innerHTML);
+                                                                    let elevation = parseFloat(heightZoneElevationTable.rows[i].cells[1].innerHTML);
+                                                                    let load = parseFloat(materialTable.rows[i].cells[1].innerHTML);
+                                                                    zones.push([zoneNum, elevation, load]);
+                                                                }
+
+                                                                const myHeaders = new Headers();
+                                                                myHeaders.append("Content-Type", "application/json");
+                                                                myHeaders.append("Accept", "application/json");
+                                                                myHeaders.append("Authorization", `Bearer ${token}`);
+
+                                                                const raw = JSON.stringify({
+                                                                    "num_floor": numFloors,
+                                                                    "h_opening": midHeight,
+                                                                    "zones": zones
+                                                                });
+
+                                                                const requestOptions = {
+                                                                    method: "POST",
+                                                                    headers: myHeaders,
+                                                                    body: raw,
+                                                                    redirect: "follow"
+                                                                };
+
+                                                                fetch("http://localhost:42613/building", requestOptions)
+                                                                    .then((response) =>
+                                                                    {
+                                                                        if (response.status === 200)
+                                                                        {
+                                                                            window.location.href = 'loads.html';
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            throw new Error('building error');
+                                                                        }
+                                                                    })
+                                                                    .catch((error) => console.error(error));
+                                                            }
+                                                            else
+                                                            {
+                                                                throw new Error('roof error');
+                                                            }
+                                                        })
+                                                        .catch((error) => console.error(error));
+                                                }
+                                                else
+                                                {
+                                                    throw new Error('cladding error');
+                                                }
+                                            })
+                                            .catch((error) => console.error(error));
+                                    }
+
+                                    else
+                                    {
+                                        throw new Error('dimensions error');
+                                    }
+                                })
+                                .catch((error) => console.error(error));
+                        }
+                        else
+                        {
+                            throw new Error('location error');
+                        }
+                    })
+                    .catch((error) => console.error(error));
+            });
     }
 });

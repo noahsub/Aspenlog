@@ -9,7 +9,7 @@ roof_router = APIRouter()
 
 
 @roof_router.post("/roof")
-def dimensions_endpoint(roof_input: RoofInput, username: str = Depends(decode_token)):
+def roof_endpoint(roof_input: RoofInput, username: str = Depends(decode_token)):
     try:
         check_user_exists(username)
         roof = process_roof_data(w_roof=roof_input.w_roof, l_roof=roof_input.l_roof, slope=roof_input.slope, uniform_dead_load=roof_input.uniform_dead_load)

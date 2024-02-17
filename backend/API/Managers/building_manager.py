@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from typing import List, Tuple, Optional
 
 from backend.API.Managers.user_data_manager import get_user_dimensions, get_user_cladding, get_user_roof
 from backend.Entities.Building.building import BuildingDefaultHeightDefaultMaterialBuilder, \
@@ -7,6 +7,8 @@ from backend.Entities.Building.height_zone import HeightZone
 
 
 def process_building_data(num_floor: int, h_opening: float, zones: List[Tuple[int, float, float]], username):
+    if h_opening is None:
+        h_opening = 0
     dimensions = get_user_dimensions(username)
     cladding = get_user_cladding(username)
     roof = get_user_roof(username)

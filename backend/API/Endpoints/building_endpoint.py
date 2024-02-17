@@ -1,3 +1,4 @@
+import jsonpickle
 from fastapi import APIRouter, Depends, HTTPException
 
 from backend.API.Managers.authentication_manager import decode_token
@@ -14,6 +15,6 @@ def building_endpoint(building_input: BuildingInput, username: str = Depends(dec
         check_user_exists(username)
         building = process_building_data(num_floor=building_input.num_floor, h_opening=building_input.h_opening, zones=building_input.zones, username=username)
         set_user_building(username=username, building=building)
-        return building
+        return jsonpickle.encode(building)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
