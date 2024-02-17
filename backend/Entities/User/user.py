@@ -2,6 +2,7 @@ from typing import Dict, List, Optional
 
 from openpyxl.worksheet.dimensions import Dimension
 
+from backend.Constants.importance_factor_constants import ImportanceFactor
 from backend.Entities.Building.building import Building
 from backend.Entities.Building.cladding import Cladding
 from backend.Entities.Building.height_zone import HeightZone
@@ -22,7 +23,7 @@ class User:
     material_load: Optional[Dict[int, float]]
     height_zones: Optional[List[HeightZone]]
     building: Optional[Building]
-    importance_category: Optional[str]
+    importance_category: Optional[ImportanceFactor]
 
     def __init__(self, username: str):
         self.username = username
@@ -68,8 +69,7 @@ class User:
     def set_building(self, building: Building):
         self.building = building
 
-    def set_importance_category(self, importance_category: str):
-        assert importance_category in {'LOW', 'NORMAL', 'HIGH', 'POST_DISASTER'}
+    def set_importance_category(self, importance_category: ImportanceFactor):
         self.importance_category = importance_category
 
     def get_username(self):

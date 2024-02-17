@@ -410,6 +410,7 @@ function nonDefaultHeightZoneNumberCase()
             document.getElementById('remove-height-zone-button').addEventListener('click', removeHeightZoneElevationRow);
             console.log('ling 346');
             document.getElementById('remove-height-zone-button').addEventListener('click', heightZoneChange);
+            heightZoneChange();
         })
         .catch((error) =>
         {
@@ -429,6 +430,8 @@ function defaultHeightZoneNumberCase()
             populateDefaultHeightZoneElevation();
             // document.getElementById('height').addEventListener('input', heightChange);
             // document.addEventListener('input', heightChange);
+            heightZoneChange();
+            document.getElementById('material-weight').addEventListener('input', materialWeightChange);
         })
         .catch((error) =>
         {
@@ -782,7 +785,40 @@ document.getElementById('next-button').addEventListener('click', function()
 
     else
     {
+        // add skeleton loader to next button
         document.getElementById('next-button').classList.add('skeleton-loader');
+
+        // add skeleton loader to all inputs on page
+        document.querySelectorAll('input').forEach((input) =>
+        {
+            input.classList.add('skeleton-loader');
+        });
+
+        // add skeleton loader to all tables on page
+        document.querySelectorAll('table').forEach((table) =>
+        {
+            table.classList.add('skeleton-loader');
+        });
+
+        // add skeleton loader to all cells in tables on page
+        document.querySelectorAll('table td, table th').forEach((cell) =>
+        {
+            cell.classList.add('skeleton-loader');
+        });
+
+        // add skeleton loader to all btn-secondary on page
+        document.querySelectorAll('.btn-secondary').forEach((button) =>
+        {
+            button.classList.add('skeleton-loader');
+        });
+
+        // add skeleton loader to all elements of type radio on page
+        document.querySelectorAll('input[type="radio"]').forEach((radio) =>
+        {
+            radio.disabled = true;
+        });
+
+
         window.api.invoke('get-token') // Retrieve the token
             .then((token) =>
             {
@@ -936,6 +972,7 @@ document.getElementById('next-button').addEventListener('click', function()
                                                     fetch("http://localhost:42613/roof", requestOptions)
                                                         .then((response) =>
                                                         {
+                                                            // BUILDING
                                                             if (response.status === 200)
                                                             {
                                                                 let numFloors = getIntValue('num-floors');
@@ -965,11 +1002,12 @@ document.getElementById('next-button').addEventListener('click', function()
                                                                 myHeaders.append("Accept", "application/json");
                                                                 myHeaders.append("Authorization", `Bearer ${token}`);
 
-                                                                const raw = JSON.stringify({
-                                                                    "num_floor": numFloors,
-                                                                    "h_opening": midHeight,
-                                                                    "zones": zones
-                                                                });
+                                                                const raw = JSON.stringify(
+                                                                    {
+                                                                        "num_floor": numFloors,
+                                                                        "h_opening": midHeight,
+                                                                        "zones": zones
+                                                                    });
 
                                                                 const requestOptions = {
                                                                     method: "POST",
@@ -981,9 +1019,62 @@ document.getElementById('next-button').addEventListener('click', function()
                                                                 fetch("http://localhost:42613/building", requestOptions)
                                                                     .then((response) =>
                                                                     {
+                                                                        // IMPORTANCE CATEGORY
                                                                         if (response.status === 200)
                                                                         {
-                                                                            window.location.href = 'loads.html';
+                                                                            let importance_category = null;
+                                                                            // if low is checked
+                                                                            if (document.getElementById('importance-category-low-option').checked)
+                                                                            {
+                                                                                importance_category = 'LOW';
+                                                                            }
+                                                                            // if normal is checked
+                                                                            else if (document.getElementById('importance-category-normal-option').checked)
+                                                                            {
+                                                                                importance_category = 'NORMAL';
+                                                                            }
+
+                                                                            else if (document.getElementById('importance-category-high-option').checked)
+                                                                            {
+                                                                                importance_category = 'HIGH';
+                                                                            }
+
+                                                                            // if post disaster is checked
+                                                                            else if (document.getElementById('importance-category-post-disaster-option').checked)
+                                                                            {
+                                                                                importance_category = 'POST_DISASTER';
+                                                                            }
+
+                                                                            const myHeaders = new Headers();
+                                                                            myHeaders.append("Content-Type", "application/json");
+                                                                            myHeaders.append("Accept", "application/json");
+                                                                            myHeaders.append("Authorization", `Bearer ${token}`);
+
+                                                                            const raw = JSON.stringify(
+                                                                                {
+                                                                                    "importance_category": importance_category
+                                                                                });
+
+                                                                            const requestOptions = {
+                                                                                method: "POST",
+                                                                                headers: myHeaders,
+                                                                                body: raw,
+                                                                                redirect: "follow"
+                                                                            };
+
+                                                                            fetch("http://localhost:42613/importance_category", requestOptions)
+                                                                                .then((response) =>
+                                                                                {
+                                                                                    if (response.status === 200)
+                                                                                    {
+                                                                                        window.location.href = 'loads.html';
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        throw new Error('importance category error');
+                                                                                    }
+                                                                                })
+                                                                                .catch((error) => console.error(error));
                                                                         }
                                                                         else
                                                                         {
