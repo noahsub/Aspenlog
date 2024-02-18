@@ -1,108 +1,12 @@
-// import $ from 'jquery';
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// GLOBALS
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// on window load
-var map;
+let map;
 
-// on window load
-window.onload = function()
-{
-    document.getElementById('navbarDropdownMenuLink').textContent = "potato";
-
-    setMap(43.66074, -79.39661, 'Myhal Centre, Toronto, Ontario, Canada');
-
-    toggleMenuColors('#site-designation-selection');
-    toggleMenuColors('#eave-and-ridge-selection');
-    toggleMenuColors('#number-height-zone-selection');
-    toggleMenuColors('#dominant-opening-selection');
-    toggleMenuColors('#single-material-selection');
-    toggleMenuColors('#importance-category-selection');
-
-    // document.getElementById('next-button').disabled = true;
-
-    var siteDesignationSelectionOptions = document.querySelectorAll('#site-designation-selection .btn input');
-    for (var i = 0; i < siteDesignationSelectionOptions.length; i++)
-    {
-        siteDesignationSelectionOptions[i].addEventListener('change', function()
-        {
-            if (this.checked)
-            {
-                if (this.id === 'xs_option')
-                {
-                    xsCase();
-                }
-                if (this.id === 'vs30_option')
-                {
-                    vs30Case();
-                }
-            }
-        });
-    }
-
-    var eaveAndRidgeSelectionOptions = document.querySelectorAll('#eave-and-ridge-selection .btn input');
-    for (var i = 0; i < eaveAndRidgeSelectionOptions.length; i++)
-    {
-        eaveAndRidgeSelectionOptions[i].addEventListener('change', function()
-        {
-            if (this.id === 'eave-and-ridge-yes-option')
-            {
-                eaveAndRidgeCase();
-            }
-            if (this.id === 'eave-and-ridge-no-option')
-            {
-                standardDimensionsCase();
-            }
-        });
-    }
-
-    var numberHeightZoneOptions = document.querySelectorAll('#number-height-zone-selection .btn input');
-    for (var i = 0; i < numberHeightZoneOptions.length; i++)
-    {
-        numberHeightZoneOptions[i].addEventListener('change', function()
-        {
-            if (this.id === 'number-height-zone-yes-option')
-            {
-                defaultHeightZoneNumberCase();
-            }
-            if (this.id === 'number-height-zone-no-option')
-            {
-                nonDefaultHeightZoneNumberCase();
-            }
-        });
-    }
-
-    var dominantOpeningOptions = document.querySelectorAll('#dominant-opening-selection .btn input');
-    for (var i = 0; i < dominantOpeningOptions.length; i++)
-    {
-        dominantOpeningOptions[i].addEventListener('change', function()
-        {
-            if (this.id === 'dominant-opening-yes-option')
-            {
-                dominantOpeningCase();
-            }
-            else
-            {
-                document.getElementById('dominant-opening-container').innerHTML = "";
-            }
-        });
-    }
-
-    var materialOptions = document.querySelectorAll('#single-material-selection .btn input');
-    for (var i = 0; i < materialOptions.length; i++)
-    {
-        materialOptions[i].addEventListener('change', function()
-        {
-            if (this.id === 'single-material-yes-option')
-            {
-                singleMaterialCase();
-            }
-
-            if (this.id === 'single-material-no-option')
-            {
-                multipleMaterialCase();
-            }
-        });
-    }
-}
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// HELPER FUNCTIONS
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function getFloatValue(id)
 {
@@ -122,213 +26,68 @@ function getStrValue(id)
     return element ? element.value : null;
 }
 
-function populateDefaultHeightZoneElevation()
+function toggleMenuColors(toggleMenu)
 {
-    var height = null;
-
-    if (document.getElementById('eave-and-ridge-yes-option').checked)
+    document.querySelectorAll(toggleMenu + ' .btn').forEach((button) =>
     {
-        var eaveHeight = parseFloat(document.getElementById('eave-height').value);
-        var ridgeHeight = parseFloat(document.getElementById('ridge-height').value);
-        height = (eaveHeight + ridgeHeight) / 2;
-    }
-    else if (document.getElementById('eave-and-ridge-no-option').checked)
-    {
-        height = document.getElementById('height').value;
-    }
-
-    if (height)
-    {
-        var numHeightZones = Math.ceil(height / 20);
-        for (var j = 1; j < numHeightZones + 1; j++)
+        button.addEventListener('click', (event) =>
         {
-            addHeightZoneElevationRow(j * 20);
-        }
-    }
+            document.querySelectorAll(toggleMenu + ' .btn').forEach((btn) =>
+            {
+                btn.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+        });
+    });
 }
 
-function clearHeightZoneElevationTable()
+function get_seismic_parameters()
 {
-    var table = document.getElementById("height-zone-elevation-table");
-    while (table.rows.length !== 1)
+    let siteDesignation = null;
+    let seismicValue = null;
+    // if vs30 is selected
+    if (document.getElementById('vs30_option').checked)
     {
-        table.deleteRow(-1);
-    }
-}
-
-function clearMaterialTable()
-{
-    var table = document.getElementById("material-table");
-    while (table.rows.length !== 1)
-    {
-        table.deleteRow(-1);
-    }
-}
-
-
-function heightChange()
-{
-    if (document.getElementById('number-height-zone-yes-option').checked)
-    {
-        clearHeightZoneElevationTable();
-        populateDefaultHeightZoneElevation();
-    }
-    else if (document.getElementById('number-height-zone-no-option').checked)
-    {
-        // pass
-    }
-    if (document.getElementById('material-table') !== null)
-    {
-        console.log('line 136');
-        heightZoneChange();
-    }
-}
-
-function materialWeightChange()
-{
-    if (document.getElementById('single-material-yes-option').checked === true)
-    {
-        var weight = document.getElementById('material-weight').value;
-        clearMaterialTable();
-        // iterate through the rows in the height zone elevation table
-        var table = document.getElementById("height-zone-elevation-table");
-        for (var i = 1; i < table.rows.length; i++)
-        {
-            addMaterialRow(weight);
-        }
-    }
-}
-
-function heightZoneChange()
-{
-    console.log('hzc triggered');
-    if (document.getElementById('single-material-yes-option').checked === true)
-    {
-        var weight = document.getElementById('material-weight').value;
-        clearMaterialTable();
-        // iterate through the rows in the height zone elevation table
-        var table = document.getElementById("height-zone-elevation-table");
-        for (var i = 1; i < table.rows.length; i++)
-        {
-            addMaterialRow(weight);
-        }
-    }
-    else if (document.getElementById('single-material-no-option').checked === true)
-    {
-        clearMaterialTable();
-        var table = document.getElementById("height-zone-elevation-table");
-        for (var i = 1; i < table.rows.length; i++)
-        {
-            addMaterialRowEditable();
-        }
-    }
-}
-
-function addHeightZoneElevationRow(elevation)
-{
-    var table = document.getElementById("height-zone-elevation-table");
-    var row = table.insertRow(-1);
-    var cell1 = row.insertCell(0);
-    var cell2 = row.insertCell(1);
-    if (table.rows.length === 1)
-    {
-        cell1.innerHTML = 1;
+        siteDesignation = 'xv';
+        seismicValue = document.getElementById('vs30').value;
     }
     else
     {
-        cell1.innerHTML = table.rows.length - 1;
-    }
-    cell2.innerHTML = elevation;
-}
-
-function addMaterialRow(weight)
-{
-    var table = document.getElementById("material-table");
-    var row = table.insertRow(-1);
-    var cell1 = row.insertCell(0);
-    var cell2 = row.insertCell(1);
-    if (table.rows.length === 1)
-    {
-        cell1.innerHTML = 1;
-    }
-    else
-    {
-        cell1.innerHTML = table.rows.length - 1;
-    }
-    cell2.innerHTML = weight;
-}
-
-function addHeightZoneElevationRowEditable()
-{
-    var table = document.getElementById("height-zone-elevation-table");
-
-    console.log(table.rows.length);
-
-    var row = table.insertRow(-1);
-    var cell1 = row.insertCell(0);
-    var cell2 = row.insertCell(1);
-    if (table.rows.length === 1)
-    {
-        cell1.innerHTML = 1;
-    }
-    else
-    {
-        cell1.innerHTML = table.rows.length - 1;
-    }
-    cell2.innerHTML = "0";
-    cell2.contentEditable = "true";
-}
-
-function addMaterialRowEditable()
-{
-    var table = document.getElementById("material-table");
-    var row = table.insertRow(-1);
-    var cell1 = row.insertCell(0);
-    var cell2 = row.insertCell(1);
-    if (table.rows.length === 1)
-    {
-        cell1.innerHTML = 1;
-    }
-    else
-    {
-        cell1.innerHTML = table.rows.length - 1;
-    }
-    cell2.innerHTML = "0";
-    cell2.contentEditable = "true";
-}
-
-function removeHeightZoneElevationRow()
-{
-    var table = document.getElementById("height-zone-elevation-table");
-    if (table.rows.length > 1)
-    {
-        table.deleteRow(-1);
-    }
-}
-
-function setMap(latitude, longitude, address)
-{
-    // If the map already exists, remove it
-    if (map)
-    {
-        map.remove();
-    }
-
-    // Create a new map
-    map = L.map('map',
+        if (document.getElementById('xs-A-option').checked)
         {
-            attributionControl: false,
-        }).setView([latitude, longitude], 13);
-
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+            siteDesignation = 'xs';
+            seismicValue = 'A';
+        }
+        else if (document.getElementById('xs-B-option').checked)
         {
-            maxZoom: 19,
-        }).addTo(map);
-
-    // Add a marker with a popup
-    L.marker([latitude, longitude]).addTo(map).bindPopup(address);
+            siteDesignation = 'xs';
+            seismicValue = 'B';
+        }
+        else if (document.getElementById('xs-C-option').checked)
+        {
+            siteDesignation = 'xs';
+            seismicValue = 'C';
+        }
+        else if (document.getElementById('xs-D-option').checked)
+        {
+            siteDesignation = 'xs';
+            seismicValue = 'D';
+        }
+        else if (document.getElementById('xs-E-option').checked)
+        {
+            siteDesignation = 'xs';
+            seismicValue = 'E';
+        }
+    }
+    return {
+        siteDesignation,
+        seismicValue
+    };
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// TOGGLE CASE FUNCTIONS
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function vs30Case()
 {
@@ -400,15 +159,11 @@ function nonDefaultHeightZoneNumberCase()
         {
             document.getElementById('height-zone-elevation-container').innerHTML = data;
             toggleMenuColors('#number-height-zone-selection');
-            // document.getElementById('height').addEventListener('input', heightChange);
-            // document.addEventListener('input', heightChange);
             // add click event listener for button with id add-height-zone-button
             document.getElementById('add-height-zone-button').addEventListener('click', addHeightZoneElevationRowEditable);
-            console.log('ling 342');
             document.getElementById('add-height-zone-button').addEventListener('click', heightZoneChange);
             // add click event listener for button with id remove-height-zone-button
             document.getElementById('remove-height-zone-button').addEventListener('click', removeHeightZoneElevationRow);
-            console.log('ling 346');
             document.getElementById('remove-height-zone-button').addEventListener('click', heightZoneChange);
             heightZoneChange();
         })
@@ -428,8 +183,6 @@ function defaultHeightZoneNumberCase()
             toggleMenuColors('#number-height-zone-selection');
             clearHeightZoneElevationTable();
             populateDefaultHeightZoneElevation();
-            // document.getElementById('height').addEventListener('input', heightChange);
-            // document.addEventListener('input', heightChange);
             heightZoneChange();
             document.getElementById('material-weight').addEventListener('input', materialWeightChange);
         })
@@ -463,7 +216,6 @@ function singleMaterialCase()
         .then(data =>
         {
             document.getElementById('material-container').innerHTML = data;
-            console.log('ling 389');
             heightZoneChange();
             document.getElementById('material-weight').addEventListener('input', materialWeightChange);
         })
@@ -480,7 +232,6 @@ function multipleMaterialCase()
         .then(data =>
         {
             document.getElementById('material-container').innerHTML = data;
-            console.log('line 400');
             heightZoneChange();
         })
         .catch((error) =>
@@ -489,89 +240,343 @@ function multipleMaterialCase()
         });
 }
 
-function toggleMenuColors(toggleMenu)
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// TOGGLE FUNCTIONS
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function siteDesignationSelection()
 {
-    document.querySelectorAll(toggleMenu + ' .btn').forEach((button) =>
+    let siteDesignationSelectionOptions = document.querySelectorAll('#site-designation-selection .btn input');
+    for (let i = 0; i < siteDesignationSelectionOptions.length; i++)
     {
-        button.addEventListener('click', (event) =>
+        siteDesignationSelectionOptions[i].addEventListener('change', function()
         {
-            document.querySelectorAll(toggleMenu + ' .btn').forEach((btn) =>
+            if (this.checked)
             {
-                btn.classList.remove('selected');
-            });
-            event.currentTarget.classList.add('selected');
+                if (this.id === 'xs_option')
+                {
+                    xsCase();
+                }
+                if (this.id === 'vs30_option')
+                {
+                    vs30Case();
+                }
+            }
         });
-    });
+    }
 }
 
-// location_button click event
-document.getElementById('location_button').addEventListener('click', function()
+function eaveAndRidgeSelection()
 {
-    // disable button
-    document.getElementById('location_button').disabled = true;
-
-    document.getElementById('location_button').classList.add('skeleton-loader');
-    document.getElementById('wind-velocity-pressure').classList.add('skeleton-loader');
-    document.getElementById('ground-snow-load').classList.add('skeleton-loader');
-    document.getElementById('rain-load').classList.add('skeleton-loader');
-    document.getElementById('design-spectral-acceleration-0-2').classList.add('skeleton-loader');
-    document.getElementById('design-spectral-acceleration-1').classList.add('skeleton-loader');
-
-    var address = document.getElementById('address').value;
-
-    var siteDesignation = null;
-    var seismicValue = null;
-    // if vs30 is selected
-    if (document.getElementById('vs30_option').checked)
+    let eaveAndRidgeSelectionOptions = document.querySelectorAll('#eave-and-ridge-selection .btn input');
+    for (let i = 0; i < eaveAndRidgeSelectionOptions.length; i++)
     {
-        siteDesignation = 'xv';
-        seismicValue = document.getElementById('vs30').value;
+        eaveAndRidgeSelectionOptions[i].addEventListener('change', function()
+        {
+            if (this.id === 'eave-and-ridge-yes-option')
+            {
+                eaveAndRidgeCase();
+            }
+            if (this.id === 'eave-and-ridge-no-option')
+            {
+                standardDimensionsCase();
+            }
+        });
+    }
+}
+
+function numberHeightZoneSelection()
+{
+    let numberHeightZoneOptions = document.querySelectorAll('#number-height-zone-selection .btn input');
+    for (let i = 0; i < numberHeightZoneOptions.length; i++)
+    {
+        numberHeightZoneOptions[i].addEventListener('change', function()
+        {
+            if (this.id === 'number-height-zone-yes-option')
+            {
+                defaultHeightZoneNumberCase();
+            }
+            if (this.id === 'number-height-zone-no-option')
+            {
+                nonDefaultHeightZoneNumberCase();
+            }
+        });
+    }
+}
+
+function dominantOpeningSelection()
+{
+    let dominantOpeningOptions = document.querySelectorAll('#dominant-opening-selection .btn input');
+    for (let i = 0; i < dominantOpeningOptions.length; i++)
+    {
+        dominantOpeningOptions[i].addEventListener('change', function()
+        {
+            if (this.id === 'dominant-opening-yes-option')
+            {
+                dominantOpeningCase();
+            }
+            else
+            {
+                document.getElementById('dominant-opening-container').innerHTML = "";
+            }
+        });
+    }
+}
+
+function materialSelection()
+{
+    let materialSelectionOptions = document.querySelectorAll('#single-material-selection .btn input');
+    for (let i = 0; i < materialSelectionOptions.length; i++)
+    {
+        materialSelectionOptions[i].addEventListener('change', function()
+        {
+            if (this.id === 'single-material-yes-option')
+            {
+                singleMaterialCase();
+            }
+
+            if (this.id === 'single-material-no-option')
+            {
+                multipleMaterialCase();
+            }
+        });
+    }
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// TABLE FUNCTIONS
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function clearHeightZoneElevationTable()
+{
+    let table = document.getElementById("height-zone-elevation-table");
+    while (table.rows.length !== 1)
+    {
+        table.deleteRow(-1);
+    }
+}
+
+function clearMaterialTable()
+{
+    let table = document.getElementById("material-table");
+    while (table.rows.length !== 1)
+    {
+        table.deleteRow(-1);
+    }
+}
+
+function addHeightZoneElevationRow(elevation)
+{
+    let table = document.getElementById("height-zone-elevation-table");
+    let row = table.insertRow(-1);
+    let cell1 = row.insertCell(0);
+    let cell2 = row.insertCell(1);
+    if (table.rows.length === 1)
+    {
+        cell1.innerHTML = (1).toString();
     }
     else
     {
-        if (document.getElementById('xs-A-option').checked)
-        {
-            siteDesignation = 'xs';
-            seismicValue = 'A';
-        }
-        else if (document.getElementById('xs-B-option').checked)
-        {
-            siteDesignation = 'xs';
-            seismicValue = 'B';
-        }
-        else if (document.getElementById('xs-C-option').checked)
-        {
-            siteDesignation = 'xs';
-            seismicValue = 'C';
-        }
-        else if (document.getElementById('xs-D-option').checked)
-        {
-            siteDesignation = 'xs';
-            seismicValue = 'D';
-        }
-        else if (document.getElementById('xs-E-option').checked)
-        {
-            siteDesignation = 'xs';
-            seismicValue = 'E';
-        }
+        cell1.innerHTML = (table.rows.length - 1).toString();
+    }
+    cell2.innerHTML = elevation;
+}
+
+function addMaterialRow(weight)
+{
+    let table = document.getElementById("material-table");
+    let row = table.insertRow(-1);
+    let cell1 = row.insertCell(0);
+    let cell2 = row.insertCell(1);
+    if (table.rows.length === 1)
+    {
+        cell1.innerHTML = (1).toString();
+    }
+    else
+    {
+        cell1.innerHTML = (table.rows.length - 1).toString();
+    }
+    cell2.innerHTML = weight;
+}
+
+function addHeightZoneElevationRowEditable()
+{
+    let table = document.getElementById("height-zone-elevation-table");
+    let row = table.insertRow(-1);
+    let cell1 = row.insertCell(0);
+    let cell2 = row.insertCell(1);
+    if (table.rows.length === 1)
+    {
+        cell1.innerHTML = 1;
+    }
+    else
+    {
+        cell1.innerHTML = table.rows.length - 1;
+    }
+    cell2.innerHTML = "0";
+    cell2.contentEditable = "true";
+}
+
+function addMaterialRowEditable()
+{
+    let table = document.getElementById("material-table");
+    let row = table.insertRow(-1);
+    let cell1 = row.insertCell(0);
+    let cell2 = row.insertCell(1);
+    if (table.rows.length === 1)
+    {
+        cell1.innerHTML = 1;
+    }
+    else
+    {
+        cell1.innerHTML = table.rows.length - 1;
+    }
+    cell2.innerHTML = "0";
+    cell2.contentEditable = "true";
+}
+
+function removeHeightZoneElevationRow()
+{
+    let table = document.getElementById("height-zone-elevation-table");
+    if (table.rows.length > 1)
+    {
+        table.deleteRow(-1);
+    }
+}
+
+function populateDefaultHeightZoneElevation()
+{
+    let height = null;
+
+    if (document.getElementById('eave-and-ridge-yes-option').checked)
+    {
+        let eaveHeight = parseFloat(document.getElementById('eave-height').value);
+        let ridgeHeight = parseFloat(document.getElementById('ridge-height').value);
+        height = (eaveHeight + ridgeHeight) / 2;
+    }
+    else if (document.getElementById('eave-and-ridge-no-option').checked)
+    {
+        height = document.getElementById('height').value;
     }
 
+    if (height)
+    {
+        let numHeightZones = Math.ceil(height / 20);
+        for (let j = 1; j < numHeightZones + 1; j++)
+        {
+            addHeightZoneElevationRow(j * 20);
+        }
+    }
+}
+
+function heightChange()
+{
+    if (document.getElementById('number-height-zone-yes-option').checked)
+    {
+        clearHeightZoneElevationTable();
+        populateDefaultHeightZoneElevation();
+    }
+    else if (document.getElementById('number-height-zone-no-option').checked)
+    {
+        // pass
+    }
+    if (document.getElementById('material-table') !== null)
+    {
+        heightZoneChange();
+    }
+}
+
+function materialWeightChange()
+{
+    if (document.getElementById('single-material-yes-option').checked === true)
+    {
+        let weight = document.getElementById('material-weight').value;
+        clearMaterialTable();
+        // iterate through the rows in the height zone elevation table
+        let table = document.getElementById("height-zone-elevation-table");
+        for (let i = 1; i < table.rows.length; i++)
+        {
+            addMaterialRow(weight);
+        }
+    }
+}
+
+function heightZoneChange()
+{
+    let i;
+    let table;
+    if (document.getElementById('single-material-yes-option').checked === true)
+    {
+        let weight = document.getElementById('material-weight').value;
+        clearMaterialTable();
+        // iterate through the rows in the height zone elevation table
+        table = document.getElementById("height-zone-elevation-table");
+        for (i = 1; i < table.rows.length; i++)
+        {
+            addMaterialRow(weight);
+        }
+    }
+    else if (document.getElementById('single-material-no-option').checked === true)
+    {
+        clearMaterialTable();
+        table = document.getElementById("height-zone-elevation-table");
+        for (i = 1; i < table.rows.length; i++)
+        {
+            addMaterialRowEditable();
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// MAP FUNCTIONS
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+function setMap(latitude, longitude, address)
+{
+    // If the map already exists, remove it
+    if (map)
+    {
+        map.remove();
+    }
+
+    // Create a new map
+    map = L.map('map',
+        {
+            attributionControl: false,
+        }).setView([latitude, longitude], 13);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+        {
+            maxZoom: 19,
+        }).addTo(map);
+
+    // Add a marker with a popup
+    L.marker([latitude, longitude]).addTo(map).bindPopup(address);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// API CALLS
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function locationCall(address, siteDesignation, seismicValue)
+{
     window.api.invoke('get-token') // Retrieve the token
         .then((token) =>
         {
-            var myHeaders = new Headers();
+            let myHeaders = new Headers();
             myHeaders.append("Content-Type", "application/json");
             myHeaders.append("Accept", "application/json");
             myHeaders.append("Authorization", `Bearer ${token}`);
 
-            var raw = JSON.stringify(
+            let raw = JSON.stringify(
                 {
                     "address": `${address}`,
                     "site_designation": `${siteDesignation}`,
                     "seismic_value": `${seismicValue}`
                 });
 
-            var requestOptions = {
+            let requestOptions = {
                 method: 'POST',
                 headers: myHeaders,
                 body: raw,
@@ -603,7 +608,7 @@ document.getElementById('location_button').addEventListener('click', function()
                 })
                 .catch(error =>
                 {
-                    console.log('error', error);
+                    console.error('Error:', error);
                 })
                 .finally(() =>
                 {
@@ -617,6 +622,32 @@ document.getElementById('location_button').addEventListener('click', function()
                     document.getElementById('design-spectral-acceleration-1').classList.remove('skeleton-loader');
                 });
         });
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// EVENTS
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// location_button click event
+document.getElementById('location_button').addEventListener('click', function()
+{
+    // disable button
+    document.getElementById('location_button').disabled = true;
+
+    const ids = [
+        'location_button',
+        'wind-velocity-pressure',
+        'ground-snow-load',
+        'rain-load',
+        'design-spectral-acceleration-0-2',
+        'design-spectral-acceleration-1'
+    ];
+
+    ids.forEach(id => document.getElementById(id).classList.add('skeleton-loader'));
+
+    let address = getStrValue('address');
+    let { siteDesignation,seismicValue} = get_seismic_parameters();
+    locationCall(address, siteDesignation, seismicValue);
 });
 
 
@@ -823,39 +854,8 @@ document.getElementById('next-button').addEventListener('click', function()
             .then((token) =>
             {
                 // LOCATION
-                let address = document.getElementById('address').value;
-                let siteDesignation = null;
-                let seismicValue = null;
-                if (document.getElementById('vs30_option').checked)
-                {
-                    siteDesignation = 'xv';
-                    seismicValue = document.getElementById('vs30').value;
-                }
-
-                if (document.getElementById('xs_option').checked)
-                {
-                    siteDesignation = 'xs';
-                    if (document.getElementById('xs-A-option').checked)
-                    {
-                        seismicValue = 'A';
-                    }
-                    else if (document.getElementById('xs-B-option').checked)
-                    {
-                        seismicValue = 'B';
-                    }
-                    else if (document.getElementById('xs-C-option').checked)
-                    {
-                        seismicValue = 'C';
-                    }
-                    else if (document.getElementById('xs-D-option').checked)
-                    {
-                        seismicValue = 'D';
-                    }
-                    else if (document.getElementById('xs-E-option').checked)
-                    {
-                        seismicValue = 'E';
-                    }
-                }
+                let address = getStrValue('address');
+                let { siteDesignation,seismicValue} = get_seismic_parameters();
 
                 const myHeaders = new Headers();
                 myHeaders.append("Content-Type", "application/json");
@@ -882,8 +882,6 @@ document.getElementById('next-button').addEventListener('click', function()
                         // DIMENSIONS
                         if (response.status === 200)
                         {
-                            console.log('dimensions reached');
-
                             let width = getFloatValue('width');
                             let eaveHeight = getFloatValue('eave-height');
                             let ridgeHeight = getFloatValue('ridge-height');
@@ -901,8 +899,6 @@ document.getElementById('next-button').addEventListener('click', function()
                                     "eave_height": eaveHeight,
                                     "ridge_height": ridgeHeight
                                 });
-
-                            console.log(raw);
 
                             const requestOptions = {
                                 method: "POST",
@@ -984,12 +980,12 @@ document.getElementById('next-button').addEventListener('click', function()
                                                                 }
 
                                                                 // list of tuples of the form (height, elevation, load)
-                                                                var zones = [];
+                                                                let zones = [];
                                                                 // iterate through height zone elevation table data rows
-                                                                var heightZoneElevationTable = document.getElementById("height-zone-elevation-table");
-                                                                var materialTable = document.getElementById("material-table");
+                                                                let heightZoneElevationTable = document.getElementById("height-zone-elevation-table");
+                                                                let materialTable = document.getElementById("material-table");
 
-                                                                for (var i = 1; i < heightZoneElevationTable.rows.length; i++)
+                                                                for (let i = 1; i < heightZoneElevationTable.rows.length; i++)
                                                                 {
                                                                     let zoneNum = parseInt(heightZoneElevationTable.rows[i].cells[0].innerHTML);
                                                                     let elevation = parseFloat(heightZoneElevationTable.rows[i].cells[1].innerHTML);
@@ -1114,3 +1110,32 @@ document.getElementById('next-button').addEventListener('click', function()
             });
     }
 });
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// WINDOW ONLOAD EVENT
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+window.onload = function()
+{
+    // TODO: implement user dropdown
+    document.getElementById('navbarDropdownMenuLink').textContent = "potato";
+
+    setMap(43.66074, -79.39661, 'Myhal Centre, Toronto, Ontario, Canada');
+
+    const selectors = [
+        '#site-designation-selection',
+        '#eave-and-ridge-selection',
+        '#number-height-zone-selection',
+        '#dominant-opening-selection',
+        '#single-material-selection',
+        '#importance-category-selection'
+    ];
+
+    selectors.forEach(selector => toggleMenuColors(selector));
+
+    siteDesignationSelection();
+    eaveAndRidgeSelection();
+    numberHeightZoneSelection();
+    dominantOpeningSelection();
+    materialSelection();
+};
