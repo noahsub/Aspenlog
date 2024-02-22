@@ -1112,6 +1112,106 @@ document.getElementById('next-button').addEventListener('click', function()
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// SERIALIZATION
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function serialize() {
+    let objects = { input_page: { radio: {}, input: {}, table: {} } };
+
+    // Handle radio inputs
+    let radios = document.querySelectorAll('input[type=radio]');
+    radios.forEach(radio => {
+        if (radio.checked) {
+            objects.input_page.radio[radio.id] = radio.value;
+        }
+    });
+
+    // Handle other inputs
+    let inputs = document.querySelectorAll('input:not([type=radio])');
+    inputs.forEach(input => {
+        if (input.value !== "") {
+            objects.input_page.input[input.id] = input.value;
+        }
+    });
+
+    // Handle tables
+    let tables = document.querySelectorAll('table');
+    tables.forEach(table => {
+        objects.input_page.table[table.id] = table.innerHTML;
+    });
+
+    let json = JSON.stringify(objects);
+    console.log(json);
+    return json;
+}
+
+
+
+function deserialize(json, section)
+{
+    let objects = JSON.parse(json)[section];
+
+    // go through all the radio
+    for (let id in objects.radio)
+    {
+        let radio = document.getElementById(id);
+        if (radio.value === objects.radio[id]) {
+            radio.click();
+        }
+    }
+
+    // go through all the input
+    for (let id in objects.input) {
+        let input = document.getElementById(id);
+        input.value = '';
+        input.focus();
+        let value = objects.input[id];
+        for (let i = 0; i < value.length; i++) {
+            let event = new KeyboardEvent('keydown', { 'key': value[i] });
+            input.dispatchEvent(event);
+            input.value += value[i];
+        }
+    }
+
+    // go through all the tables
+    for (let id in objects.table) {
+        let table = document.getElementById(id);
+        if (table) {
+            console.log(table.id);
+            table.innerHTML = objects.table[id];
+        }
+    }
+
+    // go through all the tables
+    for (let id in objects.table) {
+        let table = document.getElementById(id);
+        if (table) {
+            console.log(table.id);
+            table.innerHTML = objects.table[id];
+        }
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// SAVE BUTTON
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+let serialized = null;
+
+// save-button click event
+document.getElementById('save-button').addEventListener('click', function() {
+    serialized = serialize();
+});
+
+// back-button click event
+document.getElementById('back-button').addEventListener('click', function()
+{
+    deserialize(serialized, 'input_page');
+});
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // LOAD SAVE FILE
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1167,8 +1267,7 @@ function loadSaveFile()
                         })
                         .then((data) =>
                         {
-                            json = JSON.parse(data.JsonData);
-                            document.getElementById('project-name').value = json.project_name;
+                            // TODO
                         })
                         .catch((error) => console.error(error));
                 })
