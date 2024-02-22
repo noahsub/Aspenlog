@@ -14,6 +14,7 @@ from backend.Entities.User.profile import Profile
 class User:
     username: str
     profile: Optional[Profile]
+    current_save_file: Optional[int]
     location: Optional[Location]
     dimensions: Optional[Dimension]
     cladding: Optional[Cladding]
@@ -28,6 +29,7 @@ class User:
     def __init__(self, username: str):
         self.username = username
         self.profile = None
+        self.current_save_file = None
         self.location = None
         self.dimensions = None
         self.cladding = None
@@ -41,6 +43,9 @@ class User:
 
     def set_profile(self, profile: Profile):
         self.profile = profile
+
+    def set_current_save_file(self, current_save_file: int):
+        self.current_save_file = current_save_file
 
     def set_location(self, location: Location):
         self.location = location
@@ -77,6 +82,9 @@ class User:
 
     def get_profile(self):
         return self.profile
+
+    def get_current_save_file(self):
+        return self.current_save_file
 
     def get_location(self):
         return self.location

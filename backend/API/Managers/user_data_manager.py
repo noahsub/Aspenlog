@@ -1,6 +1,14 @@
+from datetime import datetime
+
 import jsonpickle
+from sqlalchemy import select, desc
+from sqlalchemy.orm import sessionmaker
 
 from backend.Entities.User.user import User
+from database.Constants.connection_constants import PrivilegeType
+from database.Entities.database_connection import DatabaseConnection
+from database.Entities.save_data import SaveData
+from database.Population.populate_save_data import DATABASE
 
 ALL_USER_DATA = dict()
 
@@ -16,6 +24,10 @@ def set_user_data(username, user_data):
 
 def set_user_profile(username, profile):
     ALL_USER_DATA[username].set_profile(profile)
+
+
+def set_user_current_save_file(username, current_save_file):
+    ALL_USER_DATA[username].set_current_save_file(current_save_file)
 
 
 def set_user_location(username, location):
@@ -58,8 +70,41 @@ def set_user_importance_category(username, importance_category):
     ALL_USER_DATA[username].set_importance_category(importance_category)
 
 
+def set_user_save_data(username: str, json_data: str, id: int = None):
+    new_connection = DatabaseConnection(database_name="NBCC-2020")
+    engine = new_connection.get_engine(privilege=PrivilegeType.ADMIN)
+    Session = sessionmaker(autocommit=False, autoflush=True, bind=engine)
+    controller = Session()
+
+    existing_entry = None
+    if id is not None:
+        existing_entry = controller.query(SaveData).filter((SaveData.Username == username) & (SaveData.ID == id)).first()
+
+    if existing_entry is not None:
+        # modify existing entry, by overriding JsonData and DateModified to use current time
+        existing_entry.JsonData = json_data
+        existing_entry.DateModified = datetime.now()
+    else:
+        # create new entry with the current time
+        new_entry = SaveData(Username=username, DateModified=datetime.now(), JsonData=json_data)
+        controller.add(new_entry)
+        controller.commit()
+        id = new_entry.ID
+
+    controller.commit()
+    controller.close()
+    new_connection.close()
+
+    return id
+
+
+
 def get_user_profile(username):
     return ALL_USER_DATA.get(username).get_profile()
+
+
+def get_user_current_save_file(username):
+    return ALL_USER_DATA.get(username).get_current_save_file()
 
 
 def get_user_location(username):
@@ -104,3 +149,25 @@ def get_user_importance_category(username):
 
 def get_user_data(username):
     return jsonpickle.encode(ALL_USER_DATA.get(username), indent=4)
+
+
+def get_all_user_save_data(username):
+    new_connection = DatabaseConnection(database_name="NBCC-2020")
+    engine = new_connection.get_engine(privilege=PrivilegeType.ADMIN)
+    session = sessionmaker(autocommit=False, autoflush=True, bind=engine)
+    controller = session()
+    result = controller.query(SaveData).filter(SaveData.Username == username).order_by(desc(SaveData.DateModified)).all()
+    controller.close()
+    new_connection.close()
+    return result
+
+
+def get_user_save_file(username: str, id: int):
+    new_connection = DatabaseConnection(database_name="NBCC-2020")
+    engine = new_connection.get_engine(privilege=PrivilegeType.ADMIN)
+    session = sessionmaker(autocommit=False, autoflush=True, bind=engine)
+    controller = session()
+    result = controller.query(SaveData).filter((SaveData.Username == username) & (SaveData.ID == id)).first()
+    controller.close()
+    new_connection.close()
+    return result

@@ -1112,6 +1112,71 @@ document.getElementById('next-button').addEventListener('click', function()
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// LOAD SAVE FILE
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function loadSaveFile()
+{
+    window.api.invoke('get-token') // Retrieve the token
+        .then((token) =>
+        {
+            const myHeaders = new Headers();
+            myHeaders.append("Accept", "application/json");
+            myHeaders.append("Authorization", `Bearer ${token}`);
+
+            const requestOptions = {
+                method: "POST",
+                headers: myHeaders,
+                redirect: "follow"
+            };
+
+            fetch("http://localhost:42613/get_user_current_save_file", requestOptions)
+                .then((response) => {
+                    if (response.status === 200)
+                    {
+                        return response.json();
+                    }
+                    else
+                    {
+                        throw new Error('Get User Current Save File Error');
+                    }
+                })
+                .then((result) =>
+                {
+                    let id = parseInt(result);
+                    const myHeaders = new Headers();
+                    myHeaders.append("Accept", "application/json");
+                    myHeaders.append("Authorization", `Bearer ${token}`);
+
+                    const requestOptions = {
+                        method: "POST",
+                        headers: myHeaders,
+                        redirect: "follow"
+                    };
+
+                    fetch(`http://localhost:42613/get_user_save_file?id=${id}`, requestOptions)
+                        .then((response) => {
+                            if (response.status === 200)
+                            {
+                                return response.json();
+                            }
+                            else
+                            {
+                                throw new Error('Get User Save File Error');
+                            }
+                        })
+                        .then((data) =>
+                        {
+                            json = JSON.parse(data.JsonData);
+                            document.getElementById('project-name').value = json.project_name;
+                        })
+                        .catch((error) => console.error(error));
+                })
+                .catch((error) => console.error(error));
+        });
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // WINDOW ONLOAD EVENT
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1119,6 +1184,8 @@ window.onload = function()
 {
     // TODO: implement user dropdown
     document.getElementById('navbarDropdownMenuLink').textContent = "potato";
+
+    loadSaveFile();
 
     setMap(43.66074, -79.39661, 'Myhal Centre, Toronto, Ontario, Canada');
 
