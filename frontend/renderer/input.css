@@ -2,6 +2,20 @@ body{
     background-color: #f7f4ef;
 }
 
+.skeleton-loader {
+    animation: skeleton-loading 1s linear infinite alternate;
+    color: rgba(245, 242, 237, 0) !important;
+}
+
+@keyframes skeleton-loading {
+    0% {
+        background-color: hsl(37, 29%, 95%);
+    }
+    100% {
+        background-color: hsl(38, 7%, 78%);
+    }
+}
+
 #navbar {
     background-color: #efece7 !important; /* Replace #yourColor with your desired color */
     padding: 0 30px;
@@ -121,4 +135,17 @@ a:focus {
 
 .table td {
     background-color: #f7f4ef;
+}
+
+.right-align {
+    text-align: right;
+}
+
+#next_button{
+    width: 10%;
+}
+
+#next-warning{
+    color: red;
+    font-weight: bold;
 }

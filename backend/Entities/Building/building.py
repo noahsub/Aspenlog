@@ -212,7 +212,7 @@ class BuildingDefaultHeightDefaultMaterialBuilder(BuildingBuilderInterface):
 
             self.building.height_zones.append(HeightZone(zone_num=i, elevation=height_sum))
 
-    def set_material_load(self, material_load: List[MaterialZone] | float):
+    def set_material_load(self, material_load: List[float] | float):
         if isinstance(material_load, list):
             assert len(material_load) == len(self.building.height_zones)
             for i in range(len(self.building.height_zones)):
@@ -310,7 +310,7 @@ class BuildingCustomHeightDefaultMaterialBuilder(BuildingBuilderInterface):
         self.reset()
         return building
 
-    def set_material_load(self, material_load: List[MaterialZone] | float):
+    def set_material_load(self, material_load: List[float] | float):
         if isinstance(material_load, list):
             assert len(material_load) == len(self.building.height_zones)
             for i in range(len(self.building.height_zones)):
