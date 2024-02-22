@@ -692,9 +692,9 @@ document.getElementById('next-button').addEventListener('click', function()
     }
 
     // if the wind, snow, rain, design spectral acceleration 0.2, and design spectral acceleration 1 values are not set
-    else if (document.getElementById('wind-velocity-pressure').textContent === "" || document.getElementById('ground-snow-load').textContent === "" || document.getElementById('rain-load').textContent === "" || document.getElementById('design-spectral-acceleration-0-2').textContent === "" || document.getElementById('design-spectral-acceleration-1').textContent === "")
+    else if (document.getElementById('wind-velocity-pressure').textContent === "NA" || document.getElementById('ground-snow-load').textContent === "NA" || document.getElementById('rain-load').textContent === "NA" || document.getElementById('design-spectral-acceleration-0-2').textContent === "NA" || document.getElementById('design-spectral-acceleration-1').textContent === "NA")
     {
-        document.getElementById('next-warning').innerText = "Invalid location, try including a postal code";
+        document.getElementById('next-warning').innerText = "Ensure the location button has been clicked and the values have been retrieved. If values cannot be retrieved, then you have entered an invalid address";
     }
 
     // if the building width is not set
@@ -1141,54 +1141,91 @@ function serialize() {
     });
 
     let json = JSON.stringify(objects);
-    console.log(json);
+    // console.log(json);
     return json;
 }
 
 
 
-function deserialize(json, section)
-{
+// function deserialize(json, section)
+// {
+//     let objects = JSON.parse(json)[section];
+//
+//     // go through all the radio
+//     for (let id in objects.radio)
+//     {
+//         let radio = document.getElementById(id);
+//         if (radio.value === objects.radio[id]) {
+//             radio.click();
+//         }
+//     }
+//
+//     // go through all the input
+//     for (let id in objects.input) {
+//         let input = document.getElementById(id);
+//         input.value = '';
+//         input.focus();
+//         let value = objects.input[id];
+//         for (let i = 0; i < value.length; i++) {
+//             let event = new KeyboardEvent('keydown', { 'key': value[i] });
+//             input.dispatchEvent(event);
+//             input.value += value[i];
+//         }
+//     }
+//
+//     // go through all the tables
+//     for (let id in objects.table) {
+//         let table = document.getElementById(id);
+//         if (table) {
+//             console.log(table.id);
+//             table.innerHTML = objects.table[id];
+//         }
+//     }
+// }
+
+function waitForElement(id, callback) {
+    let intervalId = setInterval(function() {
+        let element = document.getElementById(id);
+        if (element) {
+            clearInterval(intervalId);
+            callback(element);
+        }
+    }, 100); // Check every 100ms
+}
+
+function deserialize(json, section) {
     let objects = JSON.parse(json)[section];
 
+    // TODO: ENSURE xs_option IS CLICKED BEFORE xs-?-option
     // go through all the radio
-    for (let id in objects.radio)
-    {
-        let radio = document.getElementById(id);
-        if (radio.value === objects.radio[id]) {
-            radio.click();
-        }
+    for (let id in objects.radio) {
+        waitForElement(id, function(radio) {
+            if (radio.value === objects.radio[id]) {
+                radio.click();
+            }
+        });
     }
 
     // go through all the input
     for (let id in objects.input) {
-        let input = document.getElementById(id);
-        input.value = '';
-        input.focus();
-        let value = objects.input[id];
-        for (let i = 0; i < value.length; i++) {
-            let event = new KeyboardEvent('keydown', { 'key': value[i] });
-            input.dispatchEvent(event);
-            input.value += value[i];
-        }
+        waitForElement(id, function(input) {
+            input.value = '';
+            input.focus();
+            let value = objects.input[id];
+            for (let i = 0; i < value.length; i++) {
+                let event = new KeyboardEvent('keydown', { 'key': value[i] });
+                input.dispatchEvent(event);
+                input.value += value[i];
+            }
+        });
     }
 
     // go through all the tables
     for (let id in objects.table) {
-        let table = document.getElementById(id);
-        if (table) {
+        waitForElement(id, function(table) {
             console.log(table.id);
             table.innerHTML = objects.table[id];
-        }
-    }
-
-    // go through all the tables
-    for (let id in objects.table) {
-        let table = document.getElementById(id);
-        if (table) {
-            console.log(table.id);
-            table.innerHTML = objects.table[id];
-        }
+        });
     }
 }
 
@@ -1201,15 +1238,66 @@ let serialized = null;
 
 // save-button click event
 document.getElementById('save-button').addEventListener('click', function() {
-    serialized = serialize();
+    // serialized = serialize();
+    window.api.invoke('get-token') // Retrieve the token
+        .then((token) =>
+        {
+            const myHeaders = new Headers();
+            myHeaders.append("Accept", "application/json");
+            myHeaders.append("Authorization", `Bearer ${token}`);
+
+            const requestOptions = {
+                method: "POST",
+                headers: myHeaders,
+                redirect: "follow"
+            };
+
+            fetch("http://localhost:42613/get_user_current_save_file", requestOptions)
+                .then((response) => {
+                    if (response.status === 200)
+                    {
+                        return response.json();
+                    }
+                    else
+                    {
+                        throw new Error('Get User Current Save File Error');
+                    }
+                })
+                .then((result) =>
+                {
+                    let id = parseInt(result);
+                    const myHeaders = new Headers();
+                    myHeaders.append("Content-Type", "application/json");
+                    myHeaders.append("Accept", "application/json");
+                    myHeaders.append("Authorization", `Bearer ${token}`);
+
+                    const raw = JSON.stringify({
+                        "json_data": serialize(),
+                        "id": id
+                    });
+
+                    const requestOptions = {
+                        method: "POST",
+                        headers: myHeaders,
+                        body: raw,
+                        redirect: "follow"
+                    };
+
+                    fetch("http://localhost:42613/set_user_save_data", requestOptions)
+                        .then((response) => response.text())
+                        .catch((error) => console.error(error));
+                })
+                .catch((error) => console.error(error));
+        });
 });
 
-// back-button click event
-document.getElementById('back-button').addEventListener('click', function()
-{
-    deserialize(serialized, 'input_page');
-});
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// BACK BUTTON CLICK EVENT
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+document.getElementById('back-button').addEventListener('click', function() {
+    window.location.href = 'home.html';
+});
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // LOAD SAVE FILE
@@ -1267,7 +1355,32 @@ function loadSaveFile()
                         })
                         .then((data) =>
                         {
-                            // TODO
+                            const myHeaders = new Headers();
+                            myHeaders.append("Accept", "application/json");
+                            myHeaders.append("Authorization", `Bearer ${token}`);
+
+                            const requestOptions = {
+                                method: "POST",
+                                headers: myHeaders,
+                                redirect: "follow"
+                            };
+
+                            fetch(`http://localhost:42613/get_user_save_file?id=${id}`, requestOptions)
+                                .then((response) => {
+                                    if (response.status === 200)
+                                    {
+                                        return response.json();
+                                    }
+                                    else
+                                    {
+                                        throw new Error('Get User Save File Error');
+                                    }
+                                })
+                                .then((result) =>
+                                {
+                                    deserialize(result.JsonData, 'input_page');
+                                })
+                                .catch((error) => console.error(error));
                         })
                         .catch((error) => console.error(error));
                 })
@@ -1279,12 +1392,13 @@ function loadSaveFile()
 // WINDOW ONLOAD EVENT
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
 window.onload = function()
 {
+    loadSaveFile();
+
     // TODO: implement user dropdown
     document.getElementById('navbarDropdownMenuLink').textContent = "potato";
-
-    loadSaveFile();
 
     setMap(43.66074, -79.39661, 'Myhal Centre, Toronto, Ontario, Canada');
 

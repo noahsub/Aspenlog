@@ -43,7 +43,7 @@ window.onload = function()
                             const html = `
                             <div class="list-group-item d-flex justify-content-between align-items-center" id="${index}">
                                 <div>
-                                    <h4 class="list-group-item-heading">${data.project_name}</h4>
+                                    <h4 class="list-group-item-heading">${data['input_page']['input']['project-name']}</h4>
                                     <p class="list-group-item-text">${formattedDate}</p>
                                 </div>
                                 <div class="row">
@@ -132,7 +132,7 @@ document.getElementById("new-button").addEventListener("click", function()
 
             const raw = JSON.stringify(
                 {
-                    "json_data": "{\"project_name\": \"New Project\"}",
+                    "json_data": "{\"input_page\":{\"radio\":{},\"input\":{\"project-name\":\"New Project\"},\"table\":{}}}",
                     "id": null
                 });
 
