@@ -82,7 +82,11 @@ def set_user_save_data(username: str, json_data: str, id: int = None):
 
     if existing_entry is not None:
         # modify existing entry, by overriding JsonData and DateModified to use current time
-        existing_entry.JsonData = json_data
+        prev_data = jsonpickle.decode(existing_entry.JsonData)
+        for key, value in jsonpickle.decode(json_data).items():
+            prev_data[key] = value
+
+        existing_entry.JsonData = jsonpickle.encode(prev_data)
         existing_entry.DateModified = datetime.now()
     else:
         # create new entry with the current time

@@ -8,7 +8,7 @@ window.onload = function()
         {
             const myHeaders = new Headers();
             myHeaders.append("Accept", "application/json");
-            myHeaders.append("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJwb3RhdG8ifQ.yFhUOPunSV5uQexp_zhmClXWwcyKkyJAiyP9TJAkutU");
+            myHeaders.append("Authorization", `Bearer ${token}`);
 
             const requestOptions = {
                 method: "POST",

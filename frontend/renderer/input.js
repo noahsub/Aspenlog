@@ -697,6 +697,11 @@ document.getElementById('next-button').addEventListener('click', function()
         document.getElementById('next-warning').innerText = "Ensure the location button has been clicked and the values have been retrieved. If values cannot be retrieved, then you have entered an invalid address";
     }
 
+    else if (document.getElementById('wind-velocity-pressure').textContent === "" || document.getElementById('ground-snow-load').textContent === "" || document.getElementById('rain-load').textContent === "" || document.getElementById('design-spectral-acceleration-0-2').textContent === "" || document.getElementById('design-spectral-acceleration-1').textContent === "")
+    {
+        document.getElementById('next-warning').innerText = "Ensure the location button has been clicked and the values have been retrieved. If values cannot be retrieved, then you have entered an invalid address";
+    }
+
     // if the building width is not set
     else if (document.getElementById('width').value === "")
     {
@@ -1063,7 +1068,7 @@ document.getElementById('next-button').addEventListener('click', function()
                                                                                 {
                                                                                     if (response.status === 200)
                                                                                     {
-                                                                                        window.location.href = 'loads.html';
+                                                                                        window.location.href = 'load.html';
                                                                                     }
                                                                                     else
                                                                                     {
@@ -1213,9 +1218,10 @@ function deserialize(json, section) {
             input.focus();
             let value = objects.input[id];
             for (let i = 0; i < value.length; i++) {
-                let event = new KeyboardEvent('keydown', { 'key': value[i] });
-                input.dispatchEvent(event);
-                input.value += value[i];
+                // let event = new KeyboardEvent('keydown', { 'key': value[i] });
+                // input.dispatchEvent(event);
+                // input.value += value[i];
+                input.value = value;
             }
         });
     }
@@ -1223,7 +1229,7 @@ function deserialize(json, section) {
     // go through all the tables
     for (let id in objects.table) {
         waitForElement(id, function(table) {
-            console.log(table.id);
+            // console.log(table.id);
             table.innerHTML = objects.table[id];
         });
     }
@@ -1233,8 +1239,6 @@ function deserialize(json, section) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // SAVE BUTTON
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-let serialized = null;
 
 // save-button click event
 document.getElementById('save-button').addEventListener('click', function() {
