@@ -11,27 +11,17 @@ log_file_path = os.path.join('./logs', 'blender_script.log')
 logging.basicConfig(filename=log_file_path, level=logging.DEBUG, 
                     format='%(asctime)s:%(levelname)s:%(message)s')
 
-def create_cube(length=2.0, width=2.0, height=2.0):
-    # Clear existing mesh objects
-    bpy.ops.object.select_all(action='DESELECT')
-    bpy.ops.object.select_by_type(type='MESH')
-    bpy.ops.object.delete()
-
+def create_cube(length=2.0, width=2.0, height=2.0, position=0):
+   
 
     cube_x = length * 0.9
     cube_y = width * 0.9
     cube_z = height * 0.9
-
+    
+    block_z = position*cube_z
     # Add a cube
-    bpy.ops.mesh.primitive_cube_add(size=1, enter_editmode=False, location=(0, 0, 0))
+    bpy.ops.mesh.primitive_cube_add(scale=(cube_x, cube_y, cube_z), size=1, enter_editmode=False, location=(0, 0, block_z))
 
-    # Get the active object (the cube we just added)
-    cube = bpy.context.active_object
-
-    # Scale the cube to desired dimensions
-    cube.scale.x = cube_x
-    cube.scale.y = cube_y
-    cube.scale.z = cube_z
     bpy.ops.object.origin_set(type='ORIGIN_CENTER_OF_MASS', center='BOUNDS')
     # Apply the scaling transformation
     bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
@@ -40,12 +30,17 @@ def create_cube(length=2.0, width=2.0, height=2.0):
     bpy.ops.object.editmode_toggle()
 
     # positive x
-    bpy.ops.mesh.primitive_cube_add(scale=(length*0.1/2, cube_y/2, cube_z/2), enter_editmode=True, location=(cube_x/2+length*0.05, 0, 0))
+    bpy.ops.mesh.primitive_cube_add(scale=(length*0.1/2, cube_y/2, cube_z/2), enter_editmode=True, location=(cube_x/2+length*0.05, 0, block_z))
 
-    bpy.ops.mesh.primitive_cube_add(scale=(length*0.1/2, cube_y/2, cube_z/2), enter_editmode=True, location=(-cube_x/2-length*0.05, 0, 0))
+    bpy.ops.mesh.primitive_cube_add(scale=(length*0.1/2, cube_y/2, cube_z/2), enter_editmode=True, location=(-cube_x/2-length*0.05, 0, block_z))
 
-    bpy.ops.mesh.primitive_cube_add(scale=(cube_x/2, width*0.1/2, cube_z/2), enter_editmode=True, location=(0, cube_y/2+width*0.05, 0))
-    bpy.ops.mesh.primitive_cube_add(scale=(cube_x/2,width*0.1/2, cube_z/2), enter_editmode=True, location=(0,-cube_y/2-width*0.05, 0))
+    bpy.ops.mesh.primitive_cube_add(scale=(cube_x/2, width*0.1/2, cube_z/2), enter_editmode=True, location=(0, cube_y/2+width*0.05, block_z))
+    bpy.ops.mesh.primitive_cube_add(scale=(cube_x/2,width*0.1/2, cube_z/2), enter_editmode=True, location=(0,-cube_y/2-width*0.05, block_z))
+    bpy.ops.object.editmode_toggle()
+    bpy.ops.mesh.primitive_cube_add(size=2, enter_editmode=False,  location=(cube_x/2+length*0.05, cube_y/2+width*0.05, block_z), scale=(0.1,0.1,cube_z/2))
+    bpy.ops.mesh.primitive_cube_add(size=2, enter_editmode=False,  location=(-cube_x/2-length*0.05, cube_y/2+width*0.05, block_z), scale=(0.1,0.1,cube_z/2))
+    bpy.ops.mesh.primitive_cube_add(size=2, enter_editmode=False,  location=(cube_x/2+length*0.05, -cube_y/2-width*0.05, block_z), scale=(0.1,0.1,cube_z/2))
+    bpy.ops.mesh.primitive_cube_add(size=2, enter_editmode=False,  location=(-cube_x/2-length*0.05, -cube_y/2-width*0.05, block_z), scale=(0.1,0.1,cube_z/2))
 
 def set_cube_colour():
     # Select the object by name, the default cube

@@ -4,7 +4,7 @@ import sys
 import render
 import os
 
-def create_cube(length=2.0, width=2.0, height=2.0):
+def create_cube(length=2.0, width=2.0, height=2.0, position=0):
     # Clear existing mesh objects
     bpy.ops.object.select_all(action='DESELECT')
     bpy.ops.object.select_by_type(type='MESH')
@@ -15,15 +15,15 @@ def create_cube(length=2.0, width=2.0, height=2.0):
     cube_z = height
 
     # Add a cube
-    bpy.ops.mesh.primitive_cube_add(size=1, enter_editmode=False, location=(0, 0, 0))
+    bpy.ops.mesh.primitive_cube_add(scale=(cube_x, cube_y, cube_z), size=1, enter_editmode=False, location=(0, 0, position*cube_z))
 
     # Get the active object (the cube we just added)
     cube = bpy.context.active_object
 
     # Scale the cube to desired dimensions
-    cube.scale.x = cube_x
-    cube.scale.y = cube_y
-    cube.scale.z = cube_z
+    #cube.scale.x = cube_x
+   # cube.scale.y = cube_y
+    #cube.scale.z = cube_z
 
 def set_cube_colour():
     # Select the object by name, the default cube
