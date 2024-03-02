@@ -37,10 +37,62 @@
     <div class="row gx-5">
         <div class="mb-3" id="all-wind-load-container">
         </div>
+        <div class="mb-3" style="text-align: right;">
+            <hr>
+            <button class="btn btn-primary" id="wind-calculate-button">Calculate</button>
+        </div>
     </div>
     <h3>Seismic Load</h3>
     <div class="row gx-5">
         <div class="mb-3" id="all-seismic-load-container">
+        </div>
+        <div class="mb-3" style="text-align: right;">
+            <hr>
+            <button class="btn btn-primary" id="seismic-calculate-button">Calculate</button>
+        </div>
+    </div>
+    <h3>Snow Load</h3>
+    <div class="row gx-5 ">
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label for="accumulation-factor">Accumulation Factor (Ca)</label>
+                <p id="accumulation-factor">NA</p>
+            </div>
+            <div class="mb-3">
+                <label for="snow-load-upwind-uls">Snow Load Upwind ULS</label>
+                <p id="snow-load-upwind-uls">NA</p>
+            </div>
+            <div class="mb-3">
+                <label for="snow-load-upwind-sls">Snow Load Upwind ULS</label>
+                <p id="snow-load-upwind-sls">NA</p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label for="snow-load-downwind-uls">Snow Load Downwind ULS</label>
+                <p id="snow-load-downwind-uls">NA</p>
+            </div>
+            <div class="mb-3">
+                <label for="snow-load-downwind-sls">Snow Load Downwind SLS</label>
+                <p id="snow-load-downwind-sls">NA</p>
+            </div>
+        </div>
+    </div>
+    <div class="row gx-5">
+        <div class="mb-3" style="text-align: right;">
+            <hr>
+            <button class="btn btn-primary" id="snow-calculate-button">Calculate</button>
+        </div>
+    </div>
+    <hr>
+    <div class="row gx-5 align-items-center">
+        <div class="col-md-6">
+            <button class="btn btn-primary" id="back-button">Back</button>
+        </div>
+        <div class="col-md-6 right-align">
+            <button class="btn btn-primary" id="save-button">Save</button>
+            <p id="next-warning"></p>
+            <button class="btn btn-primary" id="next-button">Next</button>
         </div>
     </div>
 </div>

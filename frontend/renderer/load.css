@@ -131,6 +131,8 @@ a:focus {
 .table th {
     background-color: #f7f4ef;
     color: #707070;
+    vertical-align: middle;
+    text-align: center;
 }
 
 .table td {
