@@ -1198,42 +1198,91 @@ function waitForElement(id, callback) {
     }, 100); // Check every 100ms
 }
 
+// function deserialize(json, section) {
+//     let objects = JSON.parse(json)[section];
+//
+//     // TODO: ENSURE xs_option IS CLICKED BEFORE xs-?-option
+//     // go through all the radio
+//     for (let id in objects.radio) {
+//         waitForElement(id, function(radio) {
+//             if (radio.value === objects.radio[id]) {
+//                 radio.click();
+//             }
+//         });
+//     }
+//
+//     // go through all the input
+//     for (let id in objects.input) {
+//         waitForElement(id, function(input) {
+//             input.value = '';
+//             input.focus();
+//             let value = objects.input[id];
+//             for (let i = 0; i < value.length; i++) {
+//                 // let event = new KeyboardEvent('keydown', { 'key': value[i] });
+//                 // input.dispatchEvent(event);
+//                 // input.value += value[i];
+//                 input.value = value;
+//             }
+//         });
+//     }
+//
+//     // go through all the tables
+//     for (let id in objects.table) {
+//         waitForElement(id, function(table) {
+//             // console.log(table.id);
+//             table.innerHTML = objects.table[id];
+//         });
+//     }
+// }
+
 function deserialize(json, section) {
-    let objects = JSON.parse(json)[section];
+    return new Promise((resolve) => {
+        let objects = JSON.parse(json)[section];
+        let totalElements = Object.keys(objects.radio).length + Object.keys(objects.input).length + Object.keys(objects.table).length;
+        let processedElements = 0;
 
-    // TODO: ENSURE xs_option IS CLICKED BEFORE xs-?-option
-    // go through all the radio
-    for (let id in objects.radio) {
-        waitForElement(id, function(radio) {
-            if (radio.value === objects.radio[id]) {
-                radio.click();
-            }
-        });
-    }
+        // go through all the radio
+        for (let id in objects.radio) {
+            waitForElement(id, function(radio) {
+                if (radio.value === objects.radio[id]) {
+                    radio.click();
+                }
+                processedElements++;
+                if (processedElements === totalElements) {
+                    resolve();
+                }
+            });
+        }
 
-    // go through all the input
-    for (let id in objects.input) {
-        waitForElement(id, function(input) {
-            input.value = '';
-            input.focus();
-            let value = objects.input[id];
-            for (let i = 0; i < value.length; i++) {
-                // let event = new KeyboardEvent('keydown', { 'key': value[i] });
-                // input.dispatchEvent(event);
-                // input.value += value[i];
-                input.value = value;
-            }
-        });
-    }
+        // go through all the input
+        for (let id in objects.input) {
+            waitForElement(id, function(input) {
+                input.value = '';
+                input.focus();
+                let value = objects.input[id];
+                for (let i = 0; i < value.length; i++) {
+                    input.value = value;
+                }
+                processedElements++;
+                if (processedElements === totalElements) {
+                    resolve();
+                }
+            });
+        }
 
-    // go through all the tables
-    for (let id in objects.table) {
-        waitForElement(id, function(table) {
-            // console.log(table.id);
-            table.innerHTML = objects.table[id];
-        });
-    }
+        // go through all the tables
+        for (let id in objects.table) {
+            waitForElement(id, function(table) {
+                table.innerHTML = objects.table[id];
+                processedElements++;
+                if (processedElements === totalElements) {
+                    resolve();
+                }
+            });
+        }
+    });
 }
+
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1382,7 +1431,10 @@ function loadSaveFile()
                                 })
                                 .then((result) =>
                                 {
-                                    deserialize(result.JsonData, 'input_page');
+                                    deserialize(result.JsonData, 'input_page')
+                                        .then(() => {
+                                            window.scrollTo(0, 0);
+                                        });
                                 })
                                 .catch((error) => console.error(error));
                         })

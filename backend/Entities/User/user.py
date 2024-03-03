@@ -8,6 +8,7 @@ from backend.Entities.Building.cladding import Cladding
 from backend.Entities.Building.height_zone import HeightZone
 from backend.Entities.Building.roof import Roof
 from backend.Entities.Location.location import Location
+from backend.Entities.Snow.snow_load import SnowLoad
 from backend.Entities.User.profile import Profile
 
 
@@ -25,6 +26,7 @@ class User:
     height_zones: Optional[List[HeightZone]]
     building: Optional[Building]
     importance_category: Optional[ImportanceFactor]
+    snow_load: Optional[Dict['str', SnowLoad]]
 
     def __init__(self, username: str):
         self.username = username
@@ -40,6 +42,7 @@ class User:
         self.height_zones = None
         self.building = None
         self.importance_category = None
+        self.snow_load = None
 
     def set_profile(self, profile: Profile):
         self.profile = profile
@@ -76,6 +79,9 @@ class User:
 
     def set_importance_category(self, importance_category: ImportanceFactor):
         self.importance_category = importance_category
+
+    def set_snow_load(self, snow_load):
+        self.snow_load = snow_load
 
     def get_username(self):
         return self.username
@@ -115,3 +121,6 @@ class User:
 
     def get_importance_category(self):
         return self.importance_category
+
+    def get_snow_load(self):
+        return self.snow_load

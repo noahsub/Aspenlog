@@ -1,17 +1,23 @@
-function waitForElement(id, callback) {
-    let intervalId = setInterval(function() {
+function waitForElement(id, callback)
+{
+    let intervalId = setInterval(function()
+    {
         let element = document.getElementById(id);
-        if (element) {
+        if (element)
+        {
             clearInterval(intervalId);
             callback(element);
         }
     }, 100); // Check every 100ms
 }
 
-function waitForElements(ids, callback) {
-    let intervalId = setInterval(function() {
+function waitForElements(ids, callback)
+{
+    let intervalId = setInterval(function()
+    {
         let elements = ids.map(id => document.getElementById(id));
-        if (elements.every(element => element !== null)) {
+        if (elements.every(element => element !== null))
+        {
             clearInterval(intervalId);
             callback(elements);
         }
@@ -35,9 +41,11 @@ function toggleMenuColors(toggleMenu)
 
 function getNumHeightZones()
 {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) =>
+    {
         window.api.invoke('get-token') // Retrieve the token
-            .then((token) => {
+            .then((token) =>
+            {
                 const myHeaders = new Headers();
                 myHeaders.append("Accept", "application/json");
                 myHeaders.append("Authorization", `Bearer ${token}`);
@@ -50,12 +58,14 @@ function getNumHeightZones()
 
                 fetch("http://localhost:42613/get_height_zones", requestOptions)
                     .then((response) => response.json())
-                    .then((result) => {
+                    .then((result) =>
+                    {
                         let heightZoneData = JSON.parse(result);
                         let numHeightZones = Object.keys(heightZoneData).length;
                         resolve(numHeightZones); // Resolve the promise with numHeightZones
                     })
-                    .catch((error) => {
+                    .catch((error) =>
+                    {
                         console.error(error);
                         reject(error);
                     });
@@ -66,7 +76,8 @@ function getNumHeightZones()
 function getWindLoads()
 {
     window.api.invoke('get-token') // Retrieve the token
-        .then((token) => {
+        .then((token) =>
+        {
             const myHeaders = new Headers();
             myHeaders.append("Content-Type", "application/json");
             myHeaders.append("Accept", "application/json");
@@ -74,7 +85,7 @@ function getWindLoads()
 
             // count the number of height zones by the number of height zones wind load headers
             const numHeightZones = document.querySelectorAll('h5[id^="wind-load-component-hz-"]').length;
-            
+
             let ctValues = [];
             let exposureFactorValues = [];
             let manualCeCeiValues = [];
@@ -121,12 +132,13 @@ function getWindLoads()
                 }
             }
 
-            const raw = JSON.stringify({
-                "ct": ctValues,
-                "exposure_factor": exposureFactorValues,
-                "manual_ce_cei": manualCeCeiValues,
-                "internal_pressure_category": internalPressureCategoryValues
-            });
+            const raw = JSON.stringify(
+                {
+                    "ct": ctValues,
+                    "exposure_factor": exposureFactorValues,
+                    "manual_ce_cei": manualCeCeiValues,
+                    "internal_pressure_category": internalPressureCategoryValues
+                });
 
             const requestOptions = {
                 method: "POST",
@@ -137,7 +149,8 @@ function getWindLoads()
 
             fetch("http://localhost:42613/set_wind_load", requestOptions)
                 .then((response) => response.json())
-                .then((result) => {
+                .then((result) =>
+                {
                     const myHeaders = new Headers();
                     myHeaders.append("Accept", "application/json");
                     myHeaders.append("Authorization", `Bearer ${token}`);
@@ -215,11 +228,133 @@ function getWindLoads()
         });
 }
 
-function getSiesmicLoads()
+function getSeismicLoads()
 {
     window.api.invoke('get-token') // Retrieve the token
-        .then((token) => {
+        .then((token) =>
+        {
+            const myHeaders = new Headers();
+            myHeaders.append("Content-Type", "application/json");
+            myHeaders.append("Accept", "application/json");
+            myHeaders.append("Authorization", `Bearer ${token}`);
 
+            const raw = JSON.stringify(
+                {
+                    "ar": parseFloat(document.getElementById('amplification-factor').value),
+                    "rp": parseFloat(document.getElementById('response-modification-factor').value),
+                    "cp": parseFloat(document.getElementById('component-factor').value)
+                });
+
+            const requestOptions = {
+                method: "POST",
+                headers: myHeaders,
+                body: raw,
+                redirect: "follow"
+            };
+
+            fetch("http://localhost:42613/set_seismic_load", requestOptions)
+                .then((response) => response.json())
+                .then((result) =>
+                {
+                    const myHeaders = new Headers();
+                    myHeaders.append("Accept", "application/json");
+                    myHeaders.append("Authorization", `Bearer ${token}`);
+
+                    const requestOptions = {
+                        method: "POST",
+                        headers: myHeaders,
+                        redirect: "follow"
+                    };
+
+                    fetch("http://localhost:42613/get_height_zones", requestOptions)
+                        .then((response) => response.json())
+                        .then((result) =>
+                        {
+                            let heightZoneData = JSON.parse(result);
+                            console.log(heightZoneData);
+
+                            for (let zoneNum in heightZoneData)
+                            {
+                                let seismicLoad = heightZoneData[zoneNum]['seismic_load'];
+                                document.getElementById(`sp-hz-${zoneNum}`).innerHTML = seismicLoad['sp'];
+                                document.getElementById(`vp-hz-${zoneNum}`).innerHTML = seismicLoad['vp'];
+                            }
+                        })
+                        .catch((error) => console.error(error));
+                })
+                .catch((error) => console.error(error));
+        });
+}
+
+function getSnowLoad()
+{
+    window.api.invoke('get-token') // Retrieve the token
+        .then((token) =>
+        {
+            const myHeaders = new Headers();
+            myHeaders.append("Content-Type", "application/json");
+            myHeaders.append("Accept", "application/json");
+            myHeaders.append("Authorization", `Bearer ${token}`);
+
+            const numHeightZones = document.querySelectorAll('h5[id^="wind-load-component-hz-"]').length;
+            let exposureFactorSelection = document.getElementById(`exposure-factor-selection-hz-${numHeightZones}`).querySelector('.selected').id;
+
+            // if open
+            if (exposureFactorSelection === `exposure-factor-open-option-button-hz-${numHeightZones}`)
+            {
+                exposureFactorSelection = 'open';
+            }
+
+            // if rough
+            else if (exposureFactorSelection === `exposure-factor-rough-option-button-hz-${numHeightZones}`)
+            {
+                exposureFactorSelection = 'rough';
+            }
+
+            else if (exposureFactorSelection === `exposure-factor-intermediate-option-button-hz-${numHeightZones}`)
+            {
+                exposureFactorSelection = 'intermediate';
+            }
+
+            let roofTypeSelectionElement = document.querySelector('#roof-type-selection input[type="radio"]:checked');
+            let roofTypeSelection = roofTypeSelectionElement ? roofTypeSelectionElement.id : '';
+
+            if (roofTypeSelection === 'roof-selection-unobstructed-slippery-roof-option')
+            {
+                roofTypeSelection = 'unobstructed_slippery_roof';
+            }
+
+            else if (roofTypeSelection === 'roof-selection-other-option')
+            {
+                roofTypeSelection = 'other';
+            }
+
+            const raw = JSON.stringify(
+                {
+                    "exposure_factor_selection": exposureFactorSelection,
+                    "roof_type": roofTypeSelection
+                });
+
+            const requestOptions = {
+                method: "POST",
+                headers: myHeaders,
+                body: raw,
+                redirect: "follow"
+            };
+
+            fetch("http://localhost:42613/set_snow_load", requestOptions)
+                .then((response) => response.json())
+                .then((result) =>
+                {
+                    let snowLoadData = JSON.parse(result);
+                    let upwindData = snowLoadData['upwind'];
+                    let downwindData = snowLoadData['downwind'];
+                    document.getElementById('upwind-accumulation-factor').innerHTML = upwindData['factor']['ca'];
+                    document.getElementById('downwind-accumulation-factor').innerHTML = downwindData['factor']['ca'];
+                    document.getElementById('snow-load-upwind-uls').innerHTML = upwindData['s_uls'];
+                    document.getElementById('snow-load-downwind-uls').innerHTML = downwindData['s_uls'];
+                })
+                .catch((error) => console.error(error));
         });
 }
 
@@ -330,37 +465,37 @@ function createWindLoadComponent(zone_num)
     `;
 }
 
-function createSeismicLoadComponent(zone_num){
-    return `
-    <hr>
-    <h5 id="seismic-load-component-hz-${zone_num}">Height Zone ${zone_num}</h5>
-    <hr>
-    <div class="row gx-5 ">
-        <div class="col-md-6">
-            <div class="mb-3">
-                <label for="amplification-factor-hz-${zone_num}">Element of Component Force Amplification Factor (Ar)</label>
-                <p>By default Ar has a value of 1</p>
-                <input type="number" id="amplification-factor-hz-${zone_num}" class="form-control" value="1"/>
-            </div>
-            <div class="mb-3">
-                <label for="response-modification-factor-hz-${zone_num}">Element of Component Response Modification Factor (Rp)</label>
-                <p>By default Ar has a value of 2.5</p>
-                <input type="number" id="response-modification-factor-hz-${zone_num}" class="form-control" value="2.5"/>
-            </div>
-            <div class="mb-3">
-                <label for="component-factor-hz-${zone_num}">Elements of Component Factor (Cp)</label>
-                <p>By default Ar has a value of 1</p>
-                <input type="number" id="component-factor-hz-${zone_num}" class="form-control" value="1"/>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <label for="seismic-load-hz-${zone_num}">Seismic Load</label>
-            <p id="seismic-load-hz-${zone_num}">NA</p>
-        </div>
-    </div>
-    
-    `;
-}
+// function createSeismicLoadComponent(zone_num){
+//     return `
+//     <hr>
+//     <h5 id="seismic-load-component-hz-${zone_num}">Height Zone ${zone_num}</h5>
+//     <hr>
+//     <div class="row gx-5 ">
+//         <div class="col-md-6">
+//             <div class="mb-3">
+//                 <label for="amplification-factor-hz-${zone_num}">Element of Component Force Amplification Factor (Ar)</label>
+//                 <p>By default Ar has a value of 1</p>
+//                 <input type="number" id="amplification-factor-hz-${zone_num}" class="form-control" value="1"/>
+//             </div>
+//             <div class="mb-3">
+//                 <label for="response-modification-factor-hz-${zone_num}">Element of Component Response Modification Factor (Rp)</label>
+//                 <p>By default Ar has a value of 2.5</p>
+//                 <input type="number" id="response-modification-factor-hz-${zone_num}" class="form-control" value="2.5"/>
+//             </div>
+//             <div class="mb-3">
+//                 <label for="component-factor-hz-${zone_num}">Elements of Component Factor (Cp)</label>
+//                 <p>By default Ar has a value of 1</p>
+//                 <input type="number" id="component-factor-hz-${zone_num}" class="form-control" value="1"/>
+//             </div>
+//         </div>
+//         <div class="col-md-6">
+//             <label for="seismic-load-hz-${zone_num}">Seismic Load</label>
+//             <p id="seismic-load-hz-${zone_num}">NA</p>
+//         </div>
+//     </div>
+//
+//     `;
+// }
 
 function getWindLoadInputs(zone_num)
 {
@@ -369,16 +504,19 @@ function getWindLoadInputs(zone_num)
     let ceIntermediate;
 
     // if open
-    if (exposureFactor === `exposure-factor-open-option-hz-${zone_num}`){
+    if (exposureFactor === `exposure-factor-open-option-hz-${zone_num}`)
+    {
         exposureFactor = 'open';
     }
 
     // if rough
-    else if (exposureFactor === `exposure-factor-rough-option-hz-${zone_num}`){
+    else if (exposureFactor === `exposure-factor-rough-option-hz-${zone_num}`)
+    {
         exposureFactor = 'rough';
     }
 
-    else if (exposureFactor === `exposure-factor-intermediate-option-hz-${zone_num}`){
+    else if (exposureFactor === `exposure-factor-intermediate-option-hz-${zone_num}`)
+    {
         exposureFactor = 'intermediate';
         ceIntermediate = document.getElementById(`ce-intermediate-hz-${zone_num}`).value;
     }
@@ -386,15 +524,18 @@ function getWindLoadInputs(zone_num)
     let internalPressureCategory = document.querySelector(`input[name="internal-pressure-category-selection-hz-${zone_num}"]:checked`).id;
 
     // if enclosed
-    if (internalPressureCategory === `internal-pressure-category-enclosed-option-hz-${zone_num}`){
+    if (internalPressureCategory === `internal-pressure-category-enclosed-option-hz-${zone_num}`)
+    {
         internalPressureCategory = 'enclosed';
     }
 
-    else if (internalPressureCategory === `internal-pressure-category-partially-enclosed-option-hz-${zone_num}`){
+    else if (internalPressureCategory === `internal-pressure-category-partially-enclosed-option-hz-${zone_num}`)
+    {
         internalPressureCategory = 'partially_enclosed';
     }
 
-    else if (internalPressureCategory === `internal-pressure-category-large-openings-option-hz-${zone_num}`){
+    else if (internalPressureCategory === `internal-pressure-category-large-openings-option-hz-${zone_num}`)
+    {
         internalPressureCategory = 'large_openings';
     }
 
@@ -408,19 +549,19 @@ function getWindLoadInputs(zone_num)
     };
 }
 
-function getSeismicLoadInputs(zone_num)
-{
-    let amplificationFactor = document.getElementById(`amplification-factor-hz-${zone_num}`).value;
-    let responseModificationFactor = document.getElementById(`response-modification-factor-hz-${zone_num}`).value;
-    let componentFactor = document.getElementById(`component-factor-hz-${zone_num}`).value;
-
-    console.log(amplificationFactor, responseModificationFactor, componentFactor);
-    return {
-        amplificationFactor,
-        responseModificationFactor,
-        componentFactor
-    };
-}
+// function getSeismicLoadInputs(zone_num)
+// {
+//     let amplificationFactor = document.getElementById(`amplification-factor-hz-${zone_num}`).value;
+//     let responseModificationFactor = document.getElementById(`response-modification-factor-hz-${zone_num}`).value;
+//     let componentFactor = document.getElementById(`component-factor-hz-${zone_num}`).value;
+//
+//     console.log(amplificationFactor, responseModificationFactor, componentFactor);
+//     return {
+//         amplificationFactor,
+//         responseModificationFactor,
+//         componentFactor
+//     };
+// }
 
 // wind-calculate-button press
 document.getElementById('wind-calculate-button').addEventListener('click', () =>
@@ -431,15 +572,290 @@ document.getElementById('wind-calculate-button').addEventListener('click', () =>
 // seismic-calculate-button press
 document.getElementById('seismic-calculate-button').addEventListener('click', () =>
 {
-    getSeismicLoadInputs(1);
+    getSeismicLoads();
+});
+
+// snow-calculate-button press
+document.getElementById('snow-calculate-button').addEventListener('click', () =>
+{
+    getSnowLoad();
+});
+
+function serialize()
+{
+    let objects = {
+        load_page:
+            {
+                radio:
+                    {},
+                input:
+                    {}
+            }
+    };
+
+    // Handle radio inputs
+    let radios = document.querySelectorAll('input[type=radio]');
+    radios.forEach(radio =>
+    {
+        if (radio.checked)
+        {
+            objects.load_page.radio[radio.id] = radio.value;
+        }
+    });
+
+    // Handle other inputs
+    let inputs = document.querySelectorAll('input:not([type=radio])');
+    inputs.forEach(input =>
+    {
+        if (input.value !== "")
+        {
+            objects.load_page.input[input.id] = input.value;
+        }
+    });
+
+    let json = JSON.stringify(objects);
+    return json;
+}
+
+function deserialize(json, section)
+{
+    return new Promise((resolve) =>
+    {
+        let objects = JSON.parse(json)[section];
+        let totalElements = Object.keys(objects.radio).length + Object.keys(objects.input).length;
+        let processedElements = 0;
+
+        // go through all the radio
+        for (let id in objects.radio)
+        {
+            waitForElement(id, function(radio)
+            {
+                if (radio.value === objects.radio[id])
+                {
+                    radio.click();
+                }
+                processedElements++;
+                if (processedElements === totalElements)
+                {
+                    resolve();
+                }
+            });
+        }
+
+        // go through all the input
+        for (let id in objects.input)
+        {
+            waitForElement(id, function(input)
+            {
+                input.value = '';
+                input.focus();
+                let value = objects.input[id];
+                for (let i = 0; i < value.length; i++)
+                {
+                    input.value = value;
+                }
+                processedElements++;
+                if (processedElements === totalElements)
+                {
+                    resolve();
+                }
+            });
+        }
+    });
+}
+
+
+function loadSaveFile()
+{
+    window.api.invoke('get-token') // Retrieve the token
+        .then((token) =>
+        {
+            const myHeaders = new Headers();
+            myHeaders.append("Accept", "application/json");
+            myHeaders.append("Authorization", `Bearer ${token}`);
+
+            const requestOptions = {
+                method: "POST",
+                headers: myHeaders,
+                redirect: "follow"
+            };
+
+            fetch("http://localhost:42613/get_user_current_save_file", requestOptions)
+                .then((response) =>
+                {
+                    if (response.status === 200)
+                    {
+                        return response.json();
+                    }
+                    else
+                    {
+                        throw new Error('Get User Current Save File Error');
+                    }
+                })
+                .then((result) =>
+                {
+                    let id = parseInt(result);
+                    const myHeaders = new Headers();
+                    myHeaders.append("Accept", "application/json");
+                    myHeaders.append("Authorization", `Bearer ${token}`);
+
+                    const requestOptions = {
+                        method: "POST",
+                        headers: myHeaders,
+                        redirect: "follow"
+                    };
+
+                    fetch(`http://localhost:42613/get_user_save_file?id=${id}`, requestOptions)
+                        .then((response) =>
+                        {
+                            if (response.status === 200)
+                            {
+                                return response.json();
+                            }
+                            else
+                            {
+                                throw new Error('Get User Save File Error');
+                            }
+                        })
+                        .then((data) =>
+                        {
+                            const myHeaders = new Headers();
+                            myHeaders.append("Accept", "application/json");
+                            myHeaders.append("Authorization", `Bearer ${token}`);
+
+                            const requestOptions = {
+                                method: "POST",
+                                headers: myHeaders,
+                                redirect: "follow"
+                            };
+
+                            fetch(`http://localhost:42613/get_user_save_file?id=${id}`, requestOptions)
+                                .then((response) =>
+                                {
+                                    if (response.status === 200)
+                                    {
+                                        return response.json();
+                                    }
+                                    else
+                                    {
+                                        throw new Error('Get User Save File Error');
+                                    }
+                                })
+                                .then((result) =>
+                                {
+                                    deserialize(result.JsonData, 'load_page')
+                                        .then(() =>
+                                        {
+                                            window.scrollTo(0, 0);
+                                        });
+                                })
+                                .catch((error) => console.error(error));
+                        })
+                        .catch((error) => console.error(error));
+                })
+                .catch((error) => console.error(error));
+        });
+}
+
+// save button click
+document.getElementById('save-button').addEventListener('click', () =>
+{
+    // serialized = serialize();
+    window.api.invoke('get-token') // Retrieve the token
+        .then((token) =>
+        {
+            const myHeaders = new Headers();
+            myHeaders.append("Accept", "application/json");
+            myHeaders.append("Authorization", `Bearer ${token}`);
+
+            const requestOptions = {
+                method: "POST",
+                headers: myHeaders,
+                redirect: "follow"
+            };
+
+            fetch("http://localhost:42613/get_user_current_save_file", requestOptions)
+                .then((response) =>
+                {
+                    if (response.status === 200)
+                    {
+                        return response.json();
+                    }
+                    else
+                    {
+                        throw new Error('Get User Current Save File Error');
+                    }
+                })
+                .then((result) =>
+                {
+                    let id = parseInt(result);
+                    const myHeaders = new Headers();
+                    myHeaders.append("Content-Type", "application/json");
+                    myHeaders.append("Accept", "application/json");
+                    myHeaders.append("Authorization", `Bearer ${token}`);
+
+                    const raw = JSON.stringify(
+                        {
+                            "json_data": serialize(),
+                            "id": id
+                        });
+
+                    const requestOptions = {
+                        method: "POST",
+                        headers: myHeaders,
+                        body: raw,
+                        redirect: "follow"
+                    };
+
+                    fetch("http://localhost:42613/set_user_save_data", requestOptions)
+                        .then((response) => response.text())
+                        .catch((error) => console.error(error));
+                })
+                .catch((error) => console.error(error));
+        });
+});
+
+document.getElementById('back-button').addEventListener('click', function()
+{
+    window.location.href = 'input.html';
+});
+
+// next button click
+document.getElementById('next-button').addEventListener('click', function()
+{
+    // iterate through all the tables and ensure no NA values are present
+    let allTables = document.querySelectorAll('table');
+    let allTablesArray = Array.from(allTables);
+    let allTablesText = allTablesArray.map(table => table.innerText);
+    if (allTablesText.some(text => text.includes('NA')))
+    {
+        document.getElementById('next-warning').innerHTML = 'Please calculate all the loads before proceeding';
+    }
+
+    // iterate through all snow load inputs and ensure no NA values are present
+    else if (document.getElementById('upwind-accumulation-factor').innerText === 'NA' || document.getElementById('downwind-accumulation-factor').innerText === 'NA' || document.getElementById('snow-load-upwind-uls').innerText === 'NA' || document.getElementById('snow-load-downwind-uls').innerText === 'NA')
+    {
+        document.getElementById('next-warning').innerHTML = 'Please calculate the snow load before proceeding';
+    }
+
+    else
+    {
+        window.location.href = 'results.html';
+    }
 });
 
 window.onload = function()
 {
-    let allWindLoadContainer = document.getElementById('all-wind-load-container');
-    let allSeismicLoadContainer = document.getElementById('all-seismic-load-container');
+    loadSaveFile();
 
-    getNumHeightZones().then(numHeightZones => {
+    toggleMenuColors('#roof-type-selection')
+
+    let allWindLoadContainer = document.getElementById('all-wind-load-container');
+    // let allSeismicLoadContainer = document.getElementById('seismic-load-table-container');
+    let seismicLoadTable = document.getElementById('seismic-load-table');
+
+    getNumHeightZones().then(numHeightZones =>
+    {
         const selectors = [];
         for (let i = 1; i <= numHeightZones; i++)
         {
@@ -448,29 +864,42 @@ window.onload = function()
             selectors.push(`#internal-pressure-category-selection-hz-${i}`);
             document.getElementById(`ce-intermediate-hz-${i}`).style.display = 'none';
             // case if intermediate is selected
-            waitForElement(`exposure-factor-intermediate-option-hz-${i}`, () => {
-                document.getElementById(`exposure-factor-intermediate-option-hz-${i}`).addEventListener('click', () => {
+            waitForElement(`exposure-factor-intermediate-option-hz-${i}`, () =>
+            {
+                document.getElementById(`exposure-factor-intermediate-option-hz-${i}`).addEventListener('click', () =>
+                {
                     document.getElementById(`ce-intermediate-hz-${i}`).style.display = 'block';
                 });
             });
             // case if open is selected
-            waitForElement(`exposure-factor-open-option-hz-${i}`, () => {
-                document.getElementById(`exposure-factor-open-option-hz-${i}`).addEventListener('click', () => {
+            waitForElement(`exposure-factor-open-option-hz-${i}`, () =>
+            {
+                document.getElementById(`exposure-factor-open-option-hz-${i}`).addEventListener('click', () =>
+                {
                     document.getElementById(`ce-intermediate-hz-${i}`).style.display = 'none';
                 });
             });
 
             // case if rough is selected
-            waitForElement(`exposure-factor-rough-option-hz-${i}`, () => {
-                document.getElementById(`exposure-factor-rough-option-hz-${i}`).addEventListener('click', () => {
+            waitForElement(`exposure-factor-rough-option-hz-${i}`, () =>
+            {
+                document.getElementById(`exposure-factor-rough-option-hz-${i}`).addEventListener('click', () =>
+                {
                     document.getElementById(`ce-intermediate-hz-${i}`).style.display = 'none';
                 });
             });
 
-            allSeismicLoadContainer.innerHTML += createSeismicLoadComponent(i);
+            // add row to the seismic load table
+            seismicLoadTable.innerHTML += `
+            <tr>
+                <td>Height Zone ${i}</td>
+                <td id="sp-hz-${i}">NA</td>
+                <td id="vp-hz-${i}">NA</td>
+             </tr>`;
         }
         selectors.forEach(selector => toggleMenuColors(selector));
-    }).catch(error => {
+    }).catch(error =>
+    {
         console.error(error);
     });
 };
