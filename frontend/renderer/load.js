@@ -897,6 +897,19 @@ window.onload = function()
                 <td id="vp-hz-${i}">NA</td>
              </tr>`;
         }
+
+        // add event handler for biggest height zone if the exposure factor selection is changed
+        waitForElement(`exposure-factor-selection-hz-${numHeightZones}`, () =>
+        {
+            document.getElementById(`exposure-factor-selection-hz-${numHeightZones}`).addEventListener('click', () =>
+            {
+                document.getElementById('upwind-accumulation-factor').innerHTML = 'NA';
+                document.getElementById('downwind-accumulation-factor').innerHTML = 'NA';
+                document.getElementById('snow-load-upwind-uls').innerHTML = 'NA';
+                document.getElementById('snow-load-downwind-uls').innerHTML = 'NA';
+            });
+        });
+
         selectors.forEach(selector => toggleMenuColors(selector));
     }).catch(error =>
     {
