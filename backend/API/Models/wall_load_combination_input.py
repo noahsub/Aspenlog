@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
 
-class DimensionsInput(BaseModel):
+class WallLoadCombinationInput(BaseModel):
     uls_wall_type: str
     sls_wall_type: str

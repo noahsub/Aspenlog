@@ -316,7 +316,7 @@ def generate_wall_load_entries(columns, dataframe, variables, uls_wall, sls_wall
     dataframe.loc[len(dataframe)] = [entry[column] for column in dataframe.columns]
 
 
-def compute_wall_load_combinations(building: Building, zone_num: int, snow_load: SnowLoad,
+def compute_wall_load_combinations(building: Building, snow_load: SnowLoad,
                                    uls_wall_load_combination_type: ULSWallLoadCombinationTypes,
                                    sls_wall_load_combination_type: SLSWallLoadCombinationTypes):
     selection = (uls_wall_load_combination_type, sls_wall_load_combination_type)
@@ -328,7 +328,7 @@ def compute_wall_load_combinations(building: Building, zone_num: int, snow_load:
                 generate_wall_load_entries(columns=columns,
                                            dataframe=df,
                                            variables=compute_height_zone_variables(building, height_zone.zone_num),
-                                           uls_wall=uls_wall_1_4D(building, zone_num),
+                                           uls_wall=uls_wall_1_4D(building, height_zone.zone_num),
                                            sls_wall=sls_wall_1_0D_1_0Wy(building, height_zone.zone_num))
             return df
         case (ULSWallLoadCombinationTypes.ULS_1_4_D, SLSWallLoadCombinationTypes.SLS_1_0D_1_0WX):
@@ -338,7 +338,7 @@ def compute_wall_load_combinations(building: Building, zone_num: int, snow_load:
                 generate_wall_load_entries(columns=columns,
                                            dataframe=df,
                                            variables=compute_height_zone_variables(building, height_zone.zone_num),
-                                           uls_wall=uls_wall_1_4D(building, zone_num),
+                                           uls_wall=uls_wall_1_4D(building, height_zone.zone_num),
                                            sls_wall=sls_wall_1_0D_1_0Wx(building, height_zone.zone_num))
             return df
         case (ULSWallLoadCombinationTypes.ULS_1_25D_1_4WY, SLSWallLoadCombinationTypes.SLS_1_0D_1_0WY):

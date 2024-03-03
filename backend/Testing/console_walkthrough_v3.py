@@ -542,7 +542,7 @@ d88P     888  "Y8888P"  888        8888888888 888    Y888 88888888 "Y88888P"   "
     uls_for_wall = check_save('uls_for_wall', choice, 'ULS for wall', ULSWallLoadCombinationTypes)
     sls_for_wall = check_save('sls_for_wall', choice, 'SLS for wall', SLSWallLoadCombinationTypes)
     zone_num = user_input('Enter the zone number for which you want to compute the wall load combinations')
-    print(compute_wall_load_combinations(building, zone_num, snow_load_downwind, uls_for_wall, sls_for_wall))
+    print(compute_wall_load_combinations(building, snow_load_downwind, uls_for_wall, sls_for_wall))
 
     print("ROOF LOAD COMBINATIONS")
     uls_for_roof = check_save('uls_for_roof', choice, 'ULS for roof', ULSRoofLoadCombinationTypes)

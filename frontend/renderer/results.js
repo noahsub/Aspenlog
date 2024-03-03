@@ -24,8 +24,7 @@ document.getElementById('uls-wall-selection').addEventListener('change', functio
 
     if (ulsWallSelection !== undefined && slsWallSelection !== undefined)
     {
-        console.log(ulsWallSelection);
-        console.log(slsWallSelection);
+        getWallLoadCombinations();
     }
 });
 
@@ -41,8 +40,7 @@ document.getElementById('sls-wall-selection').addEventListener('change', functio
 
     if (ulsWallSelection !== undefined && slsWallSelection !== undefined)
     {
-        console.log(ulsWallSelection);
-        console.log(slsWallSelection);
+        getWallLoadCombinations();
     }
 });
 
@@ -70,8 +68,7 @@ document.getElementById('uls-roof-selection').addEventListener('change', functio
 
     if (ulsRoofSelection !== undefined && slsRoofSelection !== undefined)
     {
-        console.log(ulsRoofSelection);
-        console.log(slsRoofSelection);
+        getRoofLoadCombinations()
     }
 });
 
@@ -93,10 +90,122 @@ document.getElementById('sls-roof-selection').addEventListener('change', functio
 
     if (ulsRoofSelection !== undefined && slsRoofSelection !== undefined)
     {
-        console.log(ulsRoofSelection);
-        console.log(slsRoofSelection);
+        getRoofLoadCombinations()
     }
 });
+
+function getWallLoadCombinations()
+{
+    window.api.invoke('get-token') // Retrieve the token
+        .then((token) =>{
+            const myHeaders = new Headers();
+            myHeaders.append("Content-Type", "application/json");
+            myHeaders.append("Accept", "application/json");
+            myHeaders.append("Authorization", `Bearer ${token}`);
+
+            const raw = JSON.stringify({
+                "uls_wall_type": ulsWallSelection,
+                "sls_wall_type": slsWallSelection
+            });
+
+            const requestOptions = {
+                method: "POST",
+                headers: myHeaders,
+                body: raw,
+                redirect: "follow"
+            };
+
+            fetch("http://localhost:42613/get_wall_load_combinations", requestOptions)
+                .then((response) => response.text())
+                .then((result) => {
+                    let data = JSON.parse(result);
+                    console.log(data);
+                    let table = document.getElementById('wall-combination-table');
+                    table.innerHTML = "";
+                    let tableString = "";
+                    tableString += '<thead>'
+                    tableString += '<tr>'
+                    let headers = Object.keys(data[0]);
+                    tableString += `<th>Height Zone</th>`;
+                    headers.forEach((header) => {
+                        tableString += `<th>${header}</th>`;
+                    });
+                    tableString += '<tr>'
+                    tableString += '</thead>'
+                    tableString += '<tbody>'
+                    for (let i = 0; i < data.length; i++)
+                    {
+                        tableString += '<tr>'
+                        let values = Object.values(data[i]);
+                        let newValues = [i + 1].concat(values);
+                        newValues.forEach((value) => {
+                            tableString += `<td>${value}</td>`;
+                        });
+                        tableString += '</tr>'
+                    }
+                    tableString += '</tbody>'
+                    table.innerHTML = tableString;
+                })
+                .catch((error) => console.error(error));
+        });
+
+}
+
+function getRoofLoadCombinations()
+{
+    window.api.invoke('get-token') // Retrieve the token
+        .then((token) =>{
+            const myHeaders = new Headers();
+            myHeaders.append("Content-Type", "application/json");
+            myHeaders.append("Accept", "application/json");
+            myHeaders.append("Authorization", `Bearer ${token}`);
+
+            const raw = JSON.stringify({
+                "uls_roof_type": ulsRoofSelection,
+                "sls_roof_type": slsRoofSelection
+            });
+
+            const requestOptions = {
+                method: "POST",
+                headers: myHeaders,
+                body: raw,
+                redirect: "follow"
+            };
+
+            fetch("http://localhost:42613/get_roof_load_combinations", requestOptions)
+                .then((response) => response.text())
+                .then((result) => {
+                    let data = JSON.parse(result);
+                    console.log(data);
+                    let table = document.getElementById('roof-combination-table');
+                    table.innerHTML = "";
+                    let tableString = "";
+                    tableString += '<thead>'
+                    tableString += '<tr>'
+                    let headers = Object.keys(data[0]);
+                    tableString += `<th>Height Zone</th>`;
+                    headers.forEach((header) => {
+                        tableString += `<th>${header}</th>`;
+                    });
+                    tableString += '<tr>'
+                    tableString += '</thead>'
+                    tableString += '<tbody>'
+                    for (let i = 0; i < data.length; i++)
+                    {
+                        tableString += '<tr>'
+                        let values = Object.values(data[i]);
+                        let newValues = [i + 1].concat(values);
+                        newValues.forEach((value) => {
+                            tableString += `<td>${value}</td>`;
+                        });
+                        tableString += '</tr>'
+                    }
+                    tableString += '</tbody>'
+                    table.innerHTML = tableString;
+                })
+                .catch((error) => console.error(error));
+        });
+}
 
 window.onload = function()
 {
