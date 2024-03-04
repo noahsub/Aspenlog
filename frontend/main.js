@@ -1,26 +1,31 @@
 const path = require('path');
-const { app, BrowserWindow } = require('electron');
+const {app, BrowserWindow} = require('electron');
 
-const { ipcMain } = require('electron');
+const {ipcMain} = require('electron');
 const keytar = require('keytar');
 
-ipcMain.handle('store-token', async (event, token) => {
+ipcMain.handle('store-token', async (event, token) =>
+{
     await keytar.setPassword('ASPENLOG2020', 'TokenAccount', token);
 });
 
-ipcMain.handle('get-token', async () => {
+ipcMain.handle('get-token', async () =>
+{
     return await keytar.getPassword('ASPENLOG2020', 'TokenAccount');
 });
 
-ipcMain.handle('store-connection-address', async (event, connectionAddress) => {
+ipcMain.handle('store-connection-address', async (event, connectionAddress) =>
+{
     await keytar.setPassword('ASPENLOG2020', 'ConnectionAccount', connectionAddress);
 });
 
-ipcMain.handle('get-connection-address', async () => {
+ipcMain.handle('get-connection-address', async () =>
+{
     return await keytar.getPassword('ASPENLOG2020', 'ConnectionAccount');
 });
 
-function createMainWindow() {
+function createMainWindow()
+{
     const mainWindow = new BrowserWindow({
         title: 'frontend',
         width: 1280,
@@ -37,26 +42,18 @@ function createMainWindow() {
 
     // Remove menu bar
     mainWindow.setMenuBarVisibility(false);
-
-    // Load a webpage without scroll bar
-    // mainWindow.loadURL('https://www.seeda.ca/').then(() => {
-    //     mainWindow.webContents.insertCSS(`
-    //         ::-webkit-scrollbar {
-    //             display: none;
-    //         }
-    //     `);
-    // });
-
     mainWindow.loadFile(path.join(__dirname, './renderer/login.html'));
-
-    // mainWindow.webContents.openDevTools()
 }
 
-app.whenReady().then(async () => {
+app.whenReady().then(async () =>
+{
     await keytar.setPassword('ASPENLOG2020', 'ConnectionAccount', 'http://localhost:42613');
     createMainWindow();
 });
 
-try {
+try
+{
     require('electron-reloader')(module)
-} catch (_) {}
+}
+catch (_)
+{}
