@@ -1,10 +1,17 @@
 import bpy
-import argparse
 import sys
+
+import os
+
+# adding modules to blender path
+file = __file__
+module_path = os.path.dirname(file)
+sys.path.append(module_path)
+
 import render
 import os
 import jsonpickle
-from objects.shapes import create_seismic_cube, set_cube_colour
+from shapes import create_seismic_cube, set_cube_colour
 
 def color_based_on_load(load_value, max_load):
     # Ensure the load value is clamped between 0 and 100
@@ -41,17 +48,17 @@ def main():
         print("Failed to decode JSON:", e)
         sys.exit(1)
 
-    max_load = max([i.load for i in data[:-1]])
+    max_load = max([i['load'] for i in data[:-1]])
     for i in range(len(data)-1):
-        height = data[i].h
+        height = data[i]['h']
         cube = create_seismic_cube(height=height, position=i )
-        load_value = data[i].load
+        load_value = data[i]['load']
         set_cube_colour(cube, color_based_on_load(load_value, max_load))
 
     render_path = "seismic_" + str(id) + ".png"
 
     render.setup_scene()
-    render.render_image(os.path.join(os.environ['BLENDER_OUTPUT'], render_path))
+    render.render_image(os.path.join(os.path.join(os.path.dirname(module_path), 'output'), render_path))
 
 if __name__ == "__main__":
     main()

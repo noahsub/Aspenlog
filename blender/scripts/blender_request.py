@@ -1,22 +1,23 @@
 
 import sys
-sys.path.append('C:\\Users\\Alastair\\Dev\\SEEDA\\blender\\scripts')
-sys.path.append('C:\\Users\\Alastair\\Dev\\SEEDA\\blender\\objects')
+import os
+
+# adding modules to blender path
+file = __file__
+module_path = os.path.dirname(file)
+sys.path.append(module_path)
+
 import subprocess
 from concurrent.futures import ThreadPoolExecutor
-import os
-import sys
+
 import json
 from blender_object import *
 import jsonpickle
-# Check for args
-if len(sys.argv) < 3:
-    print("Usage: blender --background --python blender_request.py -- id '<json_string>'")
-    sys.exit(1)
+
 
 # last argument is JSON string
 #json_str = sys.argv[-1]
-id = int(sys.argv[-1])
+#id = int(sys.argv[-2])
 def create_blender_json(num_zones, heights, loads):
     json_str = [Arrow()]
     for i in range(num_zones):
@@ -27,17 +28,21 @@ def create_blender_json(num_zones, heights, loads):
     
     return json_str
 
-#json_str = create_blender_json(3, [2,2,2], [25,40,20])
-#print(json_str)
 
-#data = jsonpickle.decode(json_str)
+json_str = create_blender_json(3, [2,2,2], [25,40,20])
+id = 2
 def run_blender_script(script_path):
-    blender_path = os.environ['BLENDER'] 
-    args = ['--background', '--python', script_path, '--', id, json_str ]
+    try:
+        blender_path = os.environ['BLENDER'] 
+    except KeyError:
+        print("Blender path not found trying default")
+        blender_path = "blender"
+    args = ['--background', '--python', script_path, '--', str(id), json_str ]
 
     # Combine the Blender path and arguments
     command = [blender_path] + args
     print(command)
+    #return(command)
     # Run the command
     try:
         result = subprocess.run(command, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -46,8 +51,13 @@ def run_blender_script(script_path):
         print(f"Error running {script_path}:", e.stderr.decode())
 
 # Paths to the scripts
-scripts = ["./seismic_cube.py", "./wind_cube.py"]
-
+scripts = [os.path.join(module_path, "seismic_cube.py"), os.path.join(module_path, "wind_cube.py")]
+#print(os.path.join(module_path, "seismic_cube.py"))
+#sys.exit(0)
+print("Running:", json_str, "\n", id)
 # Run the scripts in parallel
 with ThreadPoolExecutor(max_workers=2) as executor:
-    executor.map(run_blender_script, scripts)
+    results = executor.map(run_blender_script, scripts)
+
+    for result in results:
+        print(result)
