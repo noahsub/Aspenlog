@@ -1,0 +1,47 @@
+<hr>
+<h5>Height Zone 1</h5>
+<hr>
+<div class="mb-3">
+    <label for="topographic-factor">Topographic Factor (Ct)</label>
+    <p>By default the topographic factor is 1</p>
+    <input type="number" id="topographic-factor" class="form-control" value="1"/>
+</div>
+<div class="mb-3">
+    <label for="exposure-factor-selection">Exposure Factor (Ce)</label>
+    <br>
+    <div class="btn-group btn-group-toggle" id="exposure-factor-selection" data-toggle="buttons">
+        <label class="btn btn-secondary">
+            <input type="radio" name="exposure-factor-selection" id="exposure-factor-open-option" autocomplete="off"> Open
+        </label>
+        <label class="btn btn-secondary">
+            <input type="radio" name="exposure-factor-selection" id="exposure-factor-rough-option" autocomplete="off"> Rough
+        </label>
+        <label class="btn btn-secondary">
+            <input type="radio" name="exposure-factor-selection" id="exposure-factor-intermediate-option" autocomplete="off"> Intermediate
+        </label>
+    </div>
+</div>
+<div class="mb-3">
+    <input type="number" id="cg-intermediate" class="form-control"/>
+</div>
+<div class="mb-3">
+    <label>Gust Factor (Cg)</label>
+    <p>2.5</p>
+</div>
+<div class="mb-3">
+    <label for="internal-pressure-category-selection">Exposure Factor (Ce)</label>
+    <br>
+    <div class="btn-group btn-group-toggle" id="internal-pressure-category-selection" data-toggle="buttons">
+        <label class="btn btn-secondary">
+            <input type="radio" name="einternal-pressure-category-selection" id="internal-pressure-category-enclosed-option" autocomplete="off"> Enclosed
+        </label>
+        <label class="btn btn-secondary">
+            <input type="radio" name="internal-pressure-category-selection" id="internal-pressure-category-partially-enclosed-option" autocomplete="off"> Partially Enclosed
+        </label>
+        <label class="btn btn-secondary">
+            <input type="radio" name="internal-pressure-category-selection" id="internal-pressure-category-large-openings-option" autocomplete="off"> Large Openings
+        </label>
+    </div>
+</div>
+
+

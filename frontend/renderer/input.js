@@ -2,86 +2,110 @@
 // GLOBALS
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-let map;
+// the map used for location of climatic and seismic data
+let MAP;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // HELPER FUNCTIONS
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Get the float value of an input element with the given id
+ * @param id
+ * @returns {number|null}
+ */
 function getFloatValue(id)
 {
     let element = document.getElementById(id);
     return element ? parseFloat(element.value) : null;
 }
 
+/**
+ * Get the int value of an input element with the given id
+ * @param id
+ * @returns {number|null}
+ */
 function getIntValue(id)
 {
     let element = document.getElementById(id);
     return element ? parseInt(element.value) : null;
 }
 
+/**
+ * Get the string value of an input element with the given id
+ * @param id
+ * @returns {*|null}
+ */
 function getStrValue(id)
 {
     let element = document.getElementById(id);
     return element ? element.value : null;
 }
 
+/**
+ * Set the color of toggle menu buttons when clicked
+ * @param toggleMenu
+ */
 function toggleMenuColors(toggleMenu)
 {
-    document.querySelectorAll(toggleMenu + ' .btn').forEach((button) =>
+    document.querySelectorAll(toggleMenu + " .btn").forEach((button) =>
     {
-        button.addEventListener('click', (event) =>
+        button.addEventListener("click", (event) =>
         {
-            document.querySelectorAll(toggleMenu + ' .btn').forEach((btn) =>
+            document.querySelectorAll(toggleMenu + " .btn").forEach((btn) =>
             {
-                btn.classList.remove('selected');
+                btn.classList.remove("selected");
             });
-            event.currentTarget.classList.add('selected');
+            event.currentTarget.classList.add("selected");
         });
     });
 }
 
-function get_seismic_parameters()
+/**
+ * Get the seismic parameters
+ * @returns {{siteDesignation: string, seismicValue: string}}
+ */
+function getSeismicParameters()
 {
     let siteDesignation = null;
     let seismicValue = null;
     // if vs30 is selected
-    if (document.getElementById('vs30_option').checked)
+    if (document.getElementById("vs30_option").checked)
     {
-        siteDesignation = 'xv';
-        seismicValue = document.getElementById('vs30').value;
+        siteDesignation = "xv";
+        seismicValue = document.getElementById("vs30").value;
     }
     else
     {
-        if (document.getElementById('xs-A-option').checked)
+        if (document.getElementById("xs-A-option").checked)
         {
-            siteDesignation = 'xs';
-            seismicValue = 'A';
+            siteDesignation = "xs";
+            seismicValue = "A";
         }
-        else if (document.getElementById('xs-B-option').checked)
+        else if (document.getElementById("xs-B-option").checked)
         {
-            siteDesignation = 'xs';
-            seismicValue = 'B';
+            siteDesignation = "xs";
+            seismicValue = "B";
         }
-        else if (document.getElementById('xs-C-option').checked)
+        else if (document.getElementById("xs-C-option").checked)
         {
-            siteDesignation = 'xs';
-            seismicValue = 'C';
+            siteDesignation = "xs";
+            seismicValue = "C";
         }
-        else if (document.getElementById('xs-D-option').checked)
+        else if (document.getElementById("xs-D-option").checked)
         {
-            siteDesignation = 'xs';
-            seismicValue = 'D';
+            siteDesignation = "xs";
+            seismicValue = "D";
         }
-        else if (document.getElementById('xs-E-option').checked)
+        else if (document.getElementById("xs-E-option").checked)
         {
-            siteDesignation = 'xs';
-            seismicValue = 'E';
+            siteDesignation = "xs";
+            seismicValue = "E";
         }
     }
     return {
         siteDesignation,
-        seismicValue
+        seismicValue,
     };
 }
 
@@ -89,154 +113,203 @@ function get_seismic_parameters()
 // TOGGLE CASE FUNCTIONS
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Fetch the vs30 sub page and set the innerHTML of the site-designation-sub-selection-container to the data
+ */
 function vs30Case()
 {
-    fetch('subPages/vs30.html')
-        .then(response => response.text())
-        .then(data =>
+    fetch("subPages/vs30.html")
+        .then((response) => response.text())
+        .then((data) =>
         {
-            document.getElementById('site-designation-sub-selection-container').innerHTML = data;
+            document.getElementById(
+                "site-designation-sub-selection-container",
+            ).innerHTML = data;
         })
         .catch((error) =>
         {
-            console.error('Error:', error);
+            console.error("Error:", error);
         });
 }
 
+/**
+ * Fetch the xs sub page and set the innerHTML of the site-designation-sub-selection-container to the data
+ */
 function xsCase()
 {
-    fetch('subPages/xs.html')
-        .then(response => response.text())
-        .then(data =>
+    fetch("subPages/xs.html")
+        .then((response) => response.text())
+        .then((data) =>
         {
-            document.getElementById('site-designation-sub-selection-container').innerHTML = data;
-            toggleMenuColors('#xs-type-selection');
+            document.getElementById(
+                "site-designation-sub-selection-container",
+            ).innerHTML = data;
+            toggleMenuColors("#xs-type-selection");
         })
         .catch((error) =>
         {
-            console.error('Error:', error);
+            console.error("Error:", error);
         });
 }
 
+/**
+ * Fetch the standard dimensions sub page and set the innerHTML of the dimensions-container to the data
+ */
 function standardDimensionsCase()
 {
-    fetch('subPages/standard_dimensions.html')
-        .then(response => response.text())
-        .then(data =>
+    fetch("subPages/standard_dimensions.html")
+        .then((response) => response.text())
+        .then((data) =>
         {
-            document.getElementById('dimensions-container').innerHTML = data;
-            toggleMenuColors('#eave-and-ridge-selection');
-            document.getElementById('height').addEventListener('input', heightChange);
+            document.getElementById("dimensions-container").innerHTML = data;
+            toggleMenuColors("#eave-and-ridge-selection");
+            document.getElementById("height").addEventListener("input", heightChange);
         })
         .catch((error) =>
         {
-            console.error('Error:', error);
+            console.error("Error:", error);
         });
 }
 
+/**
+ * Fetch the eave and ridge dimensions sub page and set the innerHTML of the dimensions-container to the data
+ */
 function eaveAndRidgeCase()
 {
-    fetch('subPages/eave_and_ridge_dimensions.html')
-        .then(response => response.text())
-        .then(data =>
+    fetch("subPages/eave_and_ridge_dimensions.html")
+        .then((response) => response.text())
+        .then((data) =>
         {
-            document.getElementById('dimensions-container').innerHTML = data;
-            toggleMenuColors('#eave-and-ridge-selection');
-            document.getElementById('eave-height').addEventListener('input', heightChange);
-            document.getElementById('ridge-height').addEventListener('input', heightChange);
+            document.getElementById("dimensions-container").innerHTML = data;
+            toggleMenuColors("#eave-and-ridge-selection");
+            document
+                .getElementById("eave-height")
+                .addEventListener("input", heightChange);
+            document
+                .getElementById("ridge-height")
+                .addEventListener("input", heightChange);
         })
         .catch((error) =>
         {
-            console.error('Error:', error);
+            console.error("Error:", error);
         });
 }
 
+/**
+ * Fetch the non default height zone number sub page and set the innerHTML of the height-zone-elevation-container
+ * to the data
+ */
 function nonDefaultHeightZoneNumberCase()
 {
-    fetch('subPages/non_default_height_zone_number.html')
-        .then(response => response.text())
-        .then(data =>
+    fetch("subPages/non_default_height_zone_number.html")
+        .then((response) => response.text())
+        .then((data) =>
         {
-            document.getElementById('height-zone-elevation-container').innerHTML = data;
-            toggleMenuColors('#number-height-zone-selection');
+            document.getElementById("height-zone-elevation-container").innerHTML =
+                data;
+            toggleMenuColors("#number-height-zone-selection");
             // add click event listener for button with id add-height-zone-button
-            document.getElementById('add-height-zone-button').addEventListener('click', addHeightZoneElevationRowEditable);
-            document.getElementById('add-height-zone-button').addEventListener('click', heightZoneChange);
+            document
+                .getElementById("add-height-zone-button")
+                .addEventListener("click", addHeightZoneElevationRowEditable);
+            document
+                .getElementById("add-height-zone-button")
+                .addEventListener("click", heightZoneChange);
             // add click event listener for button with id remove-height-zone-button
-            document.getElementById('remove-height-zone-button').addEventListener('click', removeHeightZoneElevationRow);
-            document.getElementById('remove-height-zone-button').addEventListener('click', heightZoneChange);
+            document
+                .getElementById("remove-height-zone-button")
+                .addEventListener("click", removeHeightZoneElevationRow);
+            document
+                .getElementById("remove-height-zone-button")
+                .addEventListener("click", heightZoneChange);
             heightZoneChange();
         })
         .catch((error) =>
         {
-            console.error('Error:', error);
+            console.error("Error:", error);
         });
 }
 
+/**
+ * Fetch the default height zone number sub page and set the innerHTML of the height-zone-elevation-container
+ * to the data
+ */
 function defaultHeightZoneNumberCase()
 {
-    fetch('subPages/default_height_zone_number.html')
-        .then(response => response.text())
-        .then(data =>
+    fetch("subPages/default_height_zone_number.html")
+        .then((response) => response.text())
+        .then((data) =>
         {
-            document.getElementById('height-zone-elevation-container').innerHTML = data;
-            toggleMenuColors('#number-height-zone-selection');
+            document.getElementById("height-zone-elevation-container").innerHTML =
+                data;
+            toggleMenuColors("#number-height-zone-selection");
             clearHeightZoneElevationTable();
             populateDefaultHeightZoneElevation();
             heightZoneChange();
-            document.getElementById('material-weight').addEventListener('input', materialWeightChange);
+            document
+                .getElementById("material-weight")
+                .addEventListener("input", materialWeightChange);
         })
         .catch((error) =>
         {
-            console.error('Error:', error);
+            console.error("Error:", error);
         });
 }
 
+/**
+ * Fetch the dominant opening sub page and set the innerHTML of the dominant-opening-container to the data
+ */
 function dominantOpeningCase()
 {
-    fetch('subPages/dominant_opening.html')
-        .then(response => response.text())
-        .then(data =>
+    fetch("subPages/dominant_opening.html")
+        .then((response) => response.text())
+        .then((data) =>
         {
-            document.getElementById('dominant-opening-container').innerHTML = data;
-            toggleMenuColors('#dominant-opening-selection');
+            document.getElementById("dominant-opening-container").innerHTML = data;
+            toggleMenuColors("#dominant-opening-selection");
         })
         .catch((error) =>
         {
-            console.error('Error:', error);
+            console.error("Error:", error);
         });
-
 }
 
-
+/**
+ * Fetch the single material sub page and set the innerHTML of the material-container to the data
+ */
 function singleMaterialCase()
 {
-    fetch('subPages/single_material.html')
-        .then(response => response.text())
-        .then(data =>
+    fetch("subPages/single_material.html")
+        .then((response) => response.text())
+        .then((data) =>
         {
-            document.getElementById('material-container').innerHTML = data;
+            document.getElementById("material-container").innerHTML = data;
             heightZoneChange();
-            document.getElementById('material-weight').addEventListener('input', materialWeightChange);
+            document
+                .getElementById("material-weight")
+                .addEventListener("input", materialWeightChange);
         })
         .catch((error) =>
         {
-            console.error('Error:', error);
+            console.error("Error:", error);
         });
 }
 
+/**
+ * Fetch the multiple material sub page and set the innerHTML of the material-container to the data
+ */
 function multipleMaterialCase()
 {
-    fetch('subPages/multiple_material.html')
-        .then(response => response.text())
-        .then(data =>
+    fetch("subPages/multiple_material.html")
+        .then((response) => response.text())
+        .then((data) =>
         {
-            document.getElementById('material-container').innerHTML = data;
+            document.getElementById("material-container").innerHTML = data;
             heightZoneChange();
         })
         .catch((error) =>
         {
-            console.error('Error:', error);
+            console.error("Error:", error);
         });
 }
 
@@ -244,20 +317,25 @@ function multipleMaterialCase()
 // TOGGLE FUNCTIONS
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Handles site designation selection options
+ */
 function siteDesignationSelection()
 {
-    let siteDesignationSelectionOptions = document.querySelectorAll('#site-designation-selection .btn input');
+    let siteDesignationSelectionOptions = document.querySelectorAll(
+        "#site-designation-selection .btn input",
+    );
     for (let i = 0; i < siteDesignationSelectionOptions.length; i++)
     {
-        siteDesignationSelectionOptions[i].addEventListener('change', function()
+        siteDesignationSelectionOptions[i].addEventListener("change", function ()
         {
             if (this.checked)
             {
-                if (this.id === 'xs_option')
+                if (this.id === "xs_option")
                 {
                     xsCase();
                 }
-                if (this.id === 'vs30_option')
+                if (this.id === "vs30_option")
                 {
                     vs30Case();
                 }
@@ -266,18 +344,23 @@ function siteDesignationSelection()
     }
 }
 
+/**
+ * Handles eave and ridge selection options
+ */
 function eaveAndRidgeSelection()
 {
-    let eaveAndRidgeSelectionOptions = document.querySelectorAll('#eave-and-ridge-selection .btn input');
+    let eaveAndRidgeSelectionOptions = document.querySelectorAll(
+        "#eave-and-ridge-selection .btn input",
+    );
     for (let i = 0; i < eaveAndRidgeSelectionOptions.length; i++)
     {
-        eaveAndRidgeSelectionOptions[i].addEventListener('change', function()
+        eaveAndRidgeSelectionOptions[i].addEventListener("change", function ()
         {
-            if (this.id === 'eave-and-ridge-yes-option')
+            if (this.id === "eave-and-ridge-yes-option")
             {
                 eaveAndRidgeCase();
             }
-            if (this.id === 'eave-and-ridge-no-option')
+            if (this.id === "eave-and-ridge-no-option")
             {
                 standardDimensionsCase();
             }
@@ -285,18 +368,23 @@ function eaveAndRidgeSelection()
     }
 }
 
+/**
+ * Handles number of height zone selection options
+ */
 function numberHeightZoneSelection()
 {
-    let numberHeightZoneOptions = document.querySelectorAll('#number-height-zone-selection .btn input');
+    let numberHeightZoneOptions = document.querySelectorAll(
+        "#number-height-zone-selection .btn input",
+    );
     for (let i = 0; i < numberHeightZoneOptions.length; i++)
     {
-        numberHeightZoneOptions[i].addEventListener('change', function()
+        numberHeightZoneOptions[i].addEventListener("change", function ()
         {
-            if (this.id === 'number-height-zone-yes-option')
+            if (this.id === "number-height-zone-yes-option")
             {
                 defaultHeightZoneNumberCase();
             }
-            if (this.id === 'number-height-zone-no-option')
+            if (this.id === "number-height-zone-no-option")
             {
                 nonDefaultHeightZoneNumberCase();
             }
@@ -304,38 +392,48 @@ function numberHeightZoneSelection()
     }
 }
 
+/**
+ * Handles dominant opening selection options
+ */
 function dominantOpeningSelection()
 {
-    let dominantOpeningOptions = document.querySelectorAll('#dominant-opening-selection .btn input');
+    let dominantOpeningOptions = document.querySelectorAll(
+        "#dominant-opening-selection .btn input",
+    );
     for (let i = 0; i < dominantOpeningOptions.length; i++)
     {
-        dominantOpeningOptions[i].addEventListener('change', function()
+        dominantOpeningOptions[i].addEventListener("change", function ()
         {
-            if (this.id === 'dominant-opening-yes-option')
+            if (this.id === "dominant-opening-yes-option")
             {
                 dominantOpeningCase();
             }
             else
             {
-                document.getElementById('dominant-opening-container').innerHTML = "";
+                document.getElementById("dominant-opening-container").innerHTML = "";
             }
         });
     }
 }
 
+/**
+ * Handles single material selection options
+ */
 function materialSelection()
 {
-    let materialSelectionOptions = document.querySelectorAll('#single-material-selection .btn input');
+    let materialSelectionOptions = document.querySelectorAll(
+        "#single-material-selection .btn input",
+    );
     for (let i = 0; i < materialSelectionOptions.length; i++)
     {
-        materialSelectionOptions[i].addEventListener('change', function()
+        materialSelectionOptions[i].addEventListener("change", function ()
         {
-            if (this.id === 'single-material-yes-option')
+            if (this.id === "single-material-yes-option")
             {
                 singleMaterialCase();
             }
 
-            if (this.id === 'single-material-no-option')
+            if (this.id === "single-material-no-option")
             {
                 multipleMaterialCase();
             }
@@ -343,12 +441,13 @@ function materialSelection()
     }
 }
 
-
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // TABLE FUNCTIONS
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Clear the height zone elevation table
+ */
 function clearHeightZoneElevationTable()
 {
     let table = document.getElementById("height-zone-elevation-table");
@@ -358,6 +457,9 @@ function clearHeightZoneElevationTable()
     }
 }
 
+/**
+ * Clear the material table
+ */
 function clearMaterialTable()
 {
     let table = document.getElementById("material-table");
@@ -367,6 +469,10 @@ function clearMaterialTable()
     }
 }
 
+/**
+ * Add a row to the height zone elevation table
+ * @param elevation
+ */
 function addHeightZoneElevationRow(elevation)
 {
     let table = document.getElementById("height-zone-elevation-table");
@@ -384,6 +490,10 @@ function addHeightZoneElevationRow(elevation)
     cell2.innerHTML = elevation;
 }
 
+/**
+ * Add a row to the material table
+ * @param weight
+ */
 function addMaterialRow(weight)
 {
     let table = document.getElementById("material-table");
@@ -401,6 +511,9 @@ function addMaterialRow(weight)
     cell2.innerHTML = weight;
 }
 
+/**
+ * Add a row to the height zone elevation table that is editable
+ */
 function addHeightZoneElevationRowEditable()
 {
     let table = document.getElementById("height-zone-elevation-table");
@@ -419,6 +532,9 @@ function addHeightZoneElevationRowEditable()
     cell2.contentEditable = "true";
 }
 
+/**
+ * Add a row to the material table
+ */
 function addMaterialRowEditable()
 {
     let table = document.getElementById("material-table");
@@ -437,6 +553,9 @@ function addMaterialRowEditable()
     cell2.contentEditable = "true";
 }
 
+/**
+ * Remove the last row from the height zone elevation table
+ */
 function removeHeightZoneElevationRow()
 {
     let table = document.getElementById("height-zone-elevation-table");
@@ -446,19 +565,22 @@ function removeHeightZoneElevationRow()
     }
 }
 
+/**
+ * Populate the default height zone elevation table
+ */
 function populateDefaultHeightZoneElevation()
 {
     let height = null;
 
-    if (document.getElementById('eave-and-ridge-yes-option').checked)
+    if (document.getElementById("eave-and-ridge-yes-option").checked)
     {
-        let eaveHeight = parseFloat(document.getElementById('eave-height').value);
-        let ridgeHeight = parseFloat(document.getElementById('ridge-height').value);
+        let eaveHeight = parseFloat(document.getElementById("eave-height").value);
+        let ridgeHeight = parseFloat(document.getElementById("ridge-height").value);
         height = (eaveHeight + ridgeHeight) / 2;
     }
-    else if (document.getElementById('eave-and-ridge-no-option').checked)
+    else if (document.getElementById("eave-and-ridge-no-option").checked)
     {
-        height = document.getElementById('height').value;
+        height = document.getElementById("height").value;
     }
 
     if (height)
@@ -471,28 +593,34 @@ function populateDefaultHeightZoneElevation()
     }
 }
 
+/**
+ * Detect if height is changed and update the height zone elevation table
+ */
 function heightChange()
 {
-    if (document.getElementById('number-height-zone-yes-option').checked)
+    if (document.getElementById("number-height-zone-yes-option").checked)
     {
         clearHeightZoneElevationTable();
         populateDefaultHeightZoneElevation();
     }
-    else if (document.getElementById('number-height-zone-no-option').checked)
+    else if (document.getElementById("number-height-zone-no-option").checked)
     {
         // pass
     }
-    if (document.getElementById('material-table') !== null)
+    if (document.getElementById("material-table") !== null)
     {
         heightZoneChange();
     }
 }
 
+/**
+ * Detect if material weight is changed and update the material table
+ */
 function materialWeightChange()
 {
-    if (document.getElementById('single-material-yes-option').checked === true)
+    if (document.getElementById("single-material-yes-option").checked === true)
     {
-        let weight = document.getElementById('material-weight').value;
+        let weight = document.getElementById("material-weight").value;
         clearMaterialTable();
         // iterate through the rows in the height zone elevation table
         let table = document.getElementById("height-zone-elevation-table");
@@ -503,13 +631,16 @@ function materialWeightChange()
     }
 }
 
+/**
+ * Detect if height zone is changed and update the material table
+ */
 function heightZoneChange()
 {
     let i;
     let table;
-    if (document.getElementById('single-material-yes-option').checked === true)
+    if (document.getElementById("single-material-yes-option").checked === true)
     {
-        let weight = document.getElementById('material-weight').value;
+        let weight = document.getElementById("material-weight").value;
         clearMaterialTable();
         // iterate through the rows in the height zone elevation table
         table = document.getElementById("height-zone-elevation-table");
@@ -518,7 +649,9 @@ function heightZoneChange()
             addMaterialRow(weight);
         }
     }
-    else if (document.getElementById('single-material-no-option').checked === true)
+    else if (
+        document.getElementById("single-material-no-option").checked === true
+    )
     {
         clearMaterialTable();
         table = document.getElementById("height-zone-elevation-table");
@@ -532,315 +665,453 @@ function heightZoneChange()
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // MAP FUNCTIONS
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Update the map with the given latitude, longitude, and address
+ * @param latitude
+ * @param longitude
+ * @param address
+ */
 function setMap(latitude, longitude, address)
 {
     // If the map already exists, remove it
-    if (map)
+    if (MAP)
     {
-        map.remove();
+        MAP.remove();
     }
 
     // Create a new map
-    map = L.map('map',
+    MAP = L.map("map",
         {
             attributionControl: false,
         }).setView([latitude, longitude], 13);
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
         {
             maxZoom: 19,
-        }).addTo(map);
+        }).addTo(MAP);
 
     // Add a marker with a popup
-    L.marker([latitude, longitude]).addTo(map).bindPopup(address);
+    L.marker([latitude, longitude]).addTo(MAP).bindPopup(address);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // API CALLS
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Computes location data based on the address, site designation, and seismic value in the backend
+ * @param address
+ * @param siteDesignation
+ * @param seismicValue
+ */
 function locationCall(address, siteDesignation, seismicValue)
 {
-    window.api.invoke('get-token') // Retrieve the token
-        .then((token) =>
-        {
-            let myHeaders = new Headers();
-            myHeaders.append("Content-Type", "application/json");
-            myHeaders.append("Accept", "application/json");
-            myHeaders.append("Authorization", `Bearer ${token}`);
+    window.api
+        .invoke("get-connection-address").then((connectionAddress) =>
+    {
+        window.api
+            .invoke("get-token") // Retrieve the token
+            .then((token) =>
+            {
+                let myHeaders = new Headers();
+                myHeaders.append("Content-Type", "application/json");
+                myHeaders.append("Accept", "application/json");
+                myHeaders.append("Authorization", `Bearer ${token}`);
 
-            let raw = JSON.stringify(
-                {
-                    "address": `${address}`,
-                    "site_designation": `${siteDesignation}`,
-                    "seismic_value": `${seismicValue}`
-                });
-
-            let requestOptions = {
-                method: 'POST',
-                headers: myHeaders,
-                body: raw,
-                redirect: 'follow'
-            };
-
-            fetch("http://localhost:42613/location", requestOptions)
-                .then(response => response.json())
-                .then(result =>
-                {
-                    document.getElementById('wind-velocity-pressure').textContent = result.wind_velocity_pressure;
-                    document.getElementById('ground-snow-load').textContent = result.snow_load;
-                    document.getElementById('rain-load').textContent = result.rain_load;
-                    document.getElementById('design-spectral-acceleration-0-2').textContent = result.design_spectral_acceleration_0_2;
-                    document.getElementById('design-spectral-acceleration-1').textContent = result.design_spectral_acceleration_1;
-
-                    // set the map as long as we have a valid latitude and longitude
-                    if (result.latitude && result.longitude)
+                let raw = JSON.stringify(
                     {
-                        setMap(result.latitude, result.longitude, result.address);
-                    }
-                    else
+                        address: `${address}`,
+                        site_designation: `${siteDesignation}`,
+                        seismic_value: `${seismicValue}`,
+                    });
+
+                let requestOptions = {
+                    method: "POST",
+                    headers: myHeaders,
+                    body: raw,
+                    redirect: "follow",
+                };
+
+                fetch(`${connectionAddress}/location`, requestOptions)
+                    .then((response) => response.json())
+                    .then((result) =>
                     {
-                        setMap(-70.73964, -8.91217, 'unknown');
-                    }
+                        document.getElementById("wind-velocity-pressure").textContent =
+                            result.wind_velocity_pressure;
+                        document.getElementById("ground-snow-load").textContent =
+                            result.snow_load;
+                        document.getElementById("rain-load").textContent = result.rain_load;
+                        document.getElementById(
+                            "design-spectral-acceleration-0-2",
+                        ).textContent = result.design_spectral_acceleration_0_2;
+                        document.getElementById(
+                            "design-spectral-acceleration-1",
+                        ).textContent = result.design_spectral_acceleration_1;
 
-                    document.getElementById('location_button').disabled = false;
+                        // set the map as long as we have a valid latitude and longitude
+                        if (result.latitude && result.longitude)
+                        {
+                            setMap(result.latitude, result.longitude, result.address);
+                        }
+                        else
+                        {
+                            setMap(-70.73964, -8.91217, "unknown");
+                        }
 
-                })
-                .catch(error =>
-                {
-                    console.error('Error:', error);
-                })
-                .finally(() =>
-                {
-                    document.getElementById('location_button').disabled = false;
+                        document.getElementById("location_button").disabled = false;
+                    })
+                    .catch((error) =>
+                    {
+                        console.error("Error:", error);
+                    })
+                    .finally(() =>
+                    {
+                        document.getElementById("location_button").disabled = false;
 
-                    document.getElementById('location_button').classList.remove('skeleton-loader');
-                    document.getElementById('wind-velocity-pressure').classList.remove('skeleton-loader');
-                    document.getElementById('ground-snow-load').classList.remove('skeleton-loader');
-                    document.getElementById('rain-load').classList.remove('skeleton-loader');
-                    document.getElementById('design-spectral-acceleration-0-2').classList.remove('skeleton-loader');
-                    document.getElementById('design-spectral-acceleration-1').classList.remove('skeleton-loader');
-                });
-        });
+                        document
+                            .getElementById("location_button")
+                            .classList.remove("skeleton-loader");
+                        document
+                            .getElementById("wind-velocity-pressure")
+                            .classList.remove("skeleton-loader");
+                        document
+                            .getElementById("ground-snow-load")
+                            .classList.remove("skeleton-loader");
+                        document
+                            .getElementById("rain-load")
+                            .classList.remove("skeleton-loader");
+                        document
+                            .getElementById("design-spectral-acceleration-0-2")
+                            .classList.remove("skeleton-loader");
+                        document
+                            .getElementById("design-spectral-acceleration-1")
+                            .classList.remove("skeleton-loader");
+                    });
+            });
+    });
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// EVENTS
+// BUTTON CLICK EVENTS
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// location_button click event
-document.getElementById('location_button').addEventListener('click', function()
-{
-    // disable button
-    document.getElementById('location_button').disabled = true;
+/**
+ * Loads map and location data when the location button is clicked
+ */
+document
+    .getElementById("location_button")
+    .addEventListener("click", function ()
+    {
+        // disable button
+        document.getElementById("location_button").disabled = true;
 
-    const ids = [
-        'location_button',
-        'wind-velocity-pressure',
-        'ground-snow-load',
-        'rain-load',
-        'design-spectral-acceleration-0-2',
-        'design-spectral-acceleration-1'
-    ];
+        const ids = [
+            "location_button",
+            "wind-velocity-pressure",
+            "ground-snow-load",
+            "rain-load",
+            "design-spectral-acceleration-0-2",
+            "design-spectral-acceleration-1",
+        ];
 
-    ids.forEach(id => document.getElementById(id).classList.add('skeleton-loader'));
+        ids.forEach((id) =>
+            document.getElementById(id).classList.add("skeleton-loader"),
+        );
 
-    let address = getStrValue('address');
-    let { siteDesignation,seismicValue} = get_seismic_parameters();
-    locationCall(address, siteDesignation, seismicValue);
-});
+        let address = getStrValue("address");
+        let
+            {
+                siteDesignation,
+                seismicValue
+            } = getSeismicParameters();
+        locationCall(address, siteDesignation, seismicValue);
+    });
 
-
-
-// next button click event
-document.getElementById('next-button').addEventListener('click', function()
+/**
+ * When the next button is clicked, check that all fields are valid and then proceed to the next page
+ */
+document.getElementById("next-button").addEventListener("click", function ()
 {
     // check that the project name is not empty
-    if (document.getElementById('project-name').value === "")
+    if (document.getElementById("project-name").value === "")
     {
-        document.getElementById('next-warning').innerText = "Please enter a project name";
+        document.getElementById("next-warning").innerText =
+            "Please enter a project name";
     }
 
     // check that the address is not empty
-    else if (document.getElementById('address').value === "")
+    else if (document.getElementById("address").value === "")
     {
-        document.getElementById('next-warning').innerText = "Please enter an address";
+        document.getElementById("next-warning").innerText =
+            "Please enter an address";
     }
 
     // check that a site designation type is selected
-    else if (document.getElementById('site-designation-selection').querySelector('.selected') === null)
+    else if (
+        document
+            .getElementById("site-designation-selection")
+            .querySelector(".selected") === null
+    )
     {
-        document.getElementById('next-warning').innerText = "Please select a site designation type";
+        document.getElementById("next-warning").innerText =
+            "Please select a site designation type";
     }
 
     // if the site designation type is vs30, check that the vs30 value is not empty
-    else if (document.getElementById('vs30_option').checked && document.getElementById('vs30').value === "")
+    else if (
+        document.getElementById("vs30_option").checked &&
+        document.getElementById("vs30").value === ""
+    )
     {
-        document.getElementById('next-warning').innerText = "Please enter a vs30 value";
+        document.getElementById("next-warning").innerText =
+            "Please enter a vs30 value";
     }
 
     // check that vs30 is in the range [140, 3000] inclusive
-    else if (document.getElementById('vs30_option').checked && (parseFloat(document.getElementById('vs30').value) < 140 || parseFloat(document.getElementById('vs30').value) > 3000))
+    else if (
+        document.getElementById("vs30_option").checked &&
+        (parseFloat(document.getElementById("vs30").value) < 140 ||
+            parseFloat(document.getElementById("vs30").value) > 3000)
+    )
     {
-        document.getElementById('next-warning').innerText = "vs30 must be in the range [140, 3000]";
+        document.getElementById("next-warning").innerText =
+            "vs30 must be in the range [140, 3000]";
     }
 
     // if the site designation type is xs, check that an xs type is selected
-    else if (document.getElementById('xs_option').checked && document.getElementById('xs-type-selection').querySelector('.selected') === null)
+    else if (
+        document.getElementById("xs_option").checked &&
+        document.getElementById("xs-type-selection").querySelector(".selected") ===
+        null
+    )
     {
-        document.getElementById('next-warning').innerText = "Please select an xs type";
+        document.getElementById("next-warning").innerText =
+            "Please select an xs type";
     }
 
     // if the wind, snow, rain, design spectral acceleration 0.2, and design spectral acceleration 1 values are not set
-    else if (document.getElementById('wind-velocity-pressure').textContent === "NA" || document.getElementById('ground-snow-load').textContent === "NA" || document.getElementById('rain-load').textContent === "NA" || document.getElementById('design-spectral-acceleration-0-2').textContent === "NA" || document.getElementById('design-spectral-acceleration-1').textContent === "NA")
+    else if (
+        document.getElementById("wind-velocity-pressure").textContent === "NA" ||
+        document.getElementById("ground-snow-load").textContent === "NA" ||
+        document.getElementById("rain-load").textContent === "NA" ||
+        document.getElementById("design-spectral-acceleration-0-2").textContent ===
+        "NA" ||
+        document.getElementById("design-spectral-acceleration-1").textContent ===
+        "NA"
+    )
     {
-        document.getElementById('next-warning').innerText = "Ensure the location button has been clicked and the values have been retrieved. If values cannot be retrieved, then you have entered an invalid address";
+        document.getElementById("next-warning").innerText =
+            "Ensure the location button has been clicked and the values have been retrieved. If values cannot be retrieved, then you have entered an invalid address";
+    }
+    else if (
+        document.getElementById("wind-velocity-pressure").textContent === "" ||
+        document.getElementById("ground-snow-load").textContent === "" ||
+        document.getElementById("rain-load").textContent === "" ||
+        document.getElementById("design-spectral-acceleration-0-2").textContent ===
+        "" ||
+        document.getElementById("design-spectral-acceleration-1").textContent === ""
+    )
+    {
+        document.getElementById("next-warning").innerText =
+            "Ensure the location button has been clicked and the values have been retrieved. If values cannot be retrieved, then you have entered an invalid address";
     }
 
     // if the building width is not set
-    else if (document.getElementById('width').value === "")
+    else if (document.getElementById("width").value === "")
     {
-        document.getElementById('next-warning').innerText = "Please enter a building width";
+        document.getElementById("next-warning").innerText =
+            "Please enter a building width";
     }
 
     // if the eave and ridge selection is not set
-    else if (document.getElementById('eave-and-ridge-selection').querySelector('.selected') === null)
+    else if (
+        document
+            .getElementById("eave-and-ridge-selection")
+            .querySelector(".selected") === null
+    )
     {
-        document.getElementById('next-warning').innerText = "Please select an eave and ridge option";
+        document.getElementById("next-warning").innerText =
+            "Please select an eave and ridge option";
     }
 
     // if the eave and ridge selection is yes, check that the eave height and ridge height are not empty
-    else if (document.getElementById('eave-and-ridge-yes-option').checked && (document.getElementById('eave-height').value === "" || document.getElementById('ridge-height').value === ""))
+    else if (
+        document.getElementById("eave-and-ridge-yes-option").checked &&
+        (document.getElementById("eave-height").value === "" ||
+            document.getElementById("ridge-height").value === "")
+    )
     {
-        document.getElementById('next-warning').innerText = "Please enter an eave and ridge height";
+        document.getElementById("next-warning").innerText =
+            "Please enter an eave and ridge height";
     }
 
     // if the eave and ridge selection is yes, check that height is not empty
-    else if (document.getElementById('eave-and-ridge-no-option').checked && document.getElementById('height').value === "")
+    else if (
+        document.getElementById("eave-and-ridge-no-option").checked &&
+        document.getElementById("height").value === ""
+    )
     {
-        document.getElementById('next-warning').innerText = "Please enter a height";
+        document.getElementById("next-warning").innerText = "Please enter a height";
     }
 
     // check that the number of floors is not empty
-    else if (document.getElementById('num-floors').value === "")
+    else if (document.getElementById("num-floors").value === "")
     {
-        document.getElementById('next-warning').innerText = "Please enter the number of floors";
+        document.getElementById("next-warning").innerText =
+            "Please enter the number of floors";
     }
 
     // check that the top of cladding it not empty
-    else if (document.getElementById('top-cladding').value === "")
+    else if (document.getElementById("top-cladding").value === "")
     {
-        document.getElementById('next-warning').innerText = "Please enter the top of cladding";
+        document.getElementById("next-warning").innerText =
+            "Please enter the top of cladding";
     }
 
     // check that bottom of cladding is not empty
-    else if (document.getElementById('bottom-cladding').value === "")
+    else if (document.getElementById("bottom-cladding").value === "")
     {
-        document.getElementById('next-warning').innerText = "Please enter the bottom of cladding";
+        document.getElementById("next-warning").innerText =
+            "Please enter the bottom of cladding";
     }
 
     // if the dominant opening selection is not set
-    else if (document.getElementById('dominant-opening-selection').querySelector('.selected') === null)
+    else if (
+        document
+            .getElementById("dominant-opening-selection")
+            .querySelector(".selected") === null
+    )
     {
-        document.getElementById('next-warning').innerText = "Please select a dominant opening option";
+        document.getElementById("next-warning").innerText =
+            "Please select a dominant opening option";
     }
 
     // if the dominant opening selection is yes, check that the mid-height is not empty
-    else if (document.getElementById('dominant-opening-yes-option').checked && document.getElementById('mid-height').value === "")
+    else if (
+        document.getElementById("dominant-opening-yes-option").checked &&
+        document.getElementById("mid-height").value === ""
+    )
     {
-        document.getElementById('next-warning').innerText = "Please enter a mid-height";
+        document.getElementById("next-warning").innerText =
+            "Please enter a mid-height";
     }
 
     // check that w-roof is not empty
-    else if (document.getElementById('w-roof').value === "")
+    else if (document.getElementById("w-roof").value === "")
     {
-        document.getElementById('next-warning').innerText = "Please enter w-roof";
+        document.getElementById("next-warning").innerText = "Please enter w-roof";
     }
 
     // check that l-roof is not empty
-    else if (document.getElementById('l-roof').value === "")
+    else if (document.getElementById("l-roof").value === "")
     {
-        document.getElementById('next-warning').innerText = "Please enter l-roof";
+        document.getElementById("next-warning").innerText = "Please enter l-roof";
     }
 
     // check that a-roof is not empty
-    else if (document.getElementById('a-roof').value === "")
+    else if (document.getElementById("a-roof").value === "")
     {
-        document.getElementById('next-warning').innerText = "Please enter a-roof";
+        document.getElementById("next-warning").innerText = "Please enter a-roof";
     }
 
     // check that a-roof is in the range [0, 360] inclusive
-    else if (parseFloat(document.getElementById('a-roof').value) < 0 || parseFloat(document.getElementById('a-roof').value) > 360)
+    else if (
+        parseFloat(document.getElementById("a-roof").value) < 0 ||
+        parseFloat(document.getElementById("a-roof").value) > 360
+    )
     {
-        document.getElementById('next-warning').innerText = "a-roof must be in the range [0, 360]";
+        document.getElementById("next-warning").innerText =
+            "a-roof must be in the range [0, 360]";
     }
 
     // check that roof-uniform-dead-load is not empty
-    else if (document.getElementById('roof-uniform-dead-load').value === "")
+    else if (document.getElementById("roof-uniform-dead-load").value === "")
     {
-        document.getElementById('next-warning').innerText = "Please enter roof uniform dead load";
+        document.getElementById("next-warning").innerText =
+            "Please enter roof uniform dead load";
     }
 
     // check that an importance category is selected
-    else if (document.getElementById('importance-category-selection').querySelector('.selected') === null)
+    else if (
+        document
+            .getElementById("importance-category-selection")
+            .querySelector(".selected") === null
+    )
     {
-        document.getElementById('next-warning').innerText = "Please select an importance category";
+        document.getElementById("next-warning").innerText =
+            "Please select an importance category";
     }
 
     // check that number of height zones is selected
-    else if (document.getElementById('number-height-zone-selection').querySelector('.selected') === null)
+    else if (
+        document
+            .getElementById("number-height-zone-selection")
+            .querySelector(".selected") === null
+    )
     {
-        document.getElementById('next-warning').innerText = "Please select a number of height zones option";
+        document.getElementById("next-warning").innerText =
+            "Please select a number of height zones option";
     }
 
-        // TODO: if yes, if no checks
-
     // check that a material type is selected
-    else if (document.getElementById('single-material-selection').querySelector('.selected') === null)
+    else if (
+        document
+            .getElementById("single-material-selection")
+            .querySelector(".selected") === null
+    )
     {
-        document.getElementById('next-warning').innerText = "Please select whether or not a single material will be applied to all height zones";
+        document.getElementById("next-warning").innerText =
+            "Please select whether or not a single material will be applied to all height zones";
     }
 
     // if single material is selected, check that the material weight is not empty
-    else if (document.getElementById('single-material-yes-option').checked && document.getElementById('material-weight').value === "")
+    else if (
+        document.getElementById("single-material-yes-option").checked &&
+        document.getElementById("material-weight").value === ""
+    )
     {
-        document.getElementById('next-warning').innerText = "Please enter a material weight";
+        document.getElementById("next-warning").innerText =
+            "Please enter a material weight";
     }
 
     // TODO: if no check
-
-    else if (document.getElementById('height-zone-elevation-table').rows.length !== document.getElementById('material-table').rows.length)
+    else if (
+        document.getElementById("height-zone-elevation-table").rows.length !==
+        document.getElementById("material-table").rows.length
+    )
     {
-        document.getElementById('next-warning').innerText = "The number of height zones in both tables must be the same";
+        document.getElementById("next-warning").innerText =
+            "The number of height zones in both tables must be the same";
     }
-
     else
     {
         // add skeleton loader to next button
-        document.getElementById('next-button').classList.add('skeleton-loader');
+        document.getElementById("next-button").classList.add("skeleton-loader");
 
         // add skeleton loader to all inputs on page
-        document.querySelectorAll('input').forEach((input) =>
+        document.querySelectorAll("input").forEach((input) =>
         {
-            input.classList.add('skeleton-loader');
+            input.classList.add("skeleton-loader");
         });
 
         // add skeleton loader to all tables on page
-        document.querySelectorAll('table').forEach((table) =>
+        document.querySelectorAll("table").forEach((table) =>
         {
-            table.classList.add('skeleton-loader');
+            table.classList.add("skeleton-loader");
         });
 
         // add skeleton loader to all cells in tables on page
-        document.querySelectorAll('table td, table th').forEach((cell) =>
+        document.querySelectorAll("table td, table th").forEach((cell) =>
         {
-            cell.classList.add('skeleton-loader');
+            cell.classList.add("skeleton-loader");
         });
 
         // add skeleton loader to all btn-secondary on page
-        document.querySelectorAll('.btn-secondary').forEach((button) =>
+        document.querySelectorAll(".btn-secondary").forEach((button) =>
         {
-            button.classList.add('skeleton-loader');
+            button.classList.add("skeleton-loader");
         });
 
         // add skeleton loader to all elements of type radio on page
@@ -849,569 +1120,736 @@ document.getElementById('next-button').addEventListener('click', function()
             radio.disabled = true;
         });
 
+        window.api
+            .invoke("get-connection-address").then((connectionAddress) =>
+        {
+            window.api
+                .invoke("get-token") // Retrieve the token
+                .then((token) =>
+                {
+                    // LOCATION
+                    let address = getStrValue("address");
+                    let
+                        {
+                            siteDesignation,
+                            seismicValue
+                        } = getSeismicParameters();
 
-        window.api.invoke('get-token') // Retrieve the token
+                    const myHeaders = new Headers();
+                    myHeaders.append("Content-Type", "application/json");
+                    myHeaders.append("Accept", "application/json");
+                    myHeaders.append("Authorization", `Bearer ${token}`);
+
+                    const raw = JSON.stringify(
+                        {
+                            address: `${address}`,
+                            site_designation: `${siteDesignation}`,
+                            seismic_value: `${seismicValue}`,
+                        });
+
+                    const requestOptions = {
+                        method: "POST",
+                        headers: myHeaders,
+                        body: raw,
+                        redirect: "follow",
+                    };
+
+                    fetch(`${connectionAddress}/location`, requestOptions)
+                        .then((response) =>
+                        {
+                            // DIMENSIONS
+                            if (response.status === 200)
+                            {
+                                let width = getFloatValue("width");
+                                let eaveHeight = getFloatValue("eave-height");
+                                let ridgeHeight = getFloatValue("ridge-height");
+                                let height = getFloatValue("height");
+
+                                const myHeaders = new Headers();
+                                myHeaders.append("Content-Type", "application/json");
+                                myHeaders.append("Accept", "application/json");
+                                myHeaders.append("Authorization", `Bearer ${token}`);
+
+                                const raw = JSON.stringify(
+                                    {
+                                        width: width,
+                                        height: height,
+                                        eave_height: eaveHeight,
+                                        ridge_height: ridgeHeight,
+                                    });
+
+                                const requestOptions = {
+                                    method: "POST",
+                                    headers: myHeaders,
+                                    body: raw,
+                                    redirect: "follow",
+                                };
+
+                                fetch(`${connectionAddress}/dimensions`, requestOptions)
+                                    .then((response) =>
+                                    {
+                                        // CLADDING
+                                        if (response.status === 200)
+                                        {
+                                            let cTop = getFloatValue("top-cladding");
+                                            let cBot = getFloatValue("bottom-cladding");
+
+                                            const myHeaders = new Headers();
+                                            myHeaders.append("Content-Type", "application/json");
+                                            myHeaders.append("Accept", "application/json");
+                                            myHeaders.append("Authorization", `Bearer ${token}`);
+
+                                            const raw = JSON.stringify(
+                                                {
+                                                    c_top: cTop,
+                                                    c_bot: cBot,
+                                                });
+
+                                            const requestOptions = {
+                                                method: "POST",
+                                                headers: myHeaders,
+                                                body: raw,
+                                                redirect: "follow",
+                                            };
+
+                                            fetch(`${connectionAddress}/cladding`, requestOptions)
+                                                .then((response) =>
+                                                {
+                                                    // ROOF
+                                                    if (response.status === 200)
+                                                    {
+                                                        let wRoof = getFloatValue("w-roof");
+                                                        let lRoof = getFloatValue("l-roof");
+                                                        let aRoof = getFloatValue("a-roof");
+                                                        let roofUniformDeadLoad = getFloatValue(
+                                                            "roof-uniform-dead-load",
+                                                        );
+
+                                                        const myHeaders = new Headers();
+                                                        myHeaders.append("Content-Type", "application/json");
+                                                        myHeaders.append("Accept", "application/json");
+                                                        myHeaders.append("Authorization", `Bearer ${token}`);
+
+                                                        const raw = JSON.stringify(
+                                                            {
+                                                                w_roof: wRoof,
+                                                                l_roof: lRoof,
+                                                                slope: aRoof,
+                                                                uniform_dead_load: roofUniformDeadLoad,
+                                                            });
+
+                                                        const requestOptions = {
+                                                            method: "POST",
+                                                            headers: myHeaders,
+                                                            body: raw,
+                                                            redirect: "follow",
+                                                        };
+
+                                                        fetch(`${connectionAddress}/roof`, requestOptions)
+                                                            .then((response) =>
+                                                            {
+                                                                // BUILDING
+                                                                if (response.status === 200)
+                                                                {
+                                                                    let numFloors = getIntValue("num-floors");
+                                                                    let midHeight = getFloatValue("mid-height");
+
+                                                                    if (midHeight === null)
+                                                                    {
+                                                                        midHeight = 0;
+                                                                    }
+
+                                                                    // list of tuples of the form (height, elevation, load)
+                                                                    let zones = [];
+                                                                    // iterate through height zone elevation table data rows
+                                                                    let heightZoneElevationTable =
+                                                                        document.getElementById(
+                                                                            "height-zone-elevation-table",
+                                                                        );
+                                                                    let materialTable =
+                                                                        document.getElementById("material-table");
+
+                                                                    for (
+                                                                        let i = 1; i < heightZoneElevationTable.rows.length; i++
+                                                                    )
+                                                                    {
+                                                                        let zoneNum = parseInt(
+                                                                            heightZoneElevationTable.rows[i].cells[0]
+                                                                                .innerHTML,
+                                                                        );
+                                                                        let elevation = parseFloat(
+                                                                            heightZoneElevationTable.rows[i].cells[1]
+                                                                                .innerHTML,
+                                                                        );
+                                                                        let load = parseFloat(
+                                                                            materialTable.rows[i].cells[1].innerHTML,
+                                                                        );
+                                                                        zones.push([zoneNum, elevation, load]);
+                                                                    }
+
+                                                                    const myHeaders = new Headers();
+                                                                    myHeaders.append(
+                                                                        "Content-Type",
+                                                                        "application/json",
+                                                                    );
+                                                                    myHeaders.append("Accept", "application/json");
+                                                                    myHeaders.append(
+                                                                        "Authorization",
+                                                                        `Bearer ${token}`,
+                                                                    );
+
+                                                                    const raw = JSON.stringify(
+                                                                        {
+                                                                            num_floor: numFloors,
+                                                                            h_opening: midHeight,
+                                                                            zones: zones,
+                                                                        });
+
+                                                                    const requestOptions = {
+                                                                        method: "POST",
+                                                                        headers: myHeaders,
+                                                                        body: raw,
+                                                                        redirect: "follow",
+                                                                    };
+
+                                                                    fetch(
+                                                                        `${connectionAddress}/building`,
+                                                                        requestOptions,
+                                                                    )
+                                                                        .then((response) =>
+                                                                        {
+                                                                            // IMPORTANCE CATEGORY
+                                                                            if (response.status === 200)
+                                                                            {
+                                                                                let importance_category = null;
+                                                                                // if low is checked
+                                                                                if (
+                                                                                    document.getElementById(
+                                                                                        "importance-category-low-option",
+                                                                                    ).checked
+                                                                                )
+                                                                                {
+                                                                                    importance_category = "LOW";
+                                                                                }
+                                                                                // if normal is checked
+                                                                                else if (
+                                                                                    document.getElementById(
+                                                                                        "importance-category-normal-option",
+                                                                                    ).checked
+                                                                                )
+                                                                                {
+                                                                                    importance_category = "NORMAL";
+                                                                                }
+                                                                                else if (
+                                                                                    document.getElementById(
+                                                                                        "importance-category-high-option",
+                                                                                    ).checked
+                                                                                )
+                                                                                {
+                                                                                    importance_category = "HIGH";
+                                                                                }
+
+                                                                                // if post disaster is checked
+                                                                                else if (
+                                                                                    document.getElementById(
+                                                                                        "importance-category-post-disaster-option",
+                                                                                    ).checked
+                                                                                )
+                                                                                {
+                                                                                    importance_category = "POST_DISASTER";
+                                                                                }
+
+                                                                                const myHeaders = new Headers();
+                                                                                myHeaders.append(
+                                                                                    "Content-Type",
+                                                                                    "application/json",
+                                                                                );
+                                                                                myHeaders.append(
+                                                                                    "Accept",
+                                                                                    "application/json",
+                                                                                );
+                                                                                myHeaders.append(
+                                                                                    "Authorization",
+                                                                                    `Bearer ${token}`,
+                                                                                );
+
+                                                                                const raw = JSON.stringify(
+                                                                                    {
+                                                                                        importance_category: importance_category,
+                                                                                    });
+
+                                                                                const requestOptions = {
+                                                                                    method: "POST",
+                                                                                    headers: myHeaders,
+                                                                                    body: raw,
+                                                                                    redirect: "follow",
+                                                                                };
+
+                                                                                fetch(
+                                                                                    `${connectionAddress}/importance_category`,
+                                                                                    requestOptions,
+                                                                                )
+                                                                                    .then((response) =>
+                                                                                    {
+                                                                                        if (response.status === 200)
+                                                                                        {
+                                                                                            window.location.href = "load.html";
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            throw new Error(
+                                                                                                "importance category error",
+                                                                                            );
+                                                                                        }
+                                                                                    })
+                                                                                    .catch((error) => console.error(error));
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                throw new Error("building error");
+                                                                            }
+                                                                        })
+                                                                        .catch((error) => console.error(error));
+                                                                }
+                                                                else
+                                                                {
+                                                                    throw new Error("roof error");
+                                                                }
+                                                            })
+                                                            .catch((error) => console.error(error));
+                                                    }
+                                                    else
+                                                    {
+                                                        throw new Error("cladding error");
+                                                    }
+                                                })
+                                                .catch((error) => console.error(error));
+                                        }
+                                        else
+                                        {
+                                            throw new Error("dimensions error");
+                                        }
+                                    })
+                                    .catch((error) => console.error(error));
+                            }
+                            else
+                            {
+                                throw new Error("location error");
+                            }
+                        })
+                        .catch((error) => console.error(error));
+                });
+        });
+
+    }
+});
+
+/**
+ * When the save button is clicked, serialize the input page and send it to the backend
+ */
+document.getElementById("save-button").addEventListener("click", function ()
+{
+    window.api
+        .invoke("get-connection-address").then((connectionAddress) =>
+    {
+        window.api
+            .invoke("get-token") // Retrieve the token
             .then((token) =>
             {
-                // LOCATION
-                let address = getStrValue('address');
-                let { siteDesignation,seismicValue} = get_seismic_parameters();
-
                 const myHeaders = new Headers();
-                myHeaders.append("Content-Type", "application/json");
                 myHeaders.append("Accept", "application/json");
                 myHeaders.append("Authorization", `Bearer ${token}`);
-
-                const raw = JSON.stringify(
-                    {
-                        "address": `${address}`,
-                        "site_designation": `${siteDesignation}`,
-                        "seismic_value": `${seismicValue}`
-                    });
 
                 const requestOptions = {
                     method: "POST",
                     headers: myHeaders,
-                    body: raw,
-                    redirect: "follow"
+                    redirect: "follow",
                 };
 
-                fetch("http://localhost:42613/location", requestOptions)
+                fetch(`${connectionAddress}/get_user_current_save_file`, requestOptions)
                     .then((response) =>
                     {
-                        // DIMENSIONS
                         if (response.status === 200)
                         {
-                            let width = getFloatValue('width');
-                            let eaveHeight = getFloatValue('eave-height');
-                            let ridgeHeight = getFloatValue('ridge-height');
-                            let height = getFloatValue('height');
-
-                            const myHeaders = new Headers();
-                            myHeaders.append("Content-Type", "application/json");
-                            myHeaders.append("Accept", "application/json");
-                            myHeaders.append("Authorization", `Bearer ${token}`);
-
-                            const raw = JSON.stringify(
-                                {
-                                    "width": width,
-                                    "height": height,
-                                    "eave_height": eaveHeight,
-                                    "ridge_height": ridgeHeight
-                                });
-
-                            const requestOptions = {
-                                method: "POST",
-                                headers: myHeaders,
-                                body: raw,
-                                redirect: "follow"
-                            };
-
-                            fetch("http://localhost:42613/dimensions", requestOptions)
-                                .then((response) =>
-                                {
-                                    // CLADDING
-                                    if (response.status === 200)
-                                    {
-                                        let cTop = getFloatValue('top-cladding');
-                                        let cBot = getFloatValue('bottom-cladding');
-
-                                        const myHeaders = new Headers();
-                                        myHeaders.append("Content-Type", "application/json");
-                                        myHeaders.append("Accept", "application/json");
-                                        myHeaders.append("Authorization", `Bearer ${token}`);
-
-                                        const raw = JSON.stringify(
-                                            {
-                                                "c_top": cTop,
-                                                "c_bot": cBot
-                                            });
-
-                                        const requestOptions = {
-                                            method: "POST",
-                                            headers: myHeaders,
-                                            body: raw,
-                                            redirect: "follow"
-                                        };
-
-                                        fetch("http://localhost:42613/cladding", requestOptions)
-                                            .then((response) =>
-                                            {
-                                                // ROOF
-                                                if (response.status === 200)
-                                                {
-                                                    let wRoof = getFloatValue('w-roof');
-                                                    let lRoof = getFloatValue('l-roof');
-                                                    let aRoof = getFloatValue('a-roof');
-                                                    let roofUniformDeadLoad = getFloatValue('roof-uniform-dead-load');
-
-                                                    const myHeaders = new Headers();
-                                                    myHeaders.append("Content-Type", "application/json");
-                                                    myHeaders.append("Accept", "application/json");
-                                                    myHeaders.append("Authorization", `Bearer ${token}`);
-
-                                                    const raw = JSON.stringify(
-                                                        {
-                                                            "w_roof": wRoof,
-                                                            "l_roof": lRoof,
-                                                            "slope": aRoof,
-                                                            "uniform_dead_load": roofUniformDeadLoad
-                                                        });
-
-                                                    const requestOptions = {
-                                                        method: "POST",
-                                                        headers: myHeaders,
-                                                        body: raw,
-                                                        redirect: "follow"
-                                                    };
-
-                                                    fetch("http://localhost:42613/roof", requestOptions)
-                                                        .then((response) =>
-                                                        {
-                                                            // BUILDING
-                                                            if (response.status === 200)
-                                                            {
-                                                                let numFloors = getIntValue('num-floors');
-                                                                let midHeight = getFloatValue('mid-height');
-
-                                                                if (midHeight === null)
-                                                                {
-                                                                    midHeight = 0;
-                                                                }
-
-                                                                // list of tuples of the form (height, elevation, load)
-                                                                let zones = [];
-                                                                // iterate through height zone elevation table data rows
-                                                                let heightZoneElevationTable = document.getElementById("height-zone-elevation-table");
-                                                                let materialTable = document.getElementById("material-table");
-
-                                                                for (let i = 1; i < heightZoneElevationTable.rows.length; i++)
-                                                                {
-                                                                    let zoneNum = parseInt(heightZoneElevationTable.rows[i].cells[0].innerHTML);
-                                                                    let elevation = parseFloat(heightZoneElevationTable.rows[i].cells[1].innerHTML);
-                                                                    let load = parseFloat(materialTable.rows[i].cells[1].innerHTML);
-                                                                    zones.push([zoneNum, elevation, load]);
-                                                                }
-
-                                                                const myHeaders = new Headers();
-                                                                myHeaders.append("Content-Type", "application/json");
-                                                                myHeaders.append("Accept", "application/json");
-                                                                myHeaders.append("Authorization", `Bearer ${token}`);
-
-                                                                const raw = JSON.stringify(
-                                                                    {
-                                                                        "num_floor": numFloors,
-                                                                        "h_opening": midHeight,
-                                                                        "zones": zones
-                                                                    });
-
-                                                                const requestOptions = {
-                                                                    method: "POST",
-                                                                    headers: myHeaders,
-                                                                    body: raw,
-                                                                    redirect: "follow"
-                                                                };
-
-                                                                fetch("http://localhost:42613/building", requestOptions)
-                                                                    .then((response) =>
-                                                                    {
-                                                                        // IMPORTANCE CATEGORY
-                                                                        if (response.status === 200)
-                                                                        {
-                                                                            let importance_category = null;
-                                                                            // if low is checked
-                                                                            if (document.getElementById('importance-category-low-option').checked)
-                                                                            {
-                                                                                importance_category = 'LOW';
-                                                                            }
-                                                                            // if normal is checked
-                                                                            else if (document.getElementById('importance-category-normal-option').checked)
-                                                                            {
-                                                                                importance_category = 'NORMAL';
-                                                                            }
-
-                                                                            else if (document.getElementById('importance-category-high-option').checked)
-                                                                            {
-                                                                                importance_category = 'HIGH';
-                                                                            }
-
-                                                                            // if post disaster is checked
-                                                                            else if (document.getElementById('importance-category-post-disaster-option').checked)
-                                                                            {
-                                                                                importance_category = 'POST_DISASTER';
-                                                                            }
-
-                                                                            const myHeaders = new Headers();
-                                                                            myHeaders.append("Content-Type", "application/json");
-                                                                            myHeaders.append("Accept", "application/json");
-                                                                            myHeaders.append("Authorization", `Bearer ${token}`);
-
-                                                                            const raw = JSON.stringify(
-                                                                                {
-                                                                                    "importance_category": importance_category
-                                                                                });
-
-                                                                            const requestOptions = {
-                                                                                method: "POST",
-                                                                                headers: myHeaders,
-                                                                                body: raw,
-                                                                                redirect: "follow"
-                                                                            };
-
-                                                                            fetch("http://localhost:42613/importance_category", requestOptions)
-                                                                                .then((response) =>
-                                                                                {
-                                                                                    if (response.status === 200)
-                                                                                    {
-                                                                                        window.location.href = 'loads.html';
-                                                                                    }
-                                                                                    else
-                                                                                    {
-                                                                                        throw new Error('importance category error');
-                                                                                    }
-                                                                                })
-                                                                                .catch((error) => console.error(error));
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            throw new Error('building error');
-                                                                        }
-                                                                    })
-                                                                    .catch((error) => console.error(error));
-                                                            }
-                                                            else
-                                                            {
-                                                                throw new Error('roof error');
-                                                            }
-                                                        })
-                                                        .catch((error) => console.error(error));
-                                                }
-                                                else
-                                                {
-                                                    throw new Error('cladding error');
-                                                }
-                                            })
-                                            .catch((error) => console.error(error));
-                                    }
-
-                                    else
-                                    {
-                                        throw new Error('dimensions error');
-                                    }
-                                })
-                                .catch((error) => console.error(error));
+                            return response.json();
                         }
                         else
                         {
-                            throw new Error('location error');
+                            throw new Error("Get User Current Save File Error");
                         }
+                    })
+                    .then((result) =>
+                    {
+                        let id = parseInt(result);
+                        const myHeaders = new Headers();
+                        myHeaders.append("Content-Type", "application/json");
+                        myHeaders.append("Accept", "application/json");
+                        myHeaders.append("Authorization", `Bearer ${token}`);
+
+                        const raw = JSON.stringify(
+                            {
+                                json_data: serialize(),
+                                id: id,
+                            });
+
+                        const requestOptions = {
+                            method: "POST",
+                            headers: myHeaders,
+                            body: raw,
+                            redirect: "follow",
+                        };
+
+                        fetch(`${connectionAddress}/set_user_save_data`, requestOptions)
+                            .then((response) => response.text())
+                            .catch((error) => console.error(error));
                     })
                     .catch((error) => console.error(error));
             });
-    }
+    });
+
+    // serialized = serialize();
+
+});
+
+/**
+ * When the back button is clicked, return to the home page
+ */
+document.getElementById("back-button").addEventListener("click", function ()
+{
+    window.location.href = "home.html";
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // SERIALIZATION
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function serialize() {
-    let objects = { input_page: { radio: {}, input: {}, table: {} } };
+/**
+ * Serialize the input page
+ * @returns A JSON string representing the input page
+ */
+function serialize()
+{
+    let objects = {
+        input_page:
+            {
+                radio:
+                    {},
+                input:
+                    {},
+                table:
+                    {}
+            }
+    };
 
     // Handle radio inputs
-    let radios = document.querySelectorAll('input[type=radio]');
-    radios.forEach(radio => {
-        if (radio.checked) {
+    let radios = document.querySelectorAll("input[type=radio]");
+    radios.forEach((radio) =>
+    {
+        if (radio.checked)
+        {
             objects.input_page.radio[radio.id] = radio.value;
         }
     });
 
     // Handle other inputs
-    let inputs = document.querySelectorAll('input:not([type=radio])');
-    inputs.forEach(input => {
-        if (input.value !== "") {
+    let inputs = document.querySelectorAll("input:not([type=radio])");
+    inputs.forEach((input) =>
+    {
+        if (input.value !== "")
+        {
             objects.input_page.input[input.id] = input.value;
         }
     });
 
     // Handle tables
-    let tables = document.querySelectorAll('table');
-    tables.forEach(table => {
+    let tables = document.querySelectorAll("table");
+    tables.forEach((table) =>
+    {
         objects.input_page.table[table.id] = table.innerHTML;
     });
 
     let json = JSON.stringify(objects);
-    // console.log(json);
     return json;
 }
 
-
-
-// function deserialize(json, section)
-// {
-//     let objects = JSON.parse(json)[section];
-//
-//     // go through all the radio
-//     for (let id in objects.radio)
-//     {
-//         let radio = document.getElementById(id);
-//         if (radio.value === objects.radio[id]) {
-//             radio.click();
-//         }
-//     }
-//
-//     // go through all the input
-//     for (let id in objects.input) {
-//         let input = document.getElementById(id);
-//         input.value = '';
-//         input.focus();
-//         let value = objects.input[id];
-//         for (let i = 0; i < value.length; i++) {
-//             let event = new KeyboardEvent('keydown', { 'key': value[i] });
-//             input.dispatchEvent(event);
-//             input.value += value[i];
-//         }
-//     }
-//
-//     // go through all the tables
-//     for (let id in objects.table) {
-//         let table = document.getElementById(id);
-//         if (table) {
-//             console.log(table.id);
-//             table.innerHTML = objects.table[id];
-//         }
-//     }
-// }
-
-function waitForElement(id, callback) {
-    let intervalId = setInterval(function() {
+/**
+ * wait for an element with the given id to appear
+ * @param id
+ * @param callback
+ */
+function waitForElement(id, callback)
+{
+    let intervalId = setInterval(function ()
+    {
         let element = document.getElementById(id);
-        if (element) {
+        if (element)
+        {
             clearInterval(intervalId);
             callback(element);
         }
     }, 100); // Check every 100ms
 }
 
-function deserialize(json, section) {
-    let objects = JSON.parse(json)[section];
+/**
+ * Deserialize the input page
+ * @param json
+ * @param section
+ * @returns {Promise<unknown>}
+ */
+function deserialize(json, section)
+{
+    return new Promise((resolve) =>
+    {
+        let objects = JSON.parse(json)[section];
+        let totalElements =
+            Object.keys(objects.radio).length +
+            Object.keys(objects.input).length +
+            Object.keys(objects.table).length;
+        let processedElements = 0;
 
-    // TODO: ENSURE xs_option IS CLICKED BEFORE xs-?-option
-    // go through all the radio
-    for (let id in objects.radio) {
-        waitForElement(id, function(radio) {
-            if (radio.value === objects.radio[id]) {
-                radio.click();
-            }
-        });
-    }
+        // go through all the radio
+        for (let id in objects.radio)
+        {
+            waitForElement(id, function (radio)
+            {
+                if (radio.value === objects.radio[id])
+                {
+                    radio.click();
+                }
+                processedElements++;
+                if (processedElements === totalElements)
+                {
+                    resolve();
+                }
+            });
+        }
 
-    // go through all the input
-    for (let id in objects.input) {
-        waitForElement(id, function(input) {
-            input.value = '';
-            input.focus();
-            let value = objects.input[id];
-            for (let i = 0; i < value.length; i++) {
-                let event = new KeyboardEvent('keydown', { 'key': value[i] });
-                input.dispatchEvent(event);
-                input.value += value[i];
-            }
-        });
-    }
+        // go through all the input
+        for (let id in objects.input)
+        {
+            waitForElement(id, function (input)
+            {
+                input.value = "";
+                input.focus();
+                let value = objects.input[id];
+                for (let i = 0; i < value.length; i++)
+                {
+                    input.value = value;
+                }
+                processedElements++;
+                if (processedElements === totalElements)
+                {
+                    resolve();
+                }
+            });
+        }
 
-    // go through all the tables
-    for (let id in objects.table) {
-        waitForElement(id, function(table) {
-            console.log(table.id);
-            table.innerHTML = objects.table[id];
-        });
-    }
+        // go through all the tables
+        for (let id in objects.table)
+        {
+            waitForElement(id, function (table)
+            {
+                table.innerHTML = objects.table[id];
+                processedElements++;
+                if (processedElements === totalElements)
+                {
+                    resolve();
+                }
+            });
+        }
+    });
 }
 
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// SAVE BUTTON
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-let serialized = null;
-
-// save-button click event
-document.getElementById('save-button').addEventListener('click', function() {
-    // serialized = serialize();
-    window.api.invoke('get-token') // Retrieve the token
-        .then((token) =>
-        {
-            const myHeaders = new Headers();
-            myHeaders.append("Accept", "application/json");
-            myHeaders.append("Authorization", `Bearer ${token}`);
-
-            const requestOptions = {
-                method: "POST",
-                headers: myHeaders,
-                redirect: "follow"
-            };
-
-            fetch("http://localhost:42613/get_user_current_save_file", requestOptions)
-                .then((response) => {
-                    if (response.status === 200)
-                    {
-                        return response.json();
-                    }
-                    else
-                    {
-                        throw new Error('Get User Current Save File Error');
-                    }
-                })
-                .then((result) =>
-                {
-                    let id = parseInt(result);
-                    const myHeaders = new Headers();
-                    myHeaders.append("Content-Type", "application/json");
-                    myHeaders.append("Accept", "application/json");
-                    myHeaders.append("Authorization", `Bearer ${token}`);
-
-                    const raw = JSON.stringify({
-                        "json_data": serialize(),
-                        "id": id
-                    });
-
-                    const requestOptions = {
-                        method: "POST",
-                        headers: myHeaders,
-                        body: raw,
-                        redirect: "follow"
-                    };
-
-                    fetch("http://localhost:42613/set_user_save_data", requestOptions)
-                        .then((response) => response.text())
-                        .catch((error) => console.error(error));
-                })
-                .catch((error) => console.error(error));
-        });
-});
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// BACK BUTTON CLICK EVENT
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-document.getElementById('back-button').addEventListener('click', function() {
-    window.location.href = 'home.html';
-});
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// LOAD SAVE FILE
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+/**
+ * Load the save file
+ */
 function loadSaveFile()
 {
-    window.api.invoke('get-token') // Retrieve the token
-        .then((token) =>
-        {
-            const myHeaders = new Headers();
-            myHeaders.append("Accept", "application/json");
-            myHeaders.append("Authorization", `Bearer ${token}`);
+    window.api
+        .invoke("get-connection-address").then((connectionAddress) =>
+    {
+        window.api
+            .invoke("get-token") // Retrieve the token
+            .then((token) =>
+            {
+                const myHeaders = new Headers();
+                myHeaders.append("Accept", "application/json");
+                myHeaders.append("Authorization", `Bearer ${token}`);
 
-            const requestOptions = {
-                method: "POST",
-                headers: myHeaders,
-                redirect: "follow"
-            };
+                const requestOptions = {
+                    method: "POST",
+                    headers: myHeaders,
+                    redirect: "follow",
+                };
 
-            fetch("http://localhost:42613/get_user_current_save_file", requestOptions)
-                .then((response) => {
-                    if (response.status === 200)
+                fetch(`${connectionAddress}/get_user_current_save_file`, requestOptions)
+                    .then((response) =>
                     {
-                        return response.json();
-                    }
-                    else
-                    {
-                        throw new Error('Get User Current Save File Error');
-                    }
-                })
-                .then((result) =>
-                {
-                    let id = parseInt(result);
-                    const myHeaders = new Headers();
-                    myHeaders.append("Accept", "application/json");
-                    myHeaders.append("Authorization", `Bearer ${token}`);
-
-                    const requestOptions = {
-                        method: "POST",
-                        headers: myHeaders,
-                        redirect: "follow"
-                    };
-
-                    fetch(`http://localhost:42613/get_user_save_file?id=${id}`, requestOptions)
-                        .then((response) => {
-                            if (response.status === 200)
-                            {
-                                return response.json();
-                            }
-                            else
-                            {
-                                throw new Error('Get User Save File Error');
-                            }
-                        })
-                        .then((data) =>
+                        if (response.status === 200)
                         {
-                            const myHeaders = new Headers();
-                            myHeaders.append("Accept", "application/json");
-                            myHeaders.append("Authorization", `Bearer ${token}`);
+                            return response.json();
+                        }
+                        else
+                        {
+                            throw new Error("Get User Current Save File Error");
+                        }
+                    })
+                    .then((result) =>
+                    {
+                        let id = parseInt(result);
+                        const myHeaders = new Headers();
+                        myHeaders.append("Accept", "application/json");
+                        myHeaders.append("Authorization", `Bearer ${token}`);
 
-                            const requestOptions = {
-                                method: "POST",
-                                headers: myHeaders,
-                                redirect: "follow"
-                            };
+                        const requestOptions = {
+                            method: "POST",
+                            headers: myHeaders,
+                            redirect: "follow",
+                        };
 
-                            fetch(`http://localhost:42613/get_user_save_file?id=${id}`, requestOptions)
-                                .then((response) => {
-                                    if (response.status === 200)
-                                    {
-                                        return response.json();
-                                    }
-                                    else
-                                    {
-                                        throw new Error('Get User Save File Error');
-                                    }
-                                })
-                                .then((result) =>
+                        fetch(
+                            `${connectionAddress}/get_user_save_file?id=${id}`,
+                            requestOptions,
+                        )
+                            .then((response) =>
+                            {
+                                if (response.status === 200)
                                 {
-                                    deserialize(result.JsonData, 'input_page');
-                                })
-                                .catch((error) => console.error(error));
-                        })
-                        .catch((error) => console.error(error));
-                })
-                .catch((error) => console.error(error));
-        });
+                                    return response.json();
+                                }
+                                else
+                                {
+                                    throw new Error("Get User Save File Error");
+                                }
+                            })
+                            .then((data) =>
+                            {
+                                const myHeaders = new Headers();
+                                myHeaders.append("Accept", "application/json");
+                                myHeaders.append("Authorization", `Bearer ${token}`);
+
+                                const requestOptions = {
+                                    method: "POST",
+                                    headers: myHeaders,
+                                    redirect: "follow",
+                                };
+
+                                fetch(
+                                    `${connectionAddress}/get_user_save_file?id=${id}`,
+                                    requestOptions,
+                                )
+                                    .then((response) =>
+                                    {
+                                        if (response.status === 200)
+                                        {
+                                            return response.json();
+                                        }
+                                        else
+                                        {
+                                            throw new Error("Get User Save File Error");
+                                        }
+                                    })
+                                    .then((result) =>
+                                    {
+                                        deserialize(result.JsonData, "input_page").then(() =>
+                                        {
+                                            window.scrollTo(0, 0);
+                                        });
+                                    })
+                                    .catch((error) => console.error(error));
+                            })
+                            .catch((error) => console.error(error));
+                    })
+                    .catch((error) => console.error(error));
+            });
+    });
+
+
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// DROPDOWN MENU
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Set the username in the dropdown menu
+ */
+function setUsernameDropdown()
+{
+    window.api
+        .invoke("get-connection-address").then((connectionAddress) =>
+    {
+        window.api
+            .invoke("get-token") // Retrieve the token
+            .then((token) =>
+            {
+                const myHeaders = new Headers();
+                myHeaders.append("Accept", "application/json");
+                myHeaders.append("Authorization", `Bearer ${token}`);
+
+                const requestOptions = {
+                    method: "POST",
+                    headers: myHeaders,
+                    redirect: "follow",
+                };
+
+                fetch(`${connectionAddress}/get_user_profile`, requestOptions)
+                    .then((response) => response.json())
+                    .then((result) =>
+                    {
+                        let data = JSON.parse(result);
+                        username = data["username"];
+                        document.getElementById("navbarDropdownMenuLink").textContent =
+                            username;
+                    })
+                    .catch((error) => console.error(error));
+            });
+    });
+
+
+}
+
+/**
+ * If clicked the user will be logged out and redirected to the login page
+ */
+document.getElementById("logout").addEventListener("click", function ()
+{
+    window.api.invoke("store-token", "");
+    window.location.href = "login.html";
+});
+
+/**
+ * If clicked the user will be redirected to the profile page */
+document.getElementById("profile").addEventListener("click", function ()
+{
+    window.location.href = "profile.html";
+});
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // WINDOW ONLOAD EVENT
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-window.onload = function()
+/**
+ * Set up the page on load
+ */
+window.onload = function ()
 {
+    setUsernameDropdown();
     loadSaveFile();
 
-    // TODO: implement user dropdown
-    document.getElementById('navbarDropdownMenuLink').textContent = "potato";
-
-    setMap(43.66074, -79.39661, 'Myhal Centre, Toronto, Ontario, Canada');
+    setMap(43.66074, -79.39661, "Myhal Centre, Toronto, Ontario, Canada");
 
     const selectors = [
-        '#site-designation-selection',
-        '#eave-and-ridge-selection',
-        '#number-height-zone-selection',
-        '#dominant-opening-selection',
-        '#single-material-selection',
-        '#importance-category-selection'
+        "#site-designation-selection",
+        "#eave-and-ridge-selection",
+        "#number-height-zone-selection",
+        "#dominant-opening-selection",
+        "#single-material-selection",
+        "#importance-category-selection",
     ];
 
-    selectors.forEach(selector => toggleMenuColors(selector));
+    selectors.forEach((selector) => toggleMenuColors(selector));
 
     siteDesignationSelection();
     eaveAndRidgeSelection();

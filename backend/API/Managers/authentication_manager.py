@@ -8,6 +8,8 @@ from fastapi.security import OAuth2PasswordBearer
 from jose import jwt, JWTError
 from sqlalchemy.orm import sessionmaker
 
+from backend.API.Managers.user_data_manager import set_user_profile, check_user_exists
+from backend.Entities.User.profile import Profile
 from config import get_file_path
 from database.Constants.connection_constants import PrivilegeType
 from database.Entities.authentication_data import AuthenticationData
@@ -115,6 +117,10 @@ def login(username: str, password: str):
     session = sessionmaker(autocommit=False, autoflush=True, bind=engine)
     controller = session()
     authentication_data = controller.query(AuthenticationData).filter_by(username=username).first()
+    # set_user_profile(username, Profile(username=authentication_data.username, first_name=authentication_data.first_name, last_name=authentication_data.last_name, email=authentication_data.email))
+    profile = Profile(username=authentication_data.username, first_name=authentication_data.first_name, last_name=authentication_data.last_name, email=authentication_data.email)
+    check_user_exists(username)
+    set_user_profile(username, profile)
     new_connection.close()
 
     if authentication_data is None:

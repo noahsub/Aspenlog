@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>ASPENLOG 2020</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="load.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+</head>
+
+<body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<nav class="navbar navbar-expand-lg navbar-light bg-light" id="navbar">
+    <img src="../assets/images/logo%20(Large).png" style="width: 75px; height: 75px;">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown">
+        <ul class="navbar-nav">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Username
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <a class="dropdown-item" href="#" id="profile">Profile</a>
+                    <a class="dropdown-item" href="#" id="logout">Logout</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</nav>
+<div style="padding: 40px">
+    <h3>Wind Load</h3>
+    <div class="row gx-5">
+        <div class="mb-3" id="all-wind-load-container">
+        </div>
+        <div class="mb-3" style="text-align: right;">
+            <hr>
+            <button class="btn btn-primary" id="wind-calculate-button">Calculate</button>
+        </div>
+    </div>
+    <hr>
+    <h3>Seismic Load</h3>
+    <div class="row gx-5">
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label for="amplification-factor">Element of Component Force Amplification Factor (Ar)</label>
+                <p>By default Ar has a value of 1</p>
+                <input type="number" id="amplification-factor" class="form-control" value="1" />
+            </div>
+            <div class="mb-3">
+                <label for="response-modification-factor">Element of Component Response Modification Factor (Rp)</label>
+                <p>By default Ar has a value of 2.5</p>
+                <input type="number" id="response-modification-factor" class="form-control" value="2.5" />
+            </div>
+            <div class="mb-3">
+                <label for="component-factor">Elements of Component Factor (Cp)</label>
+                <p>By default Ar has a value of 1</p>
+                <input type="number" id="component-factor" class="form-control" value="1" />
+            </div>
+        </div>
+        <div class="col-md-6" id="seismic-load-table-container">
+            <label for="seismic-load-table">Calculated Seismic Load Values</label>
+            <div class="mb-3">
+                <table id="seismic-load-table" class="table">
+                    <thead>
+                    <tr>
+                        <th>Height Zone</th>
+                        <th>Sp</th>
+                        <th>Vp</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="row gx-5">
+        <div class="mb-3" style="text-align: right;">
+            <button class="btn btn-primary" id="seismic-calculate-button">Calculate</button>
+        </div>
+    </div>
+    <div class="row gx-5">
+        <hr>
+        <h3>Snow Load</h3>
+        <div class="row gx-5 ">
+            <div class="mb-3">
+                <label for="roof-type-selection">Roof Type</label>
+                <p>Select the type of roof</p>
+                <div class="btn-group btn-group-toggle" id="roof-type-selection" data-toggle="buttons">
+                    <label class="btn btn-secondary">
+                        <input type="radio" name="roof-type-selection" id="roof-selection-unobstructed-slippery-roof-option" autocomplete="off"> Unobstructed Slippery Roof
+                    </label>
+                    <label class="btn btn-secondary">
+                        <input type="radio" name="roof-type-selection" id="roof-selection-other-option" autocomplete="off"> Other
+                    </label>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="upwind-accumulation-factor">Upwind Accumulation Factor (Ca)</label>
+                <p id="upwind-accumulation-factor">NA</p>
+            </div>
+            <div class="mb-3">
+                <label for="downwind-accumulation-factor">Downwind Accumulation Factor (Ca)</label>
+                <p id="downwind-accumulation-factor">NA</p>
+            </div>
+            <div class="mb-3">
+                <label for="snow-load-upwind-uls">Snow Load Upwind</label>
+                <p id="snow-load-upwind-uls">NA</p>
+            </div>
+            <div class="mb-3">
+                <label for="snow-load-downwind-uls">Snow Load Downwind</label>
+                <p id="snow-load-downwind-uls">NA</p>
+            </div>
+        </div>
+    </div>
+    <div class="row gx-5">
+        <div class="mb-3" style="text-align: right;">
+            <button class="btn btn-primary" id="snow-calculate-button">Calculate</button>
+        </div>
+    </div>
+    <hr>
+    <div class="row gx-5 align-items-center">
+        <div class="col-md-6">
+            <button class="btn btn-primary" id="back-button">Back</button>
+            <p></p>
+            <button class="btn btn-primary" id="home-button">Home</button>
+        </div>
+        <div class="col-md-6 right-align">
+            <button class="btn btn-primary" id="save-button">Save</button>
+            <p id="next-warning"></p>
+            <button class="btn btn-primary" id="next-button">Next</button>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>
+<script src="load.js"></script>

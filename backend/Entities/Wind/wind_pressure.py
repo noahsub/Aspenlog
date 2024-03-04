@@ -211,7 +211,7 @@ class WindPressureBuilder(WindPressureBuilderInterface):
         assert self.wind_pressure.pi_neg_uls is not None
         self.wind_pressure.pos_uls = self.wind_pressure.pe_pos_uls - self.wind_pressure.pi_neg_uls
 
-    def set_neg(self):
+    def set_neg_uls(self):
         assert self.wind_pressure.pe_neg_uls is not None
         assert self.wind_pressure.pi_pos_uls is not None
         self.wind_pressure.neg_uls = self.wind_pressure.pe_neg_uls - self.wind_pressure.pi_pos_uls

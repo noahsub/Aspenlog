@@ -1,4 +1,5 @@
-const { contextBridge, ipcRenderer } = require('electron');
+// This file is used to expose the electron API to the window object
+const {contextBridge, ipcRenderer} = require('electron');
 
 contextBridge.exposeInMainWorld(
     'api', {

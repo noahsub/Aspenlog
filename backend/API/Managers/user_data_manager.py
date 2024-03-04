@@ -70,6 +70,10 @@ def set_user_importance_category(username, importance_category):
     ALL_USER_DATA[username].set_importance_category(importance_category)
 
 
+def set_user_snow_load(username, snow_load):
+    ALL_USER_DATA[username].set_snow_load(snow_load)
+
+
 def set_user_save_data(username: str, json_data: str, id: int = None):
     new_connection = DatabaseConnection(database_name="NBCC-2020")
     engine = new_connection.get_engine(privilege=PrivilegeType.ADMIN)
@@ -78,11 +82,16 @@ def set_user_save_data(username: str, json_data: str, id: int = None):
 
     existing_entry = None
     if id is not None:
-        existing_entry = controller.query(SaveData).filter((SaveData.Username == username) & (SaveData.ID == id)).first()
+        existing_entry = controller.query(SaveData).filter(
+            (SaveData.Username == username) & (SaveData.ID == id)).first()
 
     if existing_entry is not None:
         # modify existing entry, by overriding JsonData and DateModified to use current time
-        existing_entry.JsonData = json_data
+        prev_data = jsonpickle.decode(existing_entry.JsonData)
+        for key, value in jsonpickle.decode(json_data).items():
+            prev_data[key] = value
+
+        existing_entry.JsonData = jsonpickle.encode(prev_data)
         existing_entry.DateModified = datetime.now()
     else:
         # create new entry with the current time
@@ -96,7 +105,6 @@ def set_user_save_data(username: str, json_data: str, id: int = None):
     new_connection.close()
 
     return id
-
 
 
 def get_user_profile(username):
@@ -147,6 +155,10 @@ def get_user_importance_category(username):
     return ALL_USER_DATA.get(username).get_importance_category()
 
 
+def get_user_snow_load(username):
+    return ALL_USER_DATA.get(username).get_snow_load()
+
+
 def get_user_data(username):
     return jsonpickle.encode(ALL_USER_DATA.get(username), indent=4)
 
@@ -156,7 +168,8 @@ def get_all_user_save_data(username):
     engine = new_connection.get_engine(privilege=PrivilegeType.ADMIN)
     session = sessionmaker(autocommit=False, autoflush=True, bind=engine)
     controller = session()
-    result = controller.query(SaveData).filter(SaveData.Username == username).order_by(desc(SaveData.DateModified)).all()
+    result = controller.query(SaveData).filter(SaveData.Username == username).order_by(
+        desc(SaveData.DateModified)).all()
     controller.close()
     new_connection.close()
     return result

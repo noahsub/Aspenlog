@@ -5,7 +5,8 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "build": "electron-builder"
   },
   "author": "github.com/noahsub",
   "license": "ISC",
@@ -16,7 +17,7 @@
   },
   "devDependencies": {
     "electron": "^28.2.3",
-    "electron-builder": "^24.9.1",
+    "electron-builder": "^24.13.3",
     "electron-reloader": "^1.2.3"
   },
   "build": {
@@ -24,7 +25,15 @@
     "win": {
       "target": [
         "nsis"
-      ]
+      ],
+      "icon": "icon.ico"
+    },
+    "nsis": {
+      "oneClick": true,
+      "allowToChangeInstallationDirectory": false,
+      "installerIcon": "icon.ico",
+      "uninstallerIcon": "icon.ico",
+      "uninstallDisplayName": "ASPENLOG2020 Uninstaller"
     }
   }
 }
