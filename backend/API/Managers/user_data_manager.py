@@ -1,14 +1,13 @@
 from datetime import datetime
 
 import jsonpickle
-from sqlalchemy import select, desc
+from sqlalchemy import desc
 from sqlalchemy.orm import sessionmaker
 
 from backend.Entities.User.user import User
 from database.Constants.connection_constants import PrivilegeType
 from database.Entities.database_connection import DatabaseConnection
 from database.Entities.save_data import SaveData
-from database.Population.populate_save_data import DATABASE
 
 ALL_USER_DATA = dict()
 
@@ -184,3 +183,20 @@ def get_user_save_file(username: str, id: int):
     controller.close()
     new_connection.close()
     return result
+
+
+def delete_user_save_file(username: str, id: int):
+    new_connection = DatabaseConnection(database_name="NBCC-2020")
+    engine = new_connection.get_engine(privilege=PrivilegeType.ADMIN)
+    session = sessionmaker(autocommit=False, autoflush=True, bind=engine)
+    controller = session()
+    result = controller.query(SaveData).filter((SaveData.Username == username) & (SaveData.ID == id)).first()
+    controller.delete(result)
+    controller.commit()
+    controller.close()
+    new_connection.close()
+
+
+def get_user_save_file_json(username: str, id: int):
+    save_file = get_user_save_file(username, id)
+    return save_file.JsonData
