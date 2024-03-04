@@ -1,19 +1,44 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// GLOBALS
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+var USERNAME_VALID = false;
+var PASSWORD_VALID = false;
+var CONFIRM_PASSWORD_VALID = false;
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// HELPER FUNCTIONS
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Check if a string is alphanumeric
+ * @param str
+ * @returns {boolean}
+ */
 function isAlphanumeric(str)
 {
     var regex = /^[a-z0-9]+$/i;
     return regex.test(str);
 }
 
+/**
+ * Check if an email is valid
+ * @param email
+ * @returns {boolean}
+ */
 function isValidEmail(email)
 {
     var regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return regex.test(email);
 }
 
-var username_valid = false;
-var password_valid = false;
-var confirm_password_valid = false;
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// INPUT EVENTS
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * When the username input is changed, check if the username is valid.
+ */
 document.getElementById("username").addEventListener("input", function (event)
 {
     // boolean array to check if all conditions are met
@@ -50,9 +75,12 @@ document.getElementById("username").addEventListener("input", function (event)
     }
 
     // if all conditions are met, set username_valid to true
-    username_valid = conditions[0] && conditions[1];
+    USERNAME_VALID = conditions[0] && conditions[1];
 });
 
+/**
+ * When the password input is changed, check if the password is valid.
+ */
 document.getElementById("password").addEventListener("input", function (event)
 {
     // boolean array to check if all conditions are met
@@ -138,7 +166,7 @@ document.getElementById("password").addEventListener("input", function (event)
     }
 
     // if all conditions are met, set password_valid to true
-    password_valid =
+    PASSWORD_VALID =
         conditions[0] &&
         conditions[1] &&
         conditions[2] &&
@@ -146,7 +174,9 @@ document.getElementById("password").addEventListener("input", function (event)
         conditions[4];
 });
 
-// check that the password and confirm password match
+/**
+ * When the confirm password input is changed, check if the password and confirm password match.
+ */
 document
     .getElementById("confirm-password")
     .addEventListener("input", function (event)
@@ -157,53 +187,24 @@ document
         )
         {
             document.getElementById("password-match").style.color = "red";
-            confirm_password_valid = false;
+            CONFIRM_PASSWORD_VALID = false;
         }
         else
         {
             document.getElementById("password-match").style.color = "black";
-            confirm_password_valid = true;
+            CONFIRM_PASSWORD_VALID = true;
         }
     });
 
-window.onload = function ()
-{
-    // disable the register button until all fields are valid
-    document.getElementById("register").disabled = true;
 
-    var inputs = document.getElementsByTagName("input");
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// BUTTON CLICK EVENTS
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    for (var i = 0; i < inputs.length; i++)
-    {
-        inputs[i].addEventListener("input", function ()
-        {
-            // check if all fields are valid this includes first name, last name, and email
-            first_name_valid = document.getElementById("firstname").value.length > 0;
-            last_name_valid = document.getElementById("lastname").value.length > 0;
-            email_valid = isValidEmail(document.getElementById("email").value);
-
-            if (
-                username_valid &&
-                password_valid &&
-                confirm_password_valid &&
-                first_name_valid &&
-                last_name_valid &&
-                email_valid
-            )
-            {
-                // enable the register button
-                document.getElementById("register").disabled = false;
-            }
-            else
-            {
-                // disable the register button
-                document.getElementById("register").disabled = true;
-            }
-        });
-    }
-};
-
-// register button click
+/**
+ * When the register button is clicked, the user is redirected their credentials are stored in the backend and they
+ * are redirected to the login page.
+ */
 document.getElementById("register").addEventListener("click", function (event)
 {
     event.preventDefault();
@@ -235,3 +236,47 @@ document.getElementById("register").addEventListener("click", function (event)
             .catch((error) => error.log("error", error));
     });
 });
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// WINDOW ONLOAD EVENT
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Set up the page on load
+ */
+window.onload = function ()
+{
+    // disable the register button until all fields are valid
+    document.getElementById("register").disabled = true;
+
+    var inputs = document.getElementsByTagName("input");
+
+    for (var i = 0; i < inputs.length; i++)
+    {
+        inputs[i].addEventListener("input", function ()
+        {
+            // check if all fields are valid this includes first name, last name, and email
+            first_name_valid = document.getElementById("firstname").value.length > 0;
+            last_name_valid = document.getElementById("lastname").value.length > 0;
+            email_valid = isValidEmail(document.getElementById("email").value);
+
+            if (
+                USERNAME_VALID &&
+                PASSWORD_VALID &&
+                CONFIRM_PASSWORD_VALID &&
+                first_name_valid &&
+                last_name_valid &&
+                email_valid
+            )
+            {
+                // enable the register button
+                document.getElementById("register").disabled = false;
+            }
+            else
+            {
+                // disable the register button
+                document.getElementById("register").disabled = true;
+            }
+        });
+    }
+};

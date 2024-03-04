@@ -2,30 +2,50 @@
 // GLOBALS
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-let map;
+// the map used for location of climatic and seismic data
+let MAP;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // HELPER FUNCTIONS
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Get the float value of an input element with the given id
+ * @param id
+ * @returns {number|null}
+ */
 function getFloatValue(id)
 {
     let element = document.getElementById(id);
     return element ? parseFloat(element.value) : null;
 }
 
+/**
+ * Get the int value of an input element with the given id
+ * @param id
+ * @returns {number|null}
+ */
 function getIntValue(id)
 {
     let element = document.getElementById(id);
     return element ? parseInt(element.value) : null;
 }
 
+/**
+ * Get the string value of an input element with the given id
+ * @param id
+ * @returns {*|null}
+ */
 function getStrValue(id)
 {
     let element = document.getElementById(id);
     return element ? element.value : null;
 }
 
+/**
+ * Set the color of toggle menu buttons when clicked
+ * @param toggleMenu
+ */
 function toggleMenuColors(toggleMenu)
 {
     document.querySelectorAll(toggleMenu + " .btn").forEach((button) =>
@@ -41,7 +61,11 @@ function toggleMenuColors(toggleMenu)
     });
 }
 
-function get_seismic_parameters()
+/**
+ * Get the seismic parameters
+ * @returns {{siteDesignation: string, seismicValue: string}}
+ */
+function getSeismicParameters()
 {
     let siteDesignation = null;
     let seismicValue = null;
@@ -89,6 +113,9 @@ function get_seismic_parameters()
 // TOGGLE CASE FUNCTIONS
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Fetch the vs30 sub page and set the innerHTML of the site-designation-sub-selection-container to the data
+ */
 function vs30Case()
 {
     fetch("subPages/vs30.html")
@@ -105,6 +132,9 @@ function vs30Case()
         });
 }
 
+/**
+ * Fetch the xs sub page and set the innerHTML of the site-designation-sub-selection-container to the data
+ */
 function xsCase()
 {
     fetch("subPages/xs.html")
@@ -122,6 +152,9 @@ function xsCase()
         });
 }
 
+/**
+ * Fetch the standard dimensions sub page and set the innerHTML of the dimensions-container to the data
+ */
 function standardDimensionsCase()
 {
     fetch("subPages/standard_dimensions.html")
@@ -138,6 +171,9 @@ function standardDimensionsCase()
         });
 }
 
+/**
+ * Fetch the eave and ridge dimensions sub page and set the innerHTML of the dimensions-container to the data
+ */
 function eaveAndRidgeCase()
 {
     fetch("subPages/eave_and_ridge_dimensions.html")
@@ -159,6 +195,10 @@ function eaveAndRidgeCase()
         });
 }
 
+/**
+ * Fetch the non default height zone number sub page and set the innerHTML of the height-zone-elevation-container
+ * to the data
+ */
 function nonDefaultHeightZoneNumberCase()
 {
     fetch("subPages/non_default_height_zone_number.html")
@@ -190,6 +230,10 @@ function nonDefaultHeightZoneNumberCase()
         });
 }
 
+/**
+ * Fetch the default height zone number sub page and set the innerHTML of the height-zone-elevation-container
+ * to the data
+ */
 function defaultHeightZoneNumberCase()
 {
     fetch("subPages/default_height_zone_number.html")
@@ -212,6 +256,9 @@ function defaultHeightZoneNumberCase()
         });
 }
 
+/**
+ * Fetch the dominant opening sub page and set the innerHTML of the dominant-opening-container to the data
+ */
 function dominantOpeningCase()
 {
     fetch("subPages/dominant_opening.html")
@@ -227,6 +274,9 @@ function dominantOpeningCase()
         });
 }
 
+/**
+ * Fetch the single material sub page and set the innerHTML of the material-container to the data
+ */
 function singleMaterialCase()
 {
     fetch("subPages/single_material.html")
@@ -245,6 +295,9 @@ function singleMaterialCase()
         });
 }
 
+/**
+ * Fetch the multiple material sub page and set the innerHTML of the material-container to the data
+ */
 function multipleMaterialCase()
 {
     fetch("subPages/multiple_material.html")
@@ -264,6 +317,9 @@ function multipleMaterialCase()
 // TOGGLE FUNCTIONS
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Handles site designation selection options
+ */
 function siteDesignationSelection()
 {
     let siteDesignationSelectionOptions = document.querySelectorAll(
@@ -288,6 +344,9 @@ function siteDesignationSelection()
     }
 }
 
+/**
+ * Handles eave and ridge selection options
+ */
 function eaveAndRidgeSelection()
 {
     let eaveAndRidgeSelectionOptions = document.querySelectorAll(
@@ -309,6 +368,9 @@ function eaveAndRidgeSelection()
     }
 }
 
+/**
+ * Handles number of height zone selection options
+ */
 function numberHeightZoneSelection()
 {
     let numberHeightZoneOptions = document.querySelectorAll(
@@ -330,6 +392,9 @@ function numberHeightZoneSelection()
     }
 }
 
+/**
+ * Handles dominant opening selection options
+ */
 function dominantOpeningSelection()
 {
     let dominantOpeningOptions = document.querySelectorAll(
@@ -351,6 +416,9 @@ function dominantOpeningSelection()
     }
 }
 
+/**
+ * Handles single material selection options
+ */
 function materialSelection()
 {
     let materialSelectionOptions = document.querySelectorAll(
@@ -377,6 +445,9 @@ function materialSelection()
 // TABLE FUNCTIONS
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Clear the height zone elevation table
+ */
 function clearHeightZoneElevationTable()
 {
     let table = document.getElementById("height-zone-elevation-table");
@@ -386,6 +457,9 @@ function clearHeightZoneElevationTable()
     }
 }
 
+/**
+ * Clear the material table
+ */
 function clearMaterialTable()
 {
     let table = document.getElementById("material-table");
@@ -395,6 +469,10 @@ function clearMaterialTable()
     }
 }
 
+/**
+ * Add a row to the height zone elevation table
+ * @param elevation
+ */
 function addHeightZoneElevationRow(elevation)
 {
     let table = document.getElementById("height-zone-elevation-table");
@@ -412,6 +490,10 @@ function addHeightZoneElevationRow(elevation)
     cell2.innerHTML = elevation;
 }
 
+/**
+ * Add a row to the material table
+ * @param weight
+ */
 function addMaterialRow(weight)
 {
     let table = document.getElementById("material-table");
@@ -429,6 +511,9 @@ function addMaterialRow(weight)
     cell2.innerHTML = weight;
 }
 
+/**
+ * Add a row to the height zone elevation table that is editable
+ */
 function addHeightZoneElevationRowEditable()
 {
     let table = document.getElementById("height-zone-elevation-table");
@@ -447,6 +532,9 @@ function addHeightZoneElevationRowEditable()
     cell2.contentEditable = "true";
 }
 
+/**
+ * Add a row to the material table
+ */
 function addMaterialRowEditable()
 {
     let table = document.getElementById("material-table");
@@ -465,6 +553,9 @@ function addMaterialRowEditable()
     cell2.contentEditable = "true";
 }
 
+/**
+ * Remove the last row from the height zone elevation table
+ */
 function removeHeightZoneElevationRow()
 {
     let table = document.getElementById("height-zone-elevation-table");
@@ -474,6 +565,9 @@ function removeHeightZoneElevationRow()
     }
 }
 
+/**
+ * Populate the default height zone elevation table
+ */
 function populateDefaultHeightZoneElevation()
 {
     let height = null;
@@ -499,6 +593,9 @@ function populateDefaultHeightZoneElevation()
     }
 }
 
+/**
+ * Detect if height is changed and update the height zone elevation table
+ */
 function heightChange()
 {
     if (document.getElementById("number-height-zone-yes-option").checked)
@@ -516,6 +613,9 @@ function heightChange()
     }
 }
 
+/**
+ * Detect if material weight is changed and update the material table
+ */
 function materialWeightChange()
 {
     if (document.getElementById("single-material-yes-option").checked === true)
@@ -531,6 +631,9 @@ function materialWeightChange()
     }
 }
 
+/**
+ * Detect if height zone is changed and update the material table
+ */
 function heightZoneChange()
 {
     let i;
@@ -562,16 +665,23 @@ function heightZoneChange()
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // MAP FUNCTIONS
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Update the map with the given latitude, longitude, and address
+ * @param latitude
+ * @param longitude
+ * @param address
+ */
 function setMap(latitude, longitude, address)
 {
     // If the map already exists, remove it
-    if (map)
+    if (MAP)
     {
-        map.remove();
+        MAP.remove();
     }
 
     // Create a new map
-    map = L.map("map",
+    MAP = L.map("map",
         {
             attributionControl: false,
         }).setView([latitude, longitude], 13);
@@ -579,16 +689,22 @@ function setMap(latitude, longitude, address)
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
         {
             maxZoom: 19,
-        }).addTo(map);
+        }).addTo(MAP);
 
     // Add a marker with a popup
-    L.marker([latitude, longitude]).addTo(map).bindPopup(address);
+    L.marker([latitude, longitude]).addTo(MAP).bindPopup(address);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // API CALLS
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Computes location data based on the address, site designation, and seismic value in the backend
+ * @param address
+ * @param siteDesignation
+ * @param seismicValue
+ */
 function locationCall(address, siteDesignation, seismicValue)
 {
     window.api
@@ -678,10 +794,12 @@ function locationCall(address, siteDesignation, seismicValue)
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// EVENTS
+// BUTTON CLICK EVENTS
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// location_button click event
+/**
+ * Loads map and location data when the location button is clicked
+ */
 document
     .getElementById("location_button")
     .addEventListener("click", function ()
@@ -707,11 +825,13 @@ document
             {
                 siteDesignation,
                 seismicValue
-            } = get_seismic_parameters();
+            } = getSeismicParameters();
         locationCall(address, siteDesignation, seismicValue);
     });
 
-// next button click event
+/**
+ * When the next button is clicked, check that all fields are valid and then proceed to the next page
+ */
 document.getElementById("next-button").addEventListener("click", function ()
 {
     // check that the project name is not empty
@@ -1013,7 +1133,7 @@ document.getElementById("next-button").addEventListener("click", function ()
                         {
                             siteDesignation,
                             seismicValue
-                        } = get_seismic_parameters();
+                        } = getSeismicParameters();
 
                     const myHeaders = new Headers();
                     myHeaders.append("Content-Type", "application/json");
@@ -1324,137 +1444,9 @@ document.getElementById("next-button").addEventListener("click", function ()
     }
 });
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// SERIALIZATION
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-function serialize()
-{
-    let objects = {
-        input_page:
-            {
-                radio:
-                    {},
-                input:
-                    {},
-                table:
-                    {}
-            }
-    };
-
-    // Handle radio inputs
-    let radios = document.querySelectorAll("input[type=radio]");
-    radios.forEach((radio) =>
-    {
-        if (radio.checked)
-        {
-            objects.input_page.radio[radio.id] = radio.value;
-        }
-    });
-
-    // Handle other inputs
-    let inputs = document.querySelectorAll("input:not([type=radio])");
-    inputs.forEach((input) =>
-    {
-        if (input.value !== "")
-        {
-            objects.input_page.input[input.id] = input.value;
-        }
-    });
-
-    // Handle tables
-    let tables = document.querySelectorAll("table");
-    tables.forEach((table) =>
-    {
-        objects.input_page.table[table.id] = table.innerHTML;
-    });
-
-    let json = JSON.stringify(objects);
-    return json;
-}
-
-function waitForElement(id, callback)
-{
-    let intervalId = setInterval(function ()
-    {
-        let element = document.getElementById(id);
-        if (element)
-        {
-            clearInterval(intervalId);
-            callback(element);
-        }
-    }, 100); // Check every 100ms
-}
-
-function deserialize(json, section)
-{
-    return new Promise((resolve) =>
-    {
-        let objects = JSON.parse(json)[section];
-        let totalElements =
-            Object.keys(objects.radio).length +
-            Object.keys(objects.input).length +
-            Object.keys(objects.table).length;
-        let processedElements = 0;
-
-        // go through all the radio
-        for (let id in objects.radio)
-        {
-            waitForElement(id, function (radio)
-            {
-                if (radio.value === objects.radio[id])
-                {
-                    radio.click();
-                }
-                processedElements++;
-                if (processedElements === totalElements)
-                {
-                    resolve();
-                }
-            });
-        }
-
-        // go through all the input
-        for (let id in objects.input)
-        {
-            waitForElement(id, function (input)
-            {
-                input.value = "";
-                input.focus();
-                let value = objects.input[id];
-                for (let i = 0; i < value.length; i++)
-                {
-                    input.value = value;
-                }
-                processedElements++;
-                if (processedElements === totalElements)
-                {
-                    resolve();
-                }
-            });
-        }
-
-        // go through all the tables
-        for (let id in objects.table)
-        {
-            waitForElement(id, function (table)
-            {
-                table.innerHTML = objects.table[id];
-                processedElements++;
-                if (processedElements === totalElements)
-                {
-                    resolve();
-                }
-            });
-        }
-    });
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// SAVE BUTTON
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-// save-button click event
+/**
+ * When the save button is clicked, serialize the input page and send it to the backend
+ */
 document.getElementById("save-button").addEventListener("click", function ()
 {
     window.api
@@ -1519,19 +1511,158 @@ document.getElementById("save-button").addEventListener("click", function ()
 
 });
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// BACK BUTTON CLICK EVENT
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+/**
+ * When the back button is clicked, return to the home page
+ */
 document.getElementById("back-button").addEventListener("click", function ()
 {
     window.location.href = "home.html";
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// LOAD SAVE FILE
+// SERIALIZATION
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Serialize the input page
+ * @returns A JSON string representing the input page
+ */
+function serialize()
+{
+    let objects = {
+        input_page:
+            {
+                radio:
+                    {},
+                input:
+                    {},
+                table:
+                    {}
+            }
+    };
+
+    // Handle radio inputs
+    let radios = document.querySelectorAll("input[type=radio]");
+    radios.forEach((radio) =>
+    {
+        if (radio.checked)
+        {
+            objects.input_page.radio[radio.id] = radio.value;
+        }
+    });
+
+    // Handle other inputs
+    let inputs = document.querySelectorAll("input:not([type=radio])");
+    inputs.forEach((input) =>
+    {
+        if (input.value !== "")
+        {
+            objects.input_page.input[input.id] = input.value;
+        }
+    });
+
+    // Handle tables
+    let tables = document.querySelectorAll("table");
+    tables.forEach((table) =>
+    {
+        objects.input_page.table[table.id] = table.innerHTML;
+    });
+
+    let json = JSON.stringify(objects);
+    return json;
+}
+
+/**
+ * wait for an element with the given id to appear
+ * @param id
+ * @param callback
+ */
+function waitForElement(id, callback)
+{
+    let intervalId = setInterval(function ()
+    {
+        let element = document.getElementById(id);
+        if (element)
+        {
+            clearInterval(intervalId);
+            callback(element);
+        }
+    }, 100); // Check every 100ms
+}
+
+/**
+ * Deserialize the input page
+ * @param json
+ * @param section
+ * @returns {Promise<unknown>}
+ */
+function deserialize(json, section)
+{
+    return new Promise((resolve) =>
+    {
+        let objects = JSON.parse(json)[section];
+        let totalElements =
+            Object.keys(objects.radio).length +
+            Object.keys(objects.input).length +
+            Object.keys(objects.table).length;
+        let processedElements = 0;
+
+        // go through all the radio
+        for (let id in objects.radio)
+        {
+            waitForElement(id, function (radio)
+            {
+                if (radio.value === objects.radio[id])
+                {
+                    radio.click();
+                }
+                processedElements++;
+                if (processedElements === totalElements)
+                {
+                    resolve();
+                }
+            });
+        }
+
+        // go through all the input
+        for (let id in objects.input)
+        {
+            waitForElement(id, function (input)
+            {
+                input.value = "";
+                input.focus();
+                let value = objects.input[id];
+                for (let i = 0; i < value.length; i++)
+                {
+                    input.value = value;
+                }
+                processedElements++;
+                if (processedElements === totalElements)
+                {
+                    resolve();
+                }
+            });
+        }
+
+        // go through all the tables
+        for (let id in objects.table)
+        {
+            waitForElement(id, function (table)
+            {
+                table.innerHTML = objects.table[id];
+                processedElements++;
+                if (processedElements === totalElements)
+                {
+                    resolve();
+                }
+            });
+        }
+    });
+}
+
+/**
+ * Load the save file
+ */
 function loadSaveFile()
 {
     window.api
@@ -1637,9 +1768,12 @@ function loadSaveFile()
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// SET USERNAME DROPDOWN
+// DROPDOWN MENU
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Set the username in the dropdown menu
+ */
 function setUsernameDropdown()
 {
     window.api
@@ -1675,31 +1809,30 @@ function setUsernameDropdown()
 
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// PROFILE BUTTON CLICK
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-// profile click event
-document.getElementById("profile").addEventListener("click", function ()
-{
-    window.location.href = "profile.html";
-});
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// LOGOUT BUTTON CLICK
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-// logout click event
+/**
+ * If clicked the user will be logged out and redirected to the login page
+ */
 document.getElementById("logout").addEventListener("click", function ()
 {
     window.api.invoke("store-token", "");
     window.location.href = "login.html";
 });
 
+/**
+ * If clicked the user will be redirected to the profile page */
+document.getElementById("profile").addEventListener("click", function ()
+{
+    window.location.href = "profile.html";
+});
+
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // WINDOW ONLOAD EVENT
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Set up the page on load
+ */
 window.onload = function ()
 {
     setUsernameDropdown();

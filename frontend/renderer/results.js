@@ -1,8 +1,20 @@
-let ulsWallSelection;
-let slsWallSelection;
-let ulsRoofSelection;
-let slsRoofSelection;
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// CONSTANTS
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+let ULS_WALL_SELECTION;
+let SLS_WALL_SELECTION;
+let ULS_ROOF_SELECTION;
+let SLS_ROOF_SELECTION;
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// HELPER FUNCTIONS
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * changes the color of the selected button in a toggle menu
+ * @param toggleMenu
+ */
 function toggleMenuColors(toggleMenu)
 {
     document.querySelectorAll(toggleMenu + " .btn").forEach((button) =>
@@ -18,6 +30,15 @@ function toggleMenuColors(toggleMenu)
     });
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// SERIALIZATION
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Wait for an element to load
+ * @param id
+ * @param callback
+ */
 function waitForElement(id, callback)
 {
     let intervalId = setInterval(function ()
@@ -31,6 +52,9 @@ function waitForElement(id, callback)
     }, 100); // Check every 100ms
 }
 
+/**
+ * Load the save file
+ */
 function loadSaveFile()
 {
     window.api
@@ -134,6 +158,10 @@ function loadSaveFile()
 
 }
 
+/**
+ * Serialize the current state of the page
+ * @returns {string}
+ */
 function serialize()
 {
     let objects = {
@@ -160,6 +188,12 @@ function serialize()
     return json;
 }
 
+/**
+ * Deserialize the current state of the page
+ * @param json
+ * @param section
+ * @returns {Promise<unknown>}
+ */
 function deserialize(json, section)
 {
     return new Promise((resolve) =>
@@ -188,6 +222,13 @@ function deserialize(json, section)
     });
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// BUTTON CLICK EVENTS
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * When the save button is clicked, the current state of the page is serialized and sent to the backend to be saved.
+ */
 document.getElementById("save-button").addEventListener("click", () =>
 {
     window.api
@@ -250,6 +291,9 @@ document.getElementById("save-button").addEventListener("click", () =>
 
 });
 
+/**
+ * When the back button is clicked, the user is redirected to the load page.
+ */
 document
     .getElementById("uls-wall-selection")
     .addEventListener("change", function (e)
@@ -258,31 +302,48 @@ document
         switch (selectedOption)
         {
             case "uls-wall-selection-dead-only-1-4D-option":
-                ulsWallSelection = "uls_1.4D";
+                ULS_WALL_SELECTION = "uls_1.4D";
                 break;
             case "uls-wall-selection-full-wind-1-25D-1-4Wy-option":
-                ulsWallSelection = "uls_1.25D_1.4Wy";
+                ULS_WALL_SELECTION = "uls_1.25D_1.4Wy";
                 break;
             case "uls-wall-selection-seismic-1-0D-1-0Ey-option":
-                ulsWallSelection = "uls_1.0D_1.0Ey";
+                ULS_WALL_SELECTION = "uls_1.0D_1.0Ey";
                 break;
             case "uls-wall-selection-seismic-1-0D-1-0Ex-option":
-                ulsWallSelection = "uls_1.0D_1.0Ex";
+                ULS_WALL_SELECTION = "uls_1.0D_1.0Ex";
                 break;
         }
 
-        if (ulsWallSelection !== undefined && slsWallSelection !== undefined)
+        if (ULS_WALL_SELECTION !== undefined && SLS_WALL_SELECTION !== undefined)
         {
             getWallLoadCombinations();
         }
     });
 
-// back button
+/**
+ * When the back button is clicked, the user is redirected to the load page.
+ */
 document.getElementById("back-button").addEventListener("click", () =>
 {
     window.location.href = "load.html";
 });
 
+/**
+ * When the back home is clicked, the user is redirected to the home page.
+ */
+document.getElementById("home-button").addEventListener("click", function ()
+{
+    window.location.href = "home.html";
+});
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// SELECTION CHANGE EVENTS
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * When the wall selection is changed, the load combinations are updated.
+ */
 document
     .getElementById("sls-wall-selection")
     .addEventListener("change", function (e)
@@ -291,16 +352,19 @@ document
         switch (selectedOption)
         {
             case "sls-wall-selection-1-0D-1-0Wy-option":
-                slsWallSelection = "sls_1.0D_1.0Wy";
+                SLS_WALL_SELECTION = "sls_1.0D_1.0Wy";
                 break;
         }
 
-        if (ulsWallSelection !== undefined && slsWallSelection !== undefined)
+        if (ULS_WALL_SELECTION !== undefined && SLS_WALL_SELECTION !== undefined)
         {
             getWallLoadCombinations();
         }
     });
 
+/**
+ * When the roof selection is changed, the load combinations are updated.
+ */
 document
     .getElementById("uls-roof-selection")
     .addEventListener("change", function (e)
@@ -309,28 +373,31 @@ document
         switch (selectedOption)
         {
             case "uls-roof-selection-dead-only-1-4D-option":
-                ulsRoofSelection = "uls_1.4D";
+                ULS_ROOF_SELECTION = "uls_1.4D";
                 break;
             case "uls-roof-selection-full-wind-1-25D-1-4Wy-option":
-                ulsRoofSelection = "uls_1.25D_1.4Wy";
+                ULS_ROOF_SELECTION = "uls_1.25D_1.4Wy";
                 break;
             case "uls-roof-selection-seismic-1-0D-1-0Ey-option":
-                ulsRoofSelection = "uls_1.0D_1.0Ey";
+                ULS_ROOF_SELECTION = "uls_1.0D_1.0Ey";
                 break;
             case "uls-roof-selection-seismic-1-0D-1-0Ex-option":
-                ulsRoofSelection = "uls_1.0D_1.0Ex";
+                ULS_ROOF_SELECTION = "uls_1.0D_1.0Ex";
                 break;
             case "uls-roof-selection-full-snow-with-wind-1-25D-1-5S-option":
-                ulsRoofSelection = "uls_1.25D_1.5S";
+                ULS_ROOF_SELECTION = "uls_1.25D_1.5S";
                 break;
         }
 
-        if (ulsRoofSelection !== undefined && slsRoofSelection !== undefined)
+        if (ULS_ROOF_SELECTION !== undefined && SLS_ROOF_SELECTION !== undefined)
         {
             getRoofLoadCombinations();
         }
     });
 
+/**
+ * When the roof selection is changed, the load combinations are updated.
+ */
 document
     .getElementById("sls-roof-selection")
     .addEventListener("change", function (e)
@@ -339,22 +406,30 @@ document
         switch (selectedOption)
         {
             case "sls-roof-selection-dead-and-wind-y-normal-to-face-1-0D-1-0Wy-option":
-                slsRoofSelection = "sls_1.0D_1.0Wy";
+                SLS_ROOF_SELECTION = "sls_1.0D_1.0Wy";
                 break;
             case "sls-roof-selection-full-snow-with-wind-y-1-0D-1-0S-option":
-                slsRoofSelection = "sls_1.0D_1.0S";
+                SLS_ROOF_SELECTION = "sls_1.0D_1.0S";
                 break;
             case "sls-roof-selection-dead-and-live-1-0D-1-0L-option":
-                slsRoofSelection = "sls_1.0D_1.0L_WY";
+                SLS_ROOF_SELECTION = "sls_1.0D_1.0L_WY";
                 break;
         }
 
-        if (ulsRoofSelection !== undefined && slsRoofSelection !== undefined)
+        if (ULS_ROOF_SELECTION !== undefined && SLS_ROOF_SELECTION !== undefined)
         {
             getRoofLoadCombinations();
         }
     });
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// GET LOAD COMBINATIONS
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Get the wall load combinations
+ */
 function getWallLoadCombinations()
 {
     window.api
@@ -371,8 +446,8 @@ function getWallLoadCombinations()
 
                 const raw = JSON.stringify(
                     {
-                        uls_wall_type: ulsWallSelection,
-                        sls_wall_type: slsWallSelection,
+                        uls_wall_type: ULS_WALL_SELECTION,
+                        sls_wall_type: SLS_WALL_SELECTION,
                     });
 
                 const requestOptions = {
@@ -423,6 +498,9 @@ function getWallLoadCombinations()
 
 }
 
+/**
+ * Get the roof load combinations
+ */
 function getRoofLoadCombinations()
 {
     window.api
@@ -439,8 +517,8 @@ function getRoofLoadCombinations()
 
                 const raw = JSON.stringify(
                     {
-                        uls_roof_type: ulsRoofSelection,
-                        sls_roof_type: slsRoofSelection,
+                        uls_roof_type: ULS_ROOF_SELECTION,
+                        sls_roof_type: SLS_ROOF_SELECTION,
                     });
 
                 const requestOptions = {
@@ -496,24 +574,13 @@ function getRoofLoadCombinations()
     });
 }
 
-document.getElementById("home-button").addEventListener("click", function ()
-{
-    window.location.href = "home.html";
-});
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// DROPDOWN MENU
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// profile click event
-document.getElementById("profile").addEventListener("click", function ()
-{
-    window.location.href = "profile.html";
-});
-
-// logout click event
-document.getElementById("logout").addEventListener("click", function ()
-{
-    window.api.invoke("store-token", "");
-    window.location.href = "login.html";
-});
-
+/**
+ * Set the username in the dropdown menu
+ */
 function setUsernameDropdown()
 {
     window.api
@@ -547,6 +614,29 @@ function setUsernameDropdown()
     });
 }
 
+/**
+ * When the profile button is clicked, the user is redirected to the profile page.
+ */
+document.getElementById("profile").addEventListener("click", function ()
+{
+    window.location.href = "profile.html";
+});
+
+/**
+ * When the logout button is clicked, the user is logged out and redirected to the login page.
+ */
+document.getElementById("logout").addEventListener("click", function ()
+{
+    window.api.invoke("store-token", "");
+    window.location.href = "login.html";
+});
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// WINDOW ONLOAD EVENT
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/**
+ * Set up the page on load
+ */
 window.onload = function ()
 {
     setUsernameDropdown();

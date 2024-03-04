@@ -1,3 +1,11 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// BUTTON CLICK EVENTS
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * When the signin button is clicked, the username and password are retrieved from the input fields and a request is made
+ * to the backend to check if the credentials are valid. If they are, the user is redirected to the home page.
+ */
 document.getElementById("signin").addEventListener("click", function (event)
 {
     event.preventDefault();
@@ -44,6 +52,23 @@ document.getElementById("signin").addEventListener("click", function (event)
 
 });
 
+/**
+ * When the connection details button is clicked, the user is redirected to the connection details page.
+ */
+document
+    .getElementById("connection-details-button")
+    .addEventListener("click", function (event)
+    {
+        window.location.href = "connection_details.html";
+    });
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// INPUT EVENTS
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * If the user is typing and there is an error message, the error message is cleared.
+ */
 document.getElementById("username").addEventListener("input", function (event)
 {
     if (document.getElementById("error-message").textContent !== "")
@@ -52,6 +77,9 @@ document.getElementById("username").addEventListener("input", function (event)
     }
 });
 
+/**
+ * If the user is typing and there is an error message, the error message is cleared.
+ */
 document.getElementById("password").addEventListener("input", function (event)
 {
     if (document.getElementById("error-message").textContent !== "")
@@ -60,13 +88,13 @@ document.getElementById("password").addEventListener("input", function (event)
     }
 });
 
-document
-    .getElementById("connection-details-button")
-    .addEventListener("click", function (event)
-    {
-        window.location.href = "connection_details.html";
-    });
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// WINDOW ONLOAD EVENT
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Set up the page on load
+ */
 window.onload = function ()
 {
     window.api

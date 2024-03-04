@@ -1,27 +1,11 @@
-window.onload = function ()
-{
-    window.api
-        .invoke("get-connection-address") // Retrieve the token
-        .then(async (connection) =>
-        {
-            connection = connection.toString();
-            const [security, address, port] = connection.split(":");
-            document.getElementById("address")
-                .value = address.substring(
-                2,
-                address.length,
-            );
-            document.getElementById("port")
-                .value = port;
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// BUTTON CLICK EVENTS
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-            if (security === "https")
-            {
-                document.getElementById("https")
-                    .checked = true;
-            }
-        });
-};
-
+/**
+ * When the connect button is clicked, the address and port are retrieved from the input fields and a request is made
+ * to the server to check if the server is reachable.
+ */
 document
     .getElementById("connect-button")
     .addEventListener("click", function (event)
@@ -123,9 +107,49 @@ document
             });
     });
 
+/**
+ * When the login button is clicked, the user is redirected to the login page.
+ */
 document
     .getElementById("login-button")
     .addEventListener("click", function (event)
     {
         window.location.href = "login.html";
     });
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// WINDOW LOADED
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * When the window loads, the connection details are retrieved from the main process and the address and port
+ * are set to the input fields.
+ **/
+window.onload = function ()
+{
+    window.api
+        .invoke("get-connection-address") // Retrieve the token
+        .then(async (connection) =>
+        {
+            // parse connection as a string
+            connection = connection.toString();
+            // extract the security type (https/http), address and port from the connection string
+            const [security, address, port] = connection.split(":");
+            // set address input value to the address
+            document.getElementById("address")
+                .value = address.substring(
+                2,
+                address.length,
+            );
+            // set port input value to the port
+            document.getElementById("port")
+                .value = port;
+
+            // check the security type and set the checkbox accordingly
+            if (security === "https")
+            {
+                document.getElementById("https")
+                    .checked = true;
+            }
+        });
+};
