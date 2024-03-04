@@ -1,103 +1,59 @@
 import bpy
 import argparse
 import sys
+sys.path.append('C:\\Users\\Alastair\\Dev\\SEEDA\\blender\\scripts')
+sys.path.append('C:\\Users\\Alastair\\Dev\\SEEDA\\blender\\objects')
 import render
 import os
-
+import jsonpickle
+import json
 import logging
+from blender_object import *
+from shapes import create_wind_cube
 
-# Configure logging
-log_file_path = os.path.join('./logs', 'blender_script.log')
-logging.basicConfig(filename=log_file_path, level=logging.DEBUG, 
-                    format='%(asctime)s:%(levelname)s:%(message)s')
-
-def create_cube(length=2.0, width=2.0, height=2.0, position=0):
-   
-
-    cube_x = length * 0.9
-    cube_y = width * 0.9
-    cube_z = height * 0.9
-    
-    block_z = position*cube_z
-    # Add a cube
-    bpy.ops.mesh.primitive_cube_add(scale=(cube_x, cube_y, cube_z), size=1, enter_editmode=False, location=(0, 0, block_z))
-
-    bpy.ops.object.origin_set(type='ORIGIN_CENTER_OF_MASS', center='BOUNDS')
-    # Apply the scaling transformation
-    bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
-
-    # Enter edit mode to modify the cube
-    bpy.ops.object.editmode_toggle()
-
-    # positive x
-    bpy.ops.mesh.primitive_cube_add(scale=(length*0.1/2, cube_y/2, cube_z/2), enter_editmode=True, location=(cube_x/2+length*0.05, 0, block_z))
-
-    bpy.ops.mesh.primitive_cube_add(scale=(length*0.1/2, cube_y/2, cube_z/2), enter_editmode=True, location=(-cube_x/2-length*0.05, 0, block_z))
-
-    bpy.ops.mesh.primitive_cube_add(scale=(cube_x/2, width*0.1/2, cube_z/2), enter_editmode=True, location=(0, cube_y/2+width*0.05, block_z))
-    bpy.ops.mesh.primitive_cube_add(scale=(cube_x/2,width*0.1/2, cube_z/2), enter_editmode=True, location=(0,-cube_y/2-width*0.05, block_z))
-    bpy.ops.object.editmode_toggle()
-    bpy.ops.mesh.primitive_cube_add(size=2, enter_editmode=False,  location=(cube_x/2+length*0.05, cube_y/2+width*0.05, block_z), scale=(0.1,0.1,cube_z/2))
-    bpy.ops.mesh.primitive_cube_add(size=2, enter_editmode=False,  location=(-cube_x/2-length*0.05, cube_y/2+width*0.05, block_z), scale=(0.1,0.1,cube_z/2))
-    bpy.ops.mesh.primitive_cube_add(size=2, enter_editmode=False,  location=(cube_x/2+length*0.05, -cube_y/2-width*0.05, block_z), scale=(0.1,0.1,cube_z/2))
-    bpy.ops.mesh.primitive_cube_add(size=2, enter_editmode=False,  location=(-cube_x/2-length*0.05, -cube_y/2-width*0.05, block_z), scale=(0.1,0.1,cube_z/2))
-
-def set_cube_colour():
-    # Select the object by name, the default cube
-    cube = bpy.data.objects['Cube']
-
-    # Create a new material
-    mat = bpy.data.materials.new(name="CustomMaterial")
-
-    # Enable 'Use nodes':
-    mat.use_nodes = True
-
-    # Access the principled BSDF, the default shader for new materials
-    principled_bsdf = mat.node_tree.nodes.get('Principled BSDF')
-
-    # Set the color - in RGBA format, from 0.0 to 1.0
-    # red
-    principled_bsdf.inputs['Base Color'].default_value = (1.0, 0.0, 0.0, 1.0)  # Red
-
-    # Assign the material to the object
-    if cube.data.materials:
-        # If the object already has material slots
-        cube.data.materials[0] = mat
-    else:
-        # If the object has no material slots
-        cube.data.materials.append(mat)
-
-def parse_arguments():
-    parser = argparse.ArgumentParser(description="Create a cube with specified size in Blender.")
-    parser.add_argument('-l', '--length', type=float, help="Length of the cube.", default=2.0)
-    parser.add_argument('-w', '--width', type=float, help="Width of the cube.", default=2.0)
-    parser.add_argument('-h', '--height', type=float, help="Height of the cube.", default=2.0)
+def create_blender_json(num_zones, heights, loads):
+    json_str = [Arrow()]
+    for i in range(num_zones):
+        json_str.insert(0, HeightZone(h=heights[i], load=loads[i], position=i).to_dict())
 
     
-    # Extract arguments after '--'
-    if "--" in sys.argv:
-        args, __ = parser.parse_known_args(sys.argv[sys.argv.index("--") + 1:])
-    else:
-        # Default args if not running from CLI
-        args = parser.parse_args([])
+    json_str = jsonpickle.encode(json_str)
     
-    return args
+    return json_str
+
 
 def main():
-    # Conditionally parse arguments if script is run from CLI with '--'
-    logging.info('wind')
-    if "--" in sys.argv:
-        args = parse_arguments()
-        # Create a cube with the specified dimensions
-        create_cube(args.length, args.width, args.height)
-    else:
-        # Default behavior for direct execution in Blender
-        create_cube()
+    # Check for args
+    if len(sys.argv) < 1:
+        print("Usage: blender --background --python blender_request.py -- id '<json_string>'")
+        sys.exit(1)
     
-    # Set the cube colour
-    set_cube_colour()
+    # last argument is JSON string
+    json_str = sys.argv[-1]
+    id = int(sys.argv[-2])
+    #json_str = f'\"{json_str}\"'
+    print(json_str)
+    try:
+        # Parse the JSON string
+        data = jsonpickle.decode(json_str)
+        # Now you can use the data object as needed, for example:
+        print("Data received:", data)
+    except Exception as e:
+        print("Failed to decode JSON:", e)
+        #with open(json_str, 'r') as file:
+            #data = jsonpickle.decode(file)
+        #data=json.loads(json_str)
+        sys.exit(-1)
+    rgba_decrement = 1.0/(len(data)-1)
+
+    for i in range(len(data)-1):
+        height = data[i]['h']
+        cube = create_wind_cube(height=height, position=i )
+        r = max(0, 1-(rgba_decrement*i))
+
+    render_path = "wind_" + str(id) + ".png"
 
     render.setup_scene()
-    render.render_image(os.path.join(os.environ['BLENDER_OUTPUT'], "test_wind.png"))
+    render.render_image(os.path.join('C:\\Users\\Alastair\\Dev\\SEEDA\\blender\\output', render_path))
 if __name__ == "__main__":
     main()

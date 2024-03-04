@@ -1,27 +1,24 @@
-import sys
-import json
-import objects
 
-# Check for args
-if len(sys.argv) < 5:
-    print("Usage: blender --background --python script.py -- '<json_string>'")
-    sys.exit(1)
+import jsonpickle
+from blender_object import *
+import subprocess
 
-# last argument is JSON string
-json_str = sys.argv[-1]
-height = float(sys.argv[-4])
-width = float(sys.argv[-3])
-length = float(sys.argv[-2])
+def create_blender_json(num_zones, heights, loads):
+    json_str = [Arrow()]
+    for i in range(num_zones):
+        json_str.insert(0, HeightZone(h=heights[i], load=loads[i], position=i).to_dict())
 
-try:
-    # Parse the JSON string
-    data = json.loads(json_str)
     
-    # Now you can use the data object as needed, for example:
-    print("Data received:", data)
-except json.JSONDecodeError as e:
-    print("Failed to decode JSON:", e)
-    sys.exit(1)
+    json_str = jsonpickle.encode(json_str)
+    
+    return json_str
 
+json_str = create_blender_json(3, [2,2,2], [25,40,20])
+print(json_str)
 
-
+data = jsonpickle.decode(json_str)
+print(data)
+print(data[0]['h'])
+#command = f"blender --background --python .\blender\scripts\wind_cube.py -- 1 {json_str}"
+#result = subprocess.run(command, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+#print(f"ran successfully:", result.stdout.decode())
