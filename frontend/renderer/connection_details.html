@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>ASPENLOG 2020</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <link href="login.css" rel="stylesheet">
+    <link href="connection_details.css" rel="stylesheet">
 </head>
 <body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
@@ -13,33 +13,32 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
 <div class="container vh-100 d-flex justify-content-center align-items-center">
     <div class="d-flex flex-column align-items-center">
-        <img src="../assets/images/logo%20(Large).png" style="width: 150px; height: 150px;">
         <br>
         <div class="card mx-auto" style="min-width: 300px">
             <div class="card-body">
-                <h4 class="text-center">Sign In</h4>
+                <h4 class="text-center">Connection Details</h4>
                 <form>
                     <div class="form-group">
-                        <label for="username">Username</label>
-                        <input type="text" class="form-control" id="username">
+                        <label for="address">Address</label>
+                        <input type="text" class="form-control" id="address">
                     </div>
                     <div class="form-group">
-                        <label for="password">Password</label>
-                        <input type="password" class="form-control" id="password">
+                        <label for="port">Port</label>
+                        <input type="text" class="form-control" id="port">
+                    </div>
+                    <div class="form-group">
+                        <label for="https">Use HTTPS?</label>
+                        <input type="checkbox" id="https" value="HTTPS">
                     </div>
                     <br>
-                    <p id="error-message"></p>
-                    <button type="submit" id="signin" class="btn btn-primary">Sign In</button>
+                    <button type="button" id="connect-button" class="btn btn-primary">Connect</button>
+                    <p></p>
+                    <button type="button" id="login-button" class="btn btn-primary">Return to Login</button>
                 </form>
             </div>
         </div>
-        <div class="text-center w-100 mt-3">
-            <a href="register.html" id="join-button">Join Now</a>
-        </div>
     </div>
 </div>
-<button class="btn btn-primary" style="width: 175px; position: absolute; bottom: 20px; left: 20px" id="connection-details-button">Connection Details</button>
-<p style="position: absolute; bottom: 5px; right: 20px" id="server-status"></p>
 </body>
 </html>
-<script src="login.js"></script>
+<script src="connection_details.js"></script>

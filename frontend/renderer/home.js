@@ -28,6 +28,11 @@ function setUsernameDropdown()
 
 window.onload = function()
 {
+    window.api.invoke('get-connection-address') // Retrieve the token
+        .then((connectionAddress) =>{
+            console.log(connectionAddress);
+        });
+
     setUsernameDropdown();
 
     project_array = [];

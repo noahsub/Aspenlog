@@ -44,3 +44,49 @@ document.getElementById('password').addEventListener('input', function(event){
         document.getElementById('error-message').textContent = "";
     }
 });
+
+document.getElementById('connection-details-button').addEventListener('click', function(event) {
+    window.location.href = 'connection_details.html';
+});
+
+window.onload = function()
+{
+    var myHeaders = new Headers();
+    myHeaders.append("Accept", "application/json");
+    myHeaders.append('pragma', 'no-cache');
+    myHeaders.append('cache-control', 'no-cache');
+
+    var requestOptions = {
+        method: 'GET',
+        headers: myHeaders,
+        redirect: 'follow'
+    };
+
+    let serverStatus = document.getElementById('server-status');
+
+    fetch("http://localhost:42613/server_status", requestOptions)
+        .then(response => {
+
+            if (response.status === 200)
+            {
+                serverStatus.innerHTML = 'Server Online ✓';
+                serverStatus.style.color = '#9bca6d';
+            }
+            else
+            {
+                serverStatus.innerHTML = 'Server Offline ✕';
+                serverStatus.style.color = '#9bca6d';
+            }
+        })
+        .then(result => console.log(result))
+        .catch(error => {
+            serverStatus.innerHTML = 'Server Offline ✕';
+            serverStatus.style.color = '#e64f4f';
+
+            document.getElementById('username').disabled = true;
+            document.getElementById('password').disabled = true;
+            document.getElementById('signin').disabled = true;
+            document.getElementById('join-button').style.visibility = 'hidden';
+            document.getElementById('error-message').innerHTML = 'Server outage! Either switch to another server or wait for the current one to recover.';
+        });
+};
