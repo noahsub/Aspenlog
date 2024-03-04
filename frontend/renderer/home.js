@@ -80,14 +80,91 @@ document
         {
             let list_id = parseInt(event.target.closest(".list-group-item").id);
             let id = PROJECT_ARRAY[list_id];
-            alert("This function is not yet implemented, please try again later.");
+
+            window.api
+                .invoke("get-connection-address").then((connectionAddress) =>
+            {
+                window.api
+                    .invoke("get-token") // Retrieve the token
+                    .then((token) =>
+                    {
+                        const myHeaders = new Headers();
+                        myHeaders.append("Accept", "application/json");
+                        myHeaders.append("Authorization", `Bearer ${token}`);
+
+                        const requestOptions = {
+                            method: "POST",
+                            headers: myHeaders,
+                            redirect: "follow"
+                        };
+
+                        fetch(`${connectionAddress}/download_user_save_file?id=${id}`, requestOptions)
+                            .then((response) =>
+                            {
+                                // Get filename from Content-Disposition header
+                                const contentDisposition = response.headers.get('Content-Disposition');
+                                let filename = 'default_filename.extension';
+                                if (contentDisposition)
+                                {
+                                    const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+                                    let matches = filenameRegex.exec(contentDisposition);
+                                    if (matches != null && matches[1])
+                                    {
+                                        filename = matches[1].replace(/['"]/g, '');
+                                    }
+                                }
+
+                                return response.blob().then(blob => ({blob, filename}));
+                            })
+                            .then(({blob, filename}) =>
+                            {
+                                // Convert blob to buffer
+                                blob.arrayBuffer().then((buffer) =>
+                                {
+                                    // Convert ArrayBuffer to Uint8Array
+                                    const uint8Array = new Uint8Array(buffer);
+                                    // Send Uint8Array and filename to main process for writing to file
+                                    window.api.invoke('download', {data: uint8Array, filename});
+                                });
+                            })
+                            .catch((error) => console.error(error));
+                    });
+            });
         }
         // Remove button was clicked
         else if (event.target.matches(".remove-button"))
         {
             let list_id = parseInt(event.target.closest(".list-group-item").id);
             let id = PROJECT_ARRAY[list_id];
-            alert("This function is not yet implemented, please try again later.");
+
+            window.api
+                .invoke("get-connection-address").then((connectionAddress) =>
+            {
+                window.api
+                    .invoke("get-token") // Retrieve the token
+                    .then((token) =>
+                    {
+                        const myHeaders = new Headers();
+                        myHeaders.append("Accept", "application/json");
+                        myHeaders.append("Authorization", `Bearer ${token}`);
+
+                        const requestOptions = {
+                            method: "POST",
+                            headers: myHeaders,
+                            redirect: "follow"
+                        };
+
+                        fetch(`${connectionAddress}/delete_user_current_save_file?id=${id}`, requestOptions)
+                            .then((response) => response.text())
+                            .then((result) =>
+                            {
+                                let element = document.getElementById(list_id);
+                                element.parentNode.removeChild(element);
+                                PROJECT_ARRAY[list_id] = null;
+                            })
+                            .catch((error) => console.error(error));
+                    });
+            });
         }
         // The parent div itself was clicked
         else if (event.target.matches(".list-group-item"))
@@ -212,6 +289,100 @@ document.getElementById("new-button").addEventListener("click", function ()
     });
 });
 
+/**
+ * Clicks the hidden file input element to open the file dialog
+ */
+document.getElementById("open-button").addEventListener("click", function ()
+{
+    document.getElementById('json-input').click();
+});
+
+/**
+ * When a file is selected, the file is read and the data is sent to the server to create a new save file
+ */
+document.getElementById('json-input').addEventListener('change', function (e)
+{
+    var file = e.target.files[0];
+    var reader = new FileReader();
+
+    reader.onload = function (e)
+    {
+        var content = e.target.result;
+
+        window.api
+            .invoke("get-connection-address").then((connectionAddress) =>
+        {
+            window.api
+                .invoke("get-token") // Retrieve the token
+                .then((token) =>
+                {
+                    const myHeaders = new Headers();
+                    myHeaders.append("Content-Type", "application/json");
+                    myHeaders.append("Accept", "application/json");
+                    myHeaders.append("Authorization", `Bearer ${token}`);
+
+                    const raw = JSON.stringify(
+                        {
+                            json_data: JSON.parse(content),
+                            id: null,
+                        });
+
+                    const requestOptions = {
+                        method: "POST",
+                        headers: myHeaders,
+                        body: raw,
+                        redirect: "follow",
+                    };
+
+                    fetch(`${connectionAddress}/set_user_save_data`, requestOptions)
+                        .then((response) =>
+                        {
+                            if (response.status === 200)
+                            {
+                                return response.json();
+                            }
+                            else
+                            {
+                                throw new Error("Set User Save Data Error");
+                            }
+                        })
+                        .then((result) =>
+                        {
+                            let id = parseInt(result);
+                            const myHeaders = new Headers();
+                            myHeaders.append("Accept", "application/json");
+                            myHeaders.append("Authorization", `Bearer ${token}`);
+
+                            const requestOptions = {
+                                method: "POST",
+                                headers: myHeaders,
+                                redirect: "follow",
+                            };
+
+                            fetch(
+                                `${connectionAddress}/set_user_current_save_file?current_save_file=${id}`,
+                                requestOptions,
+                            )
+                                .then((response) =>
+                                {
+                                    if (response.status === 200)
+                                    {
+                                        window.location.href = "input.html";
+                                    }
+                                    else
+                                    {
+                                        throw new Error("Set User Current Save File Error");
+                                    }
+                                })
+                                .catch((error) => console.error(error));
+                        })
+                        .catch((error) => console.error(error));
+                });
+        });
+    };
+
+    reader.readAsText(file);
+});
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // WINDOW LOADED
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
