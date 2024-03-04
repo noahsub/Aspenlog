@@ -24,6 +24,7 @@ function createMainWindow() {
             enableRemoteModule: false,
             nodeIntegration: false,
             worldSafeExecuteJavaScript: true,
+            // devTools: false,
         },
     });
 
