@@ -17,6 +17,7 @@
         <div class="card mx-auto" style="min-width: 300px">
             <div class="card-body">
                 <h4 class="text-center">Connection Details</h4>
+                <p style="text-align: center">For advanced users only</p>
                 <form>
                     <div class="form-group">
                         <label for="address">Address</label>
@@ -30,7 +31,7 @@
                         <label for="https">Use HTTPS?</label>
                         <input type="checkbox" id="https" value="HTTPS">
                     </div>
-                    <br>
+                    <p id="error-message"></p>
                     <button type="button" id="connect-button" class="btn btn-primary">Connect</button>
                     <p></p>
                     <button type="button" id="login-button" class="btn btn-primary">Return to Login</button>

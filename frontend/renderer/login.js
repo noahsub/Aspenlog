@@ -51,6 +51,11 @@ document.getElementById('connection-details-button').addEventListener('click', f
 
 window.onload = function()
 {
+    window.api.invoke('get-connection-address') // Retrieve the token
+        .then(async (connection) => {
+            console.log(connection);
+        });
+
     var myHeaders = new Headers();
     myHeaders.append("Accept", "application/json");
     myHeaders.append('pragma', 'no-cache');
@@ -76,6 +81,12 @@ window.onload = function()
             {
                 serverStatus.innerHTML = 'Server Offline ✕';
                 serverStatus.style.color = '#9bca6d';
+
+                document.getElementById('username').disabled = true;
+                document.getElementById('password').disabled = true;
+                document.getElementById('signin').disabled = true;
+                document.getElementById('join-button').style.visibility = 'hidden';
+                document.getElementById('error-message').innerHTML = 'Server outage! Either switch to another server or wait for the current one to recover.';
             }
         })
         .then(result => console.log(result))
