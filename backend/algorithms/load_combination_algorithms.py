@@ -30,7 +30,7 @@ def compute_height_zone_variables(building: Building, zone_number: int):
 
 def compute_top_height_zone_variables(building: Building):
     top_height_zone = sorted(building.height_zones, key=lambda x: x.zone_num, reverse=True)[0]
-    return {'xn': compute_height_zone_variables(building, top_height_zone.zone_num),
+    return {'xn': compute_height_zone_variables(building, top_height_zone.zone_num)['xn'],
             'hx': top_height_zone.elevation,
             'ce': top_height_zone.wind_load.factor.ce,
             'ax': top_height_zone.seismic_load.ax}

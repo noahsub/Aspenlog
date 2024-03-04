@@ -11,4 +11,7 @@ def process_roof_load_combination_data(building: Building, snow_load_upwind: Sno
     sls_wall_type = SLSRoofLoadCombinationTypes(sls_roof_type)
     upwind_roof_combination = compute_roof_load_combinations(building, snow_load_upwind, uls_wall_type, sls_wall_type)
     downwind_roof_combination = compute_roof_load_combinations(building, snow_load_downwind, uls_wall_type, sls_wall_type)
-    return pd.concat([upwind_roof_combination, downwind_roof_combination])
+    with pd.option_context('display.max_rows', None, 'display.max_columns', None):  # more options can be specified also
+        print(upwind_roof_combination)
+        print(downwind_roof_combination)
+    return {'upwind': upwind_roof_combination, 'downwind': downwind_roof_combination}

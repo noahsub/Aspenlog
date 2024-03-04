@@ -820,6 +820,11 @@ document.getElementById('back-button').addEventListener('click', function()
     window.location.href = 'input.html';
 });
 
+document.getElementById('home-button').addEventListener('click', function() {
+    window.location.href = 'home.html';
+});
+
+
 // next button click
 document.getElementById('next-button').addEventListener('click', function()
 {
@@ -844,9 +849,49 @@ document.getElementById('next-button').addEventListener('click', function()
     }
 });
 
+function setUsernameDropdown()
+{
+    window.api.invoke('get-token') // Retrieve the token
+        .then((token) =>{
+            const myHeaders = new Headers();
+            myHeaders.append("Accept", "application/json");
+            myHeaders.append("Authorization", `Bearer ${token}`);
+
+            const requestOptions = {
+                method: "POST",
+                headers: myHeaders,
+                redirect: "follow"
+            };
+
+            fetch("http://localhost:42613/get_user_profile", requestOptions)
+                .then((response) => response.json())
+                .then((result) =>
+                {
+                    let data = JSON.parse(result);
+                    username = data['username'];
+                    document.getElementById('navbarDropdownMenuLink').textContent = username;
+                })
+                .catch((error) => console.error(error));
+        });
+}
+
+// profile click event
+document.getElementById("profile").addEventListener("click", function()
+{
+    window.location.href = 'profile.html';
+});
+
+// logout click event
+document.getElementById("logout").addEventListener("click", function()
+{
+    window.api.invoke('store-token', '');
+    window.location.href = 'login.html';
+});
+
 window.onload = function()
 {
     loadSaveFile();
+    setUsernameDropdown();
 
     toggleMenuColors('#roof-type-selection')
 

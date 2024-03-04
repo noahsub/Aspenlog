@@ -1,10 +1,11 @@
 from typing import Optional
 
+import jsonpickle
 from fastapi import APIRouter, Depends, HTTPException
 
 from backend.API.Managers.authentication_manager import decode_token
 from backend.API.Managers.user_data_manager import check_user_exists, get_user_data, get_all_user_save_data, \
-    get_user_save_file, set_user_save_data, set_user_current_save_file, get_user_current_save_file
+    get_user_save_file, set_user_save_data, set_user_current_save_file, get_user_current_save_file, get_user_profile
 from backend.API.Models.save_data_input import SaveDataInput
 
 user_data_router = APIRouter()
@@ -18,6 +19,13 @@ def user_data_endpoint(username: str = Depends(decode_token)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+@user_data_router.post("/get_user_profile")
+def get_user_profile_endpoint(username: str = Depends(decode_token)):
+    try:
+        check_user_exists(username)
+        return jsonpickle.encode(get_user_profile(username))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 @user_data_router.post("/get_all_user_save_data")
 def get_all_user_save_data_endpoint(username: str = Depends(decode_token)):

@@ -1,7 +1,35 @@
 let project_array = [];
 
+function setUsernameDropdown()
+{
+    window.api.invoke('get-token') // Retrieve the token
+        .then((token) =>{
+            const myHeaders = new Headers();
+            myHeaders.append("Accept", "application/json");
+            myHeaders.append("Authorization", `Bearer ${token}`);
+
+            const requestOptions = {
+                method: "POST",
+                headers: myHeaders,
+                redirect: "follow"
+            };
+
+            fetch("http://localhost:42613/get_user_profile", requestOptions)
+                .then((response) => response.json())
+                .then((result) =>
+                {
+                    let data = JSON.parse(result);
+                    username = data['username'];
+                    document.getElementById('navbarDropdownMenuLink').textContent = username;
+                })
+                .catch((error) => console.error(error));
+        });
+}
+
 window.onload = function()
 {
+    setUsernameDropdown();
+
     project_array = [];
     window.api.invoke('get-token') // Retrieve the token
         .then((token) =>
@@ -66,6 +94,19 @@ window.onload = function()
                 .catch((error) => console.error(error));
         });
 };
+
+// profile click event
+document.getElementById("profile").addEventListener("click", function()
+{
+    window.location.href = 'profile.html';
+});
+
+// logout click event
+document.getElementById("logout").addEventListener("click", function()
+{
+    window.api.invoke('store-token', '');
+    window.location.href = 'login.html';
+});
 
 // Add event listener to the parent div
 document.getElementById("save-file-list").addEventListener('click', function(event)
