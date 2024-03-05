@@ -44,7 +44,7 @@ document.getElementById("signin").addEventListener("click", function (event)
             })
             .catch((error) =>
             {
-                document.getElementById("error-message").textContent = error.message;
+                document.getElementById("error-message").textContent = "Invalid Credentials";
             });
     });
 
