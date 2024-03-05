@@ -85,7 +85,7 @@ function createMainWindow()
 
 app.whenReady().then(async () =>
 {
-    await keytar.setPassword('ASPENLOG2020', 'ConnectionAccount', 'http://localhost:42613');
+    await keytar.setPassword('ASPENLOG2020', 'ConnectionAccount', 'https://seeda-uoft.shop:42613');
     createMainWindow();
 });
 

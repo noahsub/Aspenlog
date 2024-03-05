@@ -124,7 +124,7 @@ window.onload = function ()
                 else
                 {
                     serverStatus.innerHTML = "Server Offline ✕";
-                    serverStatus.style.color = "#9bca6d";
+                    serverStatus.style.color = "#e64f4f";
 
                     document.getElementById("username").disabled = true;
                     document.getElementById("password").disabled = true;
