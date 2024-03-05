@@ -9,39 +9,39 @@
 document.getElementById("signin").addEventListener("click", function (event)
 {
     event.preventDefault();
-    window.api
-        .invoke("get-connection-address").then((connectionAddress) =>
-    {
-        var username = document.getElementById("username").value;
-        var password = document.getElementById("password").value;
 
-        var myHeaders = new Headers();
+    window.api.invoke("get-connection-address").then((connectionAddress) =>
+    {
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
         myHeaders.append("Accept", "application/json");
 
-        var raw = JSON.stringify({
-            "username": `${username}`,
-            "password": `${password}`
+        let username = document.getElementById("username").value.toString();
+        let password = document.getElementById("password").value.toString();
+
+        console.log(username);
+        console.log(password);
+
+        const raw = JSON.stringify({
+            "username": username,
+            "password": password
         });
 
-        var requestOptions = {
+        const requestOptions = {
             method: "POST",
             headers: myHeaders,
             body: raw,
-            redirect: "follow",
+            redirect: "follow"
         };
 
-        fetch(
-            `${connectionAddress}/login`,
-            requestOptions,
-        )
+        fetch(`${connectionAddress}/login`, requestOptions)
             .then((response) =>
             {
-                console.log(response.status);
-
                 if (response.status !== 200)
                 {
                     throw new Error("Invalid Credentials");
                 }
+
                 return response.json();
             })
             .then((result) =>
@@ -50,14 +50,8 @@ document.getElementById("signin").addEventListener("click", function (event)
                 window.api.invoke("store-token", token); // Store the token
                 window.location.href = "home.html";
             })
-            .catch((error) =>
-            {
-                document.getElementById("error-message").textContent = "Invalid Credentials";
-            });
+            .catch((error) => document.getElementById("error-message").textContent = "Invalid Credentials");
     });
-
-    // Your code here
-
 });
 
 /**

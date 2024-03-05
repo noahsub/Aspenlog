@@ -209,31 +209,40 @@ document.getElementById("register").addEventListener("click", function (event)
 {
     event.preventDefault();
 
-    window.api
-        .invoke("get-connection-address").then((connectionAddress) =>
+    window.api.invoke("get-connection-address").then((connectionAddress) =>
     {
-        var first_name = document.getElementById("firstname").value;
-        var last_name = document.getElementById("lastname").value;
-        var username = document.getElementById("username").value;
-        var email = document.getElementById("email").value;
-        var password = document.getElementById("password").value;
-
-        var myHeaders = new Headers();
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
         myHeaders.append("Accept", "application/json");
 
-        var requestOptions = {
+        let first_name = document.getElementById("firstname").value.toString();
+        let last_name = document.getElementById("lastname").value.toString();
+        let username = document.getElementById("username").value.toString();
+        let email = document.getElementById("email").value.toString();
+        let password = document.getElementById("password").value.toString();
+
+        const raw = JSON.stringify({
+            "username": username,
+            "first_name": first_name,
+            "last_name": last_name,
+            "password": password,
+            "email": email
+        });
+
+        const requestOptions = {
             method: "POST",
             headers: myHeaders,
-            redirect: "follow",
+            body: raw,
+            redirect: "follow"
         };
 
-        fetch(
-            `${connectionAddress}/register?username=${username}&first_name=${first_name}&last_name=${last_name}&password=${password}&email=${email}`,
-            requestOptions,
-        )
+        fetch(`${connectionAddress}/register`, requestOptions)
             .then((response) => response.json())
-            .then((result) => (window.location.href = "login.html"))
-            .catch((error) => error.log("error", error));
+            .then((result) =>
+            {
+                window.location.href = "login.html";
+            })
+            .catch((error) => console.error(error));
     });
 });
 
