@@ -9,6 +9,16 @@ let MAP;
 // HELPER FUNCTIONS
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+function ascending(list)
+{
+    for (let i = 1; i < list.length; i++){
+        if (list[i] < list[i-1]){
+            return false;
+        }
+    }
+    return true;
+}
+
 /**
  * Get the float value of an input element with the given id
  * @param id
@@ -1144,11 +1154,10 @@ document.getElementById("next-button").addEventListener("click", function ()
         document.getElementById("next-warning").innerText = "The tallest elevation must be equal to the building height";
     }
 
-        // ensure that the elevations are in ascending order
-        // else if ()
-        // {
-        //
-    // }
+    else if (!ascending(getAllElevations()))
+    {
+        document.getElementById("next-warning").innerText = "The elevations must be in ascending order";
+    }
 
     else
     {
