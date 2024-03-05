@@ -18,19 +18,27 @@ document.getElementById("signin").addEventListener("click", function (event)
         var myHeaders = new Headers();
         myHeaders.append("Accept", "application/json");
 
+        var raw = JSON.stringify({
+            "username": `${username}`,
+            "password": `${password}`
+        });
+
         var requestOptions = {
             method: "POST",
             headers: myHeaders,
+            body: raw,
             redirect: "follow",
         };
 
         fetch(
-            `${connectionAddress}/login?username=${username}&password=${password}`,
+            `${connectionAddress}/login`,
             requestOptions,
         )
             .then((response) =>
             {
-                if (response.status === 401)
+                console.log(response.status);
+
+                if (response.status !== 200)
                 {
                     throw new Error("Invalid Credentials");
                 }
