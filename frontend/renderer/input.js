@@ -565,10 +565,7 @@ function removeHeightZoneElevationRow()
     }
 }
 
-/**
- * Populate the default height zone elevation table
- */
-function populateDefaultHeightZoneElevation()
+function getHeight()
 {
     let height = null;
 
@@ -583,12 +580,59 @@ function populateDefaultHeightZoneElevation()
         height = document.getElementById("height").value;
     }
 
+    return height;
+}
+
+function getTallestElevation()
+{
+    // get the value of the last elevation cell in the height zone table;
+    let table = document.getElementById("height-zone-elevation-table");
+    if (table.rows.length === 1)
+    {
+        return 0;
+    }
+    let lastRow = table.rows[table.rows.length - 1];
+    let lastCell = lastRow.cells[1];
+    return parseFloat(lastCell.innerHTML);
+}
+
+function getAllElevations()
+{
+    let table = document.getElementById("height-zone-elevation-table");
+    let elevations = [];
+    if (table.rows.length === 1)
+    {
+        return elevations;
+    }
+    for (let i = 1; i < table.rows.length; i++)
+    {
+        elevations.push(parseFloat(table.rows[i].cells[1].innerHTML));
+    }
+    return elevations;
+
+}
+
+/**
+ * Populate the default height zone elevation table
+ */
+function populateDefaultHeightZoneElevation()
+{
+    let height = getHeight();
+
     if (height)
     {
         let numHeightZones = Math.ceil(height / 20);
         for (let j = 1; j < numHeightZones + 1; j++)
         {
-            addHeightZoneElevationRow(j * 20);
+            if (j === numHeightZones)
+            {
+                addHeightZoneElevationRow(height);
+            }
+
+            else
+            {
+                addHeightZoneElevationRow(j * 20);
+            }
         }
     }
 }
@@ -834,6 +878,12 @@ document
  */
 document.getElementById("next-button").addEventListener("click", function ()
 {
+    let defaultZones;
+    if (document.getElementById("number-height-zone-yes-option").checked)
+    {
+        defaultZones = true;
+    }
+
     // check that the project name is not empty
     if (document.getElementById("project-name").value === "")
     {
@@ -1085,6 +1135,21 @@ document.getElementById("next-button").addEventListener("click", function ()
         document.getElementById("next-warning").innerText =
             "The number of height zones in both tables must be the same";
     }
+
+    // ensure that the tallest elevation is equal to the building height
+    else if (parseFloat(getHeight()) !== getTallestElevation())
+    {
+        console.log(getHeight());
+        console.log(getTallestElevation());
+        document.getElementById("next-warning").innerText = "The tallest elevation must be equal to the building height";
+    }
+
+        // ensure that the elevations are in ascending order
+        // else if ()
+        // {
+        //
+    // }
+
     else
     {
         // add skeleton loader to next button
@@ -1254,13 +1319,10 @@ document.getElementById("next-button").addEventListener("click", function ()
                                                                     let numFloors = getIntValue("num-floors");
                                                                     let midHeight = getFloatValue("mid-height");
 
-                                                                    if (midHeight === null)
-                                                                    {
-                                                                        midHeight = 0;
-                                                                    }
-
-                                                                    // list of tuples of the form (height, elevation, load)
+                                                                    // list of tuples of the form (height, elevation)
                                                                     let zones = [];
+                                                                    // list of tuples of the form (height, load)
+                                                                    let materials = [];
                                                                     // iterate through height zone elevation table data rows
                                                                     let heightZoneElevationTable =
                                                                         document.getElementById(
@@ -1284,7 +1346,8 @@ document.getElementById("next-button").addEventListener("click", function ()
                                                                         let load = parseFloat(
                                                                             materialTable.rows[i].cells[1].innerHTML,
                                                                         );
-                                                                        zones.push([zoneNum, elevation, load]);
+                                                                        zones.push([zoneNum, elevation]);
+                                                                        materials.push([zoneNum, load])
                                                                     }
 
                                                                     const myHeaders = new Headers();
@@ -1298,11 +1361,19 @@ document.getElementById("next-button").addEventListener("click", function ()
                                                                         `Bearer ${token}`,
                                                                     );
 
+                                                                    console.log(defaultZones);
+
+                                                                    if (defaultZones === true)
+                                                                    {
+                                                                        zones = null;
+                                                                    }
+
                                                                     const raw = JSON.stringify(
                                                                         {
                                                                             num_floor: numFloors,
                                                                             h_opening: midHeight,
                                                                             zones: zones,
+                                                                            materials: materials,
                                                                         });
 
                                                                     const requestOptions = {

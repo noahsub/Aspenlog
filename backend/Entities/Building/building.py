@@ -282,7 +282,7 @@ class BuildingCustomHeightDefaultMaterialBuilder(BuildingBuilderInterface):
             self.building.height_zones[height_zone] = None
 
         highest_height_zone = max(height_zones, key=lambda x: x.elevation)
-        assert highest_height_zone.elevation <= self.building.dimensions.height
+        assert highest_height_zone.elevation == self.building.dimensions.height
 
     def get_dimensions(self) -> Dimensions:
         return self.building.dimensions
