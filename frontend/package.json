@@ -28,6 +28,12 @@
       ],
       "icon": "icon.ico"
     },
+    "linux": {
+      "target": [
+        "deb"
+      ],
+      "icon": "icon.png"
+    },
     "nsis": {
       "oneClick": true,
       "allowToChangeInstallationDirectory": false,
