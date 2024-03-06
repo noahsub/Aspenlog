@@ -15,7 +15,7 @@ import json
 import logging
 from blender_object import *
 from shapes import create_wind_cube
-
+from arrow import create_arrow
 
 def main():
     # Check for args
@@ -39,16 +39,19 @@ def main():
         # REMOVE
         sys.exit(-1)
     rgba_decrement = 1.0/(len(data)-1)
-
+    max_height = 0
     for i in range(len(data)-1):
         height = data[i]['h']
+        max_height += height
         r = max(0, 1-(rgba_decrement*i))
         cube = create_wind_cube(height=height, position=i, r=r, g=r)
         
+    #add arrow for wind
+    #create_arrow()
 
     render_path = "wind_" + str(id) + ".png"
 
-    render.setup_scene()
+    render.setup_scene(max_height)
     render.render_image(os.path.join(os.path.join(os.path.dirname(module_path), 'output'), render_path))
 if __name__ == "__main__":
     main()

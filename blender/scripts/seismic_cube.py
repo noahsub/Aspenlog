@@ -47,17 +47,18 @@ def main():
     except jsonpickle.JSONDecodeError as e:
         print("Failed to decode JSON:", e)
         sys.exit(1)
-
+    max_height = 0
     max_load = max([i['load'] for i in data[:-1]])
     for i in range(len(data)-1):
         height = data[i]['h']
+        max_height += height
         cube = create_seismic_cube(height=height, position=i )
         load_value = data[i]['load']
         set_cube_colour(cube, color_based_on_load(load_value, max_load))
 
     render_path = "seismic_" + str(id) + ".png"
 
-    render.setup_scene()
+    render.setup_scene(max_height)
     render.render_image(os.path.join(os.path.join(os.path.dirname(module_path), 'output'), render_path))
 
 if __name__ == "__main__":

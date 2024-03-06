@@ -30,7 +30,7 @@ def create_blender_json(num_zones, heights, loads):
 
 
 json_str = create_blender_json(3, [2,2,2], [25,40,20])
-id = 2
+id = 3
 def run_blender_script(script_path):
     try:
         blender_path = os.environ['BLENDER'] 
