@@ -1,6 +1,5 @@
 import json
 
-import jsonpickle
 from fastapi import APIRouter, Depends, HTTPException
 
 from backend.API.Managers.authentication_manager import decode_token
@@ -12,13 +11,21 @@ wall_load_combination_router = APIRouter()
 
 
 @wall_load_combination_router.post("/get_wall_load_combinations")
-def wall_load_combination_endpoint(wall_load_combination_input: WallLoadCombinationInput, username: str = Depends(decode_token)):
+def wall_load_combination_endpoint(wall_load_combination_input: WallLoadCombinationInput,
+                                   username: str = Depends(decode_token)):
     try:
         check_user_exists(username)
         building = get_user_building(username)
         snow_load = get_user_snow_load(username)['upwind']
-        df = process_wall_load_combination_data(building=building, snow_load=snow_load, uls_wall_type=wall_load_combination_input.uls_wall_type, sls_wall_type=wall_load_combination_input.sls_wall_type).round(4).to_json(orient='records')
-        parsed = json.loads(df)
+        df = process_wall_load_combination_data(building=building, snow_load=snow_load,
+                                                uls_wall_type=wall_load_combination_input.uls_wall_type,
+                                                sls_wall_type=wall_load_combination_input.sls_wall_type).round(4)
+        # Check if the 'companion' column exists and drop it
+        if 'companion' in df.columns:
+            df = df.drop(columns=['companion'])
+
+        df_json = df.to_json(orient='records')
+        parsed = json.loads(df_json)
         return parsed
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

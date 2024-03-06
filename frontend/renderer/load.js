@@ -359,6 +359,8 @@ function getWindLoads()
                             .getElementById(`neg-${j}-hz-${i}`)
                             .classList.add("skeleton-loader");
                     }
+
+                    document.getElementById('save-button').disabled = true;
                 }
 
                 const raw = JSON.stringify(
@@ -502,6 +504,8 @@ function getWindLoads()
                                             .getElementById(`neg-${j}-hz-${zoneNum}`)
                                             .classList.remove("skeleton-loader");
                                     }
+
+                                    document.getElementById('save-button').disabled = false;
                                 }
                             })
                             .catch((error) => console.error(error));
@@ -560,6 +564,18 @@ function getSeismicLoads()
                             redirect: "follow",
                         };
 
+                        document.getElementById('amplification-factor').classList.add('skeleton-loader');
+                        document.getElementById('response-modification-factor').classList.add('skeleton-loader');
+                        document.getElementById('component-factor').classList.add('skeleton-loader');
+
+                        for (let i = 1; i < document.getElementById('seismic-load-table').rows.length - 1; i++)
+                        {
+                            document.getElementById(`sp-hz-${i}`).classList.add('skeleton-loader');
+                            document.getElementById(`vp-hz-${i}`).classList.add('skeleton-loader');
+                        }
+
+                        document.getElementById('save-button').disabled = true;
+
                         fetch(`${connectionAddress}/get_height_zones`, requestOptions)
                             .then((response) => response.json())
                             .then((result) =>
@@ -574,6 +590,18 @@ function getSeismicLoads()
                                     document.getElementById(`vp-hz-${zoneNum}`).innerHTML =
                                         seismicLoad["vp"];
                                 }
+
+                                document.getElementById('amplification-factor').classList.remove('skeleton-loader');
+                                document.getElementById('response-modification-factor').classList.remove('skeleton-loader');
+                                document.getElementById('component-factor').classList.remove('skeleton-loader');
+
+                                for (let i = 1; i < document.getElementById('seismic-load-table').rows.length - 1; i++)
+                                {
+                                    document.getElementById(`sp-hz-${i}`).classList.remove('skeleton-loader');
+                                    document.getElementById(`vp-hz-${i}`).classList.remove('skeleton-loader');
+                                }
+
+                                document.getElementById('save-button').disabled = false;
                             })
                             .catch((error) => console.error(error));
                     })
@@ -663,6 +691,30 @@ function getSnowLoad()
                     redirect: "follow",
                 };
 
+
+                // iterate through radio buttons in roof-type-selection
+                let radioButtons = document.getElementById('roof-type-selection').querySelectorAll('input[type="radio"]');
+                radioButtons.forEach((button) =>
+                {
+                    button.disabled = true;
+                });
+
+                // iterate through all the secondary buttons in roof-type-selection
+                let secondaryButtons = document.getElementById('roof-type-selection').querySelectorAll('.btn');
+                secondaryButtons.forEach((button) =>
+                {
+                    button.classList.add('skeleton-loader');
+                    button.disabled = true;
+                });
+
+                document.getElementById('upwind-accumulation-factor').classList.add('skeleton-loader');
+                document.getElementById('downwind-accumulation-factor').classList.add('skeleton-loader');
+                document.getElementById('snow-load-upwind-uls').classList.add('skeleton-loader');
+                document.getElementById('snow-load-downwind-uls').classList.add('skeleton-loader');
+
+                document.getElementById('save-button').disabled = true;
+
+
                 fetch(`${connectionAddress}/set_snow_load`, requestOptions)
                     .then((response) => response.json())
                     .then((result) =>
@@ -678,6 +730,28 @@ function getSnowLoad()
                             upwindData["s_uls"];
                         document.getElementById("snow-load-downwind-uls").innerHTML =
                             downwindData["s_uls"];
+
+                        // iterate through radio buttons in roof-type-selection
+                        let radioButtons = document.getElementById('roof-type-selection').querySelectorAll('input[type="radio"]');
+                        radioButtons.forEach((button) =>
+                        {
+                            button.disabled = false;
+                        });
+
+                        // iterate through all the secondary buttons in roof-type-selection
+                        let secondaryButtons = document.getElementById('roof-type-selection').querySelectorAll('.btn');
+                        secondaryButtons.forEach((button) =>
+                        {
+                            button.classList.remove('skeleton-loader');
+                            button.disabled = false;
+                        });
+
+                        document.getElementById('upwind-accumulation-factor').classList.remove('skeleton-loader');
+                        document.getElementById('downwind-accumulation-factor').classList.remove('skeleton-loader');
+                        document.getElementById('snow-load-upwind-uls').classList.remove('skeleton-loader');
+                        document.getElementById('snow-load-downwind-uls').classList.remove('skeleton-loader');
+
+                        document.getElementById('save-button').disabled = false;
                     })
                     .catch((error) => console.error(error));
             });
@@ -1108,7 +1182,7 @@ function setUsernameDropdown()
                         document.getElementById("navbarDropdownMenuLink").textContent =
                             username;
                     })
-                    .catch((error) => console.error(error));
+                    .catch((error) => window.location.href = "login.html");
             });
     });
 

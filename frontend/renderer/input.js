@@ -11,8 +11,10 @@ let MAP;
 
 function ascending(list)
 {
-    for (let i = 1; i < list.length; i++){
-        if (list[i] < list[i-1]){
+    for (let i = 1; i < list.length; i++)
+    {
+        if (list[i] < list[i - 1])
+        {
             return false;
         }
     }
@@ -841,6 +843,8 @@ function locationCall(address, siteDesignation, seismicValue)
                         document
                             .getElementById("design-spectral-acceleration-1")
                             .classList.remove("skeleton-loader");
+
+                        document.getElementById('save-button').disabled = false;
                     });
             });
     });
@@ -873,6 +877,8 @@ document
         ids.forEach((id) =>
             document.getElementById(id).classList.add("skeleton-loader"),
         );
+
+        document.getElementById('save-button').disabled = true;
 
         let address = getStrValue("address");
         let
@@ -1193,6 +1199,8 @@ document.getElementById("next-button").addEventListener("click", function ()
         {
             radio.disabled = true;
         });
+
+        document.getElementById('save-button').disabled = true;
 
         window.api
             .invoke("get-connection-address").then((connectionAddress) =>
@@ -1882,7 +1890,7 @@ function setUsernameDropdown()
                         document.getElementById("navbarDropdownMenuLink").textContent =
                             username;
                     })
-                    .catch((error) => console.error(error));
+                    .catch((error) => window.location.href = "login.html");
             });
     });
 

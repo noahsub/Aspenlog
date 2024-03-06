@@ -55,7 +55,7 @@ function getProfile()
                         document.getElementById("username").innerHTML = data["username"];
                         document.getElementById("email").innerHTML = data["email"];
                     })
-                    .catch((error) => console.error(error));
+                    .catch((error) => window.location.href = "login.html");
             });
     });
 }
