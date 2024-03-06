@@ -21,7 +21,6 @@ def process_building_data(num_floor: int, h_opening: Optional[float], zones: Opt
 
     # Case default height zones and simple material load
     if height_zones is None and isinstance(material_load, (list, float)):
-        print('reached 1')
         building_builder = BuildingDefaultHeightDefaultMaterialBuilder()
         building_builder.set_dimensions(dimensions)
         building_builder.set_cladding(cladding)
@@ -33,7 +32,6 @@ def process_building_data(num_floor: int, h_opening: Optional[float], zones: Opt
         return building_builder.get_building()
     # Case custom height zones and simple material load
     elif height_zones is not None and isinstance(material_load, (list, float)):
-        print('reached 2')
         building_builder = BuildingCustomHeightDefaultMaterialBuilder()
         building_builder.set_dimensions(dimensions)
         building_builder.set_cladding(cladding)
