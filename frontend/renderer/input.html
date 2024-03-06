@@ -4,27 +4,34 @@
 <head>
     <meta charset="UTF-8">
     <title>ASPENLOG 2020</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <link rel="stylesheet" href="input.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" rel="stylesheet">
+    <link href="input.css" rel="stylesheet">
+    <link href="https://unpkg.com/leaflet/dist/leaflet.css" rel="stylesheet"/>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 </head>
 
 <body>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<script crossorigin="anonymous"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script crossorigin="anonymous"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
 <nav class="navbar navbar-expand-lg navbar-light bg-light" id="navbar">
     <img src="../assets/images/logo%20(Large).png" style="width: 75px; height: 75px;">
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+    <button aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"
+            data-bs-target="#navbarNavDropdown" data-bs-toggle="collapse" type="button">
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown">
         <ul class="navbar-nav">
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"
+                   href="#" id="navbarDropdownMenuLink" role="button">
                     Username
                 </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                <div aria-labelledby="navbarDropdownMenuLink" class="dropdown-menu">
                     <a class="dropdown-item" href="#" id="profile">Profile</a>
                     <a class="dropdown-item" href="#" id="logout">Logout</a>
                 </div>
@@ -44,21 +51,26 @@
             <div class="mb-3">
                 <!-- Add margin-bottom for space between label and input -->
                 <label for="project-name">Project Name</label>
-                <input type="text" id="project-name" class="form-control"> <!-- Add form-control class for full width input -->
+                <input class="form-control" id="project-name" type="text">
+                <!-- Add form-control class for full width input -->
             </div>
             <div class="mb-3">
                 <label for="address">Address</label>
-                <input type="text" id="address" class="form-control">
+                <input class="form-control" id="address" type="text">
             </div>
             <div class="mb-3">
                 <label for="site-designation-selection">Site Designation</label>
-                <p>Select the site designation in accordance with Article 4.1.8.4. of the NBC 2020. Further guidance is available in the Commentary entitled Design for Seismic Effects in the Structural Commentaries (User’s Guide – NBC 2020: Part 4 of Division B)</p>
-                <div class="btn-group btn-group-toggle" id="site-designation-selection" data-toggle="buttons">
+                <p>Select the site designation in accordance with Article 4.1.8.4. of the NBC 2020. Further guidance is
+                    available in the Commentary entitled Design for Seismic Effects in the Structural Commentaries
+                    (User’s Guide – NBC 2020: Part 4 of Division B)</p>
+                <div class="btn-group btn-group-toggle" data-toggle="buttons" id="site-designation-selection">
                     <label class="btn btn-secondary">
-                        <input type="radio" name="site-designation-selection" id="vs30_option" autocomplete="off"> Vs30 value measured in situ between 140 - 3000 m/s
+                        <input autocomplete="off" id="vs30_option" name="site-designation-selection" type="radio"> Vs30
+                        value measured in situ between 140 - 3000 m/s
                     </label>
                     <label class="btn btn-secondary">
-                        <input type="radio" name="site-designation-selection" id="xs_option" autocomplete="off"> Site Class (Xs)
+                        <input autocomplete="off" id="xs_option" name="site-designation-selection" type="radio"> Site
+                        Class (Xs)
                     </label>
                 </div>
             </div>
@@ -90,7 +102,7 @@
                     </div>
                 </div>
             </div>
-            <button class="btn btn-primary" id="location_button">Calculate</button>
+            <button class="btn btn-primary" id="location_button">Get</button>
         </div>
     </div>
 </div>
@@ -101,17 +113,19 @@
             <div class="mb-3">
                 <label for="width">Building Width (m)</label>
                 <p>Use width of the widest part of the building.</p>
-                <input type="number" id="width" class="form-control" />
+                <input class="form-control" id="width" type="number"/>
             </div>
             <div class="mb-3">
                 <label for="eave-and-ridge-selection" style="display: block">Eave and Ridge</label>
                 <p>Does the building have eave and ridge?</p>
-                <div class="btn-group btn-group-toggle" id="eave-and-ridge-selection" data-toggle="buttons">
+                <div class="btn-group btn-group-toggle" data-toggle="buttons" id="eave-and-ridge-selection">
                     <label class="btn btn-secondary">
-                        <input type="radio" name="eave-and-ridge-selection" id="eave-and-ridge-yes-option" autocomplete="off"> Yes
+                        <input autocomplete="off" id="eave-and-ridge-yes-option" name="eave-and-ridge-selection"
+                               type="radio"> Yes
                     </label>
                     <label class="btn btn-secondary">
-                        <input type="radio" name="eave-and-ridge-selection" id="eave-and-ridge-no-option" autocomplete="off"> No
+                        <input autocomplete="off" id="eave-and-ridge-no-option" name="eave-and-ridge-selection"
+                               type="radio"> No
                     </label>
                 </div>
             </div>
@@ -120,27 +134,29 @@
             <div class="mb-3">
                 <label for="num-floors">Number of Floors</label>
                 <p>This will be used in seismic calculation</p>
-                <input type="number" id="num-floors" class="form-control" />
+                <input class="form-control" id="num-floors" type="number"/>
             </div>
             <div class="mb-3">
                 <label for="top-cladding">Top of Cladding (m)</label>
                 <p>Use height of the tallest part of the cladding components (i.e. where it ends)</p>
-                <input type="number" id="top-cladding" class="form-control" />
+                <input class="form-control" id="top-cladding" type="number"/>
             </div>
             <div class="mb-3">
                 <label for="bottom-cladding">Bottom of Cladding (m)</label>
                 <p>Use height of the lowest part of the cladding components (i.e. where it starts)</p>
-                <input type="number" id="bottom-cladding" class="form-control" />
+                <input class="form-control" id="bottom-cladding" type="number"/>
             </div>
             <div class="mb-3">
                 <label for="dominant-opening-selection">Dominant Opening</label>
                 <p>Does the building have dominant Opening?</p>
-                <div class="btn-group btn-group-toggle" id="dominant-opening-selection" data-toggle="buttons">
+                <div class="btn-group btn-group-toggle" data-toggle="buttons" id="dominant-opening-selection">
                     <label class="btn btn-secondary">
-                        <input type="radio" name="dominant-opening-selection" id="dominant-opening-yes-option" autocomplete="off"> Yes
+                        <input autocomplete="off" id="dominant-opening-yes-option" name="dominant-opening-selection"
+                               type="radio"> Yes
                     </label>
                     <label class="btn btn-secondary">
-                        <input type="radio" name="dominant-opening-selection" id="dominant-opening-no-option" autocomplete="off"> No
+                        <input autocomplete="off" id="dominant-opening-no-option" name="dominant-opening-selection"
+                               type="radio"> No
                     </label>
                 </div>
             </div>
@@ -148,34 +164,38 @@
             </div>
             <div class="mb-3">
                 <label for="w-roof">Smaller Plan Dimension of the Roof (m)</label>
-                <input type="number" id="w-roof" class="form-control" />
+                <input class="form-control" id="w-roof" type="number"/>
             </div>
             <div class="mb-3">
                 <label for="l-roof">Larger Plan Dimension of the Roof (m)</label>
-                <input type="number" id="l-roof" class="form-control" />
+                <input class="form-control" id="l-roof" type="number"/>
             </div>
             <div class="mb-3">
                 <label for="a-roof">Roof Slope (°)</label>
-                <input type="number" id="a-roof" class="form-control" />
+                <input class="form-control" id="a-roof" type="number"/>
             </div>
             <div class="mb-3">
                 <label for="roof-uniform-dead-load">Roof Uniform Dead Load (kPa)</label>
-                <input type="number" id="roof-uniform-dead-load" class="form-control" />
+                <input class="form-control" id="roof-uniform-dead-load" type="number"/>
             </div>
             <div class="mb-3">
                 <label for="importance-category-selection" style="display: block">Importance Category</label>
-                <div class="btn-group btn-group-toggle" id="importance-category-selection" data-toggle="buttons">
+                <div class="btn-group btn-group-toggle" data-toggle="buttons" id="importance-category-selection">
                     <label class="btn btn-secondary">
-                        <input type="radio" name="importance-category-selection" id="importance-category-low-option" autocomplete="off"> Low
+                        <input autocomplete="off" id="importance-category-low-option" name="importance-category-selection"
+                               type="radio"> Low
                     </label>
                     <label class="btn btn-secondary">
-                        <input type="radio" name="importance-category-selection" id="importance-category-normal-option" autocomplete="off"> Normal
+                        <input autocomplete="off" id="importance-category-normal-option" name="importance-category-selection"
+                               type="radio"> Normal
                     </label>
                     <label class="btn btn-secondary">
-                        <input type="radio" name="importance-category-selection" id="importance-category-high-option" autocomplete="off"> High
+                        <input autocomplete="off" id="importance-category-high-option" name="importance-category-selection"
+                               type="radio"> High
                     </label>
                     <label class="btn btn-secondary">
-                        <input type="radio" name="importance-category-selection" id="importance-category-post-disaster-option" autocomplete="off"> Post Disaster
+                        <input autocomplete="off" id="importance-category-post-disaster-option"
+                               name="importance-category-selection" type="radio"> Post Disaster
                     </label>
                 </div>
             </div>
@@ -183,13 +203,16 @@
         <div class="col-md-6">
             <div class="mb-3">
                 <label for="width">Number of Height Zones</label>
-                <p>The height of each zone is set to 20 meters by default. Meaning, the total number of height zones is calculated as the ceiling of H/20. Does this configuration meet your requirements?</p>
-                <div class="btn-group btn-group-toggle" id="number-height-zone-selection" data-toggle="buttons">
+                <p>The height of each zone is set to 20 meters by default. Meaning, the total number of height zones is
+                    calculated as the ceiling of H/20. Does this configuration meet your requirements?</p>
+                <div class="btn-group btn-group-toggle" data-toggle="buttons" id="number-height-zone-selection">
                     <label class="btn btn-secondary">
-                        <input type="radio" name="number-height-zone-selection" id="number-height-zone-yes-option" autocomplete="off"> Yes
+                        <input autocomplete="off" id="number-height-zone-yes-option" name="number-height-zone-selection"
+                               type="radio"> Yes
                     </label>
                     <label class="btn btn-secondary">
-                        <input type="radio" name="number-height-zone-selection" id="number-height-zone-no-option" autocomplete="off"> No
+                        <input autocomplete="off" id="number-height-zone-no-option" name="number-height-zone-selection"
+                               type="radio"> No
                     </label>
                 </div>
             </div>
@@ -198,12 +221,14 @@
             <div class="mb-3">
                 <label for="single-material-selection">Materials</label>
                 <p>Will the material be applied to all height zones?</p>
-                <div class="btn-group btn-group-toggle" id="single-material-selection" data-toggle="buttons">
+                <div class="btn-group btn-group-toggle" data-toggle="buttons" id="single-material-selection">
                     <label class="btn btn-secondary">
-                        <input type="radio" name="single-material-selection" id="single-material-yes-option" autocomplete="off"> Yes
+                        <input autocomplete="off" id="single-material-yes-option" name="single-material-selection"
+                               type="radio"> Yes
                     </label>
                     <label class="btn btn-secondary">
-                        <input type="radio" name="single-material-selection" id="single-material-no-option" autocomplete="off"> No
+                        <input autocomplete="off" id="single-material-no-option" name="single-material-selection"
+                               type="radio"> No
                     </label>
                 </div>
             </div>
