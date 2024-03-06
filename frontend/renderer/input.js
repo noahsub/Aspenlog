@@ -87,7 +87,7 @@ function getSeismicParameters()
         siteDesignation = "xv";
         seismicValue = document.getElementById("vs30").value;
     }
-    else
+    else if (document.getElementById("xs_option").checked)
     {
         if (document.getElementById("xs-A-option").checked)
         {
@@ -862,9 +862,6 @@ document
     .getElementById("location_button")
     .addEventListener("click", function ()
     {
-        // disable button
-        document.getElementById("location_button").disabled = true;
-
         const ids = [
             "location_button",
             "wind-velocity-pressure",
@@ -874,19 +871,26 @@ document
             "design-spectral-acceleration-1",
         ];
 
-        ids.forEach((id) =>
-            document.getElementById(id).classList.add("skeleton-loader"),
-        );
-
-        document.getElementById('save-button').disabled = true;
-
         let address = getStrValue("address");
         let
             {
                 siteDesignation,
                 seismicValue
             } = getSeismicParameters();
-        locationCall(address, siteDesignation, seismicValue);
+
+        if (!(address === "" || siteDesignation === null || seismicValue === null))
+        {
+            // disable button
+            document.getElementById("location_button").disabled = true;
+
+            ids.forEach((id) =>
+                document.getElementById(id).classList.add("skeleton-loader"),
+            );
+
+            document.getElementById('save-button').disabled = true;
+
+            locationCall(address, siteDesignation, seismicValue);
+        }
     });
 
 /**
