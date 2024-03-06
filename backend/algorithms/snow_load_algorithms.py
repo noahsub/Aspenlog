@@ -63,8 +63,8 @@ def get_accumulation_factor(snow_factor_builder: SnowFactorBuilder, wind_directi
     roof_slope = building.roof.slope
     if wind_direction == WindDirection.DOWNWIND:
         if 15 <= roof_slope <= 20:
-            snow_factor_builder.set_ca(0.25 + roof_slope/20)
-        elif 20 <= roof_slope <= 90:
+            snow_factor_builder.set_ca(0.25 + roof_slope / 20)
+        elif 20 < roof_slope <= 90:
             snow_factor_builder.set_ca(1.25)
         else:
             snow_factor_builder.set_ca(ACCUMULATION_FACTOR)
@@ -72,7 +72,8 @@ def get_accumulation_factor(snow_factor_builder: SnowFactorBuilder, wind_directi
         snow_factor_builder.set_ca(0)
 
 
-def get_wind_exposure_factor_snow(snow_factor_builder: SnowFactorBuilder, importance_factor: ImportanceFactor, wind_exposure_factor_selection: WindExposureFactorSelections):
+def get_wind_exposure_factor_snow(snow_factor_builder: SnowFactorBuilder, importance_factor: ImportanceFactor,
+                                  wind_exposure_factor_selection: WindExposureFactorSelections):
     """
     This function sets the wind exposure factor
     :param wind_exposure_factor_selection: The wind exposure factor to use in the computation
@@ -85,7 +86,7 @@ def get_wind_exposure_factor_snow(snow_factor_builder: SnowFactorBuilder, import
     # If the importance factor is low or normal and the wind exposure factor is intermediate, set the wind exposure factor to 0.75
     if importance_factor in low_or_normal and wind_exposure_factor_selection == wind_exposure_factor_selection.INTERMEDIATE:
         snow_factor_builder.set_cw(0.75)
-    # If the importance factor is low or normal and the wind exposure factor is sheltered, set the wind exposure factor to 0.5
+    # If the importance factor is low or normal and the wind exposure factor is open, set the wind exposure factor to 0.5
     elif importance_factor in low_or_normal and wind_exposure_factor_selection == wind_exposure_factor_selection.OPEN:
         snow_factor_builder.set_cw(0.5)
     # Otherwise, set the wind exposure factor to 1
@@ -106,10 +107,13 @@ def get_basic_roof_snow_load_factor(snow_factor_builder: SnowFactorBuilder, buil
         snow_factor_builder.set_cb(0.8)
     # Otherwise, set the basic roof snow load factor to Cb = 1 / Cw * (1 - (1 - 0.8 * Cw)*exp*(-1 * (Ic * Cw**2 - 70) / 100))
     else:
-        snow_factor_builder.set_cb((1 / snow_factor_builder.get_cw()) * (1 - (1 - 0.8 * snow_factor_builder.get_cw()) * math.exp(-1 * ((ic * snow_factor_builder.get_cw() ** 2 - 70) / (100)))))
+        snow_factor_builder.set_cb((1 / snow_factor_builder.get_cw()) * (
+                1 - (1 - 0.8 * snow_factor_builder.get_cw()) * math.exp(
+            -1 * ((ic * snow_factor_builder.get_cw() ** 2 - 70) / (100)))))
 
 
-def get_snow_load(snow_factor_builder: SnowFactorBuilder, snow_load_builder: SnowLoadBuilder, importance_factor: ImportanceFactor, location: Location):
+def get_snow_load(snow_factor_builder: SnowFactorBuilder, snow_load_builder: SnowLoadBuilder,
+                  importance_factor: ImportanceFactor, location: Location):
     """
     This function sets the snow load
     :param location: A Location object, responsible for storing the location information
@@ -118,6 +122,8 @@ def get_snow_load(snow_factor_builder: SnowFactorBuilder, snow_load_builder: Sno
     snow_importance_factor_uls = importance_factor.get_importance_factor_uls(LoadTypes.SNOW)
     snow_importance_factor_sls = importance_factor.get_importance_factor_sls(LoadTypes.SNOW)
 
-    snow_load_builder.set_s_uls(snow_importance_factor_uls * (location.rain_load * (snow_factor_builder.get_cb() * snow_factor_builder.get_cw() * snow_factor_builder.get_cs() * snow_factor_builder.get_ca()) + location.snow_load))
-    snow_load_builder.set_s_sls(snow_importance_factor_sls * (location.rain_load * (snow_factor_builder.get_cb() * snow_factor_builder.get_cw() * snow_factor_builder.get_cs() * snow_factor_builder.get_ca()) + location.snow_load))
+    snow_load_builder.set_s_uls(snow_importance_factor_uls * (location.rain_load * (
+            snow_factor_builder.get_cb() * snow_factor_builder.get_cw() * snow_factor_builder.get_cs() * snow_factor_builder.get_ca()) + location.snow_load))
+    snow_load_builder.set_s_sls(snow_importance_factor_sls * (location.rain_load * (
+            snow_factor_builder.get_cb() * snow_factor_builder.get_cw() * snow_factor_builder.get_cs() * snow_factor_builder.get_ca()) + location.snow_load))
     snow_load_builder.set_factor(snow_factor_builder.get_snow_factor())

@@ -6,17 +6,22 @@ from backend.Entities.Building.building import BuildingDefaultHeightDefaultMater
 from backend.Entities.Building.height_zone import HeightZone
 
 
-def process_building_data(num_floor: int, h_opening: float, zones: List[Tuple[int, float, float]], username):
+def process_building_data(num_floor: int, h_opening: Optional[float], zones: Optional[List[Tuple[int, float]]],
+                          materials: List[Tuple[int, float]], username):
     if h_opening is None:
         h_opening = 0
     dimensions = get_user_dimensions(username)
     cladding = get_user_cladding(username)
     roof = get_user_roof(username)
-    height_zones = [HeightZone(zone_num=x[0], elevation=x[1]) for x in zones]
-    material_load = [x[2] for x in zones]
+    if zones is not None:
+        height_zones = [HeightZone(zone_num=x[0], elevation=x[1]) for x in zones]
+    else:
+        height_zones = None
+    material_load = [x[1] for x in materials]
 
     # Case default height zones and simple material load
     if height_zones is None and isinstance(material_load, (list, float)):
+        print('reached 1')
         building_builder = BuildingDefaultHeightDefaultMaterialBuilder()
         building_builder.set_dimensions(dimensions)
         building_builder.set_cladding(cladding)
@@ -28,6 +33,7 @@ def process_building_data(num_floor: int, h_opening: float, zones: List[Tuple[in
         return building_builder.get_building()
     # Case custom height zones and simple material load
     elif height_zones is not None and isinstance(material_load, (list, float)):
+        print('reached 2')
         building_builder = BuildingCustomHeightDefaultMaterialBuilder()
         building_builder.set_dimensions(dimensions)
         building_builder.set_cladding(cladding)

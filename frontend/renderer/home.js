@@ -40,7 +40,7 @@ function setUsernameDropdown()
                         document.getElementById("navbarDropdownMenuLink").textContent =
                             username;
                     })
-                    .catch((error) => console.error(error));
+                    .catch((error) => window.location.href = "login.html");
             });
     });
 }

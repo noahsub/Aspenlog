@@ -457,6 +457,16 @@ function getWallLoadCombinations()
                     redirect: "follow",
                 };
 
+                for (let row = 0; row < document.getElementById("wall-combination-table").rows.length; row++)
+                {
+                    for (let cell = 0; cell < document.getElementById("wall-combination-table").rows[row].cells.length; cell++)
+                    {
+                        document.getElementById("wall-combination-table").rows[row].cells[cell].classList.add('skeleton-loader');
+                    }
+                }
+
+                document.getElementById('save-button').disabled = true;
+
                 fetch(`${connectionAddress}/get_wall_load_combinations`, requestOptions)
                     .then((response) => response.text())
                     .then((result) =>
@@ -489,6 +499,16 @@ function getWallLoadCombinations()
                         }
                         tableString += "</tbody>";
                         table.innerHTML = tableString;
+
+                        for (let row = 0; row < document.getElementById("wall-combination-table").rows.length; row++)
+                        {
+                            for (let cell = 0; cell < document.getElementById("wall-combination-table").rows[row].cells.length; cell++)
+                            {
+                                document.getElementById("wall-combination-table").rows[row].cells[cell].classList.remove('skeleton-loader');
+                            }
+                        }
+
+                        document.getElementById('save-button').disabled = false;
                     })
                     .catch((error) => console.error(error));
             });
@@ -527,6 +547,16 @@ function getRoofLoadCombinations()
                     body: raw,
                     redirect: "follow",
                 };
+
+                for (let row = 0; row < document.getElementById("roof-combination-table").rows.length; row++)
+                {
+                    for (let cell = 0; cell < document.getElementById("roof-combination-table").rows[row].cells.length; cell++)
+                    {
+                        document.getElementById("roof-combination-table").rows[row].cells[cell].classList.add('skeleton-loader');
+                    }
+                }
+
+                document.getElementById('save-button').disabled = true;
 
                 fetch(`${connectionAddress}/get_roof_load_combinations`, requestOptions)
                     .then((response) => response.json())
@@ -568,6 +598,16 @@ function getRoofLoadCombinations()
 
                         tableString += "</tbody>";
                         table.innerHTML = tableString;
+
+                        for (let row = 0; row < document.getElementById("roof-combination-table").rows.length; row++)
+                        {
+                            for (let cell = 0; cell < document.getElementById("roof-combination-table").rows[row].cells.length; cell++)
+                            {
+                                document.getElementById("roof-combination-table").rows[row].cells[cell].classList.remove('skeleton-loader');
+                            }
+                        }
+
+                        document.getElementById('save-button').disabled = false;
                     })
                     .catch((error) => console.error(error));
             });
@@ -609,7 +649,7 @@ function setUsernameDropdown()
                         document.getElementById("navbarDropdownMenuLink").textContent =
                             username;
                     })
-                    .catch((error) => console.error(error));
+                    .catch((error) => window.location.href = "login.html");
             });
     });
 }
