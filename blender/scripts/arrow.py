@@ -25,7 +25,8 @@ def create_arrow(length=0.2, width=0.2, height=0.2):
 
 
     # join the shapes
-    bpy.ops.object
+    cone.select_set(True)
+    cyl.select_set(True)
     bpy.ops.object.join()
     arrow = bpy.context.active_object
     arrow.location[0] = 2*length
@@ -37,6 +38,3 @@ def create_arrow(length=0.2, width=0.2, height=0.2):
     arrow.rotation_euler[1] = 0
     # z
     arrow.rotation_euler[2] = math.pi/4
-
-    # Enter edit mode to modify the cube
-    #bpy.ops.object.editmode_toggle()

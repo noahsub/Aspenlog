@@ -47,7 +47,7 @@ def main():
         cube = create_wind_cube(height=height, position=i, r=r, g=r)
         
     #add arrow for wind
-    #create_arrow()
+    create_arrow()
 
     render_path = "wind_" + str(id) + ".png"
 
