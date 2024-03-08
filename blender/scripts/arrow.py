@@ -1,7 +1,7 @@
 import bpy
 import bmesh
 import math
-def create_arrow(length=0.2, width=0.2, height=0.2):
+def create_arrow(length=0.2, width=0.2, height=0.2, loc_x=3, loc_y=3):
     
 
     cone_x = length 
@@ -29,8 +29,8 @@ def create_arrow(length=0.2, width=0.2, height=0.2):
     cyl.select_set(True)
     bpy.ops.object.join()
     arrow = bpy.context.active_object
-    arrow.location[0] = 2*length
-    arrow.location[1] = 2*width
+    arrow.location[0] = loc_x
+    arrow.location[1] = loc_y
     arrow.location[2] = height
 
     arrow.rotation_euler[0] = math.pi/2
