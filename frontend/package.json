@@ -8,7 +8,8 @@
     "start": "electron .",
     "build": "electron-builder"
   },
-  "author": "github.com/noahsub",
+  "author": "github.com/noahsub <noahsub@gmail.com>",
+  "homepage": "https://github.com/noahsub/SEEDA",
   "license": "ISC",
   "dependencies": {
     "bootstrap": "^5.3.2",
@@ -27,6 +28,12 @@
         "nsis"
       ],
       "icon": "icon.ico"
+    },
+    "linux": {
+      "target": [
+        "deb"
+      ],
+      "icon": "icon.png"
     },
     "nsis": {
       "oneClick": true,
