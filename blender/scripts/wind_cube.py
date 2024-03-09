@@ -2,6 +2,8 @@ import bpy
 import sys
 import os
 
+from config import get_file_path
+
 # adding modules to blender path
 file = __file__
 module_path = os.path.dirname(file)
@@ -52,6 +54,7 @@ def main():
     render_path = "wind_" + str(id) + ".png"
 
     render.setup_scene(max_height)
-    render.render_image(os.path.join(os.path.join(os.path.dirname(module_path), 'output'), render_path))
+    output_path = get_file_path('backend/output')
+    render.render_image(os.path.join(output_path, render_path))
 if __name__ == "__main__":
     main()

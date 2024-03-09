@@ -702,6 +702,38 @@ function generate_bar_chart()
     });
 }
 
+function generate_load_model()
+{
+    window.api
+        .invoke("get-connection-address").then((connectionAddress) =>
+    {
+        window.api
+            .invoke("get-token") // Retrieve the token
+            .then((token) =>
+            {
+                const myHeaders = new Headers();
+                myHeaders.append("Accept", "application/json");
+                myHeaders.append("Authorization", `Bearer ${token}`);
+
+                const requestOptions = {
+                    method: "POST",
+                    headers: myHeaders,
+                    redirect: "follow"
+                };
+
+                fetch(`${connectionAddress}/load_model`, requestOptions)
+                    .then((response) => response.json())
+                    .then((result) =>
+                    {
+                        data = JSON.parse(result);
+                        let id = data['id'];
+                        document.getElementById('wind-load-image').src = `${connectionAddress}/get_load_model?id=${id}`;
+                    })
+                    .catch((error) => console.error(error));
+            });
+    });
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // WINDOW ONLOAD EVENT
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -723,4 +755,7 @@ window.onload = function ()
     selectors.forEach((selector) => toggleMenuColors(selector));
 
     generate_bar_chart();
+    generate_load_model();
+    document.getElementById('wind-load-image').src = `http://localhost:42613/get_load_model?id=2`;
+    document.getElementById('seismic-load-image').src = `http://localhost:42613/get_load_model?id=2`;
 };

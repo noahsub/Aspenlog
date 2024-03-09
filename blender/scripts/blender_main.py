@@ -9,7 +9,7 @@ req_file = os.path.join(os.path.dirname(req_file), 'blender_request.py')
 def create_blender_json(num_zones, heights, loads):
     json_str = [Arrow()]
     for i in range(num_zones):
-        json_str.insert(0, HeightZone(h=heights[i], load=loads[i], position=i).to_dict())
+        json_str.insert(0, WindZone(h=heights[i], load=loads[i], position=i).to_dict())
 
     
     json_str = jsonpickle.encode(json_str)
