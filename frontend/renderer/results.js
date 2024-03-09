@@ -672,6 +672,37 @@ document.getElementById("logout").addEventListener("click", function ()
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// VISUALIZATION
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function generate_bar_chart()
+{
+    window.api
+        .invoke("get-connection-address").then((connectionAddress) =>
+    {
+        window.api
+            .invoke("get-token") // Retrieve the token
+            .then((token) =>
+            {
+                const myHeaders = new Headers();
+                myHeaders.append("Accept", "application/json");
+                myHeaders.append("Authorization", `Bearer ${token}`);
+
+                const requestOptions = {
+                    method: "POST",
+                    headers: myHeaders,
+                    redirect: "follow"
+                };
+
+                fetch(`${connectionAddress}/bar_chart?height_zone=1`, requestOptions)
+                    .then((response) => response.text())
+                    .then((result) => console.log(result))
+                    .catch((error) => console.error(error));
+            });
+    });
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // WINDOW ONLOAD EVENT
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
@@ -690,4 +721,6 @@ window.onload = function ()
     ];
 
     selectors.forEach((selector) => toggleMenuColors(selector));
+
+    generate_bar_chart();
 };

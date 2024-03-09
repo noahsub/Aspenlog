@@ -720,6 +720,7 @@ function getSnowLoad()
                     .then((result) =>
                     {
                         let snowLoadData = JSON.parse(result);
+                        console.log(snowLoadData);
                         let upwindData = snowLoadData["upwind"];
                         let downwindData = snowLoadData["downwind"];
                         document.getElementById("upwind-accumulation-factor").innerHTML =
