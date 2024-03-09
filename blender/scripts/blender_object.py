@@ -1,10 +1,23 @@
 from typing import Optional, Tuple
 
-class HeightZone:
+class WindZone:
+    """
+    This class is used to store the height zone information.
+    """
+    def __init__(self, wall_centre_pos: float, wall_centre_neg: float, wall_corner_pos: float, wall_corner_neg: float, h: Optional[float] = None, position: Optional[int] = None):
+        self.h = h
+        self.load = load
+        self.position = position
+
+    def to_dict(self):
+        return {"h": self.h, "load": self.load, "position": self.position}
+
+class SeismicZone:
     """
     This class is used to store the height zone information.
     """
     def __init__(self, h: Optional[float] = None, load: Optional[float] = None, position: Optional[int] = None):
+        # tuple takes pos_uls and neg_uls in that order
         self.h = h
         self.load = load
         self.position = position
