@@ -694,9 +694,41 @@ function generate_bar_chart()
                     redirect: "follow"
                 };
 
-                fetch(`${connectionAddress}/bar_chart?height_zone=1`, requestOptions)
-                    .then((response) => response.text())
-                    .then((result) => console.log(result))
+                fetch(`${connectionAddress}/bar_chart`, requestOptions)
+                    .then((response) => response.json())
+                    .then((result) => {
+                        let data = JSON.parse(result);
+                        let id= data['id'];
+                        let numBarCharts = data['num_bar_charts'];
+                        // document.getElementById('bar-chart-image').src = `http://localhost:42613/get_bar_chart?id=${id}&zone_num=1`;
+                        // document.getElementById('bar-chart-image2').src = `http://localhost:42613/get_bar_chart?id=${id}&zone_num=1`;
+                        // document.getElementById('bar-chart-image3').src = `http://localhost:42613/get_bar_chart?id=${id}&zone_num=1`;
+                        for (let i = 0; i < numBarCharts; i++)
+                        {
+                            // if i is even
+                            if (i % 3 === 0)
+                            {
+                                let img = document.createElement('img');
+                                img.src = `${connectionAddress}/get_bar_chart?id=${id}&zone_num=${i + 1}`;
+                                img.style.maxWidth = "100%";
+                                document.getElementById('left-bar-chart-container').appendChild(img);
+                            }
+                            else if (i % 3 === 1)
+                            {
+                                let img = document.createElement('img');
+                                img.src = `${connectionAddress}/get_bar_chart?id=${id}&zone_num=${i + 1}`;
+                                img.style.maxWidth = "100%";
+                                document.getElementById('middle-bar-chart-container').appendChild(img);
+                            }
+                            else
+                            {
+                                let img = document.createElement('img');
+                                img.src = `${connectionAddress}/get_bar_chart?id=${id}&zone_num=${i + 1}`;
+                                img.style.maxWidth = "100%";
+                                document.getElementById('right-bar-chart-container').appendChild(img);
+                            }
+                        }
+                    })
                     .catch((error) => console.error(error));
             });
     });
@@ -755,7 +787,7 @@ window.onload = function ()
     selectors.forEach((selector) => toggleMenuColors(selector));
 
     generate_bar_chart();
-    generate_load_model();
+    // generate_load_model();
     document.getElementById('wind-load-image').src = `http://localhost:42613/get_load_model?id=2`;
     document.getElementById('seismic-load-image').src = `http://localhost:42613/get_load_model?id=2`;
 };
