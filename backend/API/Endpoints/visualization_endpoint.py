@@ -15,12 +15,14 @@ visualization_router = APIRouter()
 
 
 @visualization_router.post("/bar_chart")
-def generate_bar_chart_endpoint(height_zone: int, username: str = Depends(decode_token)):
+def generate_bar_chart_endpoint(username: str = Depends(decode_token)):
     try:
         check_user_exists(username)
+        id = str(uuid.uuid4())
         building = get_user_building(username)
         snow_load = get_user_snow_load(username)['upwind']
-        generate_bar_chart(building, 1, snow_load)
+        num_generated = generate_bar_chart(id=id, building=building, snow_load=snow_load)
+        return jsonpickle.encode({'id': id, 'num_bar_charts': num_generated})
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -69,6 +71,15 @@ def generate_simple_model_endpoint(username: str = Depends(decode_token)):
         path_simple = get_file_path('blender/scripts/simple_cube.py')
         run_blender_script(script_path=path_simple, id=id, json_str=json_simple)
         return jsonpickle.encode(id)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@visualization_router.get("/get_bar_chart")
+def get_bar_chart_endpoint(id: str, zone_num: int):
+    try:
+        output_path = get_file_path(f'backend/output/bar_chart_hz_{zone_num}_{id}.png')
+        return FileResponse(output_path)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

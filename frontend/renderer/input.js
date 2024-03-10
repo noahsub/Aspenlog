@@ -339,7 +339,7 @@ function siteDesignationSelection()
     );
     for (let i = 0; i < siteDesignationSelectionOptions.length; i++)
     {
-        siteDesignationSelectionOptions[i].addEventListener("change", function ()
+        siteDesignationSelectionOptions[i].addEventListener("change", function()
         {
             if (this.checked)
             {
@@ -366,7 +366,7 @@ function eaveAndRidgeSelection()
     );
     for (let i = 0; i < eaveAndRidgeSelectionOptions.length; i++)
     {
-        eaveAndRidgeSelectionOptions[i].addEventListener("change", function ()
+        eaveAndRidgeSelectionOptions[i].addEventListener("change", function()
         {
             if (this.id === "eave-and-ridge-yes-option")
             {
@@ -390,7 +390,7 @@ function numberHeightZoneSelection()
     );
     for (let i = 0; i < numberHeightZoneOptions.length; i++)
     {
-        numberHeightZoneOptions[i].addEventListener("change", function ()
+        numberHeightZoneOptions[i].addEventListener("change", function()
         {
             if (this.id === "number-height-zone-yes-option")
             {
@@ -414,7 +414,7 @@ function dominantOpeningSelection()
     );
     for (let i = 0; i < dominantOpeningOptions.length; i++)
     {
-        dominantOpeningOptions[i].addEventListener("change", function ()
+        dominantOpeningOptions[i].addEventListener("change", function()
         {
             if (this.id === "dominant-opening-yes-option")
             {
@@ -438,7 +438,7 @@ function materialSelection()
     );
     for (let i = 0; i < materialSelectionOptions.length; i++)
     {
-        materialSelectionOptions[i].addEventListener("change", function ()
+        materialSelectionOptions[i].addEventListener("change", function()
         {
             if (this.id === "single-material-yes-option")
             {
@@ -755,6 +755,32 @@ function setMap(latitude, longitude, address)
 // API CALLS
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+function stopLocationLoading()
+{
+    document.getElementById("location_button").disabled = false;
+
+    document
+        .getElementById("location_button")
+        .classList.remove("skeleton-loader");
+    document
+        .getElementById("wind-velocity-pressure")
+        .classList.remove("skeleton-loader");
+    document
+        .getElementById("ground-snow-load")
+        .classList.remove("skeleton-loader");
+    document
+        .getElementById("rain-load")
+        .classList.remove("skeleton-loader");
+    document
+        .getElementById("design-spectral-acceleration-0-2")
+        .classList.remove("skeleton-loader");
+    document
+        .getElementById("design-spectral-acceleration-1")
+        .classList.remove("skeleton-loader");
+
+    document.getElementById('save-button').disabled = false;
+}
+
 /**
  * Computes location data based on the address, site designation, and seismic value in the backend
  * @param address
@@ -808,10 +834,18 @@ function locationCall(address, siteDesignation, seismicValue)
                         // set the map as long as we have a valid latitude and longitude
                         if (result.latitude && result.longitude)
                         {
+                            document.getElementById('location-error-message').innerText = "";
                             setMap(result.latitude, result.longitude, result.address);
                         }
                         else
                         {
+                            document.getElementById('location-error-message').innerText = "Cannot find location, please try using a valid postal code instead";
+                            // set location variables to NA
+                            document.getElementById("wind-velocity-pressure").textContent = "NA";
+                            document.getElementById("ground-snow-load").textContent = "NA";
+                            document.getElementById("rain-load").textContent = "NA";
+                            document.getElementById("design-spectral-acceleration-0-2").textContent = "NA";
+                            document.getElementById("design-spectral-acceleration-1").textContent = "NA";
                             setMap(-70.73964, -8.91217, "unknown");
                         }
 
@@ -820,31 +854,11 @@ function locationCall(address, siteDesignation, seismicValue)
                     .catch((error) =>
                     {
                         console.error("Error:", error);
+                        stopLocationLoading();
                     })
                     .finally(() =>
                     {
-                        document.getElementById("location_button").disabled = false;
-
-                        document
-                            .getElementById("location_button")
-                            .classList.remove("skeleton-loader");
-                        document
-                            .getElementById("wind-velocity-pressure")
-                            .classList.remove("skeleton-loader");
-                        document
-                            .getElementById("ground-snow-load")
-                            .classList.remove("skeleton-loader");
-                        document
-                            .getElementById("rain-load")
-                            .classList.remove("skeleton-loader");
-                        document
-                            .getElementById("design-spectral-acceleration-0-2")
-                            .classList.remove("skeleton-loader");
-                        document
-                            .getElementById("design-spectral-acceleration-1")
-                            .classList.remove("skeleton-loader");
-
-                        document.getElementById('save-button').disabled = false;
+                        stopLocationLoading();
                     });
             });
     });
@@ -855,12 +869,24 @@ function locationCall(address, siteDesignation, seismicValue)
 // BUTTON CLICK EVENTS
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+function startLoadingLocation(ids)
+{
+    // disable button
+    document.getElementById("location_button").disabled = true;
+
+    ids.forEach((id) =>
+        document.getElementById(id).classList.add("skeleton-loader"),
+    );
+
+    document.getElementById('save-button').disabled = true;
+}
+
 /**
  * Loads map and location data when the location button is clicked
  */
 document
     .getElementById("location_button")
-    .addEventListener("click", function ()
+    .addEventListener("click", function()
     {
         const ids = [
             "location_button",
@@ -880,24 +906,57 @@ document
 
         if (!(address === "" || siteDesignation === null || seismicValue === null))
         {
-            // disable button
-            document.getElementById("location_button").disabled = true;
-
-            ids.forEach((id) =>
-                document.getElementById(id).classList.add("skeleton-loader"),
-            );
-
-            document.getElementById('save-button').disabled = true;
+            startLoadingLocation(ids);
 
             locationCall(address, siteDesignation, seismicValue);
         }
     });
 
+function startProcessingLoading()
+{
+    // add skeleton loader to next button
+    document.getElementById("next-button").classList.add("skeleton-loader");
+
+    // add skeleton loader to all inputs on page
+    document.querySelectorAll("input").forEach((input) =>
+    {
+        input.classList.add("skeleton-loader");
+    });
+
+    // add skeleton loader to all tables on page
+    document.querySelectorAll("table").forEach((table) =>
+    {
+        table.classList.add("skeleton-loader");
+    });
+
+    // add skeleton loader to all cells in tables on page
+    document.querySelectorAll("table td, table th").forEach((cell) =>
+    {
+        cell.classList.add("skeleton-loader");
+    });
+
+    // add skeleton loader to all btn-secondary on page
+    document.querySelectorAll(".btn-secondary").forEach((button) =>
+    {
+        button.classList.add("skeleton-loader");
+    });
+
+    // add skeleton loader to all elements of type radio on page
+    document.querySelectorAll('input[type="radio"]').forEach((radio) =>
+    {
+        radio.disabled = true;
+    });
+
+    document.getElementById('save-button').disabled = true;
+}
+
 /**
  * When the next button is clicked, check that all fields are valid and then proceed to the next page
  */
-document.getElementById("next-button").addEventListener("click", function ()
+document.getElementById("next-button").addEventListener("click", async function ()
 {
+    await save();
+
     let defaultZones;
     if (document.getElementById("number-height-zone-yes-option").checked)
     {
@@ -1171,40 +1230,10 @@ document.getElementById("next-button").addEventListener("click", function ()
 
     else
     {
-        // add skeleton loader to next button
-        document.getElementById("next-button").classList.add("skeleton-loader");
+        document.getElementById("next-warning").innerText = "Processing data, please wait...";
+        document.getElementById("next-warning").style.color = '#9bca6d';
 
-        // add skeleton loader to all inputs on page
-        document.querySelectorAll("input").forEach((input) =>
-        {
-            input.classList.add("skeleton-loader");
-        });
-
-        // add skeleton loader to all tables on page
-        document.querySelectorAll("table").forEach((table) =>
-        {
-            table.classList.add("skeleton-loader");
-        });
-
-        // add skeleton loader to all cells in tables on page
-        document.querySelectorAll("table td, table th").forEach((cell) =>
-        {
-            cell.classList.add("skeleton-loader");
-        });
-
-        // add skeleton loader to all btn-secondary on page
-        document.querySelectorAll(".btn-secondary").forEach((button) =>
-        {
-            button.classList.add("skeleton-loader");
-        });
-
-        // add skeleton loader to all elements of type radio on page
-        document.querySelectorAll('input[type="radio"]').forEach((radio) =>
-        {
-            radio.disabled = true;
-        });
-
-        document.getElementById('save-button').disabled = true;
+        startProcessingLoading();
 
         window.api
             .invoke("get-connection-address").then((connectionAddress) =>
@@ -1536,15 +1565,12 @@ document.getElementById("next-button").addEventListener("click", function ()
     }
 });
 
-/**
- * When the save button is clicked, serialize the input page and send it to the backend
- */
-document.getElementById("save-button").addEventListener("click", function ()
+function save()
 {
-    window.api
+    return window.api
         .invoke("get-connection-address").then((connectionAddress) =>
     {
-        window.api
+        return window.api
             .invoke("get-token") // Retrieve the token
             .then((token) =>
             {
@@ -1558,7 +1584,7 @@ document.getElementById("save-button").addEventListener("click", function ()
                     redirect: "follow",
                 };
 
-                fetch(`${connectionAddress}/get_user_current_save_file`, requestOptions)
+                return fetch(`${connectionAddress}/get_user_current_save_file`, requestOptions)
                     .then((response) =>
                     {
                         if (response.status === 200)
@@ -1591,24 +1617,65 @@ document.getElementById("save-button").addEventListener("click", function ()
                             redirect: "follow",
                         };
 
-                        fetch(`${connectionAddress}/set_user_save_data`, requestOptions)
+                        return fetch(`${connectionAddress}/set_user_save_data`, requestOptions)
                             .then((response) => response.text())
                             .catch((error) => console.error(error));
                     })
                     .catch((error) => console.error(error));
             });
     });
+}
 
-    // serialized = serialize();
-
+/**
+ * When the save button is clicked, serialize the input page and send it to the backend
+ */
+document.getElementById("save-button").addEventListener("click", async function ()
+{
+    await save();
 });
 
 /**
  * When the back button is clicked, return to the home page
  */
-document.getElementById("back-button").addEventListener("click", function ()
+document.getElementById("back-button").addEventListener("click", async function ()
 {
+    await save();
     window.location.href = "home.html";
+});
+
+document.getElementById('building-view-button').addEventListener('click', function ()
+{
+    window.api
+        .invoke("get-connection-address").then((connectionAddress) =>
+    {
+        window.api
+            .invoke("get-token") // Retrieve the token
+            .then((token) =>
+            {
+                const myHeaders = new Headers();
+                myHeaders.append("Accept", "application/json");
+                myHeaders.append("Authorization", `Bearer ${token}`);
+
+                const requestOptions = {
+                    method: "POST",
+                    headers: myHeaders,
+                    redirect: "follow"
+                };
+
+                fetch(`${connectionAddress}/simple_model`, requestOptions)
+                    .then((response) => response.json())
+                    .then((result) =>
+                    {
+                        let id = JSON.parse(result);
+
+                        let img = document.createElement('img');
+                        img.src = `${connectionAddress}/get_simple_model?id=${id}`;
+                        img.style.maxWidth = "100%";
+                        document.getElementById('building-view-container').appendChild(img);
+                    })
+                    .catch((error) => console.error(error));
+            });
+    });
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1671,7 +1738,7 @@ function serialize()
  */
 function waitForElement(id, callback)
 {
-    let intervalId = setInterval(function ()
+    let intervalId = setInterval(function()
     {
         let element = document.getElementById(id);
         if (element)
@@ -1702,7 +1769,7 @@ function deserialize(json, section)
         // go through all the radio
         for (let id in objects.radio)
         {
-            waitForElement(id, function (radio)
+            waitForElement(id, function(radio)
             {
                 if (radio.value === objects.radio[id])
                 {
@@ -1719,7 +1786,7 @@ function deserialize(json, section)
         // go through all the input
         for (let id in objects.input)
         {
-            waitForElement(id, function (input)
+            waitForElement(id, function(input)
             {
                 input.value = "";
                 input.focus();
@@ -1739,7 +1806,7 @@ function deserialize(json, section)
         // go through all the tables
         for (let id in objects.table)
         {
-            waitForElement(id, function (table)
+            waitForElement(id, function(table)
             {
                 table.innerHTML = objects.table[id];
                 processedElements++;
@@ -1904,7 +1971,7 @@ function setUsernameDropdown()
 /**
  * If clicked the user will be logged out and redirected to the login page
  */
-document.getElementById("logout").addEventListener("click", function ()
+document.getElementById("logout").addEventListener("click", function()
 {
     window.api.invoke("store-token", "");
     window.location.href = "login.html";
@@ -1912,7 +1979,7 @@ document.getElementById("logout").addEventListener("click", function ()
 
 /**
  * If clicked the user will be redirected to the profile page */
-document.getElementById("profile").addEventListener("click", function ()
+document.getElementById("profile").addEventListener("click", function()
 {
     window.location.href = "profile.html";
 });
@@ -1925,7 +1992,7 @@ document.getElementById("profile").addEventListener("click", function ()
 /**
  * Set up the page on load
  */
-window.onload = function ()
+window.onload = function()
 {
     setUsernameDropdown();
     loadSaveFile();

@@ -4,6 +4,11 @@ import jsonpickle
 from sqlalchemy import desc
 from sqlalchemy.orm import sessionmaker
 
+from backend.Entities.Building.building import Building
+from backend.Entities.Building.cladding import Cladding
+from backend.Entities.Building.dimensions import Dimensions
+from backend.Entities.Building.roof import Roof
+from backend.Entities.Location.location import Location
 from backend.Entities.User.user import User
 from database.Constants.connection_constants import PrivilegeType
 from database.Entities.database_connection import DatabaseConnection
@@ -114,27 +119,27 @@ def get_user_current_save_file(username):
     return ALL_USER_DATA.get(username).get_current_save_file()
 
 
-def get_user_location(username):
+def get_user_location(username) -> Location:
     return ALL_USER_DATA.get(username).get_location()
 
 
-def get_user_dimensions(username):
+def get_user_dimensions(username) -> Dimensions:
     return ALL_USER_DATA.get(username).get_dimensions()
 
 
-def get_user_cladding(username):
+def get_user_cladding(username) -> Cladding:
     return ALL_USER_DATA.get(username).get_cladding()
 
 
-def get_user_roof(username):
+def get_user_roof(username) -> Roof:
     return ALL_USER_DATA.get(username).get_roof()
 
 
-def get_user_num_floors(username):
+def get_user_num_floors(username) -> int:
     return ALL_USER_DATA.get(username).get_num_floors()
 
 
-def get_user_mid_height(username):
+def get_user_mid_height(username) -> float:
     return ALL_USER_DATA.get(username).get_mid_height()
 
 
@@ -146,7 +151,7 @@ def get_user_height_zones(username):
     return ALL_USER_DATA.get(username).get_height_zones()
 
 
-def get_user_building(username):
+def get_user_building(username) -> Building:
     return ALL_USER_DATA.get(username).get_building()
 
 

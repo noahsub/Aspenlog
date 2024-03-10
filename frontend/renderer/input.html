@@ -19,7 +19,7 @@
         integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
         src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
 <nav class="navbar navbar-expand-lg navbar-light bg-light" id="navbar">
-    <img src="../assets/images/logo%20(Large).png" style="width: 75px; height: 75px;">
+    <img alt="logo-image" src="../assets/images/logo%20(Large).png" style="width: 75px; height: 75px;">
     <button aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"
             data-bs-target="#navbarNavDropdown" data-bs-toggle="collapse" type="button">
         <span class="navbar-toggler-icon"></span>
@@ -102,6 +102,7 @@
                     </div>
                 </div>
             </div>
+            <p id="location-error-message" style="color: red; font-weight: bold"></p>
             <button class="btn btn-primary" id="location_button">Get</button>
         </div>
     </div>
@@ -237,11 +238,15 @@
         </div>
     </div>
     <hr>
+    <h3>Building View</h3>
+    <div class="d-flex flex-column gx-5" id="building-view-container">
+        <button class="btn btn-primary" id="building-view-button" style="margin-left: 0; max-width: 10%">See Building</button>
+    </div>
+    <hr>
     <div class="row gx-5 align-items-center">
         <div class="col-md-6">
             <button class="btn btn-primary" id="back-button">Back</button>
         </div>
-
         <div class="col-md-6 right-align">
             <button class="btn btn-primary" id="save-button">Save</button>
             <p id="next-warning"></p>

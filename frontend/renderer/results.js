@@ -226,15 +226,12 @@ function deserialize(json, section)
 // BUTTON CLICK EVENTS
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/**
- * When the save button is clicked, the current state of the page is serialized and sent to the backend to be saved.
- */
-document.getElementById("save-button").addEventListener("click", () =>
+function save()
 {
-    window.api
+    return window.api
         .invoke("get-connection-address").then((connectionAddress) =>
     {
-        window.api
+        return window.api
             .invoke("get-token") // Retrieve the token
             .then((token) =>
             {
@@ -248,7 +245,7 @@ document.getElementById("save-button").addEventListener("click", () =>
                     redirect: "follow",
                 };
 
-                fetch(`${connectionAddress}/get_user_current_save_file`, requestOptions)
+                return fetch(`${connectionAddress}/get_user_current_save_file`, requestOptions)
                     .then((response) =>
                     {
                         if (response.status === 200)
@@ -281,14 +278,21 @@ document.getElementById("save-button").addEventListener("click", () =>
                             redirect: "follow",
                         };
 
-                        fetch(`${connectionAddress}/set_user_save_data`, requestOptions)
+                        return fetch(`${connectionAddress}/set_user_save_data`, requestOptions)
                             .then((response) => response.text())
                             .catch((error) => console.error(error));
                     })
                     .catch((error) => console.error(error));
             });
     });
+}
 
+/**
+ * When the save button is clicked, the current state of the page is serialized and sent to the backend to be saved.
+ */
+document.getElementById("save-button").addEventListener("click", async () =>
+{
+    await save();
 });
 
 /**
@@ -324,17 +328,80 @@ document
 /**
  * When the back button is clicked, the user is redirected to the load page.
  */
-document.getElementById("back-button").addEventListener("click", () =>
+document.getElementById("back-button").addEventListener("click", async () =>
 {
+    await save();
     window.location.href = "load.html";
 });
 
 /**
  * When the back home is clicked, the user is redirected to the home page.
  */
-document.getElementById("home-button").addEventListener("click", function ()
+document.getElementById("home-button").addEventListener("click", async function ()
 {
+    await save();
     window.location.href = "home.html";
+});
+
+document.getElementById('export-button').addEventListener('click', async function ()
+{
+    await save();
+
+    window.api
+        .invoke("get-connection-address").then((connectionAddress) =>
+    {
+        window.api
+            .invoke("get-token") // Retrieve the token
+            .then((token) =>
+            {
+                const myHeaders = new Headers();
+                myHeaders.append("Accept", "application/json");
+                myHeaders.append("Authorization", `Bearer ${token}`);
+
+                const requestOptions = {
+                    method: "POST",
+                    headers: myHeaders,
+                    redirect: "follow"
+                };
+
+                fetch(`${connectionAddress}/excel_output`, requestOptions)
+                    .then((response) =>
+                    {
+                        // Get filename from Content-Disposition header
+                        const contentDisposition = response.headers.get('Content-Disposition');
+                        let filename = 'default_filename.extension';
+                        if (contentDisposition)
+                        {
+                            const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+                            let matches = filenameRegex.exec(contentDisposition);
+                            if (matches != null && matches[1])
+                            {
+                                filename = matches[1].replace(/['"]/g, '');
+                            }
+                        }
+
+                        return response.blob().then(blob => ({blob, filename}));
+                    })
+                    .then(({blob, filename}) =>
+                    {
+                        // Convert blob to buffer
+                        blob.arrayBuffer().then((buffer) =>
+                        {
+                            // Convert ArrayBuffer to Uint8Array
+                            const uint8Array = new Uint8Array(buffer);
+                            // Send Uint8Array and filename to main process for writing to file
+                            window.api.invoke('download', {data: uint8Array, filename});
+                        });
+
+                        document.getElementById('export-warning').innerText = `Downloaded ${filename}`;
+
+                        setTimeout(function() {
+                            document.getElementById('export-warning').innerText = "";
+                        }, 5000);
+                    })
+                    .catch((error) => console.error(error));
+            });
+    });
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -427,6 +494,32 @@ document
 // GET LOAD COMBINATIONS
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+function startWallCombinationLoading()
+{
+    for (let row = 0; row < document.getElementById("wall-combination-table").rows.length; row++)
+    {
+        for (let cell = 0; cell < document.getElementById("wall-combination-table").rows[row].cells.length; cell++)
+        {
+            document.getElementById("wall-combination-table").rows[row].cells[cell].classList.add('skeleton-loader');
+        }
+    }
+
+    document.getElementById('save-button').disabled = true;
+}
+
+function stopWallCombinationLoading()
+{
+    for (let row = 0; row < document.getElementById("wall-combination-table").rows.length; row++)
+    {
+        for (let cell = 0; cell < document.getElementById("wall-combination-table").rows[row].cells.length; cell++)
+        {
+            document.getElementById("wall-combination-table").rows[row].cells[cell].classList.remove('skeleton-loader');
+        }
+    }
+
+    document.getElementById('save-button').disabled = false;
+}
+
 /**
  * Get the wall load combinations
  */
@@ -457,15 +550,7 @@ function getWallLoadCombinations()
                     redirect: "follow",
                 };
 
-                for (let row = 0; row < document.getElementById("wall-combination-table").rows.length; row++)
-                {
-                    for (let cell = 0; cell < document.getElementById("wall-combination-table").rows[row].cells.length; cell++)
-                    {
-                        document.getElementById("wall-combination-table").rows[row].cells[cell].classList.add('skeleton-loader');
-                    }
-                }
-
-                document.getElementById('save-button').disabled = true;
+                startWallCombinationLoading();
 
                 fetch(`${connectionAddress}/get_wall_load_combinations`, requestOptions)
                     .then((response) => response.text())
@@ -500,22 +585,43 @@ function getWallLoadCombinations()
                         tableString += "</tbody>";
                         table.innerHTML = tableString;
 
-                        for (let row = 0; row < document.getElementById("wall-combination-table").rows.length; row++)
-                        {
-                            for (let cell = 0; cell < document.getElementById("wall-combination-table").rows[row].cells.length; cell++)
-                            {
-                                document.getElementById("wall-combination-table").rows[row].cells[cell].classList.remove('skeleton-loader');
-                            }
-                        }
-
-                        document.getElementById('save-button').disabled = false;
+                        stopWallCombinationLoading();
                     })
-                    .catch((error) => console.error(error));
+                    .catch((error) => {
+                        console.error(error);
+                        stopWallCombinationLoading();
+                    });
             });
 
     });
 
 
+}
+
+function startRoofCombintaionLoading()
+{
+    for (let row = 0; row < document.getElementById("roof-combination-table").rows.length; row++)
+    {
+        for (let cell = 0; cell < document.getElementById("roof-combination-table").rows[row].cells.length; cell++)
+        {
+            document.getElementById("roof-combination-table").rows[row].cells[cell].classList.add('skeleton-loader');
+        }
+    }
+
+    document.getElementById('save-button').disabled = true;
+}
+
+function stopRoofCombinationLoading()
+{
+    for (let row = 0; row < document.getElementById("roof-combination-table").rows.length; row++)
+    {
+        for (let cell = 0; cell < document.getElementById("roof-combination-table").rows[row].cells.length; cell++)
+        {
+            document.getElementById("roof-combination-table").rows[row].cells[cell].classList.remove('skeleton-loader');
+        }
+    }
+
+    document.getElementById('save-button').disabled = false;
 }
 
 /**
@@ -548,15 +654,7 @@ function getRoofLoadCombinations()
                     redirect: "follow",
                 };
 
-                for (let row = 0; row < document.getElementById("roof-combination-table").rows.length; row++)
-                {
-                    for (let cell = 0; cell < document.getElementById("roof-combination-table").rows[row].cells.length; cell++)
-                    {
-                        document.getElementById("roof-combination-table").rows[row].cells[cell].classList.add('skeleton-loader');
-                    }
-                }
-
-                document.getElementById('save-button').disabled = true;
+                startRoofCombintaionLoading();
 
                 fetch(`${connectionAddress}/get_roof_load_combinations`, requestOptions)
                     .then((response) => response.json())
@@ -599,17 +697,12 @@ function getRoofLoadCombinations()
                         tableString += "</tbody>";
                         table.innerHTML = tableString;
 
-                        for (let row = 0; row < document.getElementById("roof-combination-table").rows.length; row++)
-                        {
-                            for (let cell = 0; cell < document.getElementById("roof-combination-table").rows[row].cells.length; cell++)
-                            {
-                                document.getElementById("roof-combination-table").rows[row].cells[cell].classList.remove('skeleton-loader');
-                            }
-                        }
-
-                        document.getElementById('save-button').disabled = false;
+                        stopRoofCombinationLoading();
                     })
-                    .catch((error) => console.error(error));
+                    .catch((error) => {
+                        console.error(error);
+                        stopRoofCombinationLoading();
+                    });
             });
     });
 }
@@ -694,9 +787,41 @@ function generate_bar_chart()
                     redirect: "follow"
                 };
 
-                fetch(`${connectionAddress}/bar_chart?height_zone=1`, requestOptions)
-                    .then((response) => response.text())
-                    .then((result) => console.log(result))
+                fetch(`${connectionAddress}/bar_chart`, requestOptions)
+                    .then((response) => response.json())
+                    .then((result) => {
+                        let data = JSON.parse(result);
+                        let id= data['id'];
+                        let numBarCharts = data['num_bar_charts'];
+                        // document.getElementById('bar-chart-image').src = `http://localhost:42613/get_bar_chart?id=${id}&zone_num=1`;
+                        // document.getElementById('bar-chart-image2').src = `http://localhost:42613/get_bar_chart?id=${id}&zone_num=1`;
+                        // document.getElementById('bar-chart-image3').src = `http://localhost:42613/get_bar_chart?id=${id}&zone_num=1`;
+                        for (let i = 0; i < numBarCharts; i++)
+                        {
+                            // if i is even
+                            if (i % 3 === 0)
+                            {
+                                let img = document.createElement('img');
+                                img.src = `${connectionAddress}/get_bar_chart?id=${id}&zone_num=${i + 1}`;
+                                img.style.maxWidth = "100%";
+                                document.getElementById('left-bar-chart-container').appendChild(img);
+                            }
+                            else if (i % 3 === 1)
+                            {
+                                let img = document.createElement('img');
+                                img.src = `${connectionAddress}/get_bar_chart?id=${id}&zone_num=${i + 1}`;
+                                img.style.maxWidth = "100%";
+                                document.getElementById('middle-bar-chart-container').appendChild(img);
+                            }
+                            else
+                            {
+                                let img = document.createElement('img');
+                                img.src = `${connectionAddress}/get_bar_chart?id=${id}&zone_num=${i + 1}`;
+                                img.style.maxWidth = "100%";
+                                document.getElementById('right-bar-chart-container').appendChild(img);
+                            }
+                        }
+                    })
                     .catch((error) => console.error(error));
             });
     });
@@ -723,11 +848,10 @@ function generate_load_model()
 
                 fetch(`${connectionAddress}/load_model`, requestOptions)
                     .then((response) => response.json())
-                    .then((result) =>
-                    {
-                        data = JSON.parse(result);
-                        let id = data['id'];
-                        document.getElementById('wind-load-image').src = `${connectionAddress}/get_load_model?id=${id}`;
+                    .then((result) => {
+                        let id = JSON.parse(result);
+                        document.getElementById('wind-load-image').src = `${connectionAddress}/get_wind_load_model?id=${id}`;
+                        document.getElementById('seismic-load-image').src = `${connectionAddress}/get_seismic_load_model?id=${id}`;
                     })
                     .catch((error) => console.error(error));
             });
@@ -754,8 +878,6 @@ window.onload = function ()
 
     selectors.forEach((selector) => toggleMenuColors(selector));
 
-    generate_bar_chart();
     generate_load_model();
-    document.getElementById('wind-load-image').src = `http://localhost:42613/get_load_model?id=2`;
-    document.getElementById('seismic-load-image').src = `http://localhost:42613/get_load_model?id=2`;
+    generate_bar_chart();
 };
