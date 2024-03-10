@@ -848,11 +848,10 @@ function generate_load_model()
 
                 fetch(`${connectionAddress}/load_model`, requestOptions)
                     .then((response) => response.json())
-                    .then((result) =>
-                    {
-                        data = JSON.parse(result);
-                        let id = data['id'];
-                        document.getElementById('wind-load-image').src = `${connectionAddress}/get_load_model?id=${id}`;
+                    .then((result) => {
+                        let id = JSON.parse(result);
+                        document.getElementById('wind-load-image').src = `${connectionAddress}/get_wind_load_model?id=${id}`;
+                        document.getElementById('seismic-load-image').src = `${connectionAddress}/get_seismic_load_model?id=${id}`;
                     })
                     .catch((error) => console.error(error));
             });
@@ -879,8 +878,6 @@ window.onload = function ()
 
     selectors.forEach((selector) => toggleMenuColors(selector));
 
+    generate_load_model();
     generate_bar_chart();
-    // generate_load_model();
-    document.getElementById('wind-load-image').src = `http://localhost:42613/get_load_model?id=2`;
-    document.getElementById('seismic-load-image').src = `http://localhost:42613/get_load_model?id=2`;
 };

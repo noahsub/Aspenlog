@@ -1643,6 +1643,41 @@ document.getElementById("back-button").addEventListener("click", async function 
     window.location.href = "home.html";
 });
 
+document.getElementById('building-view-button').addEventListener('click', function ()
+{
+    window.api
+        .invoke("get-connection-address").then((connectionAddress) =>
+    {
+        window.api
+            .invoke("get-token") // Retrieve the token
+            .then((token) =>
+            {
+                const myHeaders = new Headers();
+                myHeaders.append("Accept", "application/json");
+                myHeaders.append("Authorization", `Bearer ${token}`);
+
+                const requestOptions = {
+                    method: "POST",
+                    headers: myHeaders,
+                    redirect: "follow"
+                };
+
+                fetch(`${connectionAddress}/simple_model`, requestOptions)
+                    .then((response) => response.json())
+                    .then((result) =>
+                    {
+                        let id = JSON.parse(result);
+
+                        let img = document.createElement('img');
+                        img.src = `${connectionAddress}/get_simple_model?id=${id}`;
+                        img.style.maxWidth = "100%";
+                        document.getElementById('building-view-container').appendChild(img);
+                    })
+                    .catch((error) => console.error(error));
+            });
+    });
+});
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // SERIALIZATION
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
