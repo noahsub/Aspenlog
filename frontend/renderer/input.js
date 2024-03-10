@@ -1171,6 +1171,9 @@ document.getElementById("next-button").addEventListener("click", function ()
 
     else
     {
+        document.getElementById("next-warning").innerText = "Processing data, please wait...";
+        document.getElementById("next-warning").style.color = '#9bca6d';
+
         // add skeleton loader to next button
         document.getElementById("next-button").classList.add("skeleton-loader");
 

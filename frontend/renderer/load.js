@@ -772,6 +772,56 @@ document
     .getElementById("wind-calculate-button")
     .addEventListener("click", () =>
     {
+        let numHeightZones = document.querySelectorAll('h5[id^="wind-load-component-hz-"]').length;
+        for (let i = 1; i <= numHeightZones; i++)
+        {
+            // check that the exposure factor and internal pressure category are selected and topographic factor is not empty
+            let exposureFactor = document.querySelector(
+                `input[name="exposure-factor-selection-hz-${i}"]:checked`,
+            );
+
+            // if intermediate exposure factor is selected, check that the ce intermediate is not empty
+            if (exposureFactor && exposureFactor.id === `exposure-factor-intermediate-option-hz-${i}`)
+            {
+                let ceIntermediate = document.getElementById(`ce-intermediate-hz-${i}`).value;
+                if (ceIntermediate === "")
+                {
+                    document.getElementById("wind-calculate-warning").style.color = "red";
+                    document.getElementById("wind-calculate-warning").style.fontWeight = "bold";
+                    document.getElementById("wind-calculate-warning").innerHTML = "Please enter the ce intermediate for the intermediate exposure factor";
+
+                    // clear pos and neg of the wind load table
+                    for (let j = 1; j <= 5; j++)
+                    {
+                        document.getElementById(`pos-${j}-hz-${i}`).innerHTML = "NA";
+                        document.getElementById(`neg-${j}-hz-${i}`).innerHTML = "NA";
+                    }
+                    return;
+                }
+            }
+
+            let internalPressureCategory = document.querySelector(
+                `input[name="internal-pressure-category-selection-hz-${i}"]:checked`,
+            );
+            let topographicFactor = document.getElementById(`topographic-factor-hz-${i}`).value;
+
+            if (!exposureFactor || !internalPressureCategory || topographicFactor === "")
+            {
+                document.getElementById("wind-calculate-warning").style.color = "red";
+                document.getElementById("wind-calculate-warning").style.fontWeight = "bold";
+                document.getElementById("wind-calculate-warning").innerHTML = "Please enter the topographic factor and select the exposure factor and internal pressure category for all the height zones";
+
+                // clear pos and neg of the wind load table
+                for (let j = 1; j <= 5; j++)
+                {
+                    document.getElementById(`pos-${j}-hz-${i}`).innerHTML = "NA";
+                    document.getElementById(`neg-${j}-hz-${i}`).innerHTML = "NA";
+                }
+                return;
+            }
+        }
+
+        document.getElementById("wind-calculate-warning").innerHTML = "";
         getWindLoads();
     });
 
@@ -782,6 +832,27 @@ document
     .getElementById("seismic-calculate-button")
     .addEventListener("click", () =>
     {
+        // check that the amplification factor, response modification factor and component factor are not empty
+        let amplificationFactor = document.getElementById("amplification-factor").value;
+        let responseModificationFactor = document.getElementById("response-modification-factor").value;
+        let componentFactor = document.getElementById("component-factor").value;
+
+        if (amplificationFactor === "" || responseModificationFactor === "" || componentFactor === "")
+        {
+            document.getElementById("seismic-calculate-warning").style.color = "red";
+            document.getElementById("seismic-calculate-warning").style.fontWeight = "bold";
+            document.getElementById("seismic-calculate-warning").innerHTML = "Please enter the amplification factor, response modification factor and component factor";
+
+            // clear sp and vp of the seismic load table
+            for (let i = 1; i < document.getElementById('seismic-load-table').rows.length - 1; i++)
+            {
+                document.getElementById(`sp-hz-${i}`).innerHTML = "NA";
+                document.getElementById(`vp-hz-${i}`).innerHTML = "NA";
+            }
+            return;
+        }
+
+        document.getElementById("seismic-calculate-warning").innerHTML = "";
         getSeismicLoads();
     });
 
@@ -792,6 +863,24 @@ document
     .getElementById("snow-calculate-button")
     .addEventListener("click", () =>
     {
+        // check that roof type and exposure factor are selected
+        let numHeightZones = document.querySelectorAll('h5[id^="wind-load-component-hz-"]').length;
+        let roofTypeSelection = document.querySelector('#roof-type-selection input[type="radio"]:checked',);
+        let exposureFactorSelection = document.getElementById(`exposure-factor-selection-hz-${numHeightZones}`).querySelector(".selected");
+        if (!exposureFactorSelection || !roofTypeSelection)
+        {
+            document.getElementById("snow-calculate-warning").style.color = "red";
+            document.getElementById("snow-calculate-warning").style.fontWeight = "bold";
+            document.getElementById("snow-calculate-warning").innerHTML = "Please select the roof type and ensure exposure factor of last height zone is selected";
+
+            document.getElementById("upwind-accumulation-factor").innerHTML = "NA";
+            document.getElementById("downwind-accumulation-factor").innerHTML = "NA";
+            document.getElementById("snow-load-upwind-uls").innerHTML = "NA";
+            document.getElementById("snow-load-downwind-uls").innerHTML = "NA";
+            return;
+        }
+
+        document.getElementById("snow-calculate-warning").innerHTML = "";
         getSnowLoad();
     });
 
@@ -1214,6 +1303,21 @@ window.onload = function ()
             for (let i = 1; i <= numHeightZones; i++)
             {
                 allWindLoadContainer.innerHTML += createWindLoadComponent(i);
+
+                waitForElement(`topographic-factor-hz-${i}`, () =>
+                {
+                    // add event listener for topographic-factor-hz-i if the value is changed
+                    document.getElementById(`topographic-factor-hz-${i}`).addEventListener("input", () =>
+                    {
+                        // set the pos and neg of the associated wind load table to NA
+                        for (let j = 1; j <= 5; j++)
+                        {
+                            document.getElementById(`pos-${j}-hz-${i}`).innerHTML = "NA";
+                            document.getElementById(`neg-${j}-hz-${i}`).innerHTML = "NA";
+                        }
+                    });
+                });
+
                 selectors.push(`#exposure-factor-selection-hz-${i}`);
                 selectors.push(`#internal-pressure-category-selection-hz-${i}`);
                 document.getElementById(`ce-intermediate-hz-${i}`).style.display =
@@ -1225,9 +1329,29 @@ window.onload = function ()
                         .getElementById(`exposure-factor-intermediate-option-hz-${i}`)
                         .addEventListener("click", () =>
                         {
-                            document.getElementById(`ce-intermediate-hz-${i}`).style.display =
-                                "block";
+                            document.getElementById(`ce-intermediate-hz-${i}`).style.display = "block";
+                            // set the pos and neg of the associated wind load table to NA
+                            for (let j = 1; j <= 5; j++)
+                            {
+                                document.getElementById(`pos-${j}-hz-${i}`).innerHTML = "NA";
+                                document.getElementById(`neg-${j}-hz-${i}`).innerHTML = "NA";
+                            }
                         });
+
+                    waitForElement(`ce-intermediate-hz-${i}`, () =>
+                    {
+                        document
+                            .getElementById(`ce-intermediate-hz-${i}`)
+                            .addEventListener("input", () =>
+                            {
+                                // set the pos and neg of the associated wind load table to NA
+                                for (let j = 1; j <= 5; j++)
+                                {
+                                    document.getElementById(`pos-${j}-hz-${i}`).innerHTML = "NA";
+                                    document.getElementById(`neg-${j}-hz-${i}`).innerHTML = "NA";
+                                }
+                            });
+                    });
                 });
                 // case if open is selected
                 waitForElement(`exposure-factor-open-option-hz-${i}`, () =>
@@ -1236,8 +1360,13 @@ window.onload = function ()
                         .getElementById(`exposure-factor-open-option-hz-${i}`)
                         .addEventListener("click", () =>
                         {
-                            document.getElementById(`ce-intermediate-hz-${i}`).style.display =
-                                "none";
+                            document.getElementById(`ce-intermediate-hz-${i}`).style.display = "none";
+                            // set the pos and neg of the associated wind load table to NA
+                            for (let j = 1; j <= 5; j++)
+                            {
+                                document.getElementById(`pos-${j}-hz-${i}`).innerHTML = "NA";
+                                document.getElementById(`neg-${j}-hz-${i}`).innerHTML = "NA";
+                            }
                         });
                 });
 
@@ -1248,8 +1377,27 @@ window.onload = function ()
                         .getElementById(`exposure-factor-rough-option-hz-${i}`)
                         .addEventListener("click", () =>
                         {
-                            document.getElementById(`ce-intermediate-hz-${i}`).style.display =
-                                "none";
+                            document.getElementById(`ce-intermediate-hz-${i}`).style.display = "none";
+                            // set the pos and neg of the associated wind load table to NA
+                            for (let j = 1; j <= 5; j++)
+                            {
+                                document.getElementById(`pos-${j}-hz-${i}`).innerHTML = "NA";
+                                document.getElementById(`neg-${j}-hz-${i}`).innerHTML = "NA";
+                            }
+                        });
+                });
+
+                waitForElement(`internal-pressure-category-selection-hz-${i}`, () => {
+                    document
+                        .getElementById(`internal-pressure-category-selection-hz-${i}`)
+                        .addEventListener("click", () =>
+                        {
+                            // set the pos and neg of the associated wind load table to NA
+                            for (let j = 1; j <= 5; j++)
+                            {
+                                document.getElementById(`pos-${j}-hz-${i}`).innerHTML = "NA";
+                                document.getElementById(`neg-${j}-hz-${i}`).innerHTML = "NA";
+                            }
                         });
                 });
 
@@ -1279,9 +1427,55 @@ window.onload = function ()
             });
 
             selectors.forEach((selector) => toggleMenuColors(selector));
+
+
+
         })
         .catch((error) =>
         {
             console.error(error);
         });
+
+    waitForElement('amplification-factor', (element) => {
+        // set all sp and vp to NA if the amplification factor is changed
+        element.addEventListener('input', () => {
+            for (let i = 1; i < document.getElementById('seismic-load-table').rows.length - 1; i++)
+            {
+                document.getElementById(`sp-hz-${i}`).innerHTML = 'NA';
+                document.getElementById(`vp-hz-${i}`).innerHTML = 'NA';
+            }
+        });
+    });
+
+    waitForElement('response-modification-factor', (element) => {
+        // set all sp and vp to NA if the response modification factor is changed
+        element.addEventListener('input', () => {
+            for (let i = 1; i < document.getElementById('seismic-load-table').rows.length - 1; i++)
+            {
+                document.getElementById(`sp-hz-${i}`).innerHTML = 'NA';
+                document.getElementById(`vp-hz-${i}`).innerHTML = 'NA';
+            }
+        });
+    });
+
+    waitForElement('component-factor', (element) => {
+        // set all sp and vp to NA if the component factor is changed
+        element.addEventListener('input', () => {
+            for (let i = 1; i < document.getElementById('seismic-load-table').rows.length - 1; i++)
+            {
+                document.getElementById(`sp-hz-${i}`).innerHTML = 'NA';
+                document.getElementById(`vp-hz-${i}`).innerHTML = 'NA';
+            }
+        });
+    });
+
+    waitForElement('roof-type-selection', (element) => {
+        // set all snow load values to NA if the roof type is changed
+        element.addEventListener('click', () => {
+            document.getElementById('upwind-accumulation-factor').innerHTML = 'NA';
+            document.getElementById('downwind-accumulation-factor').innerHTML = 'NA';
+            document.getElementById('snow-load-upwind-uls').innerHTML = 'NA';
+            document.getElementById('snow-load-downwind-uls').innerHTML = 'NA';
+        });
+    });
 };
