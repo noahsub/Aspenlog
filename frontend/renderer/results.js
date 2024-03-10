@@ -226,15 +226,12 @@ function deserialize(json, section)
 // BUTTON CLICK EVENTS
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/**
- * When the save button is clicked, the current state of the page is serialized and sent to the backend to be saved.
- */
-document.getElementById("save-button").addEventListener("click", () =>
+function save()
 {
-    window.api
+    return window.api
         .invoke("get-connection-address").then((connectionAddress) =>
     {
-        window.api
+        return window.api
             .invoke("get-token") // Retrieve the token
             .then((token) =>
             {
@@ -248,7 +245,7 @@ document.getElementById("save-button").addEventListener("click", () =>
                     redirect: "follow",
                 };
 
-                fetch(`${connectionAddress}/get_user_current_save_file`, requestOptions)
+                return fetch(`${connectionAddress}/get_user_current_save_file`, requestOptions)
                     .then((response) =>
                     {
                         if (response.status === 200)
@@ -281,14 +278,21 @@ document.getElementById("save-button").addEventListener("click", () =>
                             redirect: "follow",
                         };
 
-                        fetch(`${connectionAddress}/set_user_save_data`, requestOptions)
+                        return fetch(`${connectionAddress}/set_user_save_data`, requestOptions)
                             .then((response) => response.text())
                             .catch((error) => console.error(error));
                     })
                     .catch((error) => console.error(error));
             });
     });
+}
 
+/**
+ * When the save button is clicked, the current state of the page is serialized and sent to the backend to be saved.
+ */
+document.getElementById("save-button").addEventListener("click", async () =>
+{
+    await save();
 });
 
 /**
@@ -324,16 +328,18 @@ document
 /**
  * When the back button is clicked, the user is redirected to the load page.
  */
-document.getElementById("back-button").addEventListener("click", () =>
+document.getElementById("back-button").addEventListener("click", async () =>
 {
+    await save();
     window.location.href = "load.html";
 });
 
 /**
  * When the back home is clicked, the user is redirected to the home page.
  */
-document.getElementById("home-button").addEventListener("click", function ()
+document.getElementById("home-button").addEventListener("click", async function ()
 {
+    await save();
     window.location.href = "home.html";
 });
 

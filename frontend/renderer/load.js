@@ -928,15 +928,12 @@ document
         getSnowLoad();
     });
 
-/**
- * When the save button is clicked, the current state of the page is serialized and sent to the backend
- */
-document.getElementById("save-button").addEventListener("click", () =>
+function save()
 {
-    window.api
+    return window.api
         .invoke("get-connection-address").then((connectionAddress) =>
     {
-        window.api
+        return window.api
             .invoke("get-token") // Retrieve the token
             .then((token) =>
             {
@@ -950,7 +947,7 @@ document.getElementById("save-button").addEventListener("click", () =>
                     redirect: "follow",
                 };
 
-                fetch(`${connectionAddress}/get_user_current_save_file`, requestOptions)
+                return fetch(`${connectionAddress}/get_user_current_save_file`, requestOptions)
                     .then((response) =>
                     {
                         if (response.status === 200)
@@ -983,37 +980,47 @@ document.getElementById("save-button").addEventListener("click", () =>
                             redirect: "follow",
                         };
 
-                        fetch(`${connectionAddress}/set_user_save_data`, requestOptions)
+                        return fetch(`${connectionAddress}/set_user_save_data`, requestOptions)
                             .then((response) => response.text())
                             .catch((error) => console.error(error));
                     })
                     .catch((error) => console.error(error));
             });
     });
+}
 
+/**
+ * When the save button is clicked, the current state of the page is serialized and sent to the backend
+ */
+document.getElementById("save-button").addEventListener("click", async () =>
+{
+    await save();
 });
 
 /**
  * When the back button is pressed, the user is redirected to the input page
  */
-document.getElementById("back-button").addEventListener("click", function()
+document.getElementById("back-button").addEventListener("click", async function ()
 {
+    await save();
     window.location.href = "input.html";
 });
 
 /**
  * When the home button is pressed, the user is redirected to the home page
  */
-document.getElementById("home-button").addEventListener("click", function()
+document.getElementById("home-button").addEventListener("click", async function ()
 {
+    await save();
     window.location.href = "home.html";
 });
 
 /**
  * When the next button is pressed, the user is redirected to the results page
  */
-document.getElementById("next-button").addEventListener("click", function()
+document.getElementById("next-button").addEventListener("click", async function ()
 {
+    await save();
     // iterate through all the tables and ensure no NA values are present
     let allTables = document.querySelectorAll("table");
     let allTablesArray = Array.from(allTables);

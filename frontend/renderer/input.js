@@ -953,8 +953,10 @@ function startProcessingLoading()
 /**
  * When the next button is clicked, check that all fields are valid and then proceed to the next page
  */
-document.getElementById("next-button").addEventListener("click", function()
+document.getElementById("next-button").addEventListener("click", async function ()
 {
+    await save();
+
     let defaultZones;
     if (document.getElementById("number-height-zone-yes-option").checked)
     {
@@ -1563,15 +1565,12 @@ document.getElementById("next-button").addEventListener("click", function()
     }
 });
 
-/**
- * When the save button is clicked, serialize the input page and send it to the backend
- */
-document.getElementById("save-button").addEventListener("click", function()
+function save()
 {
-    window.api
+    return window.api
         .invoke("get-connection-address").then((connectionAddress) =>
     {
-        window.api
+        return window.api
             .invoke("get-token") // Retrieve the token
             .then((token) =>
             {
@@ -1585,7 +1584,7 @@ document.getElementById("save-button").addEventListener("click", function()
                     redirect: "follow",
                 };
 
-                fetch(`${connectionAddress}/get_user_current_save_file`, requestOptions)
+                return fetch(`${connectionAddress}/get_user_current_save_file`, requestOptions)
                     .then((response) =>
                     {
                         if (response.status === 200)
@@ -1618,23 +1617,29 @@ document.getElementById("save-button").addEventListener("click", function()
                             redirect: "follow",
                         };
 
-                        fetch(`${connectionAddress}/set_user_save_data`, requestOptions)
+                        return fetch(`${connectionAddress}/set_user_save_data`, requestOptions)
                             .then((response) => response.text())
                             .catch((error) => console.error(error));
                     })
                     .catch((error) => console.error(error));
             });
     });
+}
 
-    // serialized = serialize();
-
+/**
+ * When the save button is clicked, serialize the input page and send it to the backend
+ */
+document.getElementById("save-button").addEventListener("click", async function ()
+{
+    await save();
 });
 
 /**
  * When the back button is clicked, return to the home page
  */
-document.getElementById("back-button").addEventListener("click", function()
+document.getElementById("back-button").addEventListener("click", async function ()
 {
+    await save();
     window.location.href = "home.html";
 });
 
