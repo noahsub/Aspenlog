@@ -94,10 +94,9 @@ document.getElementById("password").addEventListener("input", function (event)
 // WINDOW ONLOAD EVENT
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/**
- * Set up the page on load
- */
-window.onload = function ()
+const delay = ms => new Promise(res => setTimeout(res, ms));
+
+function checkServer()
 {
     window.api
         .invoke("get-connection-address").then((connectionAddress) =>
@@ -116,12 +115,21 @@ window.onload = function ()
         let serverStatus = document.getElementById("server-status");
 
         fetch(`${connectionAddress}/server_status`, requestOptions)
-            .then((response) =>
+            .then(async (response) =>
             {
                 if (response.status === 200)
                 {
+                    document.getElementById("username").disabled = false;
+                    document.getElementById("password").disabled = false;
+                    document.getElementById("signin").disabled = false;
+                    document.getElementById("join-button").style.visibility = "visible";
+                    document.getElementById("error-message").innerHTML = "";
+
                     serverStatus.innerHTML = "Server Online ✓";
                     serverStatus.style.color = "#9bca6d";
+
+                    await delay(5000);
+                    checkServer();
                 }
                 else
                 {
@@ -134,9 +142,12 @@ window.onload = function ()
                     document.getElementById("join-button").style.visibility = "hidden";
                     document.getElementById("error-message").innerHTML =
                         "Server outage! Either switch to another server or wait for the current one to recover.";
+
+                    await delay(5000);
+                    checkServer();
                 }
             })
-            .catch((error) =>
+            .catch(async (error) =>
             {
                 serverStatus.innerHTML = "Server Offline ✕";
                 serverStatus.style.color = "#e64f4f";
@@ -145,8 +156,18 @@ window.onload = function ()
                 document.getElementById("password").disabled = true;
                 document.getElementById("signin").disabled = true;
                 document.getElementById("join-button").style.visibility = "hidden";
-                document.getElementById("error-message").innerHTML =
-                    "Server outage! Either switch to another server or wait for the current one to recover.";
+                document.getElementById("error-message").innerHTML = "Server outage! Either switch to another server or wait for the current one to recover.";
+
+                await delay(5000);
+                checkServer();
             });
     });
+}
+
+/**
+ * Set up the page on load
+ */
+window.onload = function ()
+{
+    checkServer();
 };

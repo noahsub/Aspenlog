@@ -18,8 +18,8 @@ from config import get_file_path
 def generate_bar_chart(id: str, building: Building, snow_load: SnowLoad):
     count = 0
     for height_zone in sorted(building.height_zones, key=lambda x: x.zone_num):
-        x_labels = ['Full Wind Y', 'Seismic Y', 'Seismic X', 'Dead Load']
-        y_labels = ['Wy', 'Ey', 'Ex', 'D']
+        x_labels = ['Full Wind Y', 'Seismic X', 'Seismic Y', 'Dead Load']
+        y_labels = ['Wy', 'Ex', 'Ey', 'D']
 
         pairs = {(a, b): 0 for a in x_labels for b in y_labels}
 
@@ -53,9 +53,13 @@ def generate_bar_chart(id: str, building: Building, snow_load: SnowLoad):
         ax.set_yticks(_y)
         ax.set_xticklabels(x_labels)
         ax.set_yticklabels(y_labels)
+        ax.set_xlabel('Load Combination Type')
+        ax.set_ylabel('Load Type')
+        ax.set_zlabel('Magnitude')
 
         # Adding title
-        plt.title(f'Load Combinations of Height Zone {height_zone.zone_num} (kPa)')
+        # plt.title(f'Load Combinations of Height Zone {height_zone.zone_num} (kPa)')
+        plt.title(f'Height Zone {height_zone.zone_num} - Wall Centre Zone (kPa)')
 
         # Setting background color
         ax.set_facecolor('#f7f4ef')
