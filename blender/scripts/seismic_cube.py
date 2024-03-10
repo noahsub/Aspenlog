@@ -31,10 +31,6 @@ def color_based_on_load(load_value, max_load):
     return (r, g, b, a)
 
 def main():
-    # Check for args
-    if len(sys.argv) < 1:
-        print("Usage: blender --background --python blender_request.py -- id '<json_string>'")
-        sys.exit(1)
 
     # last argument is JSON string
     json_str = sys.argv[-1]
@@ -48,7 +44,7 @@ def main():
         print("Data received:", data)
     except jsonpickle.JSONDecodeError as e:
         print("Failed to decode JSON:", e)
-        sys.exit(1)
+
     max_height = 0
     max_load = max([i['load'] for i in data[:-1]])
     for i in range(len(data)-1):

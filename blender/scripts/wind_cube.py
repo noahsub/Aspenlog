@@ -20,11 +20,7 @@ from shapes import create_wind_cube
 from arrow import create_arrow
 
 def main():
-    # Check for args
-    if len(sys.argv) < 1:
-        print("Usage: blender --background --python blender_request.py -- id '<json_string>'")
-        sys.exit(1)
-    
+
     # last argument is JSON string
     json_str = sys.argv[-1]
     id = int(sys.argv[-2])
@@ -35,11 +31,7 @@ def main():
         print("Data received:", data)
     except Exception as e:
         print("Failed to decode JSON:", e)
-        #with open(json_str, 'r') as file:
-            #data = jsonpickle.decode(file)
-        #data=json.loads(json_str)
-        # REMOVE
-        sys.exit(-1)
+        
     rgba_decrement = 1.0/(len(data)-1)
     max_height = 0
     for i in range(len(data)-1):
