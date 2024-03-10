@@ -42,9 +42,9 @@ def generate_load_model_endpoint(username: str = Depends(decode_token)):
                                        wall_centre_pos=height_zone.wind_load.get_zone(4).pressure.pos_uls,
                                        wall_centre_neg=height_zone.wind_load.get_zone(4).pressure.neg_uls,
                                        wall_corner_pos=height_zone.wind_load.get_zone(5).pressure.pos_uls,
-                                       wall_corner_neg=height_zone.wind_load.get_zone(5).pressure.neg_uls))
+                                       wall_corner_neg=height_zone.wind_load.get_zone(5).pressure.neg_uls).to_dict())
             seismic_cubes.append(SeismicZone(h=height_zone.elevation - prev_elevation,
-                                             load=height_zone.seismic_load.vp))
+                                             load=height_zone.seismic_load.vp).to_dict())
             prev_elevation = height_zone.elevation
 
         json_wind = jsonpickle.encode(wind_cubes)

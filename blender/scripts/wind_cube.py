@@ -43,7 +43,7 @@ def main():
 
     # last argument is JSON string
     json_str = sys.argv[-1]
-    id = int(sys.argv[-2])
+    id = str(sys.argv[-2])
     try:
         # Parse the JSON string
         data = jsonpickle.decode(json_str)

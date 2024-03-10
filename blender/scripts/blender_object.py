@@ -13,7 +13,7 @@ class WindZone:
         self.position = position
 
     def to_dict(self):
-        return {"h": self.h, "load": self.load, "position": self.position}
+        return {"h": self.h, "wall_centre_pos": self.wall_centre_pos, "wall_centre_neg": self.wall_centre_neg, "wall_corner_pos": self.wall_corner_pos, "wall_corner_neg": self.wall_corner_neg, "position": self.position}
 
 class SeismicZone:
     """
