@@ -37,4 +37,4 @@ def create_arrow(length=0.2, width=0.2, height=0.2, loc_x=3, loc_y=3):
     # y
     arrow.rotation_euler[1] = 0
     # z
-    arrow.rotation_euler[2] = math.pi/4
+    arrow.rotation_euler[2] = math.pi

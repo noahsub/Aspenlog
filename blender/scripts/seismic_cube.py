@@ -3,13 +3,16 @@ import sys
 import math
 import os
 
-from config import get_file_path
+
 
 # adding modules to blender path
 file = __file__
+PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 module_path = os.path.dirname(file)
+#print(PROJECT_DIR)
 sys.path.append(module_path)
-
+sys.path.append(PROJECT_DIR)
+from config import get_file_path
 import render
 import os
 import jsonpickle
@@ -38,11 +41,11 @@ def add_load_text(load, z):
     obj = bpy.data.objects.new(name="Font Object", object_data=font_curve)
 
     # -- Set scale and location
-    obj.location = (-1, -1.1 , z)
+    obj.location = (1, -1.1 , z)
     obj.scale = (0.75, 0.5, 0.5)
     obj.rotation_euler[0] = math.pi/2
     bpy.context.scene.collection.objects.link(obj)
-
+    #set_cube_colour(obj, (1.0,0.0,1.0,1.0))
 def main():
 
     # last argument is JSON string
@@ -66,7 +69,7 @@ def main():
         cube = create_seismic_cube(height=height, position=i )
         load_value = data[i]['load']
         set_cube_colour(cube, color_based_on_load(load_value, max_load))
-        add_load_text(load_value, height)
+        add_load_text(load_value, height*i)
     render_path = "seismic_" + str(id) + ".png"
 
     render.setup_scene(max_height)

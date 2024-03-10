@@ -6,7 +6,10 @@ class WindZone:
     """
     def __init__(self, wall_centre_pos: float, wall_centre_neg: float, wall_corner_pos: float, wall_corner_neg: float, h: Optional[float] = None, position: Optional[int] = None):
         self.h = h
-        self.load = load
+        self.wall_centre_pos = wall_centre_pos
+        self.wall_centre_neg = wall_centre_neg
+        self.wall_corner_pos = wall_corner_pos
+        self.wall_corner_neg = wall_corner_neg
         self.position = position
 
     def to_dict(self):

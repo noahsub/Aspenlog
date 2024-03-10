@@ -1,14 +1,15 @@
 import bpy
 import sys
 import os
-
-from config import get_file_path
+import math
 
 # adding modules to blender path
 file = __file__
+PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 module_path = os.path.dirname(file)
 sys.path.append(module_path)
-
+sys.path.append(PROJECT_DIR)
+from config import get_file_path
 
 import render
 import os
@@ -16,9 +17,28 @@ import jsonpickle
 import json
 import logging
 from blender_object import *
-from shapes import create_wind_cube
+from shapes import create_wind_cube, set_cube_colour
 from arrow import create_arrow
 
+def add_load_text(load, location, negative=False):
+
+
+    font_curve = bpy.data.curves.new(type="FONT", name="numberPlate")
+    if negative:
+        font_curve.body = str(round(load, 2))
+    else:
+        font_curve.body = ' '+str(round(load, 2))
+    obj = bpy.data.objects.new(name="Font Object", object_data=font_curve)
+
+    # -- Set scale and location
+    obj.location = location
+    obj.scale = (0.75, 0.5, 0.5)
+    obj.rotation_euler[0] = math.pi/2
+    bpy.context.scene.collection.objects.link(obj)
+    if negative:
+        set_cube_colour(obj, (0.0,0.0,1.0,1.0))
+    else:
+        set_cube_colour(obj, (0.0,1.0,0.0,1.0))
 def main():
 
     # last argument is JSON string
@@ -39,9 +59,18 @@ def main():
         max_height += height
         r = max(0, 1-(rgba_decrement*i))
         cube = create_wind_cube(height=height, position=i, r=r, g=r)
-        
+        centre_pos = data[i]['wall_centre_pos']
+        centre_neg = data[i]['wall_centre_neg']
+        corner_pos = data[i]['wall_corner_pos']
+        corner_neg = data[i]['wall_corner_neg']
+        add_load_text(centre_pos, (0, -1.2, height*i+0.5))
+        add_load_text(centre_neg, (0,-1.2, height*i), negative=True)
+        add_load_text(corner_pos, (1,-1.2,height*i+0.5))
+        add_load_text(corner_neg, (1,-1.2,height*i), negative=True)
     #add arrow for wind
-    create_arrow(loc_x=3, loc_y=3)
+    if len(data) == 1: 
+        max_height = max_height*4
+    create_arrow(loc_x=0, loc_y=-3)
 
     render_path = "wind_" + str(id) + ".png"
 
