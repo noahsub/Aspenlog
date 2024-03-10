@@ -1,6 +1,6 @@
 import bpy
 import sys
-
+import math
 import os
 
 from config import get_file_path
@@ -30,6 +30,19 @@ def color_based_on_load(load_value, max_load):
     a=1.0
     return (r, g, b, a)
 
+def add_load_text(load, z):
+
+
+    font_curve = bpy.data.curves.new(type="FONT", name="numberPlate")
+    font_curve.body = str(round(load, 2))
+    obj = bpy.data.objects.new(name="Font Object", object_data=font_curve)
+
+    # -- Set scale and location
+    obj.location = (-1, -1.1 , z)
+    obj.scale = (0.75, 0.5, 0.5)
+    obj.rotation_euler[0] = math.pi/2
+    bpy.context.scene.collection.objects.link(obj)
+
 def main():
 
     # last argument is JSON string
@@ -53,7 +66,7 @@ def main():
         cube = create_seismic_cube(height=height, position=i )
         load_value = data[i]['load']
         set_cube_colour(cube, color_based_on_load(load_value, max_load))
-
+        add_load_text(load_value, height)
     render_path = "seismic_" + str(id) + ".png"
 
     render.setup_scene(max_height)
