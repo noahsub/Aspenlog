@@ -427,6 +427,32 @@ document
 // GET LOAD COMBINATIONS
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+function startWallCombinationLoading()
+{
+    for (let row = 0; row < document.getElementById("wall-combination-table").rows.length; row++)
+    {
+        for (let cell = 0; cell < document.getElementById("wall-combination-table").rows[row].cells.length; cell++)
+        {
+            document.getElementById("wall-combination-table").rows[row].cells[cell].classList.add('skeleton-loader');
+        }
+    }
+
+    document.getElementById('save-button').disabled = true;
+}
+
+function stopWallCombinationLoading()
+{
+    for (let row = 0; row < document.getElementById("wall-combination-table").rows.length; row++)
+    {
+        for (let cell = 0; cell < document.getElementById("wall-combination-table").rows[row].cells.length; cell++)
+        {
+            document.getElementById("wall-combination-table").rows[row].cells[cell].classList.remove('skeleton-loader');
+        }
+    }
+
+    document.getElementById('save-button').disabled = false;
+}
+
 /**
  * Get the wall load combinations
  */
@@ -457,15 +483,7 @@ function getWallLoadCombinations()
                     redirect: "follow",
                 };
 
-                for (let row = 0; row < document.getElementById("wall-combination-table").rows.length; row++)
-                {
-                    for (let cell = 0; cell < document.getElementById("wall-combination-table").rows[row].cells.length; cell++)
-                    {
-                        document.getElementById("wall-combination-table").rows[row].cells[cell].classList.add('skeleton-loader');
-                    }
-                }
-
-                document.getElementById('save-button').disabled = true;
+                startWallCombinationLoading();
 
                 fetch(`${connectionAddress}/get_wall_load_combinations`, requestOptions)
                     .then((response) => response.text())
@@ -500,22 +518,43 @@ function getWallLoadCombinations()
                         tableString += "</tbody>";
                         table.innerHTML = tableString;
 
-                        for (let row = 0; row < document.getElementById("wall-combination-table").rows.length; row++)
-                        {
-                            for (let cell = 0; cell < document.getElementById("wall-combination-table").rows[row].cells.length; cell++)
-                            {
-                                document.getElementById("wall-combination-table").rows[row].cells[cell].classList.remove('skeleton-loader');
-                            }
-                        }
-
-                        document.getElementById('save-button').disabled = false;
+                        stopWallCombinationLoading();
                     })
-                    .catch((error) => console.error(error));
+                    .catch((error) => {
+                        console.error(error);
+                        stopWallCombinationLoading();
+                    });
             });
 
     });
 
 
+}
+
+function startRoofCombintaionLoading()
+{
+    for (let row = 0; row < document.getElementById("roof-combination-table").rows.length; row++)
+    {
+        for (let cell = 0; cell < document.getElementById("roof-combination-table").rows[row].cells.length; cell++)
+        {
+            document.getElementById("roof-combination-table").rows[row].cells[cell].classList.add('skeleton-loader');
+        }
+    }
+
+    document.getElementById('save-button').disabled = true;
+}
+
+function stopRoofCombinationLoading()
+{
+    for (let row = 0; row < document.getElementById("roof-combination-table").rows.length; row++)
+    {
+        for (let cell = 0; cell < document.getElementById("roof-combination-table").rows[row].cells.length; cell++)
+        {
+            document.getElementById("roof-combination-table").rows[row].cells[cell].classList.remove('skeleton-loader');
+        }
+    }
+
+    document.getElementById('save-button').disabled = false;
 }
 
 /**
@@ -548,15 +587,7 @@ function getRoofLoadCombinations()
                     redirect: "follow",
                 };
 
-                for (let row = 0; row < document.getElementById("roof-combination-table").rows.length; row++)
-                {
-                    for (let cell = 0; cell < document.getElementById("roof-combination-table").rows[row].cells.length; cell++)
-                    {
-                        document.getElementById("roof-combination-table").rows[row].cells[cell].classList.add('skeleton-loader');
-                    }
-                }
-
-                document.getElementById('save-button').disabled = true;
+                startRoofCombintaionLoading();
 
                 fetch(`${connectionAddress}/get_roof_load_combinations`, requestOptions)
                     .then((response) => response.json())
@@ -599,17 +630,12 @@ function getRoofLoadCombinations()
                         tableString += "</tbody>";
                         table.innerHTML = tableString;
 
-                        for (let row = 0; row < document.getElementById("roof-combination-table").rows.length; row++)
-                        {
-                            for (let cell = 0; cell < document.getElementById("roof-combination-table").rows[row].cells.length; cell++)
-                            {
-                                document.getElementById("roof-combination-table").rows[row].cells[cell].classList.remove('skeleton-loader');
-                            }
-                        }
-
-                        document.getElementById('save-button').disabled = false;
+                        stopRoofCombinationLoading();
                     })
-                    .catch((error) => console.error(error));
+                    .catch((error) => {
+                        console.error(error);
+                        stopRoofCombinationLoading();
+                    });
             });
     });
 }

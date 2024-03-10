@@ -255,6 +255,152 @@ function createWindLoadComponent(zone_num)
 // GET LOADS
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+function doneLoadingWindLoads(zoneNum)
+{
+    // remove skeleton-loader class from all the wind load inputs and enable the radio buttons
+    document
+        .getElementById(`topographic-factor-hz-${zoneNum}`)
+        .classList.remove("skeleton-loader");
+    document.getElementById(
+        `exposure-factor-open-option-hz-${zoneNum}`,
+    ).disabled = false;
+    document.getElementById(
+        `exposure-factor-rough-option-hz-${zoneNum}`,
+    ).disabled = false;
+    document.getElementById(
+        `exposure-factor-intermediate-option-hz-${zoneNum}`,
+    ).disabled = false;
+    document
+        .getElementById(
+            `exposure-factor-open-option-button-hz-${zoneNum}`,
+        )
+        .classList.remove("skeleton-loader");
+    document
+        .getElementById(
+            `exposure-factor-rough-option-button-hz-${zoneNum}`,
+        )
+        .classList.remove("skeleton-loader");
+    document
+        .getElementById(
+            `exposure-factor-intermediate-option-button-hz-${zoneNum}`,
+        )
+        .classList.remove("skeleton-loader");
+    document.getElementById(
+        `internal-pressure-category-enclosed-option-hz-${zoneNum}`,
+    ).disabled = false;
+    document.getElementById(
+        `internal-pressure-category-partially-enclosed-option-hz-${zoneNum}`,
+    ).disabled = false;
+    document.getElementById(
+        `internal-pressure-category-large-openings-option-hz-${zoneNum}`,
+    ).disabled = false;
+    document
+        .getElementById(
+            `internal-pressure-category-enclosed-option-button-hz-${zoneNum}`,
+        )
+        .classList.remove("skeleton-loader");
+    document
+        .getElementById(
+            `internal-pressure-category-partially-enclosed-option-button-hz-${zoneNum}`,
+        )
+        .classList.remove("skeleton-loader");
+    document
+        .getElementById(
+            `internal-pressure-category-large-openings-option-button-hz-${zoneNum}`,
+        )
+        .classList.remove("skeleton-loader");
+    document
+        .getElementById(`ce-intermediate-hz-${zoneNum}`)
+        .classList.remove("skeleton-loader");
+
+    for (let j = 1; j <= 5; j++)
+    {
+        document
+            .getElementById(`pos-${j}-hz-${zoneNum}`)
+            .classList.remove("skeleton-loader");
+        document
+            .getElementById(`neg-${j}-hz-${zoneNum}`)
+            .classList.remove("skeleton-loader");
+    }
+
+    document.getElementById('save-button').disabled = false;
+}
+
+function startLoadingWindLoads(i)
+{
+    // add skeleton-loader class to all the wind load inputs
+    document
+        .getElementById(`topographic-factor-hz-${i}`)
+        .classList.add("skeleton-loader");
+
+    // disable associated radio buttons
+    document.getElementById(
+        `exposure-factor-open-option-hz-${i}`,
+    ).disabled = true;
+    document.getElementById(
+        `exposure-factor-rough-option-hz-${i}`,
+    ).disabled = true;
+    document.getElementById(
+        `exposure-factor-intermediate-option-hz-${i}`,
+    ).disabled = true;
+
+    // add skeleton-loader to parent secondary button
+    document
+        .getElementById(`exposure-factor-open-option-button-hz-${i}`)
+        .classList.add("skeleton-loader");
+    document
+        .getElementById(`exposure-factor-rough-option-button-hz-${i}`)
+        .classList.add("skeleton-loader");
+    document
+        .getElementById(`exposure-factor-intermediate-option-button-hz-${i}`)
+        .classList.add("skeleton-loader");
+
+    // disable radio buttons of internal pressure category
+    document.getElementById(
+        `internal-pressure-category-enclosed-option-hz-${i}`,
+    ).disabled = true;
+    document.getElementById(
+        `internal-pressure-category-partially-enclosed-option-hz-${i}`,
+    ).disabled = true;
+    document.getElementById(
+        `internal-pressure-category-large-openings-option-hz-${i}`,
+    ).disabled = true;
+
+    // add skeleton loader to secondary buttons of internal pressure category
+    document
+        .getElementById(
+            `internal-pressure-category-enclosed-option-button-hz-${i}`,
+        )
+        .classList.add("skeleton-loader");
+    document
+        .getElementById(
+            `internal-pressure-category-partially-enclosed-option-button-hz-${i}`,
+        )
+        .classList.add("skeleton-loader");
+    document
+        .getElementById(
+            `internal-pressure-category-large-openings-option-button-hz-${i}`,
+        )
+        .classList.add("skeleton-loader");
+
+    document
+        .getElementById(`ce-intermediate-hz-${i}`)
+        .classList.add("skeleton-loader");
+
+    // add skeleton-loader to pos and neg cells
+    for (let j = 1; j <= 5; j++)
+    {
+        document
+            .getElementById(`pos-${j}-hz-${i}`)
+            .classList.add("skeleton-loader");
+        document
+            .getElementById(`neg-${j}-hz-${i}`)
+            .classList.add("skeleton-loader");
+    }
+
+    document.getElementById('save-button').disabled = true;
+}
+
 /**
  * Get the wind loads
  */
@@ -290,77 +436,7 @@ function getWindLoads()
                     manualCeCeiValues.push(inputs.ceIntermediate);
                     internalPressureCategoryValues.push(inputs.internalPressureCategory);
 
-                    // add skeleton-loader class to all the wind load inputs
-                    document
-                        .getElementById(`topographic-factor-hz-${i}`)
-                        .classList.add("skeleton-loader");
-
-                    // disable associated radio buttons
-                    document.getElementById(
-                        `exposure-factor-open-option-hz-${i}`,
-                    ).disabled = true;
-                    document.getElementById(
-                        `exposure-factor-rough-option-hz-${i}`,
-                    ).disabled = true;
-                    document.getElementById(
-                        `exposure-factor-intermediate-option-hz-${i}`,
-                    ).disabled = true;
-
-                    // add skeleton-loader to parent secondary button
-                    document
-                        .getElementById(`exposure-factor-open-option-button-hz-${i}`)
-                        .classList.add("skeleton-loader");
-                    document
-                        .getElementById(`exposure-factor-rough-option-button-hz-${i}`)
-                        .classList.add("skeleton-loader");
-                    document
-                        .getElementById(`exposure-factor-intermediate-option-button-hz-${i}`)
-                        .classList.add("skeleton-loader");
-
-                    // disable radio buttons of internal pressure category
-                    document.getElementById(
-                        `internal-pressure-category-enclosed-option-hz-${i}`,
-                    ).disabled = true;
-                    document.getElementById(
-                        `internal-pressure-category-partially-enclosed-option-hz-${i}`,
-                    ).disabled = true;
-                    document.getElementById(
-                        `internal-pressure-category-large-openings-option-hz-${i}`,
-                    ).disabled = true;
-
-                    // add skeleton loader to secondary buttons of internal pressure category
-                    document
-                        .getElementById(
-                            `internal-pressure-category-enclosed-option-button-hz-${i}`,
-                        )
-                        .classList.add("skeleton-loader");
-                    document
-                        .getElementById(
-                            `internal-pressure-category-partially-enclosed-option-button-hz-${i}`,
-                        )
-                        .classList.add("skeleton-loader");
-                    document
-                        .getElementById(
-                            `internal-pressure-category-large-openings-option-button-hz-${i}`,
-                        )
-                        .classList.add("skeleton-loader");
-
-                    document
-                        .getElementById(`ce-intermediate-hz-${i}`)
-                        .classList.add("skeleton-loader");
-
-                    // add skeleton-loader to pos and neg cells
-                    for (let j = 1; j <= 5; j++)
-                    {
-                        document
-                            .getElementById(`pos-${j}-hz-${i}`)
-                            .classList.add("skeleton-loader");
-                        document
-                            .getElementById(`neg-${j}-hz-${i}`)
-                            .classList.add("skeleton-loader");
-                    }
-
-                    document.getElementById('save-button').disabled = true;
+                    startLoadingWindLoads(i);
                 }
 
                 const raw = JSON.stringify(
@@ -439,82 +515,56 @@ function getWindLoads()
                                                 break;
                                         }
                                     }
-
-                                    // remove skeleton-loader class from all the wind load inputs and enable the radio buttons
-                                    document
-                                        .getElementById(`topographic-factor-hz-${zoneNum}`)
-                                        .classList.remove("skeleton-loader");
-                                    document.getElementById(
-                                        `exposure-factor-open-option-hz-${zoneNum}`,
-                                    ).disabled = false;
-                                    document.getElementById(
-                                        `exposure-factor-rough-option-hz-${zoneNum}`,
-                                    ).disabled = false;
-                                    document.getElementById(
-                                        `exposure-factor-intermediate-option-hz-${zoneNum}`,
-                                    ).disabled = false;
-                                    document
-                                        .getElementById(
-                                            `exposure-factor-open-option-button-hz-${zoneNum}`,
-                                        )
-                                        .classList.remove("skeleton-loader");
-                                    document
-                                        .getElementById(
-                                            `exposure-factor-rough-option-button-hz-${zoneNum}`,
-                                        )
-                                        .classList.remove("skeleton-loader");
-                                    document
-                                        .getElementById(
-                                            `exposure-factor-intermediate-option-button-hz-${zoneNum}`,
-                                        )
-                                        .classList.remove("skeleton-loader");
-                                    document.getElementById(
-                                        `internal-pressure-category-enclosed-option-hz-${zoneNum}`,
-                                    ).disabled = false;
-                                    document.getElementById(
-                                        `internal-pressure-category-partially-enclosed-option-hz-${zoneNum}`,
-                                    ).disabled = false;
-                                    document.getElementById(
-                                        `internal-pressure-category-large-openings-option-hz-${zoneNum}`,
-                                    ).disabled = false;
-                                    document
-                                        .getElementById(
-                                            `internal-pressure-category-enclosed-option-button-hz-${zoneNum}`,
-                                        )
-                                        .classList.remove("skeleton-loader");
-                                    document
-                                        .getElementById(
-                                            `internal-pressure-category-partially-enclosed-option-button-hz-${zoneNum}`,
-                                        )
-                                        .classList.remove("skeleton-loader");
-                                    document
-                                        .getElementById(
-                                            `internal-pressure-category-large-openings-option-button-hz-${zoneNum}`,
-                                        )
-                                        .classList.remove("skeleton-loader");
-                                    document
-                                        .getElementById(`ce-intermediate-hz-${zoneNum}`)
-                                        .classList.remove("skeleton-loader");
-                                    for (let j = 1; j <= 5; j++)
-                                    {
-                                        document
-                                            .getElementById(`pos-${j}-hz-${zoneNum}`)
-                                            .classList.remove("skeleton-loader");
-                                        document
-                                            .getElementById(`neg-${j}-hz-${zoneNum}`)
-                                            .classList.remove("skeleton-loader");
-                                    }
-
-                                    document.getElementById('save-button').disabled = false;
+                                    doneLoadingWindLoads(zoneNum);
                                 }
                             })
-                            .catch((error) => console.error(error));
+                            .catch((error) =>
+                            {
+                                console.error(error);
+                                const numHeightZones = document.querySelectorAll(
+                                    'h5[id^="wind-load-component-hz-"]',
+                                ).length;
+                                for (let i = 1; i <= numHeightZones; i++)
+                                {
+                                    doneLoadingWindLoads(i);
+                                }
+                            });
                     })
                     .catch((error) => console.error(error));
             });
     });
 
 
+}
+
+function startLoadingSeismicLoads()
+{
+    document.getElementById('amplification-factor').classList.add('skeleton-loader');
+    document.getElementById('response-modification-factor').classList.add('skeleton-loader');
+    document.getElementById('component-factor').classList.add('skeleton-loader');
+
+    for (let i = 1; i < document.getElementById('seismic-load-table').rows.length - 1; i++)
+    {
+        document.getElementById(`sp-hz-${i}`).classList.add('skeleton-loader');
+        document.getElementById(`vp-hz-${i}`).classList.add('skeleton-loader');
+    }
+
+    document.getElementById('save-button').disabled = true;
+}
+
+function doneLoadingSeismicLoads()
+{
+    document.getElementById('amplification-factor').classList.remove('skeleton-loader');
+    document.getElementById('response-modification-factor').classList.remove('skeleton-loader');
+    document.getElementById('component-factor').classList.remove('skeleton-loader');
+
+    for (let i = 1; i < document.getElementById('seismic-load-table').rows.length - 1; i++)
+    {
+        document.getElementById(`sp-hz-${i}`).classList.remove('skeleton-loader');
+        document.getElementById(`vp-hz-${i}`).classList.remove('skeleton-loader');
+    }
+
+    document.getElementById('save-button').disabled = false;
 }
 
 /**
@@ -564,17 +614,7 @@ function getSeismicLoads()
                             redirect: "follow",
                         };
 
-                        document.getElementById('amplification-factor').classList.add('skeleton-loader');
-                        document.getElementById('response-modification-factor').classList.add('skeleton-loader');
-                        document.getElementById('component-factor').classList.add('skeleton-loader');
-
-                        for (let i = 1; i < document.getElementById('seismic-load-table').rows.length - 1; i++)
-                        {
-                            document.getElementById(`sp-hz-${i}`).classList.add('skeleton-loader');
-                            document.getElementById(`vp-hz-${i}`).classList.add('skeleton-loader');
-                        }
-
-                        document.getElementById('save-button').disabled = true;
+                        startLoadingSeismicLoads();
 
                         fetch(`${connectionAddress}/get_height_zones`, requestOptions)
                             .then((response) => response.json())
@@ -591,24 +631,36 @@ function getSeismicLoads()
                                         seismicLoad["vp"];
                                 }
 
-                                document.getElementById('amplification-factor').classList.remove('skeleton-loader');
-                                document.getElementById('response-modification-factor').classList.remove('skeleton-loader');
-                                document.getElementById('component-factor').classList.remove('skeleton-loader');
-
-                                for (let i = 1; i < document.getElementById('seismic-load-table').rows.length - 1; i++)
-                                {
-                                    document.getElementById(`sp-hz-${i}`).classList.remove('skeleton-loader');
-                                    document.getElementById(`vp-hz-${i}`).classList.remove('skeleton-loader');
-                                }
-
-                                document.getElementById('save-button').disabled = false;
+                                doneLoadingSeismicLoads();
                             })
-                            .catch((error) => console.error(error));
+                            .catch((error) => {
+                                doneLoadingSeismicLoads();
+                            });
                     })
                     .catch((error) => console.error(error));
             });
     });
 
+}
+
+function startLoadingSnowLoads()
+{
+    document.getElementById('upwind-accumulation-factor').classList.add('skeleton-loader');
+    document.getElementById('downwind-accumulation-factor').classList.add('skeleton-loader');
+    document.getElementById('snow-load-upwind-uls').classList.add('skeleton-loader');
+    document.getElementById('snow-load-downwind-uls').classList.add('skeleton-loader');
+
+    document.getElementById('save-button').disabled = true;
+}
+
+function doneLoadingSnowLoads()
+{
+    document.getElementById('upwind-accumulation-factor').classList.remove('skeleton-loader');
+    document.getElementById('downwind-accumulation-factor').classList.remove('skeleton-loader');
+    document.getElementById('snow-load-upwind-uls').classList.remove('skeleton-loader');
+    document.getElementById('snow-load-downwind-uls').classList.remove('skeleton-loader');
+
+    document.getElementById('save-button').disabled = false;
 }
 
 /**
@@ -707,12 +759,7 @@ function getSnowLoad()
                     button.disabled = true;
                 });
 
-                document.getElementById('upwind-accumulation-factor').classList.add('skeleton-loader');
-                document.getElementById('downwind-accumulation-factor').classList.add('skeleton-loader');
-                document.getElementById('snow-load-upwind-uls').classList.add('skeleton-loader');
-                document.getElementById('snow-load-downwind-uls').classList.add('skeleton-loader');
-
-                document.getElementById('save-button').disabled = true;
+                startLoadingSnowLoads();
 
 
                 fetch(`${connectionAddress}/set_snow_load`, requestOptions)
@@ -747,14 +794,11 @@ function getSnowLoad()
                             button.disabled = false;
                         });
 
-                        document.getElementById('upwind-accumulation-factor').classList.remove('skeleton-loader');
-                        document.getElementById('downwind-accumulation-factor').classList.remove('skeleton-loader');
-                        document.getElementById('snow-load-upwind-uls').classList.remove('skeleton-loader');
-                        document.getElementById('snow-load-downwind-uls').classList.remove('skeleton-loader');
-
-                        document.getElementById('save-button').disabled = false;
+                        doneLoadingSnowLoads();
                     })
-                    .catch((error) => console.error(error));
+                    .catch((error) => {
+                        doneLoadingSnowLoads();
+                    });
             });
 
     });
@@ -865,7 +909,7 @@ document
     {
         // check that roof type and exposure factor are selected
         let numHeightZones = document.querySelectorAll('h5[id^="wind-load-component-hz-"]').length;
-        let roofTypeSelection = document.querySelector('#roof-type-selection input[type="radio"]:checked',);
+        let roofTypeSelection = document.querySelector('#roof-type-selection input[type="radio"]:checked', );
         let exposureFactorSelection = document.getElementById(`exposure-factor-selection-hz-${numHeightZones}`).querySelector(".selected");
         if (!exposureFactorSelection || !roofTypeSelection)
         {
@@ -952,7 +996,7 @@ document.getElementById("save-button").addEventListener("click", () =>
 /**
  * When the back button is pressed, the user is redirected to the input page
  */
-document.getElementById("back-button").addEventListener("click", function ()
+document.getElementById("back-button").addEventListener("click", function()
 {
     window.location.href = "input.html";
 });
@@ -960,7 +1004,7 @@ document.getElementById("back-button").addEventListener("click", function ()
 /**
  * When the home button is pressed, the user is redirected to the home page
  */
-document.getElementById("home-button").addEventListener("click", function ()
+document.getElementById("home-button").addEventListener("click", function()
 {
     window.location.href = "home.html";
 });
@@ -968,7 +1012,7 @@ document.getElementById("home-button").addEventListener("click", function ()
 /**
  * When the next button is pressed, the user is redirected to the results page
  */
-document.getElementById("next-button").addEventListener("click", function ()
+document.getElementById("next-button").addEventListener("click", function()
 {
     // iterate through all the tables and ensure no NA values are present
     let allTables = document.querySelectorAll("table");
@@ -1001,7 +1045,7 @@ document.getElementById("next-button").addEventListener("click", function ()
 /**
  * When the profile button is clicked, the user is redirected to the profile page
  */
-document.getElementById("profile").addEventListener("click", function ()
+document.getElementById("profile").addEventListener("click", function()
 {
     window.location.href = "profile.html";
 });
@@ -1009,7 +1053,7 @@ document.getElementById("profile").addEventListener("click", function ()
 /**
  * When the logout button is clicked, the user is logged out and redirected to the login page
  */
-document.getElementById("logout").addEventListener("click", function ()
+document.getElementById("logout").addEventListener("click", function()
 {
     window.api.invoke("store-token", "");
     window.location.href = "login.html";
@@ -1026,7 +1070,7 @@ document.getElementById("logout").addEventListener("click", function ()
  */
 function waitForElement(id, callback)
 {
-    let intervalId = setInterval(function ()
+    let intervalId = setInterval(function()
     {
         let element = document.getElementById(id);
         if (element)
@@ -1095,7 +1139,7 @@ function deserialize(json, section)
         // go through all the radio
         for (let id in objects.radio)
         {
-            waitForElement(id, function (radio)
+            waitForElement(id, function(radio)
             {
                 if (radio.value === objects.radio[id])
                 {
@@ -1112,7 +1156,7 @@ function deserialize(json, section)
         // go through all the input
         for (let id in objects.input)
         {
-            waitForElement(id, function (input)
+            waitForElement(id, function(input)
             {
                 input.value = "";
                 input.focus();
@@ -1285,7 +1329,7 @@ function setUsernameDropdown()
 /**
  * Set up the page on load
  */
-window.onload = function ()
+window.onload = function()
 {
     loadSaveFile();
     setUsernameDropdown();
@@ -1387,7 +1431,8 @@ window.onload = function ()
                         });
                 });
 
-                waitForElement(`internal-pressure-category-selection-hz-${i}`, () => {
+                waitForElement(`internal-pressure-category-selection-hz-${i}`, () =>
+                {
                     document
                         .getElementById(`internal-pressure-category-selection-hz-${i}`)
                         .addEventListener("click", () =>
@@ -1429,16 +1474,17 @@ window.onload = function ()
             selectors.forEach((selector) => toggleMenuColors(selector));
 
 
-
         })
         .catch((error) =>
         {
             console.error(error);
         });
 
-    waitForElement('amplification-factor', (element) => {
+    waitForElement('amplification-factor', (element) =>
+    {
         // set all sp and vp to NA if the amplification factor is changed
-        element.addEventListener('input', () => {
+        element.addEventListener('input', () =>
+        {
             for (let i = 1; i < document.getElementById('seismic-load-table').rows.length - 1; i++)
             {
                 document.getElementById(`sp-hz-${i}`).innerHTML = 'NA';
@@ -1447,9 +1493,11 @@ window.onload = function ()
         });
     });
 
-    waitForElement('response-modification-factor', (element) => {
+    waitForElement('response-modification-factor', (element) =>
+    {
         // set all sp and vp to NA if the response modification factor is changed
-        element.addEventListener('input', () => {
+        element.addEventListener('input', () =>
+        {
             for (let i = 1; i < document.getElementById('seismic-load-table').rows.length - 1; i++)
             {
                 document.getElementById(`sp-hz-${i}`).innerHTML = 'NA';
@@ -1458,9 +1506,11 @@ window.onload = function ()
         });
     });
 
-    waitForElement('component-factor', (element) => {
+    waitForElement('component-factor', (element) =>
+    {
         // set all sp and vp to NA if the component factor is changed
-        element.addEventListener('input', () => {
+        element.addEventListener('input', () =>
+        {
             for (let i = 1; i < document.getElementById('seismic-load-table').rows.length - 1; i++)
             {
                 document.getElementById(`sp-hz-${i}`).innerHTML = 'NA';
@@ -1469,9 +1519,11 @@ window.onload = function ()
         });
     });
 
-    waitForElement('roof-type-selection', (element) => {
+    waitForElement('roof-type-selection', (element) =>
+    {
         // set all snow load values to NA if the roof type is changed
-        element.addEventListener('click', () => {
+        element.addEventListener('click', () =>
+        {
             document.getElementById('upwind-accumulation-factor').innerHTML = 'NA';
             document.getElementById('downwind-accumulation-factor').innerHTML = 'NA';
             document.getElementById('snow-load-upwind-uls').innerHTML = 'NA';
