@@ -1,17 +1,10 @@
-import pprint
-
+import matplotlib.pyplot as plt
 import numpy as np
 
 from backend.Constants.wall_load_combination_constants import ULSWallLoadCombinationTypes, SLSWallLoadCombinationTypes
 from backend.Entities.Building.building import Building
 from backend.Entities.Snow.snow_load import SnowLoad
 from backend.algorithms.load_combination_algorithms import compute_wall_load_combinations
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
-import plotly.graph_objects as go
-from matplotlib import cm
-from matplotlib.colors import ListedColormap, LinearSegmentedColormap
-
 from config import get_file_path
 
 
@@ -66,6 +59,7 @@ def generate_bar_chart(id: str, building: Building, snow_load: SnowLoad):
 
         path = get_file_path(f'backend/output/bar_chart_hz_{height_zone.zone_num}_{id}.png')
         plt.savefig(path, dpi=300, transparent=True)
+        plt.close(fig)
         count += 1
     return count
 

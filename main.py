@@ -3,7 +3,6 @@ from pathlib import Path
 
 import uvicorn
 from fastapi import FastAPI
-
 from config import get_file_path
 
 if __name__ == "__main__":
@@ -73,6 +72,7 @@ if __name__ == "__main__":
     from backend.API.Endpoints.wall_load_combination_endpoint import wall_load_combination_router
     from backend.API.Endpoints.wind_load_endpoint import wind_load_router
     from backend.API.Endpoints.visualization_endpoint import visualization_router
+    from backend.API.Endpoints.output_endpoint import output_router
 
     app = FastAPI()
     app.include_router(authentication_router)
@@ -91,5 +91,6 @@ if __name__ == "__main__":
     app.include_router(roof_load_combination_router)
     app.include_router(server_status_endpoint)
     app.include_router(visualization_router)
+    app.include_router(output_router)
 
     uvicorn.run(app, host="0.0.0.0", port=42613)

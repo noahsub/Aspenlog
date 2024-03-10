@@ -343,6 +343,35 @@ document.getElementById("home-button").addEventListener("click", async function 
     window.location.href = "home.html";
 });
 
+document.getElementById('export-button').addEventListener('click', async function ()
+{
+    await save();
+
+    window.api
+        .invoke("get-connection-address").then((connectionAddress) =>
+    {
+        window.api
+            .invoke("get-token") // Retrieve the token
+            .then((token) =>
+            {
+                const myHeaders = new Headers();
+                myHeaders.append("Accept", "application/json");
+                myHeaders.append("Authorization", `Bearer ${token}`);
+
+                const requestOptions = {
+                    method: "POST",
+                    headers: myHeaders,
+                    redirect: "follow"
+                };
+
+                fetch(`${connectionAddress}/excel_output`, requestOptions)
+                    .then((response) => response.text())
+                    .then((result) => console.log(result))
+                    .catch((error) => console.error(error));
+            });
+    });
+});
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // SELECTION CHANGE EVENTS
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

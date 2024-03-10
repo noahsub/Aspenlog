@@ -15,4 +15,5 @@ jsonpickle~=3.0.2
 python-jose
 bcrypt~=4.1.2
 pandas~=2.2.0
+matplotlib~=3.8.3
 pydantic~=2.5.3
