@@ -3,6 +3,7 @@ import uuid
 import jsonpickle
 import pandas as pd
 from fastapi import APIRouter, HTTPException, Depends
+from starlette.responses import StreamingResponse, FileResponse
 
 from backend.API.Managers.authentication_manager import decode_token
 from backend.API.Managers.user_data_manager import check_user_exists, get_user_location, get_user_dimensions, \
@@ -191,6 +192,7 @@ def excel_output_endpoint(username: str = Depends(decode_token)):
                 title_df.to_excel(writer, sheet_name='Roof Load Combinations', startrow=startrow)
                 df.to_excel(writer, sheet_name='Roof Load Combinations', startrow=startrow + 1, index=False)
                 startrow += len(df.index) + 3  # update startrow for the next dataframe
-        return jsonpickle.encode(id)
+        # return the file as a streaming response
+        return FileResponse(output_path, filename=f'aspenlog2022_report_{id}.xlsx', media_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

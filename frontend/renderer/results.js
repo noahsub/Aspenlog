@@ -365,8 +365,40 @@ document.getElementById('export-button').addEventListener('click', async functio
                 };
 
                 fetch(`${connectionAddress}/excel_output`, requestOptions)
-                    .then((response) => response.text())
-                    .then((result) => console.log(result))
+                    .then((response) =>
+                    {
+                        // Get filename from Content-Disposition header
+                        const contentDisposition = response.headers.get('Content-Disposition');
+                        let filename = 'default_filename.extension';
+                        if (contentDisposition)
+                        {
+                            const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+                            let matches = filenameRegex.exec(contentDisposition);
+                            if (matches != null && matches[1])
+                            {
+                                filename = matches[1].replace(/['"]/g, '');
+                            }
+                        }
+
+                        return response.blob().then(blob => ({blob, filename}));
+                    })
+                    .then(({blob, filename}) =>
+                    {
+                        // Convert blob to buffer
+                        blob.arrayBuffer().then((buffer) =>
+                        {
+                            // Convert ArrayBuffer to Uint8Array
+                            const uint8Array = new Uint8Array(buffer);
+                            // Send Uint8Array and filename to main process for writing to file
+                            window.api.invoke('download', {data: uint8Array, filename});
+                        });
+
+                        document.getElementById('export-warning').innerText = `Downloaded ${filename}`;
+
+                        setTimeout(function() {
+                            document.getElementById('export-warning').innerText = "";
+                        }, 5000);
+                    })
                     .catch((error) => console.error(error));
             });
     });
