@@ -16,7 +16,7 @@ from config import get_file_path
 import render
 import os
 import jsonpickle
-from shapes import create_seismic_cube, set_cube_colour
+from shapes import create_seismic_cube, set_cube_colour, create_axis
 
 
 def color_based_on_load(load_value, max_load):
@@ -83,7 +83,7 @@ def main():
         set_cube_colour(cube, color_based_on_load(load_value, max_load))
         add_load_text(load_value, max_height, scale)
         max_height += height
-
+    create_axis(location=(-3, -max_height/2, max_height/2))
     render_path = "seismic_" + str(id) + ".png"
 
     render.setup_scene(max_height)
