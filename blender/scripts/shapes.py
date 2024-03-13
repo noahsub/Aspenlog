@@ -8,9 +8,9 @@ def create_wind_cube(length=2.0, width=2.0, height=2.0, position=0, r=1.0, g=1.0
 
     cube_x = length * 0.9
     cube_y = width * 0.9
-    cube_z = height * 0.9
+    cube_z = height 
     
-    block_z = position*cube_z
+    block_z = position
     # Add a cube
     bpy.ops.mesh.primitive_cube_add(scale=(cube_x, cube_y, cube_z), size=1, enter_editmode=False, location=(0, 0, block_z))
 
@@ -30,7 +30,7 @@ def create_wind_cube(length=2.0, width=2.0, height=2.0, position=0, r=1.0, g=1.0
     bpy.ops.mesh.primitive_cube_add(scale=(cube_x/2,width*0.1/2, cube_z/2), enter_editmode=True, location=(0,-cube_y/2-width*0.05, block_z))
     cube =bpy.context.active_object
     cube.name="Base Cube"
-    set_cube_colour(cube, rgba=(r, 0.0, 0.0, 1.0))
+    set_cube_colour(cube, rgba=(1.0, 1.0, 1.0, 1.0), text=True)
     bpy.ops.object.editmode_toggle()
     bpy.ops.mesh.primitive_cube_add(size=2, enter_editmode=True,  location=(cube_x/2+length*0.05, cube_y/2+width*0.05, block_z), scale=(0.1,0.1,cube_z/2))
     bpy.ops.mesh.primitive_cube_add(size=2, enter_editmode=True,  location=(-cube_x/2-length*0.05, cube_y/2+width*0.05, block_z), scale=(0.1,0.1,cube_z/2))
@@ -39,7 +39,7 @@ def create_wind_cube(length=2.0, width=2.0, height=2.0, position=0, r=1.0, g=1.0
     bpy.ops.object.editmode_toggle()
     bpy.ops.object.join()
     cube = bpy.context.active_object
-    set_cube_colour(cube, rgba=(r, g, 0.0, 1.0))
+    set_cube_colour(cube, rgba=(r, g, 0.0, 1.0), text=True)
     bpy.ops.object.select_all(action='DESELECT')
 
 def create_seismic_cube(length=2.0, width=2.0, height=2.0, position=0):
@@ -49,7 +49,7 @@ def create_seismic_cube(length=2.0, width=2.0, height=2.0, position=0):
     cube_z = height
 
     # Add a cube
-    bpy.ops.mesh.primitive_cube_add(scale=(cube_x, cube_y, cube_z), size=1, enter_editmode=False, location=(0, 0, position*cube_z))
+    bpy.ops.mesh.primitive_cube_add(scale=(cube_x, cube_y, cube_z), size=1, enter_editmode=False, location=(0, 0, position))
 
     # Get the active object (the cube we just added)
     cube = bpy.context.active_object
@@ -112,11 +112,12 @@ def create_simple_cube(angle_degrees=45, total_height=20):
 
         bpy.ops.mesh.primitive_cube_add(scale=(2,2,total_height))
 
-def set_cube_colour(cube, rgba=(1.0, 0.0, 0.0, 1.0)):
+def set_cube_colour(cube, rgba=(1.0, 0.0, 0.0, 1.0), text=False):
 
     # Create a new material
     mat = bpy.data.materials.new(name="CustomMaterial")
-
+    if text:
+        mat.shadow_method = 'NONE'
     # Enable 'Use nodes':
     mat.use_nodes = True
 
