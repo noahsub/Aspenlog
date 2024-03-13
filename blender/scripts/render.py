@@ -74,6 +74,10 @@ def setup_scene(max_height):
         bpy.ops.object.light_add(type='POINT', location=(0, 0, 10))
     light = bpy.data.objects.get("Light")
     light.data.energy = 1000  # Adjust light intensity
+
+    #adjust light position
+    light.location[0] = 3
+    light.location[1] = -1.9
     #light.visible_shadow = False
     #bpy.context.scene.eevee.use_shadow = False
 

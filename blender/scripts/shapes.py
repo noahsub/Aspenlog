@@ -39,7 +39,8 @@ def create_wind_cube(length=2.0, width=2.0, height=2.0, position=0, r=1.0, g=1.0
     bpy.ops.object.editmode_toggle()
     bpy.ops.object.join()
     cube = bpy.context.active_object
-    set_cube_colour(cube, rgba=(r, g, 0.0, 1.0), text=True)
+    bpy.ops.object.modifier_add(type="EDGE_SPLIT")
+    set_cube_colour(cube, rgba=(r, g, 0.0, 1.0), text=False)
     bpy.ops.object.select_all(action='DESELECT')
 
 def create_seismic_cube(length=2.0, width=2.0, height=2.0, position=0):
@@ -135,3 +136,69 @@ def set_cube_colour(cube, rgba=(1.0, 0.0, 0.0, 1.0), text=False):
     else:
         # If the object has no material slots
         cube.data.materials.append(mat)
+
+
+def create_axis(radius=0.05, depth=1, location=(0, -3, 2) ):
+    bpy.ops.object.select_all(action='DESELECT')
+    # y
+    bpy.ops.mesh.primitive_cylinder_add(radius=0.05, depth=1, enter_editmode=False, location=(0, depth/2, 0), rotation=(math.pi/2, 0 , math.pi))
+    y = bpy.context.active_object
+    y.name = 'yaxis'
+    set_cube_colour(y, rgba=(0.0,1.0,0.0,1.0))
+    
+    # z
+    bpy.ops.mesh.primitive_cylinder_add(radius=0.05, depth=1, enter_editmode=False, location=(0, 0, depth/2), rotation=(0, 0 , math.pi/2))
+    z = bpy.context.active_object
+    z.name = 'zaxis'
+    set_cube_colour(z, rgba=(0.0,0.0,1.0,1.0))
+    
+    #
+
+    # x
+    bpy.ops.mesh.primitive_cylinder_add(radius=0.05, depth=1, enter_editmode=False, location=(depth/2, 0, 0), rotation=(0, math.pi/2 , 0))
+    x = bpy.context.active_object
+    x.name = 'xaxis'
+    set_cube_colour(x, rgba=(1.0,0.0,0.0,1.0))
+   
+    
+    obj = bpy.data.objects['yaxis']
+    obj.select_set(True)
+    obj = bpy.data.objects['zaxis']
+    obj.select_set(True)
+    obj = bpy.data.objects['xaxis']
+    obj.select_set(True)
+    
+    #bpy.ops.object.mode_set(mode='OBJECT')
+    bpy.ops.object.join()
+    axis = bpy.context.active_object
+    axis.name='Axis'
+    axis.location = location
+    
+    # add labels
+    obj=add_axis_text('Y', location=(location[0], location[1]+depth, location[2]))
+    obj.name = 'ylabel'
+    set_cube_colour(obj, rgba=(0.0,1.0,0.0,1.0))
+    
+    obj=add_axis_text('Z', location=(location[0], location[1], location[2]+depth))
+    obj.name = 'zlabel'
+    set_cube_colour(obj, rgba=(0.0,0.0,1.0,1.0))
+    
+    obj=add_axis_text('X', location=(location[0]+depth, location[1]-0.3, location[2]))
+    obj.name = 'xlabel'
+    set_cube_colour(obj, rgba=(1.0,0.0,0.0,1.0))
+    
+def add_axis_text(axis, location, scale=(0.3, 0.3, 0.3)):
+
+
+    font_curve = bpy.data.curves.new(type="FONT", name="numberPlate")
+
+    font_curve.body = str(axis)
+    obj = bpy.data.objects.new(name="Font Object", object_data=font_curve)
+
+    # -- Set scale and location
+    obj.location = location
+    obj.rotation_euler = (math.pi/2, 0, math.pi/2)
+    obj.scale = scale
+     # Link the object to the active collection in the current view layer
+    bpy.context.view_layer.active_layer_collection.collection.objects.link(obj)
+    return obj
