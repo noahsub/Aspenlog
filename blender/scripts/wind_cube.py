@@ -61,7 +61,13 @@ def main():
     rgba_decrement = 1.0/(len(data)-1)
     max_height = 0
     max_hz = max([i['h'] for i in data[:-1]])
-    scale = (max_hz*0.1,)*3
+
+    text_scaling = min(max_hz*0.1, 0.6)
+    scale = (text_scaling,)*3
+    max_scale_chosen = False
+    if scale[0] == 0.6:
+        max_scale_chosen = True
+    
     for i in range(len(data)-1):
         if i == 0:
             if "Cube" in bpy.data.objects:
@@ -72,19 +78,24 @@ def main():
 
         height = data[i]['h']
         position = max_height + height/2
+        
+        if not max_scale_chosen: 
+            text_position_factor = 0.05*height
+        else:
+            text_position_factor = 0.2
         r = max(0, 1-(rgba_decrement*i))
         cube = create_wind_cube(height=height, position=position, r=r, g=r)
         centre_pos = data[i]['wall_centre_pos']
         centre_neg = data[i]['wall_centre_neg']
         corner_pos = data[i]['wall_corner_pos']
         corner_neg = data[i]['wall_corner_neg']
-        add_load_text(centre_pos, (-0.1, -1.2, position), scale=scale)
-        add_load_text(corner_pos, (0.9, -1.2, position), scale=scale)
-        add_load_text(corner_pos, (-1, -1.2, position), scale=scale)
+        add_load_text(centre_pos, (0-text_position_factor, -1.2, position), scale=scale)
+        add_load_text(corner_pos, (1-text_position_factor, -1.2, position), scale=scale)
+        add_load_text(corner_pos, (-1-text_position_factor, -1.2, position), scale=scale)
 
-        add_load_text(centre_neg, (1.15, -0.1, position-0.5), negative=True, scale=scale)
-        add_load_text(corner_neg, (1.15, -1.1, position-0.5), negative=True, scale=scale)
-        add_load_text(corner_neg, (1.15, 0.85, position-0.5), negative=True, scale=scale)
+        add_load_text(centre_neg, (1.15, 0-text_position_factor, position-0.5), negative=True, scale=scale)
+        add_load_text(corner_neg, (1.15, -1-text_position_factor, position-0.5), negative=True, scale=scale)
+        add_load_text(corner_neg, (1.15, 0.9-text_position_factor, position-0.5), negative=True, scale=scale)
         max_height += height
     #add arrow for wind
     if len(data) == 1: 
