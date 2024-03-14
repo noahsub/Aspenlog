@@ -2,12 +2,13 @@ import bpy
 import sys
 import os
 
-from config import get_file_path
-
 # adding modules to blender path
 file = __file__
+PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 module_path = os.path.dirname(file)
 sys.path.append(module_path)
+sys.path.append(PROJECT_DIR)
+from config import get_file_path
 
 
 import render
@@ -31,9 +32,10 @@ def main():
     except Exception as e:
         print("Failed to decode JSON:", e)
         
-
-    max_height = data['total_elevation']
+    max_possible_height = 30 #58.29
+    max_height = min(data['total_elevation'], max_possible_height)
     angle = data['roof_angle']
+    print("Creating Simple Cube")
     create_simple_cube(angle_degrees=angle, total_height=max_height)
 
     render_path = "simple_" + str(id) + ".png"

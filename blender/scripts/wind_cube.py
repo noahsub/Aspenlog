@@ -17,10 +17,10 @@ import jsonpickle
 import json
 import logging
 from blender_object import *
-from shapes import create_wind_cube, set_cube_colour, create_axis
+from shapes import create_wind_cube, set_cube_colour, create_axis, max_height_check
 from arrow import create_arrow
 
-def add_load_text(load, location, negative=False, scale=(0.3, 0.3, 0.3)):
+def add_load_text(load, location, negative=False, scale=(0.3, 0.3, 0.3), arrow=False):
 
 
     font_curve = bpy.data.curves.new(type="FONT", name="numberPlate")
@@ -32,12 +32,26 @@ def add_load_text(load, location, negative=False, scale=(0.3, 0.3, 0.3)):
         except:
             font_curve.body = str(load)
     obj = bpy.data.objects.new(name="Font Object", object_data=font_curve)
+    
+    # link to scene collection
+    
 
     # -- Set scale and location
     obj.location = location
     obj.scale = scale
     obj.rotation_euler[0] = math.pi/2
     bpy.context.scene.collection.objects.link(obj)
+    #bpy.context.collection.objects.link(obj)
+    if arrow:
+        
+        bpy.ops.object.mode_set(mode='OBJECT')
+        bpy.ops.object.select_all(action='DESELECT')
+        obj.select_set(True)
+        bpy.context.view_layer.objects.active = obj
+        bpy.ops.object.convert(target='MESH')
+
+        set_cube_colour(obj, (1.0,0.0,1.0,1.0), text=True)
+        return 0
     if negative:
         obj.rotation_euler[2] = math.pi/2
         set_cube_colour(obj, (0.0,0.0,1.0,1.0), text=True)
@@ -61,11 +75,12 @@ def main():
     rgba_decrement = 1.0/(len(data)-1)
     max_height = 0
     max_hz = max([i['h'] for i in data[:-1]])
+    heights = max_height_check([i['h'] for i in data[:-1]])
 
-    text_scaling = min(max_hz*0.1, 0.6)
+    text_scaling = min(max_hz*0.05, 0.4)
     scale = (text_scaling,)*3
     max_scale_chosen = False
-    if scale[0] == 0.6:
+    if scale[0] == 0.4:
         max_scale_chosen = True
     
     for i in range(len(data)-1):
@@ -76,7 +91,7 @@ def main():
                 bpy.data.objects['Cube'].select_set(True)
                 bpy.ops.object.delete()
 
-        height = data[i]['h']
+        height = heights[i]
         position = max_height + height/2
         
         if not max_scale_chosen: 
@@ -101,7 +116,7 @@ def main():
     if len(data) == 1: 
         max_height = max_height*4
     create_arrow(loc_x=0, loc_y=-3)
-    add_load_text("Wind Direction", (0, -3.5, 0.5), scale=(0.2,0.2,0.2))
+    add_load_text("Wind Direction", (0, -3.5, 0.5), scale=scale, arrow=True)
     create_axis(location=(-3, -max_height/2, max_height/2))
     render_path = "wind_" + str(id) + ".png"
 
