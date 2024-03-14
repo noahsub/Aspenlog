@@ -878,7 +878,6 @@ window.onload = function ()
 
     selectors.forEach((selector) => toggleMenuColors(selector));
 
-    // TODO: uncomment when fixed
-    // generate_load_model();
+    generate_load_model();
     generate_bar_chart();
 };
