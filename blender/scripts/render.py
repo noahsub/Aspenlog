@@ -37,13 +37,28 @@ def set_camera_position(max_height, camera, focal_length=50, sensor_height=24, e
     camera.rotation_euler[2] = math.pi/4
 
 ####
+def hex_to_rgb(value):
+    """Converts a hex color to an RGB tuple normalized to [0, 1]."""
+    value = value.lstrip('#')
+    lv = len(value)
+    rgb = [int(value[i:i + lv // 3], 16) / 255. for i in range(0, lv, lv // 3)]
+    return (rgb[0], rgb[1], rgb[2])
+
 def setup_scene(max_height):
     # Set render resolution
     bpy.context.scene.render.resolution_x = 1920
     bpy.context.scene.render.resolution_y = 1080
     bpy.context.scene.render.resolution_percentage = 100
 
-    # Check if camera exists, if not, create one
+    hex_color = "#f7f4ef"  
+
+    # Convert hex to RGB
+    rgb_color = hex_to_rgb(hex_color)
+    # (0.969, 0.957, 0.937)
+    # Set the background color using the converted RGB values
+
+    bpy.context.scene.world.color = rgb_color
+    # Check if camera exists
     if "Camera" not in bpy.data.objects:
         bpy.ops.object.camera_add(location=(7.0, -7.0, 7.0), rotation=(63.4, 0.0, 45.0))
     camera = bpy.data.objects.get("Camera")
@@ -54,18 +69,27 @@ def setup_scene(max_height):
     sensor_height = camera.data.sensor_height
     set_camera_position(max_height, camera, focal_length=50, sensor_height=24)
 
-    # Ensure there is a light in the scene
+    # light
     if "Light" not in bpy.data.objects:
         bpy.ops.object.light_add(type='POINT', location=(0, 0, 10))
     light = bpy.data.objects.get("Light")
     light.data.energy = 1000  # Adjust light intensity
+
+    #adjust light position
+    light.location[0] = 3
+    light.location[1] = -1.9
+    #light.visible_shadow = False
+    #bpy.context.scene.eevee.use_shadow = False
 
 def render_image(output_path):
     # Set the output path
     bpy.context.scene.render.filepath = output_path
 
     # Set render engine to Cycles for better quality (optional)
-    bpy.context.scene.render.engine = 'CYCLES'
+    
+    #bpy.context.scene.render.engine = 'CYCLES'
+    # easier to render but no background choices
+    bpy.context.scene.render.engine = 'BLENDER_EEVEE'
 
     # Render the scene
     bpy.ops.render.render(write_still=True)
