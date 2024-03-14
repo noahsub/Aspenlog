@@ -16,7 +16,7 @@ from config import get_file_path
 import render
 import os
 import jsonpickle
-from shapes import create_seismic_cube, set_cube_colour, create_axis
+from shapes import create_seismic_cube, set_cube_colour, create_axis, max_height_check
 
 
 def color_based_on_load(load_value, max_load):
@@ -46,7 +46,7 @@ def add_load_text(load, z, scale):
     obj.scale = (scale,scale,scale)
     obj.rotation_euler[0] = math.pi/2
     bpy.context.scene.collection.objects.link(obj)
-    set_cube_colour(obj, (1.0,0.0,1.0,1.0))
+    set_cube_colour(obj, (1.0,0.0,1.0,1.0), text=True)
 def main():
 
     # last argument is JSON string
@@ -65,6 +65,7 @@ def main():
     max_height = 0
     max_hz = max([i['h'] for i in data[:-1]])
     max_load = max([i['load'] for i in data[:-1]])
+    heights = max_height_check([i['h'] for i in data[:-1]])
 
     # text scaling
     scale = max_hz*0.1
@@ -76,7 +77,7 @@ def main():
                 bpy.ops.object.select_all(action='DESELECT')
                 bpy.data.objects['Cube'].select_set(True)
                 bpy.ops.object.delete()
-        height = data[i]['h']
+        height = heights[i]
         position = max_height + height/2
         cube = create_seismic_cube(height=height, position=position )
         load_value = data[i]['load']

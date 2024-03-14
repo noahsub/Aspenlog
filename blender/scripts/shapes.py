@@ -3,6 +3,7 @@ import sys
 import render
 import os
 import math
+import bmesh
 
 def create_wind_cube(length=2.0, width=2.0, height=2.0, position=0, r=1.0, g=1.0):  
 
@@ -65,46 +66,37 @@ def create_simple_cube(angle_degrees=45, total_height=20):
         angle_radians = math.radians(angle_degrees)
         triangle_height = math.tan(angle_radians) * half_base
 
+        if "Cube" in bpy.data.objects:
+            # Deleting Default Cube
+            bpy.ops.object.select_all(action='DESELECT')
+            bpy.data.objects['Cube'].select_set(True)
+            bpy.ops.object.delete()
+
         # add cylinder
         bpy.ops.mesh.primitive_cylinder_add(vertices=3)
         bpy.data.objects["Cylinder"].rotation_euler[0] = math.pi/2
         bpy.data.objects["Cylinder"].scale[1] = triangle_height
 
-        bpy.data.objects["Cylinder"].location[2] = total_height-triangle_height
-
-        obj = bpy.context.active_object
+        bpy.data.objects["Cylinder"].location[2] = (total_height)/2
+        #bpy.context.scene.objects.link(object)
+        obj = bpy.context.view_layer.objects.active
         if obj.type == 'MESH':
             # Switch to Object Mode (required to make changes to mesh data)
-            bpy.ops.object.mode_set(mode='OBJECT')
-            
-            # Retrieve the mesh data of the object
-            mesh = obj.data
-            
-            # Assume we want to select the face with index 0
-            face_index = 1
-            
-            # Deselect all faces
-            for face in mesh.polygons:
-                face.select = False
-            
-            # Select the face with the specified index
-            mesh.polygons[face_index].select = True
-            
-            # Update the mesh to apply the selection
-            obj.update_from_editmode()
-            
-            # Switch to Edit Mode
             bpy.ops.object.mode_set(mode='EDIT')
+            bpy.ops.mesh.normals_make_consistent(inside=False)
+            mesh = obj.data
+            bm = bmesh.from_edit_mesh(mesh)
             
-            # Make sure we're using face selection mode
-            bpy.context.tool_settings.mesh_select_mode = (False, False, True)
-            
-            # Extrude the selected face
+            for face in bm.faces:
+                face.select = False
+            bm.faces[1].select = True
+
+            # Show the updates in the viewport
+            bmesh.update_edit_mesh(mesh)
+                        # Retrieve the mesh data of the object
+            #VALUE = 5
             #bpy.ops.mesh.extrude_faces_move(TRANSFORM_OT_shrink_fatten={"value"=total_height})
             bpy.ops.mesh.extrude_faces_move(TRANSFORM_OT_shrink_fatten={"value":float(total_height)})
-
-            # Apply the shrink/fatten transformation with the specified value to the extruded faces
-            #bpy.ops.transform.shrink_fatten(value=total_height, use_even_offset=True)
             
             # Switch back to Object Mode if necessary
             bpy.ops.object.mode_set(mode='OBJECT')
@@ -112,6 +104,8 @@ def create_simple_cube(angle_degrees=45, total_height=20):
         print("Angle out of Bounds, Generating default")
 
         bpy.ops.mesh.primitive_cube_add(scale=(2,2,total_height))
+    obj = bpy.context.view_layer.objects.active
+    set_cube_colour(obj, rgba=(0.7, 0.5, 0.5, 1.0))
 
 def set_cube_colour(cube, rgba=(1.0, 0.0, 0.0, 1.0), text=False):
 
@@ -202,3 +196,14 @@ def add_axis_text(axis, location, scale=(0.3, 0.3, 0.3)):
      # Link the object to the active collection in the current view layer
     bpy.context.view_layer.active_layer_collection.collection.objects.link(obj)
     return obj
+
+def max_height_check(height_list, limit=15 ):
+    total_height = sum(height_list)
+    output_heights = []
+    if total_height > limit:
+        map_factor = limit/total_height
+        for height in height_list:
+            output_heights.append(height*map_factor)
+    else:
+        output_heights = height_list
+    return output_heights
