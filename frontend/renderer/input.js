@@ -1680,9 +1680,8 @@ document.getElementById('building-view-button').addEventListener('click', functi
 
                         let img = document.createElement('img');
                         img.src = `${connectionAddress}/get_simple_model?id=${id}`;
-                        img.style.maxWidth = "100%";
+                        img.style.maxWidth = "50%";
                         img.style.backgroundColor = "#efe8de";
-                        img.style.maxHeight = "300px";
                         let images = document.getElementById('building-view-container').getElementsByTagName('img');
                         while (images.length > 0)
                         {
