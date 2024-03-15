@@ -111,7 +111,7 @@ def render_image(output_path):
 
     if len(cuda_devices) > 0:
         bpy.context.preferences.addons['cycles'].preferences.compute_device_type = 'CUDA'
-        for device in devices:
+        for device in cuda_devices:
             print(f'Using {device} for rendering')
             device.use = True
         bpy.context.scene.cycles.device = 'GPU'
