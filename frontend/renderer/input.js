@@ -1653,24 +1653,35 @@ document.getElementById('building-view-button').addEventListener('click', functi
             .then((token) =>
             {
                 const myHeaders = new Headers();
+                myHeaders.append("Content-Type", "application/json");
                 myHeaders.append("Accept", "application/json");
                 myHeaders.append("Authorization", `Bearer ${token}`);
+
+                let totalElevation = getHeight();
+                let roofAngle = getFloatValue("a-roof");
+
+                const raw = JSON.stringify({
+                    "total_elevation": totalElevation,
+                    "roof_angle": roofAngle
+                });
 
                 const requestOptions = {
                     method: "POST",
                     headers: myHeaders,
+                    body: raw,
                     redirect: "follow"
                 };
 
                 fetch(`${connectionAddress}/simple_model`, requestOptions)
                     .then((response) => response.json())
-                    .then((result) =>
-                    {
+                    .then((result) => {
                         let id = JSON.parse(result);
 
                         let img = document.createElement('img');
                         img.src = `${connectionAddress}/get_simple_model?id=${id}`;
                         img.style.maxWidth = "100%";
+                        img.style.backgroundColor = "#efe8de";
+                        document.getElementById('building-view-container').innerHTML = "";
                         document.getElementById('building-view-container').appendChild(img);
                     })
                     .catch((error) => console.error(error));
