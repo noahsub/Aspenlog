@@ -49,15 +49,15 @@ def setup_scene(max_height):
     bpy.context.scene.render.resolution_x = 1920
     bpy.context.scene.render.resolution_y = 1080
     bpy.context.scene.render.resolution_percentage = 100
-
+    bpy.context.scene.render.film_transparent = True
     hex_color = "#f7f4ef"  
 
     # Convert hex to RGB
-    rgb_color = hex_to_rgb(hex_color)
+    #rgb_color = hex_to_rgb(hex_color)
     # (0.969, 0.957, 0.937)
     # Set the background color using the converted RGB values
 
-    bpy.context.scene.world.color = rgb_color
+    #bpy.context.scene.world.color = rgb_color
     # Check if camera exists
     if "Camera" not in bpy.data.objects:
         bpy.ops.object.camera_add(location=(7.0, -7.0, 7.0), rotation=(63.4, 0.0, 45.0))
