@@ -104,7 +104,7 @@ def render_image(output_path):
     preferences = bpy.context.preferences
     cycles_preferences = preferences.addons["cycles"].preferences
     cycles_preferences.refresh_devices()
-    cuda_devices = list(cycles_preferences.devices[1])
+    cuda_devices = list(cycles_preferences.devices)
 
     for device in cuda_devices:
         print(device)
