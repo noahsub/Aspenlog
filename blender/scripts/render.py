@@ -113,9 +113,10 @@ def render_image(output_path):
         for device in cuda_devices:
             print(f'Using {device} for rendering')
             device.use = True
+        bpy.context.scene.cycles.device = 'GPU'
     else:
-        bpy.context.preferences.addons['cycles'].preferences.compute_device_type = 'NONE'
-        print('No CUDA devices available, falling back to CPU')
+        bpy.context.scene.render.engine = 'BLENDER_EEVEE'
+        print('No CUDA devices available, falling back to CPU EEVEE rendering')
 
     # Render the scene
     bpy.ops.render.render(write_still=True)
