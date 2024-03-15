@@ -104,25 +104,18 @@ def render_image(output_path):
     preferences = bpy.context.preferences
     cycles_preferences = preferences.addons["cycles"].preferences
     cycles_preferences.refresh_devices()
-    cuda_devices = cycles_preferences.devices[0]
-    opencl_devices = cycles_preferences.devices[1]
+    cuda_devices = cycles_preferences.devices[1]
 
     print(f'cuda_devices: {cuda_devices}')
-    print(f'opencl_devices: {opencl_devices}')
 
     if cuda_devices:
         bpy.context.preferences.addons['cycles'].preferences.compute_device_type = 'CUDA'
         for device in cuda_devices:
             print(f'Using {device} for rendering')
             device.use = True
-    elif opencl_devices:
-        bpy.context.preferences.addons['cycles'].preferences.compute_device_type = 'OPENCL'
-        for device in opencl_devices:
-            print(f'Using {device} for rendering')
-            device.use = True
     else:
         bpy.context.preferences.addons['cycles'].preferences.compute_device_type = 'NONE'
-        print('No CUDA or OpenCL devices available, falling back to CPU')
+        print('No CUDA devices available, falling back to CPU')
 
     # Render the scene
     bpy.ops.render.render(write_still=True)
