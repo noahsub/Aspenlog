@@ -46,8 +46,8 @@ def hex_to_rgb(value):
 
 def setup_scene(max_height):
     # Set render resolution
-    bpy.context.scene.render.resolution_x = 640
-    bpy.context.scene.render.resolution_y = 480
+    bpy.context.scene.render.resolution_x = 1280
+    bpy.context.scene.render.resolution_y = 720
     bpy.context.scene.render.resolution_percentage = 100
     bpy.context.scene.render.film_transparent = True
     hex_color = "#f7f4ef"  
