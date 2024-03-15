@@ -1681,6 +1681,7 @@ document.getElementById('building-view-button').addEventListener('click', functi
                         img.src = `${connectionAddress}/get_simple_model?id=${id}`;
                         img.style.maxWidth = "100%";
                         img.style.backgroundColor = "#efe8de";
+                        img.style.maxHeight = "300px";
                         document.getElementById('building-view-container').innerHTML = "";
                         document.getElementById('building-view-container').appendChild(img);
                     })
