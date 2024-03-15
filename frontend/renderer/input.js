@@ -339,7 +339,7 @@ function siteDesignationSelection()
     );
     for (let i = 0; i < siteDesignationSelectionOptions.length; i++)
     {
-        siteDesignationSelectionOptions[i].addEventListener("change", function()
+        siteDesignationSelectionOptions[i].addEventListener("change", function ()
         {
             if (this.checked)
             {
@@ -366,7 +366,7 @@ function eaveAndRidgeSelection()
     );
     for (let i = 0; i < eaveAndRidgeSelectionOptions.length; i++)
     {
-        eaveAndRidgeSelectionOptions[i].addEventListener("change", function()
+        eaveAndRidgeSelectionOptions[i].addEventListener("change", function ()
         {
             if (this.id === "eave-and-ridge-yes-option")
             {
@@ -390,7 +390,7 @@ function numberHeightZoneSelection()
     );
     for (let i = 0; i < numberHeightZoneOptions.length; i++)
     {
-        numberHeightZoneOptions[i].addEventListener("change", function()
+        numberHeightZoneOptions[i].addEventListener("change", function ()
         {
             if (this.id === "number-height-zone-yes-option")
             {
@@ -414,7 +414,7 @@ function dominantOpeningSelection()
     );
     for (let i = 0; i < dominantOpeningOptions.length; i++)
     {
-        dominantOpeningOptions[i].addEventListener("change", function()
+        dominantOpeningOptions[i].addEventListener("change", function ()
         {
             if (this.id === "dominant-opening-yes-option")
             {
@@ -438,7 +438,7 @@ function materialSelection()
     );
     for (let i = 0; i < materialSelectionOptions.length; i++)
     {
-        materialSelectionOptions[i].addEventListener("change", function()
+        materialSelectionOptions[i].addEventListener("change", function ()
         {
             if (this.id === "single-material-yes-option")
             {
@@ -886,7 +886,7 @@ function startLoadingLocation(ids)
  */
 document
     .getElementById("location_button")
-    .addEventListener("click", function()
+    .addEventListener("click", function ()
     {
         const ids = [
             "location_button",
@@ -1569,61 +1569,61 @@ function save()
 {
     return window.api
         .invoke("get-connection-address").then((connectionAddress) =>
-    {
-        return window.api
-            .invoke("get-token") // Retrieve the token
-            .then((token) =>
-            {
-                const myHeaders = new Headers();
-                myHeaders.append("Accept", "application/json");
-                myHeaders.append("Authorization", `Bearer ${token}`);
+        {
+            return window.api
+                .invoke("get-token") // Retrieve the token
+                .then((token) =>
+                {
+                    const myHeaders = new Headers();
+                    myHeaders.append("Accept", "application/json");
+                    myHeaders.append("Authorization", `Bearer ${token}`);
 
-                const requestOptions = {
-                    method: "POST",
-                    headers: myHeaders,
-                    redirect: "follow",
-                };
+                    const requestOptions = {
+                        method: "POST",
+                        headers: myHeaders,
+                        redirect: "follow",
+                    };
 
-                return fetch(`${connectionAddress}/get_user_current_save_file`, requestOptions)
-                    .then((response) =>
-                    {
-                        if (response.status === 200)
+                    return fetch(`${connectionAddress}/get_user_current_save_file`, requestOptions)
+                        .then((response) =>
                         {
-                            return response.json();
-                        }
-                        else
-                        {
-                            throw new Error("Get User Current Save File Error");
-                        }
-                    })
-                    .then((result) =>
-                    {
-                        let id = parseInt(result);
-                        const myHeaders = new Headers();
-                        myHeaders.append("Content-Type", "application/json");
-                        myHeaders.append("Accept", "application/json");
-                        myHeaders.append("Authorization", `Bearer ${token}`);
-
-                        const raw = JSON.stringify(
+                            if (response.status === 200)
                             {
-                                json_data: serialize(),
-                                id: id,
-                            });
+                                return response.json();
+                            }
+                            else
+                            {
+                                throw new Error("Get User Current Save File Error");
+                            }
+                        })
+                        .then((result) =>
+                        {
+                            let id = parseInt(result);
+                            const myHeaders = new Headers();
+                            myHeaders.append("Content-Type", "application/json");
+                            myHeaders.append("Accept", "application/json");
+                            myHeaders.append("Authorization", `Bearer ${token}`);
 
-                        const requestOptions = {
-                            method: "POST",
-                            headers: myHeaders,
-                            body: raw,
-                            redirect: "follow",
-                        };
+                            const raw = JSON.stringify(
+                                {
+                                    json_data: serialize(),
+                                    id: id,
+                                });
 
-                        return fetch(`${connectionAddress}/set_user_save_data`, requestOptions)
-                            .then((response) => response.text())
-                            .catch((error) => console.error(error));
-                    })
-                    .catch((error) => console.error(error));
-            });
-    });
+                            const requestOptions = {
+                                method: "POST",
+                                headers: myHeaders,
+                                body: raw,
+                                redirect: "follow",
+                            };
+
+                            return fetch(`${connectionAddress}/set_user_save_data`, requestOptions)
+                                .then((response) => response.text())
+                                .catch((error) => console.error(error));
+                        })
+                        .catch((error) => console.error(error));
+                });
+        });
 }
 
 /**
@@ -1653,12 +1653,22 @@ document.getElementById('building-view-button').addEventListener('click', functi
             .then((token) =>
             {
                 const myHeaders = new Headers();
+                myHeaders.append("Content-Type", "application/json");
                 myHeaders.append("Accept", "application/json");
                 myHeaders.append("Authorization", `Bearer ${token}`);
+
+                let totalElevation = getHeight();
+                let roofAngle = getFloatValue("a-roof");
+
+                const raw = JSON.stringify({
+                    "total_elevation": totalElevation,
+                    "roof_angle": roofAngle
+                });
 
                 const requestOptions = {
                     method: "POST",
                     headers: myHeaders,
+                    body: raw,
                     redirect: "follow"
                 };
 
@@ -1670,7 +1680,13 @@ document.getElementById('building-view-button').addEventListener('click', functi
 
                         let img = document.createElement('img');
                         img.src = `${connectionAddress}/get_simple_model?id=${id}`;
-                        img.style.maxWidth = "100%";
+                        img.style.maxWidth = "50%";
+                        img.style.backgroundColor = "#efe8de";
+                        let images = document.getElementById('building-view-container').getElementsByTagName('img');
+                        while (images.length > 0)
+                        {
+                            images[0].parentNode.removeChild(images[0]);
+                        }
                         document.getElementById('building-view-container').appendChild(img);
                     })
                     .catch((error) => console.error(error));
@@ -1738,7 +1754,7 @@ function serialize()
  */
 function waitForElement(id, callback)
 {
-    let intervalId = setInterval(function()
+    let intervalId = setInterval(function ()
     {
         let element = document.getElementById(id);
         if (element)
@@ -1769,7 +1785,7 @@ function deserialize(json, section)
         // go through all the radio
         for (let id in objects.radio)
         {
-            waitForElement(id, function(radio)
+            waitForElement(id, function (radio)
             {
                 if (radio.value === objects.radio[id])
                 {
@@ -1786,7 +1802,7 @@ function deserialize(json, section)
         // go through all the input
         for (let id in objects.input)
         {
-            waitForElement(id, function(input)
+            waitForElement(id, function (input)
             {
                 input.value = "";
                 input.focus();
@@ -1806,7 +1822,7 @@ function deserialize(json, section)
         // go through all the tables
         for (let id in objects.table)
         {
-            waitForElement(id, function(table)
+            waitForElement(id, function (table)
             {
                 table.innerHTML = objects.table[id];
                 processedElements++;
@@ -1971,7 +1987,7 @@ function setUsernameDropdown()
 /**
  * If clicked the user will be logged out and redirected to the login page
  */
-document.getElementById("logout").addEventListener("click", function()
+document.getElementById("logout").addEventListener("click", function ()
 {
     window.api.invoke("store-token", "");
     window.location.href = "login.html";
@@ -1979,7 +1995,7 @@ document.getElementById("logout").addEventListener("click", function()
 
 /**
  * If clicked the user will be redirected to the profile page */
-document.getElementById("profile").addEventListener("click", function()
+document.getElementById("profile").addEventListener("click", function ()
 {
     window.location.href = "profile.html";
 });
@@ -1992,7 +2008,7 @@ document.getElementById("profile").addEventListener("click", function()
 /**
  * Set up the page on load
  */
-window.onload = function()
+window.onload = function ()
 {
     setUsernameDropdown();
     loadSaveFile();

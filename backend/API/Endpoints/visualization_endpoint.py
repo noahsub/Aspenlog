@@ -6,6 +6,7 @@ from starlette.responses import FileResponse
 
 from backend.API.Managers.authentication_manager import decode_token
 from backend.API.Managers.user_data_manager import check_user_exists, get_user_building, get_user_snow_load
+from backend.API.Models.simple_model_input import SimpleModelInput
 from backend.visualizations.load_combination_bar_chart import generate_bar_chart
 from blender.scripts.blender_object import WindZone, SeismicZone
 from blender.scripts.blender_request import run_blender_script
@@ -60,13 +61,12 @@ def generate_load_model_endpoint(username: str = Depends(decode_token)):
 
 
 @visualization_router.post('/simple_model')
-def generate_simple_model_endpoint(username: str = Depends(decode_token)):
+def generate_simple_model_endpoint(simple_model_input: SimpleModelInput, username: str = Depends(decode_token)):
     try:
         check_user_exists(username)
         id = str(uuid.uuid4())
-        building = get_user_building(username=username)
-        total_elevation = building.dimensions.height
-        roof_angle = building.roof.slope
+        total_elevation = simple_model_input.total_elevation
+        roof_angle = simple_model_input.roof_angle
         json_simple = jsonpickle.encode({'total_elevation': total_elevation, 'roof_angle': roof_angle})
         path_simple = get_file_path('blender/scripts/simple_cube.py')
         run_blender_script(script_path=path_simple, id=id, json_str=json_simple)

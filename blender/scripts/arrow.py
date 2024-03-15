@@ -1,7 +1,8 @@
 import bpy
 import bmesh
 import math
-def create_arrow(length=0.2, width=0.2, height=0.2, loc_x=3, loc_y=3):
+def create_arrow(length=0.2, width=0.2, height=0.2, loc_x=3, loc_y=3, \
+                rot_x=math.pi/2, rot_y=0, rot_z=math.pi):
     
 
     cone_x = length 
@@ -33,8 +34,10 @@ def create_arrow(length=0.2, width=0.2, height=0.2, loc_x=3, loc_y=3):
     arrow.location[1] = loc_y
     arrow.location[2] = height
 
-    arrow.rotation_euler[0] = math.pi/2
+    arrow.rotation_euler[0] = rot_x
     # y
-    arrow.rotation_euler[1] = 0
+    arrow.rotation_euler[1] = rot_y
     # z
-    arrow.rotation_euler[2] = math.pi
+    arrow.rotation_euler[2] = rot_z
+    bpy.ops.object.select_all(action='DESELECT')
+
