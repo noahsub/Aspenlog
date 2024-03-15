@@ -81,18 +81,40 @@ def setup_scene(max_height):
     #light.visible_shadow = False
     #bpy.context.scene.eevee.use_shadow = False
 
+# def render_image(output_path):
+#     # Set the output path
+#     bpy.context.scene.render.filepath = output_path
+#
+#     # Set render engine to Cycles for better quality (optional)
+#
+#     #bpy.context.scene.render.engine = 'CYCLES'
+#     # easier to render but no background choices
+#     bpy.context.scene.render.engine = 'BLENDER_EEVEE'
+#
+#     # Render the scene
+#     bpy.ops.render.render(write_still=True)
+    
 def render_image(output_path):
     # Set the output path
     bpy.context.scene.render.filepath = output_path
 
     # Set render engine to Cycles for better quality (optional)
-    
-    #bpy.context.scene.render.engine = 'CYCLES'
-    # easier to render but no background choices
-    bpy.context.scene.render.engine = 'BLENDER_EEVEE'
+    bpy.context.scene.render.engine = 'CYCLES'  # or 'BLENDER_EEVEE' for faster rendering
+
+    # Check if a GPU device is available
+    if bpy.context.preferences.addons['cycles'].preferences.get_devices():
+        # Enable GPU rendering
+        bpy.context.preferences.addons['cycles'].preferences.compute_device_type = 'CUDA'  # or 'OPENCL' for AMD cards
+
+        # Enable all GPU devices
+        for device in bpy.context.preferences.addons['cycles'].preferences.get_devices():
+            device.use = True
+
+        print("Using GPU for rendering")
+    else:
+        # Fallback to CPU if no GPU is found
+        bpy.context.preferences.addons['cycles'].preferences.compute_device_type = 'NONE'
+        print("Using CPU for rendering")
 
     # Render the scene
     bpy.ops.render.render(write_still=True)
-    
-
-
