@@ -101,8 +101,12 @@ def render_image(output_path):
     # Set render engine to Cycles for better quality (optional)
     bpy.context.scene.render.engine = 'CYCLES'  # or 'BLENDER_EEVEE' for faster rendering
 
+    devices = bpy.context.preferences.addons['cycles'].preferences.get_devices()
+
+    print(devices)
+
     # Check if a GPU device is available
-    if bpy.context.preferences.addons['cycles'].preferences.get_devices():
+    if devices:
         # Enable GPU rendering
         bpy.context.preferences.addons['cycles'].preferences.compute_device_type = 'CUDA'  # or 'OPENCL' for AMD cards
 
