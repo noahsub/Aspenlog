@@ -104,14 +104,14 @@ def render_image(output_path):
     preferences = bpy.context.preferences
     cycles_preferences = preferences.addons["cycles"].preferences
     cycles_preferences.refresh_devices()
-    cuda_devices = list(cycles_preferences.devices)
+    devices = list(cycles_preferences.devices)
 
-    for device in cuda_devices:
-        print(device)
+    for device in devices:
+        print(device.name)
 
-    if cuda_devices:
+    if devices:
         bpy.context.preferences.addons['cycles'].preferences.compute_device_type = 'CUDA'
-        for device in cuda_devices:
+        for device in devices:
             print(f'Using {device} for rendering')
             device.use = True
         bpy.context.scene.cycles.device = 'GPU'
