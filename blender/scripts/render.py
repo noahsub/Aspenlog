@@ -110,20 +110,19 @@ def render_image(output_path):
     print(f'cuda_devices: {cuda_devices}')
     print(f'opencl_devices: {opencl_devices}')
 
-    # Check if a GPU device is available
-    if cuda_devices or opencl_devices:
-        # Enable GPU rendering
-        bpy.context.preferences.addons['cycles'].preferences.compute_device_type = 'CUDA'  # or 'OPENCL' for AMD cards
-
-        # Enable all GPU devices
-        for device in bpy.context.preferences.addons['cycles'].preferences.get_devices():
+    if cuda_devices:
+        bpy.context.preferences.addons['cycles'].preferences.compute_device_type = 'CUDA'
+        for device in cuda_devices:
+            print(f'Using {device} for rendering')
             device.use = True
-
-        print("Using GPU for rendering")
+    elif opencl_devices:
+        bpy.context.preferences.addons['cycles'].preferences.compute_device_type = 'OPENCL'
+        for device in opencl_devices:
+            print(f'Using {device} for rendering')
+            device.use = True
     else:
-        # Fallback to CPU if no GPU is found
         bpy.context.preferences.addons['cycles'].preferences.compute_device_type = 'NONE'
-        print("Using CPU for rendering")
+        print('No CUDA or OpenCL devices available, falling back to CPU')
 
     # Render the scene
     bpy.ops.render.render(write_still=True)
