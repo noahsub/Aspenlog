@@ -107,7 +107,7 @@ def render_image(output_path):
     devices = list(cycles_preferences.devices)
 
     for device in devices:
-        print(device.name)
+        print(device.name, device.type)
 
     if devices:
         bpy.context.preferences.addons['cycles'].preferences.compute_device_type = 'CUDA'
