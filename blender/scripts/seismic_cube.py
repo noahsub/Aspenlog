@@ -46,6 +46,7 @@ def add_load_text(load, z, scale):
     obj.scale = (scale,scale,scale)
     obj.rotation_euler[0] = math.pi/2
     bpy.context.scene.collection.objects.link(obj)
+    obj.visible_shadow=False
     set_cube_colour(obj, (1.0,0.0,1.0,1.0), text=True)
 def main():
 
@@ -82,6 +83,8 @@ def main():
         cube = create_seismic_cube(height=height, position=position )
         load_value = data[i]['load']
         set_cube_colour(cube, color_based_on_load(load_value, max_load))
+
+        cube.visible_shadow=False
         add_load_text(load_value, max_height, scale)
         max_height += height
     create_axis(location=(-3, -max_height/2, max_height/2))

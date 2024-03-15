@@ -42,6 +42,7 @@ def add_load_text(load, location, negative=False, scale=(0.3, 0.3, 0.3), arrow=F
     obj.rotation_euler[0] = math.pi/2
     bpy.context.scene.collection.objects.link(obj)
     #bpy.context.collection.objects.link(obj)
+    obj.visible_shadow = False
     if arrow:
         
         bpy.ops.object.mode_set(mode='OBJECT')
