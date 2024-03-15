@@ -59,13 +59,13 @@ def create_seismic_cube(length=2.0, width=2.0, height=2.0, position=0):
 
 def create_simple_cube(angle_degrees=45, total_height=20):
     
-    if angle_degrees < 90:
+    if angle_degrees < 90 and angle_degrees!= 0:
 
         base_width = 2.0  # Length of the square base sides
         half_base = base_width / 2
         angle_radians = math.radians(angle_degrees)
         triangle_height = math.tan(angle_radians) * half_base
-
+        print("Tri heightL", triangle_height, "\tTotal:", total_height)
         if "Cube" in bpy.data.objects:
             # Deleting Default Cube
             bpy.ops.object.select_all(action='DESELECT')
@@ -77,7 +77,7 @@ def create_simple_cube(angle_degrees=45, total_height=20):
         bpy.data.objects["Cylinder"].rotation_euler[0] = math.pi/2
         bpy.data.objects["Cylinder"].scale[1] = triangle_height
 
-        bpy.data.objects["Cylinder"].location[2] = (total_height)/2
+        bpy.data.objects["Cylinder"].location[2] = total_height-triangle_height/2
         #bpy.context.scene.objects.link(object)
         obj = bpy.context.view_layer.objects.active
         if obj.type == 'MESH':
@@ -90,13 +90,10 @@ def create_simple_cube(angle_degrees=45, total_height=20):
             for face in bm.faces:
                 face.select = False
             bm.faces[1].select = True
-
-            # Show the updates in the viewport
-            bmesh.update_edit_mesh(mesh)
-                        # Retrieve the mesh data of the object
             #VALUE = 5
-            #bpy.ops.mesh.extrude_faces_move(TRANSFORM_OT_shrink_fatten={"value"=total_height})
-            bpy.ops.mesh.extrude_faces_move(TRANSFORM_OT_shrink_fatten={"value":float(total_height)})
+            bpy.ops.mesh.extrude_context_move(MESH_OT_extrude_context=None, TRANSFORM_OT_translate={"value":(0,0,-(total_height-triangle_height))})
+            #bpy.ops.mesh.extrude_faces_move(TRANSFORM_OT_shrink_fatten={"value":total_height-triangle_height})
+            #bpy.ops.mesh.extrude_faces_move(TRANSFORM_OT_shrink_fatten={"value":float(total_height-triangle_height)})
             
             # Switch back to Object Mode if necessary
             bpy.ops.object.mode_set(mode='OBJECT')
