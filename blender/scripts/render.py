@@ -109,7 +109,26 @@ def render_image(output_path):
     cuda_devices = [x for x in devices if str(x.type) == 'CUDA']
     cpu_devices = [x for x in devices if str(x.type) == 'CPU']
 
+    # reduce for less vram
+    #bpy.context.scene.render.simplify_subdivision_render =10
+      
     if len(cuda_devices) > 0:
+
+        bpy.context.scene.cycles.texture_limit_render = '128'
+
+        # default 4096
+        bpy.context.scene.cycles.samples = 64
+
+        bpy.context.scene.cycles.adaptive_threshold = 1
+
+        bpy.context.scene.cycles.use_auto_tile = True
+        #bpy.context.scene.cycles.debug_use_compact_bvh = True
+        
+        bpy.context.scene.cycles.use_denoising = False
+
+        # Lower = slightly less ram, default 2048, 64 seems good, 512 is faster with a bit more mem
+        bpy.context.scene.cycles.tile_size = 512
+
         bpy.context.preferences.addons['cycles'].preferences.compute_device_type = 'CUDA'
         for device in cuda_devices:
             print(f'Using {device} for rendering')
