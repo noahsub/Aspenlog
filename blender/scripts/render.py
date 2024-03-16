@@ -114,10 +114,10 @@ def render_image(output_path):
       
     if len(cuda_devices) > 0:
 
-        bpy.context.scene.cycles.texture_limit_render = '128'
+        bpy.context.scene.cycles.texture_limit_render = '16'
 
         # default 4096
-        bpy.context.scene.cycles.samples = 64
+        bpy.context.scene.cycles.samples = 10
 
         bpy.context.scene.cycles.adaptive_threshold = 1
 
