@@ -117,7 +117,7 @@ def render_image(output_path):
         bpy.context.scene.cycles.texture_limit_render = '128'
 
         # default 4096
-        bpy.context.scene.cycles.samples = 5
+        bpy.context.scene.cycles.samples = 10
 
         bpy.context.scene.cycles.adaptive_threshold = 1
 
