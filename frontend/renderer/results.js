@@ -145,6 +145,8 @@ function loadSaveFile()
                                     {
                                         deserialize(result.JsonData, "result_page").then(() =>
                                         {
+                                            generate_load_model();
+                                            generate_bar_chart();
                                             window.scrollTo(0, 0);
                                         });
                                     })
@@ -787,6 +789,9 @@ function generate_bar_chart()
                     redirect: "follow"
                 };
 
+                document.getElementById('bar-chart-render-error').style.display = 'block';
+                document.getElementById('bar-chart-render-error').innerHTML = "You have been placed in a rendering queue. Please wait for the render to complete...";
+
                 fetch(`${connectionAddress}/bar_chart`, requestOptions)
                     .then((response) => response.json())
                     .then((result) => {
@@ -821,8 +826,15 @@ function generate_bar_chart()
                                 document.getElementById('right-bar-chart-container').appendChild(img);
                             }
                         }
+
+                        document.getElementById('bar-chart-render-error').style.display = 'none';
+                        document.getElementById('bar-chart-render-error').innerHTML = "";
                     })
-                    .catch((error) => console.error(error));
+                    .catch((error) => {
+                        console.error(error);
+                        document.getElementById('bar-chart-render-error').style.display = 'block';
+                        document.getElementById('bar-chart-render-error').innerHTML = "Render failed. Please try again.";
+                    });
             });
     });
 }
@@ -846,14 +858,24 @@ function generate_load_model()
                     redirect: "follow"
                 };
 
+                document.getElementById('model-render-error').style.display = 'block';
+                document.getElementById('model-render-error').innerHTML = "You have been placed in a rendering queue. Please wait for the render to complete...";
+
                 fetch(`${connectionAddress}/load_model`, requestOptions)
                     .then((response) => response.json())
                     .then((result) => {
                         let id = JSON.parse(result);
                         document.getElementById('wind-load-image').src = `${connectionAddress}/get_wind_load_model?id=${id}`;
                         document.getElementById('seismic-load-image').src = `${connectionAddress}/get_seismic_load_model?id=${id}`;
+
+                        document.getElementById('model-render-error').style.display = 'none';
+                        document.getElementById('model-render-error').innerHTML = "";
                     })
-                    .catch((error) => console.error(error));
+                    .catch((error) => {
+                        console.error(error)
+                        document.getElementById('model-render-error').style.display = 'block';
+                        document.getElementById('model-render-error').innerHTML = "Render failed. Please try again.";
+                    });
             });
     });
 }
@@ -878,6 +900,6 @@ window.onload = function ()
 
     selectors.forEach((selector) => toggleMenuColors(selector));
 
-    generate_load_model();
-    generate_bar_chart();
+    // generate_load_model();
+    // generate_bar_chart();
 };

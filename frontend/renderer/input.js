@@ -1672,6 +1672,9 @@ document.getElementById('building-view-button').addEventListener('click', functi
                     redirect: "follow"
                 };
 
+                document.getElementById('building-render-error').style.display = 'block';
+                document.getElementById('building-render-error').innerHTML = "You have been placed in a rendering queue. Please wait for the render to complete...";
+
                 fetch(`${connectionAddress}/simple_model`, requestOptions)
                     .then((response) => response.json())
                     .then((result) =>
@@ -1688,8 +1691,15 @@ document.getElementById('building-view-button').addEventListener('click', functi
                             images[0].parentNode.removeChild(images[0]);
                         }
                         document.getElementById('building-view-container').appendChild(img);
+
+                        document.getElementById('building-render-error').style.display = 'none';
+                        document.getElementById('building-render-error').innerHTML = "";
                     })
-                    .catch((error) => console.error(error));
+                    .catch((error) => {
+                        console.error(error);
+                        document.getElementById('building-render-error').style.display = 'block';
+                        document.getElementById('building-render-error').innerHTML = "Render failed. Please try again.";
+                    });
             });
     });
 });

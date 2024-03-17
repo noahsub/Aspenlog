@@ -485,33 +485,33 @@ function getWindLoads()
                                         {
                                             case "roof_interior":
                                                 document.getElementById(`pos-1-hz-${zoneNum}`).innerHTML =
-                                                    innerZone["pressure"]["pos_uls"];
+                                                    parseFloat(innerZone["pressure"]["pos_uls"]).toFixed(4);
                                                 document.getElementById(`neg-1-hz-${zoneNum}`).innerHTML =
-                                                    innerZone["pressure"]["neg_uls"];
+                                                    parseFloat(innerZone["pressure"]["neg_uls"]).toFixed(4);
                                                 break;
                                             case "roof_edge":
                                                 document.getElementById(`pos-2-hz-${zoneNum}`).innerHTML =
-                                                    innerZone["pressure"]["pos_uls"];
+                                                    parseFloat(innerZone["pressure"]["pos_uls"]).toFixed(4);
                                                 document.getElementById(`neg-2-hz-${zoneNum}`).innerHTML =
-                                                    innerZone["pressure"]["neg_uls"];
+                                                    parseFloat(innerZone["pressure"]["neg_uls"]).toFixed(4);
                                                 break;
                                             case "roof_corner":
                                                 document.getElementById(`pos-3-hz-${zoneNum}`).innerHTML =
-                                                    innerZone["pressure"]["pos_uls"];
+                                                    parseFloat(innerZone["pressure"]["pos_uls"]).toFixed(4);
                                                 document.getElementById(`neg-3-hz-${zoneNum}`).innerHTML =
-                                                    innerZone["pressure"]["neg_uls"];
+                                                    parseFloat(innerZone["pressure"]["neg_uls"]).toFixed(4);
                                                 break;
                                             case "wall_centre":
                                                 document.getElementById(`pos-4-hz-${zoneNum}`).innerHTML =
-                                                    innerZone["pressure"]["pos_uls"];
+                                                    parseFloat(innerZone["pressure"]["pos_uls"]).toFixed(4);
                                                 document.getElementById(`neg-4-hz-${zoneNum}`).innerHTML =
-                                                    innerZone["pressure"]["neg_uls"];
+                                                    parseFloat(innerZone["pressure"]["neg_uls"]).toFixed(4);
                                                 break;
                                             case "wall_corner":
                                                 document.getElementById(`pos-5-hz-${zoneNum}`).innerHTML =
-                                                    innerZone["pressure"]["pos_uls"];
+                                                    parseFloat(innerZone["pressure"]["pos_uls"]).toFixed(4);
                                                 document.getElementById(`neg-5-hz-${zoneNum}`).innerHTML =
-                                                    innerZone["pressure"]["neg_uls"];
+                                                    parseFloat(innerZone["pressure"]["neg_uls"]).toFixed(4);
                                                 break;
                                         }
                                     }
@@ -626,9 +626,9 @@ function getSeismicLoads()
                                 {
                                     let seismicLoad = heightZoneData[zoneNum]["seismic_load"];
                                     document.getElementById(`sp-hz-${zoneNum}`).innerHTML =
-                                        seismicLoad["sp"];
+                                        parseFloat(seismicLoad["sp"]).toFixed(4);
                                     document.getElementById(`vp-hz-${zoneNum}`).innerHTML =
-                                        seismicLoad["vp"];
+                                        parseFloat(seismicLoad["vp"]).toFixed(4);
                                 }
 
                                 doneLoadingSeismicLoads();
@@ -771,13 +771,13 @@ function getSnowLoad()
                         let upwindData = snowLoadData["upwind"];
                         let downwindData = snowLoadData["downwind"];
                         document.getElementById("upwind-accumulation-factor").innerHTML =
-                            upwindData["factor"]["ca"];
+                            parseFloat(upwindData["factor"]["ca"]).toFixed(4);
                         document.getElementById("downwind-accumulation-factor").innerHTML =
-                            downwindData["factor"]["ca"];
+                            parseFloat(downwindData["factor"]["ca"]).toFixed(4);
                         document.getElementById("snow-load-upwind-uls").innerHTML =
-                            upwindData["s_uls"];
+                            parseFloat(upwindData["s_uls"]).toFixed(4);
                         document.getElementById("snow-load-downwind-uls").innerHTML =
-                            downwindData["s_uls"];
+                            parseFloat(downwindData["s_uls"]).toFixed(4);
 
                         // iterate through radio buttons in roof-type-selection
                         let radioButtons = document.getElementById('roof-type-selection').querySelectorAll('input[type="radio"]');
