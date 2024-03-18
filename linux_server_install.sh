@@ -46,16 +46,16 @@ sudo apt-get update -y
 sudo apt-get install -y python3.11 python3-pip
 sudo python3.11 -m pip install --upgrade pip
 
+# Setup Virtual Environment
+sudo apt-get install python3.11-venv
+python3.11 -m venv seeda_python_virtual_environment
+source seeda_python_virtual_environment/bin/activate
+pip install --no-cache-dir -r requirements_linux.txt
+
 # Populate database
 python3.11 database/Population/populate_authentication_data.py
 python3.11 database/Population/populate_canadian_postal_code_data.py
 python3.11 database/Population/populate_climate_data.py
 python3.11 database/Population/populate_save_data.py
 python3.11 database/Population/populate_wind_speed_data.py
-
-# Setup Virtual Environment
-sudo apt-get install python3.11-venv
-python3.11 -m venv seeda_python_virtual_environment
-source seeda_python_virtual_environment/bin/activate
-pip install --no-cache-dir -r requirements_linux.txt
 deactivate
