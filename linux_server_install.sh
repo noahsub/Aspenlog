@@ -14,6 +14,9 @@ sudo apt-get update
 
 sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
+docker stop aspenlog2020-database
+docker rm aspenlog2020-database
+
 sudo docker pull postgres:11.22-bullseye
 
 echo ""

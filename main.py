@@ -62,7 +62,7 @@ if __name__ == "__main__":
             file.write(f'READ_PASSWORD=NONE\n')
 
     # Installation mode
-    if len(sys.argv) > 1 and sys.argv[1] is True:
+    if len(sys.argv) > 1 and sys.argv[1].lower() == 'true':
         exit(0)
 
     from backend.API.Endpoints.authentication import authentication_router
