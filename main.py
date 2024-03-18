@@ -14,6 +14,8 @@ if __name__ == "__main__":
 
     # check that the files at the paths
     if not api_env_path.exists():
+        # create the directory
+        api_env_path.parent.mkdir(parents=True, exist_ok=True)
         # create the file
         api_env_path.touch()
         api_env_valid = False
@@ -26,6 +28,8 @@ if __name__ == "__main__":
                 api_env_valid = False
 
     if not database_env_path.exists():
+        # create the directory
+        database_env_path.parent.mkdir(parents=True, exist_ok=True)
         # create the file
         database_env_path.touch()
         database_env_valid = False
@@ -47,14 +51,14 @@ if __name__ == "__main__":
         # populate the .env file
         with open(database_env_path, 'w') as file:
             print("Please enter the following information associated with the database.")
-            file.write(f'ADMIN_USERNAME={input("Database Admin Username: ")}\n')
-            file.write(f'ADMIN_PASSWORD={input("Database Admin Password: ")}\n')
-            file.write(f'WRITE_USERNAME={input("Database Write Username: ")}\n')
-            file.write(f'WRITE_PASSWORD={input("Database Write Password: ")}\n')
-            file.write(f'READ_USERNAME={input("Database Read Username")}\n')
-            file.write(f'READ_PASSWORD={input("Database Read Password")}\n')
             file.write(f'HOST={input("Database IP Address (HTTPS is Not Supported Here): ")}\n')
             file.write(f'PORT={input("Database Port: ")}')
+            file.write(f'ADMIN_USERNAME={input("Database Admin Username: ")}\n')
+            file.write(f'ADMIN_PASSWORD={input("Database Admin Password: ")}\n')
+            file.write(f'WRITE_USERNAME=NONE\n')
+            file.write(f'WRITE_PASSWORD=NONE\n')
+            file.write(f'READ_USERNAME=NONE\n')
+            file.write(f'READ_PASSWORD=NONE\n')
 
     from backend.API.Endpoints.authentication import authentication_router
     from backend.API.Endpoints.building_endpoint import building_router
