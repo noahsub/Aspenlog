@@ -14,8 +14,8 @@ sudo apt-get update
 
 sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
-docker stop aspenlog2020-database
-docker rm aspenlog2020-database
+sudo docker stop aspenlog2020-database
+sudo docker rm aspenlog2020-database
 
 sudo docker pull postgres:11.22-bullseye
 
@@ -30,7 +30,7 @@ read POSTGRES_PORT
 sudo docker run --name aspenlog2020-database -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD -p $POSTGRES_PORT:5432 -d postgres:11.22-bullseye
 
 # Wait for the Postgres service to start running in the Docker container
-until [ "`docker inspect -f {{.State.Running}} aspenlog2020-database`"=="true" ]; do
+until [ "`sudo docker inspect -f {{.State.Running}} aspenlog2020-database`"=="true" ]; do
     sleep 0.1;
 done;
 
