@@ -52,6 +52,9 @@ python3.11 -m venv seeda_python_virtual_environment
 source seeda_python_virtual_environment/bin/activate
 pip install --no-cache-dir -r requirements_linux.txt
 
+# Set up environment variables
+python3.11 main.py True
+
 # Populate database
 python3.11 -m database.Population.populate_authentication_data
 python3.11 -m database.Population.populate_canadian_postal_code_data
