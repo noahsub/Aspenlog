@@ -17,7 +17,7 @@ sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin 
 sudo docker pull postgres:11.22-bullseye
 
 echo ""
-ehco "Please enter the password you would like to use for the database:"
+echo "Please enter the password you would like to use for the database:"
 read POSTGRES_PASSWORD
 
 echo ""
