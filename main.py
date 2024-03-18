@@ -52,7 +52,7 @@ if __name__ == "__main__":
         with open(database_env_path, 'w') as file:
             print("Please enter the following information associated with the database.")
             file.write(f'HOST={input("Database IP Address (HTTPS is Not Supported Here): ")}\n')
-            file.write(f'PORT={input("Database Port: ")}')
+            file.write(f'PORT={input("Database Port: ")}\n')
             file.write(f'ADMIN_USERNAME={input("Database Admin Username: ")}\n')
             file.write(f'ADMIN_PASSWORD={input("Database Admin Password: ")}\n')
             file.write(f'WRITE_USERNAME=NONE\n')
