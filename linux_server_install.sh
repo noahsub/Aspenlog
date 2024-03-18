@@ -31,7 +31,7 @@ until [ "`docker inspect -f {{.State.Running}} aspenlog2020-database`"=="true" ]
     sleep 0.1;
 done;
 
-docker exec -it aspenlog2020-database psql -U postgres -c "CREATE DATABASE \"NBCC-2020\";"
+sudo docker exec -it aspenlog2020-database psql -U postgres -c "CREATE DATABASE \"NBCC-2020\";"
 
 # Install Blender
 sudo apt-get install xorg openbox
