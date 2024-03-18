@@ -4,6 +4,7 @@ from pathlib import Path
 import uvicorn
 from fastapi import FastAPI
 from config import get_file_path
+import sys
 
 if __name__ == "__main__":
     api_env_path = Path(get_file_path('data/EnvironmentVariables/.env'))
@@ -59,6 +60,10 @@ if __name__ == "__main__":
             file.write(f'WRITE_PASSWORD=NONE\n')
             file.write(f'READ_USERNAME=NONE\n')
             file.write(f'READ_PASSWORD=NONE\n')
+
+    # Installation mode
+    if len(sys.argv) > 1 and sys.argv[1] is True:
+        exit(0)
 
     from backend.API.Endpoints.authentication import authentication_router
     from backend.API.Endpoints.building_endpoint import building_router
