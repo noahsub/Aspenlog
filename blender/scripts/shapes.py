@@ -104,7 +104,7 @@ def create_simple_cube(angle_degrees=45, total_height=20):
     obj = bpy.context.view_layer.objects.active
     set_cube_colour(obj, rgba=(0.7, 0.5, 0.5, 1.0))
 
-def set_cube_colour(cube, rgba=(1.0, 0.0, 0.0, 1.0), text=False):
+def set_cube_colour(cube, rgba=(1.0, 0.0, 0.0, 1.0), text=False, emit=False):
 
     # Create a new material
     mat = bpy.data.materials.new(name="CustomMaterial")
@@ -119,6 +119,12 @@ def set_cube_colour(cube, rgba=(1.0, 0.0, 0.0, 1.0), text=False):
     # Set the color - in RGBA format, from 0.0 to 1.0
     # red
     principled_bsdf.inputs['Base Color'].default_value = rgba # Red
+
+    #principled_bsdf.inputs[26].default_value = rgba
+    #principled_bsdf.inputs[27].default_value = 0.5
+    if emit:
+        principled_bsdf.inputs[26].default_value = rgba
+        principled_bsdf.inputs[27].default_value = 0.5
 
     # Assign the material to the object
     if cube.data.materials:
