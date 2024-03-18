@@ -27,10 +27,9 @@ read POSTGRES_PORT
 sudo docker run --name aspenlog2020-database -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD -p $POSTGRES_PORT:5432 -d postgres:11.22-bullseye
 
 # Wait for the Postgres service to start running in the Docker container
-echo "Waiting for Postgres service to start..."
-while ! docker exec aspenlog2020-database pg_isready -U postgres > /dev/null 2>&1; do
-    sleep 1
-done
+until [ "`docker inspect -f {{.State.Running}} aspenlog2020-database`"=="true" ]; do
+    sleep 0.1;
+done;
 
 docker exec -it aspenlog2020-database psql -U postgres -c "CREATE DATABASE \"NBCC-2020\";"
 
