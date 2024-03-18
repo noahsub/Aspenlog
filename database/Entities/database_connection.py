@@ -15,6 +15,8 @@ import psycopg2
 import sqlalchemy
 from sqlalchemy import create_engine
 from dotenv import load_dotenv
+
+from config import get_file_path
 from database.Constants.connection_constants import PrivilegeType
 
 
@@ -57,7 +59,7 @@ class DatabaseConnection:
         :param database_name: The name of the database
         """
         # Load the .env file
-        load_dotenv()
+        load_dotenv(get_file_path('database/.env'))
         # Read and store the values retrieved from the .env file
         self.host = os.getenv('HOST')
         self.port = int(os.getenv('PORT'))
