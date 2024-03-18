@@ -34,6 +34,9 @@ until [ "`sudo docker inspect -f {{.State.Running}} aspenlog2020-database`"=="tr
     sleep 0.1;
 done;
 
+echo "Press Enter to continue..."
+read
+
 sudo docker exec -it aspenlog2020-database psql -U postgres -c "CREATE DATABASE \"NBCC-2020\";"
 
 # Install Blender
@@ -54,6 +57,10 @@ sudo apt-get install python3.11-venv
 python3.11 -m venv seeda_python_virtual_environment
 source seeda_python_virtual_environment/bin/activate
 pip install --no-cache-dir -r requirements_linux.txt
+
+# Remove existing environment variables
+sudo rm database/.env
+sudo rm data/EnvironmentVariables/.env
 
 # Set up environment variables
 python3.11 main.py True
