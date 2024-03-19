@@ -6,6 +6,8 @@ if [ "$EUID" -eq 0 ]; then
     exit 1
 fi
 
+clear
+
 echo "================================================================================================================="
 echo "ASPENLOG 2020 LINUX SERVER INSTALLATION SCRIPT"
 echo "================================================================================================================="
@@ -25,6 +27,7 @@ echo "__________________________________________________________________________
 # Update and install necessary packages
 sudo apt-get update > /dev/null
 sudo apt-get install -y ca-certificates curl software-properties-common xorg openbox snapd python3.11 python3-pip > /dev/null
+echo "Packages installed successfully."
 
 echo "_________________________________________________________________________________________________________________"
 echo "INSTALLING DOCKER"
@@ -44,13 +47,17 @@ sudo apt-get update > /dev/null
 # Install Docker and its plugins
 sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin > /dev/null
 
+echo "Installed Docker version:"
+sudo docker --version | grep Docker
+
 echo "_________________________________________________________________________________________________________________"
 echo "STOPPING AND REMOVING EXISTING DOCKER CONTAINER IF IT EXISTS"
 echo "_________________________________________________________________________________________________________________"
 
 # Stop and remove any existing Docker container
-sudo docker stop aspenlog2020-database > /dev/null || true
-sudo docker rm aspenlog2020-database > /dev/null || true
+sudo docker stop aspenlog2020-database > /dev/null 2>&1 || true
+sudo docker rm aspenlog2020-database > /dev/null 2>&1 || true
+echo "Stopped and removed existing Docker container if it existed"
 
 echo "_________________________________________________________________________________________________________________"
 echo "SETUP DOCKER CONTAINER FOR POSTGRES DATABASE"
