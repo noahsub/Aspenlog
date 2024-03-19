@@ -81,7 +81,7 @@ rm database/.env
 rm data/EnvironmentVariables/.env
 
 # Set up environment variables
-python3.11 main.py True
+python3.11 main.py --install --host 127.0.0.1 --port $POSTGRES_PORT --admin_username postgres --admin_password $POSTGRES_PASSWORD
 
 # Populate database
 python3.11 -m database.Population.populate_authentication_data
