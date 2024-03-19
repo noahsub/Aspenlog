@@ -1,12 +1,21 @@
+import argparse
 import secrets
 from pathlib import Path
 
 import uvicorn
 from fastapi import FastAPI
+
 from config import get_file_path
-import sys
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='')
+    parser.add_argument('-i', '--install', action='store_true', help='Installation Mode Only')
+    parser.add_argument('-h', '--host', type=str, help='Database ip Address (HTTPS is Not Supported Here)')
+    parser.add_argument('-p', '--port', type=int, help='Port Number')
+    parser.add_argument('-du', '--admin_username', type=str, help='Admin Username')
+    parser.add_argument('-dp', '--admin_password', type=str, help='Admin Password')
+    args = parser.parse_args()
+
     api_env_path = Path(get_file_path('data/EnvironmentVariables/.env'))
     database_env_path = Path(get_file_path('database/.env'))
 
@@ -52,17 +61,29 @@ if __name__ == "__main__":
         # populate the .env file
         with open(database_env_path, 'w') as file:
             print("Please enter the following information associated with the database.")
-            file.write(f'HOST={input("Database IP Address (HTTPS is Not Supported Here): ")}\n')
-            file.write(f'PORT={input("Database Port: ")}\n')
-            file.write(f'ADMIN_USERNAME={input("Database Admin Username: ")}\n')
-            file.write(f'ADMIN_PASSWORD={input("Database Admin Password: ")}\n')
+            if args.host:
+                file.write(f'HOST={args.host}\n')
+            else:
+                file.write(f'HOST={input("Database IP Address (HTTPS is Not Supported Here): ")}\n')
+            if args.port:
+                file.write(f'PORT={args.port}\n')
+            else:
+                file.write(f'PORT={input("Database Port: ")}\n')
+            if args.admin_username:
+                file.write(f'ADMIN_USERNAME={args.admin_username}\n')
+            else:
+                file.write(f'ADMIN_USERNAME={input("Database Admin Username: ")}\n')
+            if args.admin_password:
+                file.write(f'ADMIN_PASSWORD={args.admin_password}\n')
+            else:
+                file.write(f'ADMIN_PASSWORD={input("Database Admin Password: ")}\n')
             file.write(f'WRITE_USERNAME=NONE\n')
             file.write(f'WRITE_PASSWORD=NONE\n')
             file.write(f'READ_USERNAME=NONE\n')
             file.write(f'READ_PASSWORD=NONE\n')
 
     # Installation mode
-    if len(sys.argv) > 1 and sys.argv[1].lower() == 'true':
+    if args.install:
         exit(0)
 
     from backend.API.Endpoints.authentication import authentication_router
