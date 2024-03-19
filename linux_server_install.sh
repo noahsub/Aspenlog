@@ -33,7 +33,21 @@ echo ""
 echo "Please enter the port you would like to use for the database:"
 read POSTGRES_PORT
 
+# Get the PID of the process using the port
+pid=$(sudo lsof -t -i:$POSTGRES_PORT)
+
+# Kill the process using the selected port
+if [ -n "$pid" ]; then
+    sudo kill -9 $pid
+    echo "Killed process $pid on port $POSTGRES_PORT"
+else
+    echo "No process using port $POSTGRES_PORT was found"
+fi
+
 sudo docker run --name aspenlog2020-database -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD -p $POSTGRES_PORT:5432 -d postgres:11.22-bullseye
+
+echo "Press enter to continue"
+read
 
 # Set maximum number of attempts to prevent infinite loop
 max_attempts=30
@@ -75,14 +89,6 @@ pip install --no-cache-dir -r requirements_linux.txt
 # Remove existing environment variables
 sudo rm database/.env
 sudo rm data/EnvironmentVariables/.env
-
-# check that the database is running and if it is, check that the NBCC-2020 database exists, if it does not, create it
-if [ "`sudo docker inspect -f {{.State.Running}} aspenlog2020-database`"=="true" ]; then
-    if [ "`sudo docker exec -it aspenlog2020-database psql -U postgres -lqt | cut -d \| -f 1 | grep -qw NBCC-2020`" ]; then
-        echo "Database already exists"
-    else
-        sudo docker exec -it aspenlog2020-database psql -U postgres -c "CREATE DATABASE \"NBCC-2020\";"
-fi
 
 # Set up environment variables
 python3.11 main.py --install --host 127.0.0.1 --port $POSTGRES_PORT --admin_username postgres --admin_password $POSTGRES_PASSWORD
