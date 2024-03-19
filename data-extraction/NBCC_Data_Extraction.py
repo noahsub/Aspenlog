@@ -6,7 +6,7 @@
 #   - Table C1: Design Wind Pressures for Components and Cladding
 #   - Table C2: Design Wind Pressures for Main Wind-Force Resisting Systems
 #
-# PLease refer to the LICENSE and DISCLAIMER files for more information regarding the use and distribution of this code.
+# Please refer to the LICENSE and DISCLAIMER files for more information regarding the use and distribution of this code.
 # By using this code, you agree to abide by the terms and conditions in those files.
 #
 # Author: Noah Subedar [https://github.com/noahsub]

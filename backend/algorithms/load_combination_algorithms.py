@@ -3,7 +3,7 @@
 # This file contains the algorithms for computing the load combinations of a building. The load combinations are
 # computed for both the roof and the walls and for both the ULS and SLS.
 #
-# PLease refer to the LICENSE and DISCLAIMER files for more information regarding the use and distribution of this code.
+# Please refer to the LICENSE and DISCLAIMER files for more information regarding the use and distribution of this code.
 # By using this code, you agree to abide by the terms and conditions in those files.
 #
 # Author: Noah Subedar [https://github.com/noahsub]
