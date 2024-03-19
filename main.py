@@ -10,7 +10,7 @@ from config import get_file_path
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='')
     parser.add_argument('-i', '--install', action='store_true', help='Installation Mode Only')
-    parser.add_argument('-h', '--host', type=str, help='Database ip Address (HTTPS is Not Supported Here)')
+    parser.add_argument('-ip', '--host', type=str, help='Database ip Address (HTTPS is Not Supported Here)')
     parser.add_argument('-p', '--port', type=int, help='Port Number')
     parser.add_argument('-du', '--admin_username', type=str, help='Admin Username')
     parser.add_argument('-dp', '--admin_password', type=str, help='Admin Password')

@@ -89,4 +89,3 @@ python3.11 -m database.Population.populate_canadian_postal_code_data
 python3.11 -m database.Population.populate_climate_data
 python3.11 -m database.Population.populate_save_data
 python3.11 -m database.Population.populate_wind_speed_data
-deactivate
