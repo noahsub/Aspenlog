@@ -26,10 +26,10 @@ from backend.API.Models.cladding_input import CladdingInput
 
 cladding_router = APIRouter()
 
+
 ########################################################################################################################
 # ENDPOINTS
 ########################################################################################################################
-
 
 @cladding_router.post("/cladding")
 def cladding_endpoint(cladding_input: CladdingInput, username: str = Depends(decode_token)):
