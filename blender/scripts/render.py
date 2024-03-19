@@ -100,7 +100,9 @@ def render_image(output_path):
 
     # Set render engine to Cycles for better quality (optional)
     bpy.context.scene.render.engine = 'CYCLES'  # or 'BLENDER_EEVEE' for faster rendering
-
+    #bpy.context.scene.render.use_freestyle=True
+    #bpy.context.scene.render.line_thickness = 0.5
+    #bpy.context.scene.render.line_thickness_mode = "RELATIVE"
     preferences = bpy.context.preferences
     cycles_preferences = preferences.addons["cycles"].preferences
     cycles_preferences.refresh_devices()

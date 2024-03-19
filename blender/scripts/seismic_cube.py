@@ -21,9 +21,9 @@ from shapes import create_seismic_cube, set_cube_colour, create_axis, max_height
 def color_even_odd(index):
     '''switches opacity for even and odd index'''
     if index % 2 == 0:
-        return (0.5,0.5, 0.0, 1.0)
+        return (0.0 ,0.2, 0.0, 0.5)
     else:
-        return (0.8,0.8, 0.0, 1.0)
+        return (0.0,0.4, 0.0, 0.3)
 
 def color_based_on_load(load_value, max_load):
     # Ensure the load value is clamped between 0 and 100
@@ -40,7 +40,7 @@ def color_based_on_load(load_value, max_load):
     a=1.0
     return (r, g, b, a)
 
-def add_load_text(load, z, scale, location=(-0.5, -1.1)):
+def add_load_text(load, z, scale, location=(-0.5, -1.1), rotation=(math.pi/2, 0, 0)):
 
 
     font_curve = bpy.data.curves.new(type="FONT", name="numberPlate")
@@ -54,7 +54,7 @@ def add_load_text(load, z, scale, location=(-0.5, -1.1)):
     # -- Set scale and location
     obj.location = (location[0], location[1] , z)
     obj.scale = (scale,scale,scale)
-    obj.rotation_euler[0] = math.pi/2
+    obj.rotation_euler = rotation
     bpy.context.scene.collection.objects.link(obj)
     obj.visible_shadow=False
     set_cube_colour(obj, (1.0,0.0,1.0,1.0), text=True)
@@ -92,13 +92,13 @@ def main():
         position = max_height + height/2
         cube = create_seismic_cube(height=height, position=position )
         load_value = data[i]['load']
-        set_cube_colour(cube, color_based_on_load(load_value, max_load), emit=True)
+        set_cube_colour(cube, color_even_odd(i), emit=True)
 
         cube.visible_shadow=False
-        add_load_text(load_value, max_height, scale)
+        add_load_text(load_value, position, scale)
         max_height += height
     
-    add_load_text(load="Seismic Load (kPa)", z=0, location=(-0.4, -2), scale=0.5)
+    add_load_text(load="Seismic Load (kPa) \n *Wall Colour is to Distinguish Zones ", z=1, location=(0.8, -3), scale=0.5, rotation=(math.pi/2, 0, math.pi/4))
     create_axis(location=(-3, -max_height/2, max_height/2))
     render_path = "seismic_" + str(id) + ".png"
 
