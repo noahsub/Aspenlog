@@ -1,42 +1,43 @@
-# ensure script is not run as sudo
-if [ "$EUID" -eq 0 ]
-  then echo "Please do not run as root"
-  exit
+#!/bin/bash
+
+# Ensure script is not run as sudo
+if [ "$EUID" -eq 0 ]; then
+    echo "Please do not run as root"
+    exit 1
 fi
 
-# Add Docker's official GPG key:
+# Update and install necessary packages
 sudo apt-get update
-sudo apt-get install ca-certificates curl
+sudo apt-get install -y ca-certificates curl software-properties-common xorg openbox snapd python3.11 python3-pip
+
+# Add Docker's official GPG key
 sudo install -m 0755 -d /etc/apt/keyrings
 sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
 sudo chmod a+r /etc/apt/keyrings/docker.asc
 
-# Add the repository to Apt sources:
+# Add the Docker repository to Apt sources
 echo \
   "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
   $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
   sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 sudo apt-get update
 
-sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+# Install Docker and its plugins
+sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
-sudo docker stop aspenlog2020-database
-sudo docker rm aspenlog2020-database
+# Stop and remove any existing Docker container
+sudo docker stop aspenlog2020-database || true
+sudo docker rm aspenlog2020-database || true
 
+# Pull the latest Docker image for Postgres
 sudo docker pull postgres:11.22-bullseye
 
-echo ""
-echo "Please enter the password you would like to use for the database:"
-read POSTGRES_PASSWORD
+# Prompt for database password and port
+read -p "Please enter the password you would like to use for the database: " POSTGRES_PASSWORD
+read -p "Please enter the port you would like to use for the database: " POSTGRES_PORT
 
-echo ""
-echo "Please enter the port you would like to use for the database:"
-read POSTGRES_PORT
-
-# Get the PID of the process using the port
+# Kill any process using the selected port
 pid=$(sudo lsof -t -i:$POSTGRES_PORT)
-
-# Kill the process using the selected port
 if [ -n "$pid" ]; then
     sudo kill -9 $pid
     echo "Killed process $pid on port $POSTGRES_PORT"
@@ -44,51 +45,48 @@ else
     echo "No process using port $POSTGRES_PORT was found"
 fi
 
+# Run the Docker container
 sudo docker run --name aspenlog2020-database -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD -p $POSTGRES_PORT:5432 -d postgres:11.22-bullseye
 
-echo "Press enter to continue"
-read
+# Wait for user to press enter
+read -p "Press enter to continue"
 
 # Set maximum number of attempts to prevent infinite loop
 max_attempts=30
 count=0
 
 # Wait for the Postgres service to start running in the Docker container
-until [ "`sudo docker inspect -f {{.State.Running}} aspenlog2020-database`"=="true" ] || [ $count -eq $max_attempts ];
-do
-    sleep 1;
+until [ "$(sudo docker inspect -f {{.State.Running}} aspenlog2020-database)" == "true" ] || [ $count -eq $max_attempts ]; do
+    sleep 1
     count=$((count+1))
-done;
+done
 
+# Create the database if the service started, otherwise print an error message
 if [ $count -lt $max_attempts ]; then
     sudo docker exec -it aspenlog2020-database psql -U postgres -c "CREATE DATABASE \"NBCC-2020\";"
 else
     echo "Database did not start within the expected time."
+    exit 1
 fi
 
 # Install Blender
-sudo apt-get install xorg openbox
-sudo apt install snapd
-snap install blender --classic
+sudo apt install -y snapd
+sudo snap install blender --classic
 blender --version
 
-# Install Python
-sudo apt-get install -y software-properties-common
-sudo add-apt-repository ppa:deadsnakes/ppa
-sudo apt-get update -y
-sudo apt-get install -y
-python3.11 python3-pip
+# Upgrade pip
 sudo python3.11 -m pip install --upgrade pip
 
-# Setup Virtual Environment
+# Install python venv
 sudo apt-get install python3.11-venv
+
+# Setup Python virtual environment
 python3.11 -m venv seeda_python_virtual_environment
 source seeda_python_virtual_environment/bin/activate
 pip install --no-cache-dir -r requirements_linux.txt
 
 # Remove existing environment variables
-sudo rm database/.env
-sudo rm data/EnvironmentVariables/.env
+sudo rm -f database/.env data/EnvironmentVariables/.env
 
 # Set up environment variables
 python3.11 main.py --install --host 127.0.0.1 --port $POSTGRES_PORT --admin_username postgres --admin_password $POSTGRES_PASSWORD
@@ -99,4 +97,6 @@ python3.11 -m database.Population.populate_canadian_postal_code_data
 python3.11 -m database.Population.populate_climate_data
 python3.11 -m database.Population.populate_save_data
 python3.11 -m database.Population.populate_wind_speed_data
+
+# Deactivate the virtual environment
 deactivate
