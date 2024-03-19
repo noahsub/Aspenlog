@@ -83,7 +83,7 @@ sudo apt-get install python3.11-venv > /dev/null
 # Setup Python virtual environment
 python3.11 -m venv seeda_python_virtual_environment > /dev/null
 source seeda_python_virtual_environment/bin/activate
-pip install --no-cache-dir -r requirements_linux.txt
+pip install --no-cache-dir -r requirements_linux.txt -q
 
 # Remove existing environment variables
 sudo rm -f database/.env data/EnvironmentVariables/.env
