@@ -1,13 +1,15 @@
 ########################################################################################################################
 # NBCC_Data_Extraction.py
-# This file contains functions that extract data from the National Building Code of Canada 2020 (NBCC2020) and store it
+# This file contains functions that extract data from the National Building Code of Canada 2020 (NBCC2020) and stores it
 # in a Pandas dataframe. The data is then converted to a csv file and an Excel file and saved in the output directory.
 # The data is extracted from the following tables:
 #   - Table C1: Design Wind Pressures for Components and Cladding
 #   - Table C2: Design Wind Pressures for Main Wind-Force Resisting Systems
 #
-# This code may not be reproduced, disclosed, or used without the specific written permission of the owners
-# Author(s): https://github.com/noahsub
+# PLease refer to the LICENSE and DISCLAIMER files for more information regarding the use and distribution of this code.
+# By using this code, you agree to abide by the terms and conditions in those files.
+#
+# Author: Noah Subedar [https://github.com/noahsub]
 ########################################################################################################################
 
 ########################################################################################################################
