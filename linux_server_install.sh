@@ -6,10 +6,29 @@ if [ "$EUID" -eq 0 ]; then
     exit 1
 fi
 
+echo "================================================================================================================="
+echo "ASPENLOG 2020 LINUX SERVER INSTALLATION SCRIPT"
+echo "================================================================================================================="
+echo "This script will install the necessary packages and set up the environment for the Aspenlog 2020 backend."
+echo "This include the following:"
+echo "  - Docker"
+echo "  - Blender"
+echo "  - Python 3.11"
+echo "  - Python virtual environment"
+echo "Note: This will delete any existing Docker container named 'aspenlog2020-database' and any existing environment "
+echo "variables associated with the application. Please ensure that you have backed up any necessary data before"
+echo "running this script."
+
+echo "_________________________________________________________________________________________________________________"
+echo "INSTALLING NECESSARY PACKAGES"
+echo "_________________________________________________________________________________________________________________"
 # Update and install necessary packages
 sudo apt-get update > /dev/null
 sudo apt-get install -y ca-certificates curl software-properties-common xorg openbox snapd python3.11 python3-pip > /dev/null
 
+echo "_________________________________________________________________________________________________________________"
+echo "INSTALLING DOCKER"
+echo "_________________________________________________________________________________________________________________"
 # Add Docker's official GPG key
 sudo install -m 0755 -d /etc/apt/keyrings > /dev/null
 sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc > /dev/null
@@ -25,9 +44,17 @@ sudo apt-get update > /dev/null
 # Install Docker and its plugins
 sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin > /dev/null
 
+echo "_________________________________________________________________________________________________________________"
+echo "STOPPING AND REMOVING EXISTING DOCKER CONTAINER IF IT EXISTS"
+echo "_________________________________________________________________________________________________________________"
+
 # Stop and remove any existing Docker container
-sudo docker stop aspenlog2020-database || true
-sudo docker rm aspenlog2020-database || true
+sudo docker stop aspenlog2020-database > /dev/null || true
+sudo docker rm aspenlog2020-database > /dev/null || true
+
+echo "_________________________________________________________________________________________________________________"
+echo "SETUP DOCKER CONTAINER FOR POSTGRES DATABASE"
+echo "_________________________________________________________________________________________________________________"
 
 # Pull the latest Docker image for Postgres
 sudo docker pull postgres:11.22-bullseye > /dev/null
@@ -68,12 +95,18 @@ else
     exit 1
 fi
 
+echo "_________________________________________________________________________________________________________________"
+echo "INSTALLING BLENDER"
+echo "_________________________________________________________________________________________________________________"
 # Install Blender
 sudo apt install -y snapd > /dev/null
 sudo snap install blender --classic > /dev/null
 echo "Installed Blender version:"
 blender --version | grep Blender
 
+echo "_________________________________________________________________________________________________________________"
+echo "SETUP PYTHON 3.11 VIRTUAL ENVIRONMENT"
+echo "_________________________________________________________________________________________________________________"
 # Upgrade pip
 sudo python3.11 -m pip install --upgrade pip > /dev/null
 
@@ -83,13 +116,22 @@ sudo apt-get install python3.11-venv > /dev/null
 # Setup Python virtual environment
 python3.11 -m venv seeda_python_virtual_environment > /dev/null
 source seeda_python_virtual_environment/bin/activate
+echo "Installing Python packages, this may take a while..."
 pip install --no-cache-dir -r requirements_linux.txt -q
+
+echo "_________________________________________________________________________________________________________________"
+echo "SETTING ENVIRONMENT VARIABLES"
+echo "_________________________________________________________________________________________________________________"
 
 # Remove existing environment variables
 sudo rm -f database/.env data/EnvironmentVariables/.env
 
 # Set up environment variables
 python3.11 main.py --install --host 127.0.0.1 --port $POSTGRES_PORT --admin_username postgres --admin_password $POSTGRES_PASSWORD
+
+echo "_________________________________________________________________________________________________________________"
+echo "POPULATING DATABASE"
+echo "_________________________________________________________________________________________________________________"
 
 # Populate database
 python3.11 -m database.Population.populate_authentication_data
@@ -100,3 +142,13 @@ python3.11 -m database.Population.populate_wind_speed_data
 
 # Deactivate the virtual environment
 deactivate
+
+echo "_________________________________________________________________________________________________________________"
+echo "RESULT"
+echo "_________________________________________________________________________________________________________________"
+
+echo "The installation was successful. The server is now ready to run the Aspenlog 2020 backend."
+echo "You can access the postgres database using credentials you created:"
+echo "  - Host: 127.0.0.1"
+echo "  - Port: $POSTGRES_PORT"
+echo "  - Username: postgres"
