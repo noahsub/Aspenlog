@@ -125,6 +125,7 @@ python3.11 -m venv seeda_python_virtual_environment > /dev/null
 source seeda_python_virtual_environment/bin/activate
 echo "Installing Python packages, this may take a while..."
 pip install --no-cache-dir -r requirements_linux.txt -q
+echo "Python packages installed successfully."
 
 echo "_________________________________________________________________________________________________________________"
 echo "SETTING ENVIRONMENT VARIABLES"
@@ -135,6 +136,8 @@ sudo rm -f database/.env data/EnvironmentVariables/.env
 
 # Set up environment variables
 python3.11 main.py --install --host 127.0.0.1 --port $POSTGRES_PORT --admin_username postgres --admin_password $POSTGRES_PASSWORD
+
+echo "Environment variables set successfully."
 
 echo "_________________________________________________________________________________________________________________"
 echo "POPULATING DATABASE"
