@@ -35,12 +35,22 @@ read POSTGRES_PORT
 
 sudo docker run --name aspenlog2020-database -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD -p $POSTGRES_PORT:5432 -d postgres:11.22-bullseye
 
+# Set maximum number of attempts to prevent infinite loop
+max_attempts=30
+count=0
+
 # Wait for the Postgres service to start running in the Docker container
-until [ "`sudo docker inspect -f {{.State.Running}} aspenlog2020-database`"=="true" ]; do
-    sleep 0.1;
+until [ "`sudo docker inspect -f {{.State.Running}} aspenlog2020-database`"=="true" ] || [ $count -eq $max_attempts ];
+do
+    sleep 1;
+    count=$((count+1))
 done;
 
-sudo docker exec -it aspenlog2020-database psql -U postgres -c "CREATE DATABASE \"NBCC-2020\";"
+if [ $count -lt $max_attempts ]; then
+    sudo docker exec -it aspenlog2020-database psql -U postgres -c "CREATE DATABASE \"NBCC-2020\";"
+else
+    echo "Database did not start within the expected time."
+fi
 
 # Install Blender
 sudo apt-get install xorg openbox
@@ -52,21 +62,27 @@ blender --version
 sudo apt-get install -y software-properties-common
 sudo add-apt-repository ppa:deadsnakes/ppa
 sudo apt-get update -y
-sudo apt-get install -y python3.11 python3-pip
+sudo apt-get install -y
+python3.11 python3-pip
 sudo python3.11 -m pip install --upgrade pip
 
 # Setup Virtual Environment
 sudo apt-get install python3.11-venv
 python3.11 -m venv seeda_python_virtual_environment
 source seeda_python_virtual_environment/bin/activate
-which python
-echo "Press Enter to continue..."
-read
 pip install --no-cache-dir -r requirements_linux.txt
 
 # Remove existing environment variables
 sudo rm database/.env
 sudo rm data/EnvironmentVariables/.env
+
+# check that the database is running and if it is, check that the NBCC-2020 database exists, if it does not, create it
+if [ "`sudo docker inspect -f {{.State.Running}} aspenlog2020-database`"=="true" ]; then
+    if [ "`sudo docker exec -it aspenlog2020-database psql -U postgres -lqt | cut -d \| -f 1 | grep -qw NBCC-2020`" ]; then
+        echo "Database already exists"
+    else
+        sudo docker exec -it aspenlog2020-database psql -U postgres -c "CREATE DATABASE \"NBCC-2020\";"
+fi
 
 # Set up environment variables
 python3.11 main.py --install --host 127.0.0.1 --port $POSTGRES_PORT --admin_username postgres --admin_password $POSTGRES_PASSWORD
@@ -77,4 +93,4 @@ python3.11 -m database.Population.populate_canadian_postal_code_data
 python3.11 -m database.Population.populate_climate_data
 python3.11 -m database.Population.populate_save_data
 python3.11 -m database.Population.populate_wind_speed_data
-which python
+deactivate
