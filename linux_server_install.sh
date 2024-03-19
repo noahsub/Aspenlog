@@ -52,17 +52,19 @@ sudo docker run --name aspenlog2020-database -e POSTGRES_PASSWORD=$POSTGRES_PASS
 max_attempts=30
 count=0
 
-# Wait for the Postgres service to start running in the Docker container
-until [ "$(sudo docker inspect -f {{.State.Running}} aspenlog2020-database)" == "true" ] || [ $count -eq $max_attempts ]; do
+# Wait for the Postgres service to start accepting connections
+echo "Waiting for the PostgreSQL to start..."
+until sudo docker exec -it aspenlog2020-database pg_isready -U postgres -h localhost > /dev/null 2>&1 || [ $count -eq $max_attempts ]; do
     sleep 1
     count=$((count+1))
 done
 
 # Create the database if the service started, otherwise print an error message
 if [ $count -lt $max_attempts ]; then
+    echo "PostgreSQL started successfully, creating NBCC-2020 database..."
     sudo docker exec -it aspenlog2020-database psql -U postgres -c "CREATE DATABASE \"NBCC-2020\";" > /dev/null
 else
-    echo "Database did not start within the expected time."
+    echo "PostgreSQL did not start within the expected time."
     exit 1
 fi
 
@@ -70,7 +72,7 @@ fi
 sudo apt install -y snapd > /dev/null
 sudo snap install blender --classic > /dev/null
 echo "Installed Blender version:"
-blender --version
+blender --version | grep Blender
 
 # Upgrade pip
 sudo python3.11 -m pip install --upgrade pip > /dev/null
