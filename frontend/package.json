@@ -1,7 +1,7 @@
 {
   "name": "aspenlog2020",
-  "productName": "ASPENLOG2020",
-  "version": "1.0.0",
+  "productName": "Aspenlog 2020",
+  "version": "1.0.1",
   "description": "",
   "main": "main.js",
   "scripts": {
@@ -9,7 +9,7 @@
     "build": "electron-builder"
   },
   "author": "github.com/noahsub <noahsub@gmail.com>",
-  "homepage": "https://github.com/noahsub/SEEDA",
+  "homepage": "https://github.com/noahsub/Aspenlog",
   "license": "ISC",
   "dependencies": {
     "bootstrap": "^5.3.2",
@@ -34,6 +34,12 @@
         "deb"
       ],
       "icon": "icon.png"
+    },
+    "mac": {
+      "target": [
+        "dmg"
+      ],
+      "icon": "icon.icns"
     },
     "nsis": {
       "oneClick": true,
