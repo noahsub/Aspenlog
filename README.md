@@ -11,3 +11,15 @@ on Chapter 4 of the National Building Code of Canada (NBCC) 2020. The
 application was developed by the University of Toronto Institute for
 Multidisciplinary Design & Innovation (UT-IMDI) for SEEDA.
 
+## Hosting the Backend
+Refer to the installation guide in the `installation` directory.
+
+## Running the Application
+Simply install the latest release for your operating system from the releases page.
+
+## Features
+### Automatically Obtain Site Parameters for any Location in Canada
+![aspenlog2020](assets/images/site_parameters.png)
+### Efficient Building Parameter Input
+![aspenlog2020](assets/images/building_parameters.png)
+TODO
