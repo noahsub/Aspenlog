@@ -8,65 +8,65 @@ By using this code, you agree to abide by the terms and conditions in those file
 Author: Noah Subedar [https://github.com/noahsub]
  */
 
-body{
-    background-color: #f7f4ef;
+body {
+  background-color: #f7f4ef;
 }
 
 .btn-primary {
-    display: block;
-    width: 100%;
-    margin: 0 auto;
-    border: transparent;
-    background-color: #d6b689;
-    border-radius: 25px;
-    font-weight: bold;
+  display: block;
+  width: 100%;
+  margin: 0 auto;
+  border: transparent;
+  background-color: #d6b689;
+  border-radius: 25px;
+  font-weight: bold;
 }
 
 .btn-primary:hover {
-    background-color: #61523D;
+  background-color: #61523d;
 }
 
-.btn-primary:active{
-    background-color: red;
+.btn-primary:active {
+  background-color: red;
 }
 
-label{
-    font-weight: bold;
-    color: #707070;
+label {
+  font-weight: bold;
+  color: #707070;
 }
 
 a {
-    color: #61523D;
-    font-weight: bold;
-    text-decoration: none;
+  color: #61523d;
+  font-weight: bold;
+  text-decoration: none;
 }
 
 a:focus {
-    color: #9d661b;
+  color: #9d661b;
 }
 
 p {
-    font-weight: bold;
+  font-weight: bold;
 }
 
-.form-control{
-    background-color: #f7f4ef;
+.form-control {
+  background-color: #f7f4ef;
 }
 
-.form-control:focus{
-    background-color: #f7f4ef;
-    outline: none;
+.form-control:focus {
+  background-color: #f7f4ef;
+  outline: none;
 }
 
-.card.mx-auto{
-    background-color: #f7f4ef;
-    border: none;
-    box-shadow: 5px 5px 10px lightgray;
-    border-radius: 12px;
+.card.mx-auto {
+  background-color: #f7f4ef;
+  border: none;
+  box-shadow: 5px 5px 10px lightgray;
+  border-radius: 12px;
 }
 
-#error-message{
-    font-weight: normal !important;
-    color: red !important;
-    text-align: center;
+#error-message {
+  font-weight: normal !important;
+  color: red !important;
+  text-align: center;
 }

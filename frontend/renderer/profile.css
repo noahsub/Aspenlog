@@ -8,158 +8,157 @@ By using this code, you agree to abide by the terms and conditions in those file
 Author: Noah Subedar [https://github.com/noahsub]
  */
 
-body{
-    background-color: #f7f4ef;
+body {
+  background-color: #f7f4ef;
 }
 
 .skeleton-loader {
-    animation: skeleton-loading 1s linear infinite alternate;
-    color: rgba(245, 242, 237, 0) !important;
+  animation: skeleton-loading 1s linear infinite alternate;
+  color: rgba(245, 242, 237, 0) !important;
 }
 
 @keyframes skeleton-loading {
-    0% {
-        background-color: hsl(37, 29%, 95%);
-    }
-    100% {
-        background-color: hsl(38, 7%, 78%);
-    }
+  0% {
+    background-color: hsl(37, 29%, 95%);
+  }
+  100% {
+    background-color: hsl(38, 7%, 78%);
+  }
 }
 
 #navbar {
-    background-color: #efece7 !important; /* Replace #yourColor with your desired color */
-    padding: 0 30px;
-    border-bottom: 5px solid #ccac81
+  background-color: #efece7 !important; /* Replace #yourColor with your desired color */
+  padding: 0 30px;
+  border-bottom: 5px solid #ccac81;
 }
 
-.dropdown-menu{
-    background-color: #efece7;
+.dropdown-menu {
+  background-color: #efece7;
 }
 
 .btn-primary {
-    display: block;
-    width: 100%;
-    margin: 0 auto;
-    border: transparent;
-    background-color: #9bca6d;
-    border-radius: 25px;
-    font-weight: bold;
+  display: block;
+  width: 100%;
+  margin: 0 auto;
+  border: transparent;
+  background-color: #9bca6d;
+  border-radius: 25px;
+  font-weight: bold;
 }
 
 .btn-primary:hover {
-    background-color: #85b05a;
+  background-color: #85b05a;
 }
 
 .btn-danger {
-    background-color: #e65b5b;
-    display: block;
-    width: 100%;
-    margin: 0 auto;
-    border: transparent;
-    border-radius: 25px;
-    font-weight: bold;
+  background-color: #e65b5b;
+  display: block;
+  width: 100%;
+  margin: 0 auto;
+  border: transparent;
+  border-radius: 25px;
+  font-weight: bold;
 }
 
-iframe{
-    border: none !important;
+iframe {
+  border: none !important;
 }
 
 .btn-danger:hover {
-    background-color: #c54242;
+  background-color: #c54242;
 }
 
-label{
-    font-weight: bold;
-    color: #707070;
+label {
+  font-weight: bold;
+  color: #707070;
 }
 
 a {
-    color: #61523D;
-    font-weight: bold;
-    text-decoration: none;
+  color: #61523d;
+  font-weight: bold;
+  text-decoration: none;
 }
 
 a:focus {
-    color: #9d661b;
+  color: #9d661b;
 }
 
-.form-control{
-    background-color: #f7f4ef;
+.form-control {
+  background-color: #f7f4ef;
 }
 
-.form-control:focus{
-    background-color: #f7f4ef;
-    outline: none;
+.form-control:focus {
+  background-color: #f7f4ef;
+  outline: none;
 }
 
-.card.mx-auto{
-    background-color: #f7f4ef;
-    border: none;
-    box-shadow: 5px 5px 10px lightgray;
-    border-radius: 12px;
+.card.mx-auto {
+  background-color: #f7f4ef;
+  border: none;
+  box-shadow: 5px 5px 10px lightgray;
+  border-radius: 12px;
 }
 
-#error-message{
-    font-weight: normal !important;
-    color: red !important;
-    text-align: center;
+#error-message {
+  font-weight: normal !important;
+  color: red !important;
+  text-align: center;
 }
 
-.btn-secondary{
-    background-color: #f7f4ef;
-    color: #818687;
-    border: transparent;
-    border-radius: 12px;
-    font-weight: bold;
-    filter: drop-shadow(2px 2px 2px #cccccc);
-    margin-top: 5px;
-    margin-bottom: 5px;
+.btn-secondary {
+  background-color: #f7f4ef;
+  color: #818687;
+  border: transparent;
+  border-radius: 12px;
+  font-weight: bold;
+  filter: drop-shadow(2px 2px 2px #cccccc);
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
-
-.btn-secondary:hover{
-    background-color: #ccac81;
+.btn-secondary:hover {
+  background-color: #ccac81;
 }
 
-.btn-secondary:focus{
-    background-color: #ccac81;
+.btn-secondary:focus {
+  background-color: #ccac81;
 }
 
-.btn-secondary.selected{
-    background-color: #9ac86c;
-    color: white;
+.btn-secondary.selected {
+  background-color: #9ac86c;
+  color: white;
 }
 
-.table{
-
+.table {
 }
 
-.table tr td, .table tr th {
-    border: 1px solid #d9d9d9;
+.table tr td,
+.table tr th {
+  border: 1px solid #d9d9d9;
 }
 
 .table th {
-    background-color: #f7f4ef;
-    color: #707070;
+  background-color: #f7f4ef;
+  color: #707070;
 }
 
 .table td {
-    background-color: #f7f4ef;
+  background-color: #f7f4ef;
 }
 
 .right-align {
-    text-align: right;
+  text-align: right;
 }
 
-#next_button{
-    width: 10%;
+#next_button {
+  width: 10%;
 }
 
-#next-warning{
-    color: red;
-    font-weight: bold;
+#next-warning {
+  color: red;
+  font-weight: bold;
 }
 
-p{
-    font-size: 20px;
+p {
+  font-size: 20px;
 }

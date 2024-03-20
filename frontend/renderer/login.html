@@ -10,46 +10,79 @@ Author: Noah Subedar [https://github.com/noahsub]
 
 <!doctype html>
 <html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta content="width=device-width, initial-scale=1" name="viewport">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
     <title>ASPENLOG 2020</title>
-    <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" rel="stylesheet">
-    <link href="login.css" rel="stylesheet">
-</head>
-<body>
-<script crossorigin="anonymous" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script crossorigin="anonymous" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
-<script crossorigin="anonymous" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script>
-<div class="container vh-100 d-flex justify-content-center align-items-center">
-    <div class="d-flex flex-column align-items-center">
-        <img src="../assets/images/logo%20(Large).png" style="width: 150px; height: 150px;">
-        <br>
+    <link
+      crossorigin="anonymous"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      rel="stylesheet"
+    />
+    <link href="login.css" rel="stylesheet" />
+  </head>
+  <body>
+    <script
+      crossorigin="anonymous"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    ></script>
+    <script
+      crossorigin="anonymous"
+      integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+    ></script>
+    <script
+      crossorigin="anonymous"
+      integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+    ></script>
+    <div
+      class="container vh-100 d-flex justify-content-center align-items-center"
+    >
+      <div class="d-flex flex-column align-items-center">
+        <img
+          src="../assets/images/logo%20(Large).png"
+          style="width: 150px; height: 150px"
+        />
+        <br />
         <div class="card mx-auto" style="min-width: 300px">
-            <div class="card-body">
-                <h4 class="text-center">Sign In</h4>
-                <form>
-                    <div class="form-group">
-                        <label for="username">Username</label>
-                        <input class="form-control" id="username" type="text">
-                    </div>
-                    <div class="form-group">
-                        <label for="password">Password</label>
-                        <input class="form-control" id="password" type="password">
-                    </div>
-                    <br>
-                    <p id="error-message"></p>
-                    <button class="btn btn-primary" id="signin" type="submit">Sign In</button>
-                </form>
-            </div>
+          <div class="card-body">
+            <h4 class="text-center">Sign In</h4>
+            <form>
+              <div class="form-group">
+                <label for="username">Username</label>
+                <input class="form-control" id="username" type="text" />
+              </div>
+              <div class="form-group">
+                <label for="password">Password</label>
+                <input class="form-control" id="password" type="password" />
+              </div>
+              <br />
+              <p id="error-message"></p>
+              <button class="btn btn-primary" id="signin" type="submit">
+                Sign In
+              </button>
+            </form>
+          </div>
         </div>
         <div class="text-center w-100 mt-3">
-            <a href="register.html" id="join-button">Join Now</a>
+          <a href="register.html" id="join-button">Join Now</a>
         </div>
+      </div>
     </div>
-</div>
-<button class="btn btn-primary" id="connection-details-button" style="width: 175px; position: absolute; bottom: 20px; left: 20px">Connection Details</button>
-<p id="server-status" style="position: absolute; bottom: 5px; right: 20px"></p>
-</body>
+    <button
+      class="btn btn-primary"
+      id="connection-details-button"
+      style="width: 175px; position: absolute; bottom: 20px; left: 20px"
+    >
+      Connection Details
+    </button>
+    <p
+      id="server-status"
+      style="position: absolute; bottom: 5px; right: 20px"
+    ></p>
+  </body>
 </html>
 <script src="login.js"></script>
