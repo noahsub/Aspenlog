@@ -2,8 +2,10 @@
 # seismic_load_algorithms.py
 # This file contains the algorithms for calculating seismic loads
 #
-# This code may not be reproduced, disclosed, or used without the specific written permission of the owners
-# Author(s): https://github.com/noahsub
+# Please refer to the LICENSE and DISCLAIMER files for more information regarding the use and distribution of this code.
+# By using this code, you agree to abide by the terms and conditions in those files.
+#
+# Author: Noah Subedar [https://github.com/noahsub]
 ########################################################################################################################
 
 ########################################################################################################################
@@ -22,9 +24,11 @@ from backend.Entities.Seismic.seismic_load import SeismicLoadBuilder
 # SEISMIC LOAD ALGORITHMS
 ########################################################################################################################
 
-def get_seismic_factor_values(seismic_factor_builder: SeismicFactorBuilder, ar: float = 1, rp: float = 2.5, cp: float = 1):
+def get_seismic_factor_values(seismic_factor_builder: SeismicFactorBuilder, ar: float = 1, rp: float = 2.5,
+                              cp: float = 1):
     """
     This function sets the seismic factor values
+    :param seismic_factor_builder:
     :param ar: Element or component force amplification factor
     :param rp: Element of component response modification factor
     :param cp: Element of component factor
@@ -37,14 +41,13 @@ def get_seismic_factor_values(seismic_factor_builder: SeismicFactorBuilder, ar: 
     # if cp parameter is present, override default value
     seismic_factor_builder.set_cp(cp)
 
+
 def get_floor_mapping(building: Building):
     """
     This function maps the floor number to the appropriate height zone number
     :param building: A Building object, responsible for storing the building information
     :return: A mapping of the floor number to the height zone number
     """
-    # TODO: Needs to be optimized
-    # TODO: Bug here. num_floor is a string when execution of this function is reached
     building.num_floor = int(int(building.num_floor))
     # Get the height of the floors
     floor_height = building.dimensions.height / building.num_floor
@@ -65,6 +68,8 @@ def get_floor_mapping(building: Building):
 def get_height_factor(seismic_load_builder: SeismicLoadBuilder, building: Building, zone_num: int):
     """
     This function calculates the height factor
+    :param zone_num: The numerical identifier for the height zone
+    :param seismic_load_builder: A SeismicLoadBuilder object, responsible for building the seismic load information
     :param building: A Building object, responsible for storing the building information
     :return: None
     """
@@ -80,18 +85,30 @@ def get_horizontal_force_factor(seismic_factor_builder: SeismicFactorBuilder, se
     """
     # Sp = Cp * Ar * Ax / Rp
     # Range of Sp: [0.7, 4]
-    seismic_load_builder.set_sp(seismic_factor_builder.get_cp() * seismic_factor_builder.get_ar() * seismic_load_builder.get_ax() / seismic_factor_builder.get_rp())
+    seismic_load_builder.set_sp(seismic_factor_builder.get_cp() *
+                                seismic_factor_builder.get_ar() *
+                                seismic_load_builder.get_ax() /
+                                seismic_factor_builder.get_rp())
     seismic_factor = seismic_factor_builder.get_seismic_factor()
     seismic_load_builder.set_factor(seismic_factor)
 
 
-def get_specified_lateral_earthquake_force(seismic_load_builder: SeismicLoadBuilder, building: Building, height_zone_num: int, location: Location, importance_factor: ImportanceFactor):
+def get_specified_lateral_earthquake_force(seismic_load_builder: SeismicLoadBuilder, building: Building,
+                                           height_zone_num: int, location: Location,
+                                           importance_factor: ImportanceFactor):
     """
     This function calculates the specified lateral earthquake force
+    :param importance_factor: The selected importance factor
+    :param height_zone_num: The numerical identifier for the height zone
+    :param seismic_load_builder: A SeismicLoadBuilder object, responsible for building the seismic load information
     :param building: A Building object, responsible for storing the building information
     :param location: A Location object, responsible for storing the location information
     :return: None
     """
     seismic_importance_factor = importance_factor.get_importance_factor_uls(LoadTypes.SEISMIC)
     # Vp=0.3*S_0.2*Ie*Sp*Wp
-    seismic_load_builder.set_vp(0.3 * location.design_spectral_acceleration_0_2 * seismic_importance_factor * seismic_load_builder.get_sp() * building.get_height_zone(height_zone_num).wp)
+    seismic_load_builder.set_vp(0.3 *
+                                location.design_spectral_acceleration_0_2 *
+                                seismic_importance_factor *
+                                seismic_load_builder.get_sp() *
+                                building.get_height_zone(height_zone_num).wp)

@@ -1,6 +1,25 @@
+########################################################################################################################
+# wind_factor.py
+# This file contains classes that represent the wind factor.
+#
+# Please refer to the LICENSE and DISCLAIMER files for more information regarding the use and distribution of this code.
+# By using this code, you agree to abide by the terms and conditions in those files.
+#
+# Author: Noah Subedar [https://github.com/noahsub]
+########################################################################################################################
+
+########################################################################################################################
+# IMPORTS
+########################################################################################################################
+
 from typing import Optional
 
 from backend.Constants.wind_constants import GUST_FACTOR
+
+
+########################################################################################################################
+# MAIN CLASS
+########################################################################################################################
 
 
 class WindFactor:
@@ -68,6 +87,11 @@ class WindFactorBuilderInterface:
 
     def get_cg(self) -> float:
         pass
+
+
+########################################################################################################################
+# BUILDER CLASS
+########################################################################################################################
 
 
 class WindFactorBuilder(WindFactorBuilderInterface):
@@ -160,6 +184,10 @@ class WindFactorBuilder(WindFactorBuilderInterface):
         return self.wind_factor.cg
 
     def get_wind_factor(self) -> WindFactor:
+        """
+        Returns the WindFactor object and resets the WindFactorBuilder object
+        :return: The WindFactor object
+        """
         wind_factor = self.wind_factor
         self.reset()
         return wind_factor

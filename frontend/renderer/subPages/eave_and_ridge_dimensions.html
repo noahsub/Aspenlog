@@ -1,11 +1,22 @@
-<link rel="stylesheet" href="../input.css">
+<!--
+eave_and_ridge_dimensions.html
+This file is the eave and ridge dimensions page for the frontend. It is a simple HTML file that displays a form with two
+input fields for the eave height and ridge height.
+
+Please refer to the LICENSE and DISCLAIMER files for more information regarding the use and distribution of this code.
+By using this code, you agree to abide by the terms and conditions in those files.
+
+Author: Noah Subedar [https://github.com/noahsub]
+-->
+
+<link href="../input.css" rel="stylesheet">
 <p>Building height will be computed as H=(h_eave+h_ridge)/2</p>
 <div class="mb-3">
     <label for="eave-height">Eave Height</label>
-    <input type="number" id="eave-height" class="form-control"/>
+    <input class="form-control" id="eave-height" type="number"/>
 </div>
 <div class="mb-3">
     <label for="ridge-height">Ridge Height</label>
-    <input type="number" id="ridge-height" class="form-control"/>
+    <input class="form-control" id="ridge-height" type="number"/>
 </div>
 <script src="../input.js"></script>

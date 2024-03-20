@@ -1,7 +1,25 @@
+########################################################################################################################
+# material_zone.py
+# This file contains classes that represent the material zones of a building.
+#
+# Please refer to the LICENSE and DISCLAIMER files for more information regarding the use and distribution of this code.
+# By using this code, you agree to abide by the terms and conditions in those files.
+#
+# Author: Noah Subedar [https://github.com/noahsub]
+########################################################################################################################
+
+########################################################################################################################
+# IMPORTS
+########################################################################################################################
+
 from typing import List
 
 from backend.Constants.materials import Materials
 
+
+########################################################################################################################
+# HELPER CLASS
+########################################################################################################################
 
 class MaterialComposition:
     material: Materials
@@ -23,6 +41,10 @@ class MaterialComposition:
                 f"respected percentage: {self.respected_percentage}\n,"
                 f"weight: {self.weight}\n")
 
+
+########################################################################################################################
+# MAIN CLASS
+########################################################################################################################
 
 class MaterialZone:
     """

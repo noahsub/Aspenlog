@@ -2,8 +2,10 @@
 # building.py
 # This file contains classes that represent a building
 #
-# This code may not be reproduced, disclosed, or used without the specific written permission of the owners
-# Author(s): https://github.com/noahsub
+# Please refer to the LICENSE and DISCLAIMER files for more information regarding the use and distribution of this code.
+# By using this code, you agree to abide by the terms and conditions in those files.
+#
+# Author: Noah Subedar [https://github.com/noahsub]
 ########################################################################################################################
 
 ########################################################################################################################
@@ -18,11 +20,6 @@ from backend.Entities.Building.dimensions import Dimensions
 from backend.Entities.Building.height_zone import HeightZone
 from backend.Entities.Building.material_zone import MaterialZone
 from backend.Entities.Building.roof import Roof
-
-
-########################################################################################################################
-# SUBCLASSES
-########################################################################################################################
 
 
 ########################################################################################################################
@@ -49,6 +46,9 @@ class Building:
     height_zones: Optional[List[HeightZone]]
 
     def __init__(self):
+        """
+        Initializes the Building class
+        """
         self.dimensions = None
         self.cladding = None
         self.roof = None
@@ -91,6 +91,11 @@ class Building:
                 return height_zone
         # TODO: Custom error required
         raise IndexError
+
+
+########################################################################################################################
+# BUILDER CLASSES
+########################################################################################################################
 
 
 class BuildingBuilderInterface:
@@ -145,27 +150,64 @@ class BuildingDefaultHeightDefaultMaterialBuilder(BuildingBuilderInterface):
     building: Building
 
     def __init__(self):
+        """
+        Constructor for the BuildingDefaultHeightDefaultMaterialBuilder class
+        """
+        # Initialize the builder to its initial state
         self.reset()
 
     def reset(self):
+        """
+        Resets the builder to its initial state
+        :return: None
+        """
         self.building = Building()
 
     def set_dimensions(self, dimensions: Dimensions):
+        """
+        Sets the dimensions attribute of the Building class
+        :param dimensions: The dimensions of the building
+        :return: None
+        """
         self.building.dimensions = dimensions
 
     def set_cladding(self, cladding: Cladding):
+        """
+        Sets the cladding attribute of the Building class
+        :param cladding: The cladding of the building
+        :return: None
+        """
         self.building.cladding = cladding
 
     def set_roof(self, roof: Roof):
+        """
+        Sets the roof attribute of the Building class
+        :param roof: The roof of the building
+        :return: None
+        """
         self.building.roof = roof
 
     def set_num_floor(self, num_floor: int):
+        """
+        Sets the num_floor attribute of the Building class
+        :param num_floor: The number of floors in the building
+        :return: None
+        """
         self.building.num_floor = num_floor
 
     def set_h_opening(self, h_opening: float):
+        """
+        Sets the h_opening attribute of the Building class
+        :param h_opening: The height of the opening in the building
+        :return: None
+        """
         self.building.h_opening = h_opening
 
     def generate_height_zones(self):
+        """
+        Generates the height zones of the building
+        :return: None
+        """
         assert self.building.dimensions is not None
 
         self.building.height_zones = dict()
@@ -213,37 +255,75 @@ class BuildingDefaultHeightDefaultMaterialBuilder(BuildingBuilderInterface):
             self.building.height_zones.append(HeightZone(zone_num=i, elevation=height_sum))
 
     def set_material_load(self, material_load: List[float] | float):
+        """
+        Sets the material load of the building
+        :param material_load: The material load of the building
+        :return: None
+        """
+        # if the material load is a list, then we set the material load of each height zone
         if isinstance(material_load, list):
             assert len(material_load) == len(self.building.height_zones)
             for i in range(len(self.building.height_zones)):
                 self.building.get_height_zone(i + 1).wp = material_load[i]
-
+        # if the material load is a float, then we set the material load of each height zone to the same value
         elif isinstance(material_load, float):
             for height_zone in self.building.height_zones:
                 height_zone.wp = material_load
 
     def get_dimensions(self) -> Dimensions:
+        """
+        Returns the dimensions attribute of the Building class
+        :return: The dimensions of the building
+        """
         return self.building.dimensions
 
     def get_cladding(self) -> Cladding:
+        """
+        Returns the cladding attribute of the Building class
+        :return: The cladding of the building
+        """
         return self.building.cladding
 
     def get_roof(self) -> Roof:
+        """
+        Returns the roof attribute of the Building class
+        :return: The roof of the building
+        """
         return self.building.roof
 
     def get_hz_num(self) -> int:
+        """
+        Returns the hz_num attribute of the Building class
+        :return: The number of height zones in the building
+        """
         return self.building.hz_num
 
     def get_num_floor(self) -> int:
+        """
+        Returns the num_floor attribute of the Building class
+        :return: The number of floors in the building
+        """
         return self.building.num_floor
 
     def get_h_opening(self) -> float:
+        """
+        Returns the h_opening attribute of the Building class
+        :return: The height of the opening in the building
+        """
         return self.building.h_opening
 
     def get_height_zones(self) -> List[HeightZone]:
+        """
+        Returns the height_zones attribute of the Building class
+        :return: The height zones of the building
+        """
         return self.building.height_zones
 
     def get_building(self) -> Building:
+        """
+        Returns the building object and resets the builder object to its initial state so that it can be used again.
+        :return: The constructed building object.
+        """
         building = self.building
         self.reset()
         return building
@@ -253,27 +333,65 @@ class BuildingCustomHeightDefaultMaterialBuilder(BuildingBuilderInterface):
     building: Building
 
     def __init__(self):
+        """
+        Constructor for the BuildingCustomHeightDefaultMaterialBuilder class
+        """
+        # Initialize the builder to its initial state
         self.reset()
 
     def reset(self):
+        """
+        Resets the builder to its initial state
+        :return: None
+        """
         self.building = Building()
 
     def set_dimensions(self, dimensions: Dimensions):
+        """
+        Sets the dimensions attribute of the Building class
+        :param dimensions: The dimensions of the building
+        :return: None
+        """
         self.building.dimensions = dimensions
 
     def set_cladding(self, cladding: Cladding):
+        """
+        Sets the cladding attribute of the Building class
+        :param cladding: The cladding of the building
+        :return: None
+        """
         self.building.cladding = cladding
 
     def set_roof(self, roof: Roof):
+        """
+        Sets the roof attribute of the Building class
+        :param roof: The roof of the building
+        :return: None
+        """
         self.building.roof = roof
 
     def set_num_floor(self, num_floor: int):
+        """
+        Sets the num_floor attribute of the Building class
+        :param num_floor: The number of floors in the building
+        :return: None
+        """
         self.building.num_floor = num_floor
 
     def set_h_opening(self, h_opening: float):
+        """
+        Sets the h_opening attribute of the Building class
+        :param h_opening: The height of the opening in the building
+        :return: None
+        """
         self.building.h_opening = h_opening
 
     def generate_height_zones(self, height_zones: List[HeightZone]):
+        """
+        Generates the height zones of the building
+        :param height_zones: The height zones of the building
+        :return: None
+        """
         assert self.building.dimensions is not None
 
         self.building.height_zones = dict()
@@ -285,37 +403,75 @@ class BuildingCustomHeightDefaultMaterialBuilder(BuildingBuilderInterface):
         assert highest_height_zone.elevation == self.building.dimensions.height
 
     def get_dimensions(self) -> Dimensions:
+        """
+        Returns the dimensions attribute of the Building class
+        :return: The dimensions of the building
+        """
         return self.building.dimensions
 
     def get_cladding(self) -> Cladding:
+        """
+        Returns the cladding attribute of the Building class
+        :return: The cladding of the building
+        """
         return self.building.cladding
 
     def get_roof(self) -> Roof:
+        """
+        Returns the roof attribute of the Building class
+        :return: The roof of the building
+        """
         return self.building.roof
 
     def get_hz_num(self) -> int:
+        """
+        Returns the hz_num attribute of the Building class
+        :return: The number of height zones in the building
+        """
         return self.building.hz_num
 
     def get_num_floor(self) -> int:
+        """
+        Returns the num_floor attribute of the Building class
+        :return: The number of floors in the building
+        """
         return self.building.num_floor
 
     def get_h_opening(self) -> float:
+        """
+        Returns the h_opening attribute of the Building class
+        :return: The height of the opening in the building
+        """
         return self.building.h_opening
 
     def get_height_zones(self) -> List[HeightZone]:
+        """
+        Returns the height_zones attribute of the Building class
+        :return: The height zones of the building
+        """
         return self.building.height_zones
 
     def get_building(self) -> Building:
+        """
+        Returns the building object and resets the builder object to its initial state so that it can be used again.
+        :return: The constructed building object.
+        """
         building = self.building
         self.reset()
         return building
 
     def set_material_load(self, material_load: List[float] | float):
+        """
+        Sets the material load of the building
+        :param material_load: The material load of the building
+        :return: None
+        """
+        # if the material load is a list, then we set the material load of each height zone
         if isinstance(material_load, list):
             assert len(material_load) == len(self.building.height_zones)
             for i in range(len(self.building.height_zones)):
                 self.building.get_height_zone(i + 1).wp = material_load[i]
-
+        # if the material load is a float, then we set the material load of each height zone to the same value
         elif isinstance(material_load, float):
             for height_zone in self.building.height_zones:
                 height_zone.wp = material_load

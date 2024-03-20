@@ -2,8 +2,10 @@
 # database_warnings.py
 # This file contains the warnings for the database
 #
-# This code may not be reproduced, disclosed, or used without the specific written permission of the owners
-# Author(s): https://github.com/noahsub
+# Please refer to the LICENSE and DISCLAIMER files for more information regarding the use and distribution of this code.
+# By using this code, you agree to abide by the terms and conditions in those files.
+#
+# Author: Noah Subedar [https://github.com/noahsub]
 ########################################################################################################################
 
 ########################################################################################################################
@@ -96,6 +98,7 @@ def email_taken_warning(email: str):
     """
     # Warn the user that the email is already taken in the database
     warnings.warn(f"Email '{email}' is already taken", category=EmailTakenWarning)
+
 
 def not_valid_password_warning(password: str):
     """

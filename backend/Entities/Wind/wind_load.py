@@ -1,8 +1,26 @@
+########################################################################################################################
+# wind_load.py
+# This file contains classes that represent the wind load.
+#
+# Please refer to the LICENSE and DISCLAIMER files for more information regarding the use and distribution of this code.
+# By using this code, you agree to abide by the terms and conditions in those files.
+#
+# Author: Noah Subedar [https://github.com/noahsub]
+########################################################################################################################
+
+########################################################################################################################
+# IMPORTS
+########################################################################################################################
+
 from typing import Optional
 
 from backend.Entities.Wind.wind_factor import WindFactor
-from backend.Entities.Wind.wind_pressure import WindPressure
 from backend.Entities.Wind.zone import Zone
+
+
+########################################################################################################################
+# MAIN CLASS
+########################################################################################################################
 
 
 class WindLoad:
@@ -61,6 +79,11 @@ class WindLoad:
                     return zone
 
 
+########################################################################################################################
+# BUILDER CLASSES
+########################################################################################################################
+
+
 class WindLoadBuilderInterface:
     """
     Builder interface for the WindLoad class
@@ -98,18 +121,40 @@ class WindLoadBuilder(WindLoadBuilderInterface):
         self.reset()
 
     def reset(self):
+        """
+        Resets the builder
+        :return: None
+        """
         self.wind_load = WindLoad()
 
     def set_factor(self, factor: WindFactor):
+        """
+        Sets the wind factor
+        :param factor: The wind factor
+        :return: None
+        """
         self.wind_load.factor = factor
 
     def set_zones(self, zones: list[Zone]):
+        """
+        Sets the zones
+        :param zones: The zones
+        :return: None
+        """
         self.wind_load.zones = zones
 
     def get_factor(self) -> WindFactor:
+        """
+        Gets the wind factor
+        :return: The wind factor
+        """
         return self.wind_load.factor
 
     def get_zones(self) -> list[Zone]:
+        """
+        Gets the zones
+        :return: A list of zones
+        """
         return self.wind_load.zones
 
     def get_zone(self, key: int | str) -> Zone:
@@ -131,6 +176,10 @@ class WindLoadBuilder(WindLoadBuilderInterface):
                     return zone
 
     def get_wind_load(self):
+        """
+        Gets the wind load and resets the builder
+        :return: The wind load
+        """
         wind_load = self.wind_load
         self.reset()
         return wind_load

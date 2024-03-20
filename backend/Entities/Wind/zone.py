@@ -1,7 +1,25 @@
+########################################################################################################################
+# wind_pressure.py
+# This file contains classes that represent the wind pressure.
+#
+# Please refer to the LICENSE and DISCLAIMER files for more information regarding the use and distribution of this code.
+# By using this code, you agree to abide by the terms and conditions in those files.
+#
+# Author: Noah Subedar [https://github.com/noahsub]
+########################################################################################################################
+
+########################################################################################################################
+# IMPORTS
+########################################################################################################################
+
 from typing import Optional
 
 from backend.Entities.Wind.wind_pressure import WindPressure
 
+
+########################################################################################################################
+# MAIN CLASS
+########################################################################################################################
 
 class Zone:
     """
@@ -13,7 +31,6 @@ class Zone:
     num: Optional[int]
     # The wind pressure
     pressure: Optional[WindPressure]
-    # TODO: IMPLEMENT ZONE WIDTH
 
     def __init__(self):
         """
@@ -42,11 +59,15 @@ class Zone:
                 f"pressure: {self.pressure}\n")
 
 
+########################################################################################################################
+# BUILDER CLASSES
+########################################################################################################################
+
+
 class ZoneBuilderInterface:
     """
     Builder interface for the Zone class
     """
-
     def reset(self):
         pass
 
@@ -73,30 +94,68 @@ class ZoneBuilder(ZoneBuilderInterface):
     zone: Zone
 
     def __init__(self):
+        """
+        Constructor for the ZoneBuilder class
+        """
         self.reset()
 
     def reset(self):
+        """
+        Resets the builder
+        :return: None
+        """
         self.zone = Zone()
 
     def set_name(self, name: str):
+        """
+        Sets the name of the zone
+        :param name: The name of the zone
+        :return: None
+        """
         self.zone.name = name
 
     def set_num(self, num: int):
+        """
+        Sets the number of the zone
+        :param num: The number of the zone
+        :return: None
+        """
         self.zone.num = num
 
     def set_pressure(self, pressure: WindPressure):
+        """
+        Sets the wind pressure of the zone
+        :param pressure: The wind pressure of the zone
+        :return: None
+        """
         self.zone.pressure = pressure
 
     def get_name(self) -> str:
+        """
+        Gets the name of the zone
+        :return: The name of the zone
+        """
         return self.zone.name
 
     def get_num(self) -> int:
+        """
+        Gets the number of the zone
+        :return: The number of the zone
+        """
         return self.zone.num
 
     def get_pressure(self) -> WindPressure:
+        """
+        Gets the wind pressure of the zone
+        :return: The wind pressure of the zone
+        """
         return self.zone.pressure
 
     def get_zone(self):
+        """
+        Gets the zone and resets the builder
+        :return: The zone
+        """
         zone = self.zone
         self.reset()
         return zone

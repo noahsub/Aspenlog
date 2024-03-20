@@ -1,4 +1,23 @@
+########################################################################################################################
+# cladding.py
+# This file contains classes that represent the cladding of a building.
+#
+# Please refer to the LICENSE and DISCLAIMER files for more information regarding the use and distribution of this code.
+# By using this code, you agree to abide by the terms and conditions in those files.
+#
+# Author: Noah Subedar [https://github.com/noahsub]
+########################################################################################################################
+
+########################################################################################################################
+# IMPORTS
+########################################################################################################################
+
 from typing import Optional
+
+
+########################################################################################################################
+# MAIN CLASS
+########################################################################################################################
 
 
 class Cladding:
@@ -23,6 +42,10 @@ class Cladding:
         return (f"c_top: {self.c_top}\n"
                 f"c_bot: {self.c_bot}")
 
+
+########################################################################################################################
+# BUILDER CLASSES
+########################################################################################################################
 
 class CladdingBuilderInterface:
     """
@@ -52,6 +75,10 @@ class CladdingBuilder(CladdingBuilderInterface):
     cladding: Cladding
 
     def __init__(self):
+        """
+        Constructor for CladdingBuilder class
+        """
+        # Initialize the cladding object
         self.reset()
 
     def reset(self):

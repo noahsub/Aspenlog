@@ -1,4 +1,14 @@
 ########################################################################################################################
+# console_walkthrough_v3.py
+# This file contains the console walkthrough for the backend of the application.
+#
+# Please refer to the LICENSE and DISCLAIMER files for more information regarding the use and distribution of this code.
+# By using this code, you agree to abide by the terms and conditions in those files.
+#
+# Author: Noah Subedar [https://github.com/noahsub]
+########################################################################################################################
+
+########################################################################################################################
 # IMPORTS
 ########################################################################################################################
 
@@ -26,7 +36,6 @@ from backend.Entities.Building.cladding import CladdingBuilder, Cladding
 from backend.Entities.Building.dimensions import BasicDimensionsBuilder, \
     EaveRidgeDimensionsBuilder, Dimensions
 from backend.Entities.Building.height_zone import HeightZone
-from backend.Entities.Building.material_zone import MaterialZone
 from backend.Entities.Building.roof import RoofBuilder, Roof
 from backend.Entities.Location.location import LocationXvBuilder, LocationXsBuilder
 from backend.Entities.Seismic.seismic_factor import SeismicFactorBuilder
