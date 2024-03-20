@@ -1,3 +1,17 @@
+########################################################################################################################
+# location.py
+# This file contains classes that represent the location of a building.
+#
+# Please refer to the LICENSE and DISCLAIMER files for more information regarding the use and distribution of this code.
+# By using this code, you agree to abide by the terms and conditions in those files.
+#
+# Author: Noah Subedar [https://github.com/noahsub]
+########################################################################################################################
+
+########################################################################################################################
+# IMPORTS
+########################################################################################################################
+
 import json
 import re
 import uuid
@@ -13,6 +27,11 @@ from database.Constants.connection_constants import PrivilegeType
 from database.Entities.canadian_postal_code_data import CanadianPostalCodeData
 from database.Entities.climatic_data import ClimaticData
 from database.Entities.database_connection import DatabaseConnection
+
+
+########################################################################################################################
+# HELPER FUNCTIONS
+########################################################################################################################
 
 
 def haversine_distance(lat1, lon1, lat2, lon2):
@@ -35,6 +54,11 @@ def haversine_distance(lat1, lon1, lat2, lon2):
     distance = 2 * EARTH_RADIUS * arcsin(sqrt(a + b * c * d))
     # Return distance in km
     return distance
+
+
+########################################################################################################################
+# MAIN CLASS
+########################################################################################################################
 
 
 class Location:
@@ -85,6 +109,10 @@ class Location:
         self.design_spectral_acceleration_1 = None
 
     def find_coordinates(self):
+        """
+        Finds the latitude and longitude of the location using the address
+        :return: None
+        """
         assert self.address is not None
         address = self.address
 
@@ -167,21 +195,23 @@ class Location:
         # example data
         # {'data': {'NBC2020': {'XC': [{'sa0p2': 0.658, 'sa1p0': 0.209}]}}}
 
-
         # Assign the data to the attributes
         self.design_spectral_acceleration_0_2 = data['data']['NBC2020']['XC'][0]['sa0p2']
         self.design_spectral_acceleration_1 = data['data']['NBC2020']['XC'][0]['sa1p0']
 
     def get_climatic_data(self):
+        """
+        Fetches the climatic data from the database
+        :return: None
+        """
         # Connect to the database
         database = DatabaseConnection(database_name="NBCC-2020")
-        # TODO: Change this to READ PrivilegeType
         engine = database.get_engine(privilege=PrivilegeType.ADMIN)
         session = sessionmaker(autocommit=False, autoflush=True, bind=engine)
         controller = session()
 
         # Get the climatic data of the closest location in the database
-        # TODO: This can be optimized using PostGIS extension for PostgreSQL
+        # Future: This can be optimized using PostGIS extension for PostgreSQL
         min_distance = inf
         min_entry = None
         # Iterate through all entries in the database (small enough that we can do this until we optimize code)
@@ -220,6 +250,10 @@ class Location:
                 f"design_spectral_acceleration_0_2: {self.design_spectral_acceleration_0_2}\n"
                 f"design_spectral_acceleration_1: {self.design_spectral_acceleration_1}")
 
+
+########################################################################################################################
+# BUILDER CLASSES
+########################################################################################################################
 
 class LocationBuilderInterface:
     """
@@ -288,57 +322,123 @@ class LocationXvBuilder:
         self.reset()
 
     def reset(self):
+        """
+        Resets the builder to its initial state
+        :return: None
+        """
         self.location = Location()
 
     def set_address(self, address: str):
+        """
+        Sets the address of the location
+        :param address: The address of the location
+        :return: None
+        """
         self.location.address = address
 
     def set_coordinates(self):
+        """
+        Finds the latitude and longitude of the location using the address
+        :return: None
+        """
         assert self.location.address is not None
         self.location.find_coordinates()
 
     def set_seismic_data(self, xv: int):
+        """
+        Sets the seismic data of the location using the XV site designation
+        :param xv: The Vs30 value
+        :return: None
+        """
         self.location.site_designation = SiteDesignation.XV
         self.location.xv = xv
         self.location.get_seismic_data_xv()
 
     def set_climatic_data(self):
+        """
+        Fetches the climatic data from the database
+        :return: None
+        """
         assert self.location.address is not None
         assert self.location.latitude is not None
         assert self.location.longitude is not None
         self.location.get_climatic_data()
 
     def get_address(self) -> str:
+        """
+        Returns the address of the location
+        :return: The address of the location
+        """
         return self.location.address
 
     def get_latitude(self) -> float:
+        """
+        Returns the latitude of the location
+        :return: The latitude of the location
+        """
         return self.location.latitude
 
     def get_longitude(self) -> float:
+        """
+        Returns the longitude of the location
+        :return: The longitude of the location
+        """
         return self.location.longitude
 
     def get_site_designation(self) -> SiteDesignation:
+        """
+        Returns the site designation of the location
+        :return: The site designation of the location
+        """
         return self.location.site_designation
 
     def get_xv(self) -> int:
+        """
+        Returns the Vs30 value of the location
+        :return: The Vs30 value of the location
+        """
         return self.location.xv
 
     def get_wind_velocity_pressure(self) -> float:
+        """
+        Returns the wind velocity pressure of the location
+        :return: The wind velocity pressure of the location
+        """
         return self.location.wind_velocity_pressure
 
     def get_snow_load(self) -> float:
+        """
+        Returns the snow load of the location
+        :return: The snow load of the location
+        """
         return self.location.snow_load
 
     def get_rain_load(self) -> float:
+        """
+        Returns the rain load of the location
+        :return: The rain load of the location
+        """
         return self.location.rain_load
 
     def get_design_spectral_acceleration_0_2(self) -> float:
+        """
+        Returns the design spectral acceleration at 0.2 seconds of the location
+        :return: The design spectral acceleration at 0.2 seconds of the location
+        """
         return self.location.design_spectral_acceleration_0_2
 
     def get_design_spectral_acceleration_1(self) -> float:
+        """
+        Returns the design spectral acceleration at 1 second of the location
+        :return: The design spectral acceleration at 1 second of the location
+        """
         return self.location.design_spectral_acceleration_1
 
     def get_location(self) -> Location:
+        """
+        Returns the location object and resets the builder object to its initial state so that it can be used again.
+        :return: The constructed location object.
+        """
         location = self.location
         self.reset()
         return location
@@ -357,57 +457,123 @@ class LocationXsBuilder:
         self.reset()
 
     def reset(self):
+        """
+        Resets the builder to its initial state
+        :return: None
+        """
         self.location = Location()
 
     def set_address(self, address: str):
+        """
+        Sets the address of the location
+        :param address: The address of the location
+        :return: None
+        """
         self.location.address = address
 
     def set_coordinates(self):
+        """
+        Finds the latitude and longitude of the location using the address
+        :return: None
+        """
         assert self.location.address is not None
         self.location.find_coordinates()
 
     def set_seismic_data(self, xs: SiteClass):
+        """
+        The seismic data of the location using the XS site designation
+        :param xs: The site class
+        :return: None
+        """
         self.location.site_designation = SiteDesignation.XS
         self.location.xs = xs
         self.location.get_seismic_data_xs()
 
     def set_climatic_data(self):
+        """
+        Fetches the climatic data from the database
+        :return: None
+        """
         assert self.location.address is not None
         assert self.location.latitude is not None
         assert self.location.longitude is not None
         self.location.get_climatic_data()
 
     def get_address(self) -> str:
+        """
+        Returns the address of the location
+        :return: The address of the location
+        """
         return self.location.address
 
     def get_latitude(self) -> float:
+        """
+        Returns the latitude of the location
+        :return: The latitude of the location
+        """
         return self.location.latitude
 
     def get_longitude(self) -> float:
+        """
+        Returns the longitude of the location
+        :return: The longitude of the location
+        """
         return self.location.longitude
 
     def get_site_designation(self) -> SiteDesignation:
+        """
+        Returns the site designation of the location
+        :return: The site designation of the location
+        """
         return self.location.site_designation
 
     def get_xs(self) -> SiteClass:
+        """
+        Returns the site class of the location
+        :return: The site class of the location
+        """
         return self.location.xs
 
     def get_wind_velocity_pressure(self) -> float:
+        """
+        Returns the wind velocity pressure of the location
+        :return: The wind velocity pressure of the location
+        """
         return self.location.wind_velocity_pressure
 
     def get_snow_load(self) -> float:
+        """
+        Returns the snow load of the location
+        :return: The snow load of the location
+        """
         return self.location.snow_load
 
     def get_rain_load(self) -> float:
+        """
+        Returns the rain load of the location
+        :return: The rain load of the location
+        """
         return self.location.rain_load
 
     def get_design_spectral_acceleration_0_2(self) -> float:
+        """
+        Returns the design spectral acceleration at 0.2 seconds of the location
+        :return: The design spectral acceleration at 0.2 seconds of the location
+        """
         return self.location.design_spectral_acceleration_0_2
 
     def get_design_spectral_acceleration_1(self) -> float:
+        """
+        Returns the design spectral acceleration at 1 second of the location
+        :return: The design spectral acceleration at 1 second of the location
+        """
         return self.location.design_spectral_acceleration_1
 
     def get_location(self) -> Location:
+        """
+        Returns the location object and resets the builder object to its initial state so that it can be used again.
+        :return: The constructed location object.
+        """
         location = self.location
         self.reset()
         return location
