@@ -24,8 +24,13 @@ from backend.Entities.Seismic.seismic_load import SeismicLoadBuilder
 # SEISMIC LOAD ALGORITHMS
 ########################################################################################################################
 
-def get_seismic_factor_values(seismic_factor_builder: SeismicFactorBuilder, ar: float = 1, rp: float = 2.5,
-                              cp: float = 1):
+
+def get_seismic_factor_values(
+    seismic_factor_builder: SeismicFactorBuilder,
+    ar: float = 1,
+    rp: float = 2.5,
+    cp: float = 1,
+):
     """
     This function sets the seismic factor values
     :param seismic_factor_builder:
@@ -65,7 +70,9 @@ def get_floor_mapping(building: Building):
     return floor_mapping
 
 
-def get_height_factor(seismic_load_builder: SeismicLoadBuilder, building: Building, zone_num: int):
+def get_height_factor(
+    seismic_load_builder: SeismicLoadBuilder, building: Building, zone_num: int
+):
     """
     This function calculates the height factor
     :param zone_num: The numerical identifier for the height zone
@@ -75,27 +82,38 @@ def get_height_factor(seismic_load_builder: SeismicLoadBuilder, building: Buildi
     """
     height_zone = building.get_height_zone(zone_num)
     # Ax=1+2*H_hz_num/H
-    seismic_load_builder.set_ax(1 + 2 * (height_zone.elevation / building.dimensions.height))
+    seismic_load_builder.set_ax(
+        1 + 2 * (height_zone.elevation / building.dimensions.height)
+    )
 
 
-def get_horizontal_force_factor(seismic_factor_builder: SeismicFactorBuilder, seismic_load_builder: SeismicLoadBuilder):
+def get_horizontal_force_factor(
+    seismic_factor_builder: SeismicFactorBuilder,
+    seismic_load_builder: SeismicLoadBuilder,
+):
     """
     This function calculates the horizontal force factor for the part or portion of the building
     :return: None
     """
     # Sp = Cp * Ar * Ax / Rp
     # Range of Sp: [0.7, 4]
-    seismic_load_builder.set_sp(seismic_factor_builder.get_cp() *
-                                seismic_factor_builder.get_ar() *
-                                seismic_load_builder.get_ax() /
-                                seismic_factor_builder.get_rp())
+    seismic_load_builder.set_sp(
+        seismic_factor_builder.get_cp()
+        * seismic_factor_builder.get_ar()
+        * seismic_load_builder.get_ax()
+        / seismic_factor_builder.get_rp()
+    )
     seismic_factor = seismic_factor_builder.get_seismic_factor()
     seismic_load_builder.set_factor(seismic_factor)
 
 
-def get_specified_lateral_earthquake_force(seismic_load_builder: SeismicLoadBuilder, building: Building,
-                                           height_zone_num: int, location: Location,
-                                           importance_factor: ImportanceFactor):
+def get_specified_lateral_earthquake_force(
+    seismic_load_builder: SeismicLoadBuilder,
+    building: Building,
+    height_zone_num: int,
+    location: Location,
+    importance_factor: ImportanceFactor,
+):
     """
     This function calculates the specified lateral earthquake force
     :param importance_factor: The selected importance factor
@@ -105,10 +123,14 @@ def get_specified_lateral_earthquake_force(seismic_load_builder: SeismicLoadBuil
     :param location: A Location object, responsible for storing the location information
     :return: None
     """
-    seismic_importance_factor = importance_factor.get_importance_factor_uls(LoadTypes.SEISMIC)
+    seismic_importance_factor = importance_factor.get_importance_factor_uls(
+        LoadTypes.SEISMIC
+    )
     # Vp=0.3*S_0.2*Ie*Sp*Wp
-    seismic_load_builder.set_vp(0.3 *
-                                location.design_spectral_acceleration_0_2 *
-                                seismic_importance_factor *
-                                seismic_load_builder.get_sp() *
-                                building.get_height_zone(height_zone_num).wp)
+    seismic_load_builder.set_vp(
+        0.3
+        * location.design_spectral_acceleration_0_2
+        * seismic_importance_factor
+        * seismic_load_builder.get_sp()
+        * building.get_height_zone(height_zone_num).wp
+    )

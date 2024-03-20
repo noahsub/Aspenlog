@@ -16,13 +16,15 @@ import jsonpickle
 from blender_object import *
 import subprocess
 import os
+
 req_file = __file__
-req_file = os.path.join(os.path.dirname(req_file), 'blender_request.py')
+req_file = os.path.join(os.path.dirname(req_file), "blender_request.py")
 
 
 ########################################################################################################################
 # FUNCTIONS
 ########################################################################################################################
+
 
 def create_blender_json(num_zones, heights, loads):
     """
@@ -40,12 +42,15 @@ def create_blender_json(num_zones, heights, loads):
 
     return json_str
 
+
 ########################################################################################################################
 # MAIN
 ########################################################################################################################
 
 json_str = create_blender_json(3, [2, 2, 2], [25, 40, 20])
-command = ['blender', '--background', '--python', req_file, '--', '2', json_str]
+command = ["blender", "--background", "--python", req_file, "--", "2", json_str]
 # print(command)
-result = subprocess.run(command, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+result = subprocess.run(
+    command, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+)
 # print(f"ran successfully:", result.stdout.decode())

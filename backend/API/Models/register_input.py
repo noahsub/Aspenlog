@@ -19,10 +19,12 @@ from pydantic import BaseModel
 # MODEL
 ########################################################################################################################
 
+
 class RegisterInput(BaseModel):
     """
     The input model for the register endpoint
     """
+
     # The username of the user
     username: str
     # The first name of the user

@@ -18,12 +18,13 @@ import math
 import os
 
 
-
 # adding modules to blender path
 file = __file__
-PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+PROJECT_DIR = os.path.dirname(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+)
 module_path = os.path.dirname(file)
-#print(PROJECT_DIR)
+# print(PROJECT_DIR)
 sys.path.append(module_path)
 sys.path.append(PROJECT_DIR)
 from config import get_file_path
@@ -36,6 +37,7 @@ from shapes import create_seismic_cube, set_cube_colour, create_axis, max_height
 ########################################################################################################################
 # FUNCTIONS
 ########################################################################################################################
+
 
 def color_even_odd(index):
     """
@@ -102,6 +104,7 @@ def add_load_text(load, z, scale, location=(-0.5, -1.1), rotation=(math.pi / 2, 
 # MAIN
 ########################################################################################################################
 
+
 def main():
     # last argument is JSON string
     json_str = sys.argv[-1]
@@ -117,9 +120,9 @@ def main():
         print("Failed to decode JSON:", e)
 
     max_height = 0
-    max_hz = max([i['h'] for i in data])
-    max_load = max([i['load'] for i in data])
-    heights = max_height_check([i['h'] for i in data])
+    max_hz = max([i["h"] for i in data])
+    max_load = max([i["load"] for i in data])
+    heights = max_height_check([i["h"] for i in data])
 
     # text scaling
     scale = max_hz * 0.05
@@ -128,26 +131,31 @@ def main():
 
             if "Cube" in bpy.data.objects:
                 # Deleting Default Cube
-                bpy.ops.object.select_all(action='DESELECT')
-                bpy.data.objects['Cube'].select_set(True)
+                bpy.ops.object.select_all(action="DESELECT")
+                bpy.data.objects["Cube"].select_set(True)
                 bpy.ops.object.delete()
         height = heights[i]
         position = max_height + height / 2
         cube = create_seismic_cube(height=height, position=position)
-        load_value = data[i]['load']
+        load_value = data[i]["load"]
         set_cube_colour(cube, color_even_odd(i), emit=True)
 
         cube.visible_shadow = False
         add_load_text(load_value, position, scale)
         max_height += height
 
-    add_load_text(load="Seismic Load (kPa) \n *Wall Colour is to Distinguish Zones ", z=1, location=(0.8, -3),
-                  scale=0.5, rotation=(math.pi / 2, 0, math.pi / 4))
+    add_load_text(
+        load="Seismic Load (kPa) \n *Wall Colour is to Distinguish Zones ",
+        z=1,
+        location=(0.8, -3),
+        scale=0.5,
+        rotation=(math.pi / 2, 0, math.pi / 4),
+    )
     create_axis(location=(-3, -max_height / 2, max_height / 2))
     render_path = "seismic_" + str(id) + ".png"
 
     render.setup_scene(max_height)
-    output_path = get_file_path('backend/output')
+    output_path = get_file_path("backend/output")
     render.render_image(os.path.join(output_path, render_path))
 
 

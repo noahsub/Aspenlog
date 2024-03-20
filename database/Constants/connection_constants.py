@@ -19,10 +19,12 @@ from enum import Enum
 # ENUMS
 ########################################################################################################################
 
+
 class PrivilegeType(Enum):
     """
     Enum for the privilege types
     """
-    ADMIN: str = 'admin'
-    WRITE: str = 'write'
-    READ: str = 'read'
+
+    ADMIN: str = "admin"
+    WRITE: str = "write"
+    READ: str = "read"

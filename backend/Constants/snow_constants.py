@@ -26,14 +26,16 @@ ACCUMULATION_FACTOR = 1
 # ENUMS
 ########################################################################################################################
 
+
 class RoofType(Enum):
     """
     Enum for the roof types
     """
-    UNOBSTRUCTED_SLIPPERY_ROOF: str = 'unobstructed_slippery_roof'
-    OTHER: str = 'other'
+
+    UNOBSTRUCTED_SLIPPERY_ROOF: str = "unobstructed_slippery_roof"
+    OTHER: str = "other"
 
 
 class WindDirection(Enum):
-    UPWIND: str = 'upwind'
-    DOWNWIND: str = 'downwind'
+    UPWIND: str = "upwind"
+    DOWNWIND: str = "downwind"

@@ -44,7 +44,12 @@ def roof_endpoint(roof_input: RoofInput, username: str = Depends(decode_token)):
         # If storage for the user does not exist in memory, create a slot for the user
         check_user_exists(username)
         # Process the roof data and create a roof object
-        roof = process_roof_data(w_roof=roof_input.w_roof, l_roof=roof_input.l_roof, slope=roof_input.slope, uniform_dead_load=roof_input.uniform_dead_load)
+        roof = process_roof_data(
+            w_roof=roof_input.w_roof,
+            l_roof=roof_input.l_roof,
+            slope=roof_input.slope,
+            uniform_dead_load=roof_input.uniform_dead_load,
+        )
         # Store the roof object in the user's memory slot
         set_user_roof(username=username, roof=roof)
         # Return the roof object

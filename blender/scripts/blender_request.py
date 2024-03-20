@@ -31,6 +31,7 @@ import jsonpickle
 # FUNCTIONS
 ########################################################################################################################
 
+
 # last argument is JSON string
 # json_str = sys.argv[-1]
 # id = int(sys.argv[-2])
@@ -62,11 +63,11 @@ def run_blender_script(script_path, id, json_str):
     :return: None
     """
     try:
-        blender_path = os.environ['BLENDER']
+        blender_path = os.environ["BLENDER"]
     except KeyError:
         print("Blender path not found trying default")
         blender_path = "blender"
-    args = ['--background', '--python', script_path, '--', str(id), json_str]
+    args = ["--background", "--python", script_path, "--", str(id), json_str]
 
     # Combine the Blender path and arguments
     command = [blender_path] + args
@@ -74,10 +75,13 @@ def run_blender_script(script_path, id, json_str):
     # return(command)
     # Run the command
     try:
-        result = subprocess.run(command, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        result = subprocess.run(
+            command, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+        )
         print(f"{script_path} ran successfully:", result.stdout.decode())
     except subprocess.CalledProcessError as e:
         print(f"Error running {script_path}:", e.stderr.decode())
+
 
 # # Paths to the scripts
 # scripts = [os.path.join(module_path, "seismic_cube.py"), os.path.join(module_path, "wind_cube.py")]

@@ -21,10 +21,12 @@ from backend.Entities.Wind.wind_load import WindLoad
 # MAIN CLASS
 ########################################################################################################################
 
+
 class HeightZone:
     """
     Represents a height zone of a building
     """
+
     # Number of the height zone
     zone_num: int
     # Elevation of the height zone
@@ -46,11 +48,13 @@ class HeightZone:
         :return:
         """
         # Print each attribute and its value on a new line
-        return (f"zone_num: {self.zone_num}\n,"
-                f"elevation: {self.elevation}\n"
-                f"wind_load: {str(self.wind_load)}\n"
-                f"seismic_load: {str(self.seismic_load)}\n"
-                f"wp: {self.wp}")
+        return (
+            f"zone_num: {self.zone_num}\n,"
+            f"elevation: {self.elevation}\n"
+            f"wind_load: {str(self.wind_load)}\n"
+            f"seismic_load: {str(self.seismic_load)}\n"
+            f"wp: {self.wp}"
+        )
 
     def __repr__(self):
         """
@@ -58,8 +62,10 @@ class HeightZone:
         :return:
         """
         # Print each attribute and its value on a new line
-        return (f"zone_num: {self.zone_num}\n,"
-                f"elevation: {self.elevation}\n"
-                f"wind_load: {str(self.wind_load)}\n"
-                f"seismic_load: {str(self.seismic_load)}\n"
-                f"wp: {self.wp}")
+        return (
+            f"zone_num: {self.zone_num}\n,"
+            f"elevation: {self.elevation}\n"
+            f"wind_load: {str(self.wind_load)}\n"
+            f"seismic_load: {str(self.seismic_load)}\n"
+            f"wp: {self.wp}"
+        )

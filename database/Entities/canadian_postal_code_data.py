@@ -27,12 +27,14 @@ BASE = declarative_base()
 # CANADIAN POSTAL CODE DATA CLASS
 ########################################################################################################################
 
+
 class CanadianPostalCodeData(BASE):
     """
     Class for the climatic data
     """
+
     # The name of the table
-    __tablename__ = 'CanadianPostalCodeData'
+    __tablename__ = "CanadianPostalCodeData"
     # The ID of the entry
     ID = Column(Integer, primary_key=True)
     # The postal code of the location

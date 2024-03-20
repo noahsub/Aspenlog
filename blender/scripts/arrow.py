@@ -21,8 +21,17 @@ import math
 # FUNCTIONS
 ########################################################################################################################
 
-def create_arrow(length=0.2, width=0.2, height=0.2, loc_x=3, loc_y=3, \
-                 rot_x=math.pi / 2, rot_y=0, rot_z=math.pi):
+
+def create_arrow(
+    length=0.2,
+    width=0.2,
+    height=0.2,
+    loc_x=3,
+    loc_y=3,
+    rot_x=math.pi / 2,
+    rot_y=0,
+    rot_z=math.pi,
+):
     """
     Create an arrow in Blender.
     :param length: The length of the arrow.
@@ -43,8 +52,8 @@ def create_arrow(length=0.2, width=0.2, height=0.2, loc_x=3, loc_y=3, \
     bpy.ops.mesh.primitive_cone_add(enter_editmode=False, location=(0, 0, cone_z))
     bpy.ops.mesh.primitive_cylinder_add(enter_editmode=False, location=(0, 0, -cone_z))
     # Get the active objects
-    cone = bpy.data.objects['Cone']
-    cyl = bpy.data.objects['Cylinder']
+    cone = bpy.data.objects["Cone"]
+    cyl = bpy.data.objects["Cylinder"]
     # Scale the cone to desired dimensions
     cone.scale.x = cone_x
     cone.scale.y = cone_y
@@ -68,4 +77,4 @@ def create_arrow(length=0.2, width=0.2, height=0.2, loc_x=3, loc_y=3, \
     arrow.rotation_euler[1] = rot_y
     # z
     arrow.rotation_euler[2] = rot_z
-    bpy.ops.object.select_all(action='DESELECT')
+    bpy.ops.object.select_all(action="DESELECT")

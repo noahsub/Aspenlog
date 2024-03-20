@@ -21,6 +21,7 @@ class SaveDataInput(BaseModel):
     """
     The input model for the save data endpoint
     """
+
     # The JSON data to save
     json_data: str
     # The id of the save file

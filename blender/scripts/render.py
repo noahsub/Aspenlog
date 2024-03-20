@@ -19,10 +19,13 @@ import math
 # FUNCTIONS
 ########################################################################################################################
 
-def set_camera_position(max_height, camera, focal_length=50, sensor_height=24, extra_space_factor=1.1):
+
+def set_camera_position(
+    max_height, camera, focal_length=50, sensor_height=24, extra_space_factor=1.1
+):
     """
     Adjust the camera position to ensure the target object is fully visible in frame.
-    
+
     Args:
     - target_object: The object you want to frame.
     - camera: The camera object.
@@ -54,7 +57,7 @@ def set_camera_position(max_height, camera, focal_length=50, sensor_height=24, e
 
     # Point the camera to look at the target object
     # Rotational Coordinates
-    # x 
+    # x
     camera.rotation_euler[0] = math.pi / 2
     # y
     camera.rotation_euler[1] = 0
@@ -70,9 +73,9 @@ def hex_to_rgb(value):
     :param value: The hex color value.
     :return: An RGB tuple normalized to [0, 1].
     """
-    value = value.lstrip('#')
+    value = value.lstrip("#")
     lv = len(value)
-    rgb = [int(value[i:i + lv // 3], 16) / 255. for i in range(0, lv, lv // 3)]
+    rgb = [int(value[i : i + lv // 3], 16) / 255.0 for i in range(0, lv, lv // 3)]
     return (rgb[0], rgb[1], rgb[2])
 
 
@@ -108,7 +111,7 @@ def setup_scene(max_height):
 
     # light
     if "Light" not in bpy.data.objects:
-        bpy.ops.object.light_add(type='POINT', location=(0, 0, 10))
+        bpy.ops.object.light_add(type="POINT", location=(0, 0, 10))
     light = bpy.data.objects.get("Light")
     light.data.energy = 1000  # Adjust light intensity
 
@@ -132,6 +135,7 @@ def setup_scene(max_height):
 #     # Render the scene
 #     bpy.ops.render.render(write_still=True)
 
+
 def render_image(output_path):
     """
     Render the image and save it to the output path.
@@ -142,7 +146,9 @@ def render_image(output_path):
     bpy.context.scene.render.filepath = output_path
 
     # Set render engine to Cycles for better quality (optional)
-    bpy.context.scene.render.engine = 'CYCLES'  # or 'BLENDER_EEVEE' for faster rendering
+    bpy.context.scene.render.engine = (
+        "CYCLES"  # or 'BLENDER_EEVEE' for faster rendering
+    )
     # bpy.context.scene.render.use_freestyle=True
     # bpy.context.scene.render.line_thickness = 0.5
     # bpy.context.scene.render.line_thickness_mode = "RELATIVE"
@@ -151,15 +157,15 @@ def render_image(output_path):
     cycles_preferences.refresh_devices()
     devices = list(cycles_preferences.devices)
 
-    cuda_devices = [x for x in devices if str(x.type) == 'CUDA']
-    cpu_devices = [x for x in devices if str(x.type) == 'CPU']
+    cuda_devices = [x for x in devices if str(x.type) == "CUDA"]
+    cpu_devices = [x for x in devices if str(x.type) == "CPU"]
 
     # reduce for less vram
     # bpy.context.scene.render.simplify_subdivision_render =10
 
     if len(cuda_devices) > 0:
 
-        bpy.context.scene.cycles.texture_limit_render = '128'
+        bpy.context.scene.cycles.texture_limit_render = "128"
 
         # default 4096
         bpy.context.scene.cycles.samples = 10
@@ -174,14 +180,16 @@ def render_image(output_path):
         # Lower = slightly less ram, default 2048, 64 seems good, 512 is faster with a bit more mem
         bpy.context.scene.cycles.tile_size = 512
 
-        bpy.context.preferences.addons['cycles'].preferences.compute_device_type = 'CUDA'
+        bpy.context.preferences.addons["cycles"].preferences.compute_device_type = (
+            "CUDA"
+        )
         for device in cuda_devices:
-            print(f'Using {device} for rendering')
+            print(f"Using {device} for rendering")
             device.use = True
-        bpy.context.scene.cycles.device = 'GPU'
+        bpy.context.scene.cycles.device = "GPU"
     else:
-        bpy.context.scene.render.engine = 'BLENDER_EEVEE'
-        print('No CUDA devices available, falling back to CPU EEVEE rendering')
+        bpy.context.scene.render.engine = "BLENDER_EEVEE"
+        print("No CUDA devices available, falling back to CPU EEVEE rendering")
 
     # Render the scene
     bpy.ops.render.render(write_still=True)

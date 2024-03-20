@@ -35,6 +35,7 @@ DATABASE = DatabaseConnection(database_name="NBCC-2020")
 # DATABASE FUNCTIONS
 ########################################################################################################################
 
+
 def create_canadian_postal_code_data_table():
     """
     Creates the CanadianPostalCodeData table
@@ -44,7 +45,7 @@ def create_canadian_postal_code_data_table():
     engine = DATABASE.get_engine(privilege=PrivilegeType.ADMIN)
 
     # Name of the table
-    table_name = 'CanadianPostalCodeData'
+    table_name = "CanadianPostalCodeData"
     inspector = inspect(engine)
     # If the table already exists, we don't want to create it again
 
@@ -78,6 +79,7 @@ def clean_canadian_postal_code_data_table():
 # POPULATION FUNCTIONS
 ########################################################################################################################
 
+
 def populate_canadian_postal_code_data_table():
     """
     Populates the CanadianPostalCodeData table
@@ -91,7 +93,7 @@ def populate_canadian_postal_code_data_table():
     # get the path to the data/location/CanadianPostalCodes202312.csv file
     file_path = get_file_path("data/location/CanadianPostalCodes202312.csv")
     # read the file
-    with open(file_path, 'r') as csv_file:
+    with open(file_path, "r") as csv_file:
         # Skip first line, header line and not data
         next(csv_file)
 
@@ -102,7 +104,14 @@ def populate_canadian_postal_code_data_table():
         for row in tqdm(csv_reader, "Populating Canadian Postal Code Data"):
 
             # unpack entry_data to create a ClimaticData object
-            entry = CanadianPostalCodeData(postal_code=row[0], city=row[1], province=row[2], time_zone=row[3], latitude=row[4], longitude=row[5])
+            entry = CanadianPostalCodeData(
+                postal_code=row[0],
+                city=row[1],
+                province=row[2],
+                time_zone=row[3],
+                latitude=row[4],
+                longitude=row[5],
+            )
             # prepare the entry to be added to the database
             controller.add(entry)
         # add all entries to the database
@@ -110,21 +119,21 @@ def populate_canadian_postal_code_data_table():
         print("This may take a while...")
         controller.commit()
 
+
 ########################################################################################################################
 # MAIN
 ########################################################################################################################
 
 # ONLY RUN IF DATABASE NEEDS TO BE REPOPULATED
 if __name__ == "__main__":
-    print("WARNING: This script will repopulate the CanadianPostalCodeData table. If the database is already populated, this will delete existing data and repopulate the table, meaning any manual changes will be lost.")
+    print(
+        "WARNING: This script will repopulate the CanadianPostalCodeData table. If the database is already populated, this will delete existing data and repopulate the table, meaning any manual changes will be lost."
+    )
     choice = input("Are you sure you want to continue? (y/n): ")
-    if choice.lower() == 'y':
+    if choice.lower() == "y":
         create_canadian_postal_code_data_table()
         clean_canadian_postal_code_data_table()
         populate_canadian_postal_code_data_table()
         DATABASE.close()
     else:
         exit(0)
-
-
-

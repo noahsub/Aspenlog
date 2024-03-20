@@ -27,6 +27,7 @@ class WindLoad:
     """
     This class is used to store all the information regarding wind loads
     """
+
     # The wind factor
     factor: Optional[WindFactor]
     # The zones
@@ -44,21 +45,20 @@ class WindLoad:
         :return:
         """
         # Special formatting for subclasses
-        factor_str = '\n  ' + '\n  '.join(str(self.factor).split('\n'))
+        factor_str = "\n  " + "\n  ".join(str(self.factor).split("\n"))
         # pressure_str = '\n  ' + '\n  '.join(str(self.pressure).split('\n'))
 
         # Special formatting for zones
-        zones_str = '\n'
+        zones_str = "\n"
         for zone in self.zones:
             zones_str += f"  zone {zone.num}\n"
-            zone_lst = str(zone).split('\n')
+            zone_lst = str(zone).split("\n")
             for i in zone_lst:
                 zones_str += f"    {i.lstrip(', ')}\n"
         zones_str = zones_str[:-1]
 
         # Print each attribute and its value on a new line
-        return (f"factor: {factor_str}\n"
-                f"zones: {zones_str}")
+        return f"factor: {factor_str}\n" f"zones: {zones_str}"
 
     def get_zone(self, key: int | str) -> Zone:
         """
@@ -112,6 +112,7 @@ class WindLoadBuilder(WindLoadBuilderInterface):
     """
     Concrete builder class for the WindLoad class
     """
+
     wind_load: WindLoad
 
     def __init__(self):

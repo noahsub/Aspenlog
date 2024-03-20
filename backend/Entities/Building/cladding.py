@@ -24,6 +24,7 @@ class Cladding:
     """
     Represents the cladding of a building
     """
+
     # Height of the tallest part of the cladding components (i.e. where it ends)
     c_top: Optional[float]
     # Height of the lowest part of the cladding components (i.e. where it starts)
@@ -39,13 +40,13 @@ class Cladding:
         :return:
         """
         # Print each attribute and its value on a new line
-        return (f"c_top: {self.c_top}\n"
-                f"c_bot: {self.c_bot}")
+        return f"c_top: {self.c_top}\n" f"c_bot: {self.c_bot}"
 
 
 ########################################################################################################################
 # BUILDER CLASSES
 ########################################################################################################################
+
 
 class CladdingBuilderInterface:
     """
@@ -72,6 +73,7 @@ class CladdingBuilder(CladdingBuilderInterface):
     """
     Concrete builder class for the Cladding class
     """
+
     cladding: Cladding
 
     def __init__(self):

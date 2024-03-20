@@ -31,15 +31,17 @@ class WindExposureFactorSelections(Enum):
     """
     Enum for the wind exposure factor selections
     """
-    OPEN: str = 'open'
-    ROUGH: str = 'rough'
-    INTERMEDIATE: str = 'intermediate'
+
+    OPEN: str = "open"
+    ROUGH: str = "rough"
+    INTERMEDIATE: str = "intermediate"
 
 
 class InternalPressureSelections(Enum):
     """
     Enum for the internal pressure selections
     """
-    ENCLOSED: str = 'enclosed'
-    PARTIALLY_ENCLOSED: str = 'partially_enclosed'
-    LARGE_OPENINGS: str = 'large_openings'
+
+    ENCLOSED: str = "enclosed"
+    PARTIALLY_ENCLOSED: str = "partially_enclosed"
+    LARGE_OPENINGS: str = "large_openings"

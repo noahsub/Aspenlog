@@ -19,7 +19,10 @@ from backend.Entities.Building.roof import RoofBuilder
 # MANAGER
 ########################################################################################################################
 
-def process_roof_data(w_roof: float, l_roof: float, slope: float, uniform_dead_load: float):
+
+def process_roof_data(
+    w_roof: float, l_roof: float, slope: float, uniform_dead_load: float
+):
     """
     Processes the roof data and creates a roof object
     :param w_roof: The width of the roof

@@ -19,10 +19,12 @@ from pydantic import BaseModel
 # MODEL
 ########################################################################################################################
 
+
 class SeismicLoadInput(BaseModel):
     """
     The input model for the seismic load object
     """
+
     # The amplification force factor
     ar: float
     # The response modification factor

@@ -21,6 +21,7 @@ from backend.Constants.materials import Materials
 # HELPER CLASS
 ########################################################################################################################
 
+
 class MaterialComposition:
     material: Materials
     respected_percentage: float
@@ -32,24 +33,30 @@ class MaterialComposition:
         self.weight = weight
 
     def __str__(self):
-        return (f"material: {self.material}\n,"
-                f"respected percentage: {self.respected_percentage}\n,"
-                f"weight: {self.weight}\n")
+        return (
+            f"material: {self.material}\n,"
+            f"respected percentage: {self.respected_percentage}\n,"
+            f"weight: {self.weight}\n"
+        )
 
     def __repr__(self):
-        return (f"material: {self.material}\n,"
-                f"respected percentage: {self.respected_percentage}\n,"
-                f"weight: {self.weight}\n")
+        return (
+            f"material: {self.material}\n,"
+            f"respected percentage: {self.respected_percentage}\n,"
+            f"weight: {self.weight}\n"
+        )
 
 
 ########################################################################################################################
 # MAIN CLASS
 ########################################################################################################################
 
+
 class MaterialZone:
     """
     Represents the material composition of a height zone of a building
     """
+
     materials_list: List[MaterialComposition]
 
     def __init__(self, materials_list):

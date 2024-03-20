@@ -12,8 +12,11 @@ from copy import deepcopy
 
 from backend.Constants.importance_factor_constants import ImportanceFactor
 from backend.Constants.load_constants import LoadTypes
-from backend.Constants.wind_constants import WindExposureFactorSelections, InternalPressureSelections, \
-    INTERNAL_GUST_EFFECT_FACTOR
+from backend.Constants.wind_constants import (
+    WindExposureFactorSelections,
+    InternalPressureSelections,
+    INTERNAL_GUST_EFFECT_FACTOR,
+)
 from backend.Entities.Building.building import Building
 from backend.Entities.Location.location import Location
 from backend.Entities.Wind.wind_factor import WindFactorBuilder, WindFactor
@@ -31,6 +34,7 @@ from backend.Entities.Wind.zone import ZoneBuilder
 # WIND LOAD ALGORITHMS
 ########################################################################################################################
 
+
 def get_wind_topographic_factor(wind_factor_builder: WindFactorBuilder, ct: float = 1):
     """
     This function sets the topographic factor
@@ -42,9 +46,13 @@ def get_wind_topographic_factor(wind_factor_builder: WindFactorBuilder, ct: floa
     wind_factor_builder.set_ct(ct)
 
 
-def get_wind_exposure_factor(wind_factor_builder: WindFactorBuilder,
-                             wind_exposure_factor_selection: WindExposureFactorSelections, building: Building,
-                             zone_num: int, manual: float = None):
+def get_wind_exposure_factor(
+    wind_factor_builder: WindFactorBuilder,
+    wind_exposure_factor_selection: WindExposureFactorSelections,
+    building: Building,
+    zone_num: int,
+    manual: float = None,
+):
     """
     This function sets the exposure factor
     :param zone_num: The numerical identifier of the height zone
@@ -70,18 +78,24 @@ def get_wind_exposure_factor(wind_factor_builder: WindFactorBuilder,
                 wind_factor_builder.set_cei((building.h_opening / 10) ** 0.2)
             # Otherwise set cei = max ((H / 20)**0.2, (0.6)**0.2
             else:
-                wind_factor_builder.set_cei(max((height_zone.elevation / 20) ** 0.2, 0.6 ** 0.2))
+                wind_factor_builder.set_cei(
+                    max((height_zone.elevation / 20) ** 0.2, 0.6**0.2)
+                )
         # If wind exposure factor is rough
         case wind_exposure_factor_selection.ROUGH:
             # ce = max((H / 12) ** 0.3, 0.7)
-            wind_factor_builder.set_ce(max(0.7 * (height_zone.elevation / 12) ** 0.3, 0.7))
+            wind_factor_builder.set_ce(
+                max(0.7 * (height_zone.elevation / 12) ** 0.3, 0.7)
+            )
             # If dominant opening is not 0 and the height of the building is greater than 20m, set
             # cei = (H_opening / 12)**0.2
             if building.h_opening != 0 and height_zone.elevation > 20:
                 wind_factor_builder.set_cei((building.h_opening / 12) ** 0.2)
             # Otherwise set cei = max ((H / 24)**0.3, (0.5)**0.3
             else:
-                wind_factor_builder.set_cei(max((height_zone.elevation / 24) ** 0.3, 0.5 ** 0.3))
+                wind_factor_builder.set_cei(
+                    max((height_zone.elevation / 24) ** 0.3, 0.5**0.3)
+                )
         # If wind exposure factor is intermediate, manually set ce and cei values
         # Note that ce == cei in this case
         case wind_exposure_factor_selection.INTERMEDIATE:
@@ -98,9 +112,13 @@ def get_wind_gust_factor(wind_factor_builder: WindFactorBuilder):
     wind_factor_builder.set_cg()
 
 
-def get_internal_pressure(wind_factor: WindFactor, wind_pressure_builder: WindPressureBuilder,
-                          internal_pressure_selection: InternalPressureSelections, importance_factor: ImportanceFactor,
-                          location: Location):
+def get_internal_pressure(
+    wind_factor: WindFactor,
+    wind_pressure_builder: WindPressureBuilder,
+    internal_pressure_selection: InternalPressureSelections,
+    importance_factor: ImportanceFactor,
+    location: Location,
+):
     """
     This function sets the internal pressure
     :param importance_factor: The selected importance factor
@@ -111,19 +129,28 @@ def get_internal_pressure(wind_factor: WindFactor, wind_pressure_builder: WindPr
     :return:None
     """
 
-    wind_importance_factor_uls = importance_factor.get_importance_factor_uls(LoadTypes.WIND)
-    wind_importance_factor_sls = importance_factor.get_importance_factor_sls(LoadTypes.WIND)
+    wind_importance_factor_uls = importance_factor.get_importance_factor_uls(
+        LoadTypes.WIND
+    )
+    wind_importance_factor_sls = importance_factor.get_importance_factor_sls(
+        LoadTypes.WIND
+    )
 
     # A = (Iw * q * Cei * Ct * Cgi) * X where, x is the cpi_pos or cpi_neg value
-    internal_pressure_uls = (wind_importance_factor_uls *
-                             location.wind_velocity_pressure *
-                             wind_factor.cei * wind_factor.ct *
-                             INTERNAL_GUST_EFFECT_FACTOR)
-    internal_pressure_sls = (wind_importance_factor_sls *
-                             location.wind_velocity_pressure *
-                             wind_factor.cei *
-                             wind_factor.ct *
-                             INTERNAL_GUST_EFFECT_FACTOR)
+    internal_pressure_uls = (
+        wind_importance_factor_uls
+        * location.wind_velocity_pressure
+        * wind_factor.cei
+        * wind_factor.ct
+        * INTERNAL_GUST_EFFECT_FACTOR
+    )
+    internal_pressure_sls = (
+        wind_importance_factor_sls
+        * location.wind_velocity_pressure
+        * wind_factor.cei
+        * wind_factor.ct
+        * INTERNAL_GUST_EFFECT_FACTOR
+    )
 
     # Different cases based on the internal pressure selection
     match internal_pressure_selection:
@@ -147,25 +174,44 @@ def get_internal_pressure(wind_factor: WindFactor, wind_pressure_builder: WindPr
             wind_pressure_builder.set_pi_neg_sls(internal_pressure_sls * -0.7)
 
 
-def get_external_pressure(wind_factor: WindFactor, wind_pressure_builder: WindPressureBuilder,
-                          wind_load_builder: WindLoadBuilder, importance_factor: ImportanceFactor, location: Location):
-    wind_importance_factor_uls = importance_factor.get_importance_factor_uls(LoadTypes.WIND)
-    wind_importance_factor_sls = importance_factor.get_importance_factor_sls(LoadTypes.WIND)
+def get_external_pressure(
+    wind_factor: WindFactor,
+    wind_pressure_builder: WindPressureBuilder,
+    wind_load_builder: WindLoadBuilder,
+    importance_factor: ImportanceFactor,
+    location: Location,
+):
+    wind_importance_factor_uls = importance_factor.get_importance_factor_uls(
+        LoadTypes.WIND
+    )
+    wind_importance_factor_sls = importance_factor.get_importance_factor_sls(
+        LoadTypes.WIND
+    )
 
     # A = (Iw * q * Ce * Ct * Cg) * X where, x is the cpi_pos or cpi_neg value
-    external_pressure_uls = (wind_importance_factor_uls *
-                             location.wind_velocity_pressure *
-                             wind_factor.ce *
-                             wind_factor.ct *
-                             wind_factor.cg)
-    external_pressure_sls = (wind_importance_factor_sls *
-                             location.wind_velocity_pressure *
-                             wind_factor.ce *
-                             wind_factor.ct *
-                             wind_factor.cg)
+    external_pressure_uls = (
+        wind_importance_factor_uls
+        * location.wind_velocity_pressure
+        * wind_factor.ce
+        * wind_factor.ct
+        * wind_factor.cg
+    )
+    external_pressure_sls = (
+        wind_importance_factor_sls
+        * location.wind_velocity_pressure
+        * wind_factor.ce
+        * wind_factor.ct
+        * wind_factor.cg
+    )
 
     # The types of zones within each height zone
-    zone_types = [(1, 'roof_interior'), (2, 'roof_edge'), (3, 'roof_corner'), (4, 'wall_centre'), (5, 'wall_corner')]
+    zone_types = [
+        (1, "roof_interior"),
+        (2, "roof_edge"),
+        (3, "roof_corner"),
+        (4, "wall_centre"),
+        (5, "wall_corner"),
+    ]
     zones = []
 
     # Apply calculation to each zone
@@ -177,31 +223,31 @@ def get_external_pressure(wind_factor: WindFactor, wind_pressure_builder: WindPr
         # Different cases based on the zone type
         match zone_type[1]:
             # If zone is roof interior, set pe_pos = A * 0 and pe_neg = A * -1
-            case 'roof_interior':
+            case "roof_interior":
                 zone_wind_pressure_builder.set_pe_pos_uls(external_pressure_uls * 0)
                 zone_wind_pressure_builder.set_pe_neg_uls(external_pressure_uls * -1)
                 zone_wind_pressure_builder.set_pe_pos_sls(external_pressure_sls * 0)
                 zone_wind_pressure_builder.set_pe_neg_sls(external_pressure_sls * -1)
             # If zone is roof edge, set pe_pos = A * 0 and pe_neg = A * -1.5
-            case 'roof_edge':
+            case "roof_edge":
                 zone_wind_pressure_builder.set_pe_pos_uls(external_pressure_uls * 0)
                 zone_wind_pressure_builder.set_pe_neg_uls(external_pressure_uls * -1.5)
                 zone_wind_pressure_builder.set_pe_pos_sls(external_pressure_sls * 0)
                 zone_wind_pressure_builder.set_pe_neg_sls(external_pressure_sls * -1.5)
             # If zone is roof corner, set pe_pos = A * 0 and pe_neg = A * -2.3
-            case 'roof_corner':
+            case "roof_corner":
                 zone_wind_pressure_builder.set_pe_pos_uls(external_pressure_uls * 0)
                 zone_wind_pressure_builder.set_pe_neg_uls(external_pressure_uls * -2.3)
                 zone_wind_pressure_builder.set_pe_pos_sls(external_pressure_sls * 0)
                 zone_wind_pressure_builder.set_pe_neg_sls(external_pressure_sls * -2.3)
             # If zone is wall centre, set pe_pos = A * 0.9 and pe_neg = A * -0.9
-            case 'wall_centre':
+            case "wall_centre":
                 zone_wind_pressure_builder.set_pe_pos_uls(external_pressure_uls * 0.9)
                 zone_wind_pressure_builder.set_pe_neg_uls(external_pressure_uls * -0.9)
                 zone_wind_pressure_builder.set_pe_pos_sls(external_pressure_sls * 0.9)
                 zone_wind_pressure_builder.set_pe_neg_sls(external_pressure_sls * -0.9)
             # If zone is wall corner, set pe_pos = A * 0.9 and pe_neg = A * -1.2
-            case 'wall_corner':
+            case "wall_corner":
                 zone_wind_pressure_builder.set_pe_pos_uls(external_pressure_uls * 0.9)
                 zone_wind_pressure_builder.set_pe_neg_uls(external_pressure_uls * -1.2)
                 zone_wind_pressure_builder.set_pe_pos_sls(external_pressure_sls * 0.9)

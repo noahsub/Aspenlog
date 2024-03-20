@@ -16,8 +16,13 @@
 from fastapi import APIRouter, Depends, HTTPException
 
 from backend.API.Managers.authentication_manager import decode_token
-from backend.API.Managers.importance_category_manager import process_importance_category_data
-from backend.API.Managers.user_data_manager import check_user_exists, set_user_importance_category
+from backend.API.Managers.importance_category_manager import (
+    process_importance_category_data,
+)
+from backend.API.Managers.user_data_manager import (
+    check_user_exists,
+    set_user_importance_category,
+)
 from backend.API.Models.importance_category_input import ImportanceCategoryInput
 
 ########################################################################################################################
@@ -33,8 +38,10 @@ importance_category_router = APIRouter()
 
 
 @importance_category_router.post("/importance_category")
-def importance_category_endpoint(importance_category_input: ImportanceCategoryInput,
-                                 username: str = Depends(decode_token)):
+def importance_category_endpoint(
+    importance_category_input: ImportanceCategoryInput,
+    username: str = Depends(decode_token),
+):
     """
     Sets the importance category for a user
     :param importance_category_input: The input data for the importance category
@@ -45,9 +52,13 @@ def importance_category_endpoint(importance_category_input: ImportanceCategoryIn
         # If storage for the user does not exist in memory, create a slot for the user
         check_user_exists(username)
         # Process the importance category data and create an importance category object
-        importance_category = process_importance_category_data(importance_category_input.importance_category)
+        importance_category = process_importance_category_data(
+            importance_category_input.importance_category
+        )
         # Store the importance category object in the user's memory slot
-        set_user_importance_category(username=username, importance_category=importance_category)
+        set_user_importance_category(
+            username=username, importance_category=importance_category
+        )
         # Return the importance category object
         return importance_category
     # If something goes wrong, raise an error

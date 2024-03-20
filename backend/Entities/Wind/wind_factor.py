@@ -26,6 +26,7 @@ class WindFactor:
     """
     This class is used to store the wind factor information
     """
+
     # Topographic factor
     ct: Optional[float]
     # Exposure factor
@@ -50,10 +51,9 @@ class WindFactor:
         :return:
         """
         # Print each attribute and its value on a new line
-        return (f"ct: {self.ct}\n"
-                f"ce: {self.ce}\n"
-                f"cei: {self.cei}\n"
-                f"cg: {self.cg}")
+        return (
+            f"ct: {self.ct}\n" f"ce: {self.ce}\n" f"cei: {self.cei}\n" f"cg: {self.cg}"
+        )
 
 
 class WindFactorBuilderInterface:
@@ -98,6 +98,7 @@ class WindFactorBuilder(WindFactorBuilderInterface):
     """
     Concrete builder class for the WindFactor class
     """
+
     wind_factor: WindFactor
 
     def __init__(self):

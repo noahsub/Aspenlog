@@ -21,10 +21,12 @@ from pydantic import BaseModel
 # MODEL
 ########################################################################################################################
 
+
 class BuildingInput(BaseModel):
     """
     The input model for the building object
     """
+
     # The number of floors in the building
     num_floor: int
     # The mid-height of the building

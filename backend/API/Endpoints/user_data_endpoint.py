@@ -29,9 +29,18 @@ from fastapi import APIRouter, Depends, HTTPException
 from starlette.responses import StreamingResponse
 
 from backend.API.Managers.authentication_manager import decode_token
-from backend.API.Managers.user_data_manager import check_user_exists, get_user_data, get_all_user_save_data, \
-    get_user_save_file, set_user_save_data, set_user_current_save_file, get_user_current_save_file, get_user_profile, \
-    delete_user_save_file, get_user_save_file_json
+from backend.API.Managers.user_data_manager import (
+    check_user_exists,
+    get_user_data,
+    get_all_user_save_data,
+    get_user_save_file,
+    set_user_save_data,
+    set_user_current_save_file,
+    get_user_current_save_file,
+    get_user_profile,
+    delete_user_save_file,
+    get_user_save_file_json,
+)
 from backend.API.Models.save_data_input import SaveDataInput
 
 ########################################################################################################################
@@ -44,6 +53,7 @@ user_data_router = APIRouter()
 ########################################################################################################################
 # ENDPOINTS
 ########################################################################################################################
+
 
 @user_data_router.post("/user_data")
 def user_data_endpoint(username: str = Depends(decode_token)):
@@ -115,7 +125,9 @@ def get_user_save_file_endpoint(id: int, username: str = Depends(decode_token)):
 
 
 @user_data_router.post("/set_user_save_data")
-def set_user_save_data_endpoint(data: SaveDataInput, username: str = Depends(decode_token)):
+def set_user_save_data_endpoint(
+    data: SaveDataInput, username: str = Depends(decode_token)
+):
     """
     Sets user save data
     :param data: The save data input
@@ -133,7 +145,9 @@ def set_user_save_data_endpoint(data: SaveDataInput, username: str = Depends(dec
 
 
 @user_data_router.post("/set_user_current_save_file")
-def set_user_current_save_file_endpoint(current_save_file: int, username: str = Depends(decode_token)):
+def set_user_current_save_file_endpoint(
+    current_save_file: int, username: str = Depends(decode_token)
+):
     """
     Sets the current user save file
     :param current_save_file: The id of the save file

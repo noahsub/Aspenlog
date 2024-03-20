@@ -21,10 +21,12 @@ from backend.Entities.Seismic.seismic_factor import SeismicFactor
 # MAIN CLASS
 ########################################################################################################################
 
+
 class SeismicLoad:
     """
     This class is used to store all the information regarding seismic loads
     """
+
     # The seismic factor
     factor: Optional[SeismicFactor]
     # Height factor
@@ -49,13 +51,16 @@ class SeismicLoad:
         :return:
         """
         # Special formatting for subclasses
-        factor_str = '\n  ' + '\n  '.join(str(self.factor).split('\n'))
+        factor_str = "\n  " + "\n  ".join(str(self.factor).split("\n"))
         # Print each attribute and its value on a new line
-        return (f"factor: {factor_str}\n"
-                f"ax: {self.ax}\n"
-                f"sp: {self.sp}\n"
-                f"vp: {self.vp}\n"
-                f"vp_snow: {self.vp_snow}")
+        return (
+            f"factor: {factor_str}\n"
+            f"ax: {self.ax}\n"
+            f"sp: {self.sp}\n"
+            f"vp: {self.vp}\n"
+            f"vp_snow: {self.vp_snow}"
+        )
+
 
 ########################################################################################################################
 # BUILDER CLASSES
@@ -105,6 +110,7 @@ class SeismicLoadBuilder(SeismicLoadBuilderInterface):
     """
     Concrete builder class for the SeismicLoad class
     """
+
     seismic_load: SeismicLoad
 
     def __init__(self):

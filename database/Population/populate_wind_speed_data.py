@@ -35,6 +35,7 @@ DATABASE = DatabaseConnection(database_name="NBCC-2020")
 # DATABASE FUNCTIONS
 ########################################################################################################################
 
+
 def create_wind_speed_data_table():
     """
     Creates the WindSpeedData table
@@ -44,7 +45,7 @@ def create_wind_speed_data_table():
     engine = DATABASE.get_engine(privilege=PrivilegeType.ADMIN)
 
     # Name of the table
-    table_name = 'WindSpeedData'
+    table_name = "WindSpeedData"
     inspector = inspect(engine)
     # If the table already exists, we don't want to create it again
     if table_name in inspector.get_table_names():
@@ -76,6 +77,7 @@ def clean_wind_speed_data_table():
 # POPULATION FUNCTIONS
 ########################################################################################################################
 
+
 def populate_wind_speed_data_table():
     """
     Populates the WindSpeedData table
@@ -89,7 +91,7 @@ def populate_wind_speed_data_table():
     # Open the data-extraction/output/table_c1.csv file
     file_path = get_file_path("data-extraction/output/table_c1.csv")
     # Read the file
-    with open(file_path, 'r') as csv_file:
+    with open(file_path, "r") as csv_file:
         # Skip first 3 lines, these are header lines and not data
         for _ in range(2):
             next(csv_file)
@@ -101,7 +103,7 @@ def populate_wind_speed_data_table():
         for row in tqdm(csv_reader, "Populating Wind Speed Data"):
             # Each row of the csv file contains 4 entries, hence we need to split the row into groups of two columns
             for i in range(1, 9, 2):
-                entry = WindSpeedData(q_KPa=float(row[i]), V_ms=float(row[i+1]))
+                entry = WindSpeedData(q_KPa=float(row[i]), V_ms=float(row[i + 1]))
                 # Add the entry to the controller
                 controller.add(entry)
         # Commit the changes
@@ -113,14 +115,15 @@ def populate_wind_speed_data_table():
 ########################################################################################################################
 
 # ONLY RUN IF DATABASE NEEDS TO BE REPOPULATED
-if __name__ == '__main__':
-    print("WARNING: This script will repopulate the WindSpeedData table. If the database is already populated, this will delete existing data and repopulate the table, meaning any manual changes will be lost.")
+if __name__ == "__main__":
+    print(
+        "WARNING: This script will repopulate the WindSpeedData table. If the database is already populated, this will delete existing data and repopulate the table, meaning any manual changes will be lost."
+    )
     choice = input("Are you sure you want to continue? (y/n): ")
-    if choice.lower() == 'y':
+    if choice.lower() == "y":
         create_wind_speed_data_table()
         clean_wind_speed_data_table()
         populate_wind_speed_data_table()
         DATABASE.close()
     else:
         exit(0)
-

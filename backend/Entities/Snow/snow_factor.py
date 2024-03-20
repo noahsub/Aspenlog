@@ -21,6 +21,7 @@ from backend.Constants.snow_constants import ACCUMULATION_FACTOR
 # MAIN CLASS
 ########################################################################################################################
 
+
 class SnowFactor:
     # Slope factor
     cs: Optional[float]
@@ -44,10 +45,7 @@ class SnowFactor:
         :return:
         """
         # Print each attribute and its value on a new line
-        return (f"cs: {self.cs}\n"
-                f"ca: {self.ca}\n"
-                f"cw: {self.cw}\n"
-                f"cb: {self.cb}")
+        return f"cs: {self.cs}\n" f"ca: {self.ca}\n" f"cw: {self.cw}\n" f"cb: {self.cb}"
 
 
 ########################################################################################################################
@@ -92,6 +90,7 @@ class SnowFactorBuilder(SnowFactorBuilderInterface):
     """
     Concrete builder class for the SnowFactor class
     """
+
     snow_factor: SnowFactor
 
     def __init__(self):

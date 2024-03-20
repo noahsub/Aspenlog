@@ -19,10 +19,12 @@ from typing import Optional
 # MAIN CLASS
 ########################################################################################################################
 
+
 class Roof:
     """
     Represents the roof of a building
     """
+
     # Smaller Plan dimension of the roof (m)
     w_roof: Optional[float]
     # Larger Plan dimension of the roof (m)
@@ -50,11 +52,13 @@ class Roof:
         :return:
         """
         # Print each attribute and its value on a new line
-        return (f"w_roof: {self.w_roof}\n"
-                f"l_roof: {self.l_roof}\n"
-                f"slope: {self.slope}\n"
-                f"wall_slope: {self.wall_slope}\n"
-                f"wp: {self.wp}")
+        return (
+            f"w_roof: {self.w_roof}\n"
+            f"l_roof: {self.l_roof}\n"
+            f"slope: {self.slope}\n"
+            f"wall_slope: {self.wall_slope}\n"
+            f"wp: {self.wp}"
+        )
 
 
 ########################################################################################################################
@@ -105,6 +109,7 @@ class RoofBuilder(RoofBuilderInterface):
     """
     Concrete builder class for the Cladding class
     """
+
     roof: Roof
 
     def __init__(self):

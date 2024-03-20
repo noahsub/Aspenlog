@@ -20,10 +20,12 @@ from enum import Enum
 # ENUMS
 ########################################################################################################################
 
+
 class LoadTypes(Enum):
     """
     Enum for the load types
     """
-    WIND: str = 'WIND'
-    SNOW: str = 'SNOW'
-    SEISMIC: str = 'SEISMIC'
+
+    WIND: str = "WIND"
+    SNOW: str = "SNOW"
+    SEISMIC: str = "SEISMIC"

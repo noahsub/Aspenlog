@@ -16,7 +16,11 @@ import math
 
 from backend.Constants.importance_factor_constants import ImportanceFactor
 from backend.Constants.load_constants import LoadTypes
-from backend.Constants.snow_constants import RoofType, ACCUMULATION_FACTOR, WindDirection
+from backend.Constants.snow_constants import (
+    RoofType,
+    ACCUMULATION_FACTOR,
+    WindDirection,
+)
 from backend.Constants.wind_constants import WindExposureFactorSelections
 from backend.Entities.Building.building import Building
 from backend.Entities.Location.location import Location
@@ -28,7 +32,10 @@ from backend.Entities.Snow.snow_load import SnowLoadBuilder
 # SNOW LOAD ALGORITHMS
 ########################################################################################################################
 
-def get_slope_factor(snow_factor_builder: SnowFactorBuilder, selection: RoofType, building: Building):
+
+def get_slope_factor(
+    snow_factor_builder: SnowFactorBuilder, selection: RoofType, building: Building
+):
     """
     This function sets the slope factor
     :param snow_factor_builder: A SnowFactorBuilder object, responsible for building the snow factor information
@@ -62,7 +69,11 @@ def get_slope_factor(snow_factor_builder: SnowFactorBuilder, selection: RoofType
                 snow_factor_builder.set_cs(0)
 
 
-def get_accumulation_factor(snow_factor_builder: SnowFactorBuilder, wind_direction: WindDirection, building: Building):
+def get_accumulation_factor(
+    snow_factor_builder: SnowFactorBuilder,
+    wind_direction: WindDirection,
+    building: Building,
+):
     roof_slope = building.roof.slope
     if wind_direction == WindDirection.DOWNWIND:
         if 15 <= roof_slope <= 20:
@@ -75,8 +86,11 @@ def get_accumulation_factor(snow_factor_builder: SnowFactorBuilder, wind_directi
         snow_factor_builder.set_ca(0)
 
 
-def get_wind_exposure_factor_snow(snow_factor_builder: SnowFactorBuilder, importance_factor: ImportanceFactor,
-                                  wind_exposure_factor_selection: WindExposureFactorSelections):
+def get_wind_exposure_factor_snow(
+    snow_factor_builder: SnowFactorBuilder,
+    importance_factor: ImportanceFactor,
+    wind_exposure_factor_selection: WindExposureFactorSelections,
+):
     """
     This function sets the wind exposure factor
     :param importance_factor: The selected importance factor
@@ -90,19 +104,27 @@ def get_wind_exposure_factor_snow(snow_factor_builder: SnowFactorBuilder, import
 
     # If the importance factor is low or normal and the wind exposure factor is intermediate, set the wind exposure
     # factor to 0.75
-    if (importance_factor in low_or_normal and wind_exposure_factor_selection ==
-            wind_exposure_factor_selection.INTERMEDIATE):
+    if (
+        importance_factor in low_or_normal
+        and wind_exposure_factor_selection
+        == wind_exposure_factor_selection.INTERMEDIATE
+    ):
         snow_factor_builder.set_cw(0.75)
     # If the importance factor is low or normal and the wind exposure factor is open, set the wind exposure factor to
     # 0.5
-    elif importance_factor in low_or_normal and wind_exposure_factor_selection == wind_exposure_factor_selection.OPEN:
+    elif (
+        importance_factor in low_or_normal
+        and wind_exposure_factor_selection == wind_exposure_factor_selection.OPEN
+    ):
         snow_factor_builder.set_cw(0.5)
     # Otherwise, set the wind exposure factor to 1
     else:
         snow_factor_builder.set_cw(1)
 
 
-def get_basic_roof_snow_load_factor(snow_factor_builder: SnowFactorBuilder, building: Building):
+def get_basic_roof_snow_load_factor(
+    snow_factor_builder: SnowFactorBuilder, building: Building
+):
     """
     This function sets the basic roof snow load factor
     :param snow_factor_builder: A SnowFactorBuilder object, responsible for building the snow factor information
@@ -110,7 +132,7 @@ def get_basic_roof_snow_load_factor(snow_factor_builder: SnowFactorBuilder, buil
     :return: None
     """
     # Ic = 2 * w_roof - w_roof**2 / l_roof
-    ic = 2 * building.roof.w_roof - building.roof.w_roof ** 2 / building.roof.l_roof
+    ic = 2 * building.roof.w_roof - building.roof.w_roof**2 / building.roof.l_roof
     # If ic is less than or equal to 70 divided by the wind exposure factor squared, set the basic roof snow load
     # factor to 0.8
     if ic <= (70 / snow_factor_builder.get_cw() ** 2):
@@ -118,13 +140,22 @@ def get_basic_roof_snow_load_factor(snow_factor_builder: SnowFactorBuilder, buil
     # Otherwise, set the basic roof snow load factor to Cb = 1 / Cw * (1 - (1 - 0.8 * Cw)*exp*(-1 * (Ic * Cw**2 - 70)
     # / 100))
     else:
-        snow_factor_builder.set_cb((1 / snow_factor_builder.get_cw()) * (
-                1 - (1 - 0.8 * snow_factor_builder.get_cw()) * math.exp(
-            -1 * ((ic * snow_factor_builder.get_cw() ** 2 - 70) / (100)))))
+        snow_factor_builder.set_cb(
+            (1 / snow_factor_builder.get_cw())
+            * (
+                1
+                - (1 - 0.8 * snow_factor_builder.get_cw())
+                * math.exp(-1 * ((ic * snow_factor_builder.get_cw() ** 2 - 70) / (100)))
+            )
+        )
 
 
-def get_snow_load(snow_factor_builder: SnowFactorBuilder, snow_load_builder: SnowLoadBuilder,
-                  importance_factor: ImportanceFactor, location: Location):
+def get_snow_load(
+    snow_factor_builder: SnowFactorBuilder,
+    snow_load_builder: SnowLoadBuilder,
+    importance_factor: ImportanceFactor,
+    location: Location,
+):
     """
     This function sets the snow load
     :param snow_load_builder: A SnowLoadBuilder object, responsible for building the snow load information
@@ -133,20 +164,37 @@ def get_snow_load(snow_factor_builder: SnowFactorBuilder, snow_load_builder: Sno
     :param location: A Location object, responsible for storing the location information
     :return: None
     """
-    snow_importance_factor_uls = importance_factor.get_importance_factor_uls(LoadTypes.SNOW)
-    snow_importance_factor_sls = importance_factor.get_importance_factor_sls(LoadTypes.SNOW)
+    snow_importance_factor_uls = importance_factor.get_importance_factor_uls(
+        LoadTypes.SNOW
+    )
+    snow_importance_factor_sls = importance_factor.get_importance_factor_sls(
+        LoadTypes.SNOW
+    )
 
-    snow_load_builder.set_s_uls(snow_importance_factor_uls *
-                                (location.rain_load * (snow_factor_builder.get_cb() *
-                                                       snow_factor_builder.get_cw() *
-                                                       snow_factor_builder.get_cs() *
-                                                       snow_factor_builder.get_ca()) +
-                                 location.snow_load))
-    snow_load_builder.set_s_sls(snow_importance_factor_sls *
-                                (location.rain_load * (
-                                        snow_factor_builder.get_cb() *
-                                        snow_factor_builder.get_cw() *
-                                        snow_factor_builder.get_cs() *
-                                        snow_factor_builder.get_ca()) +
-                                 location.snow_load))
+    snow_load_builder.set_s_uls(
+        snow_importance_factor_uls
+        * (
+            location.rain_load
+            * (
+                snow_factor_builder.get_cb()
+                * snow_factor_builder.get_cw()
+                * snow_factor_builder.get_cs()
+                * snow_factor_builder.get_ca()
+            )
+            + location.snow_load
+        )
+    )
+    snow_load_builder.set_s_sls(
+        snow_importance_factor_sls
+        * (
+            location.rain_load
+            * (
+                snow_factor_builder.get_cb()
+                * snow_factor_builder.get_cw()
+                * snow_factor_builder.get_cs()
+                * snow_factor_builder.get_ca()
+            )
+            + location.snow_load
+        )
+    )
     snow_load_builder.set_factor(snow_factor_builder.get_snow_factor())

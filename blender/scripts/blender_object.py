@@ -19,13 +19,21 @@ from typing import Optional, Tuple
 # OBJECT CLASSES
 ########################################################################################################################
 
+
 class WindZone:
     """
     This class is used to store the height zone information.
     """
 
-    def __init__(self, wall_centre_pos: float, wall_centre_neg: float, wall_corner_pos: float, wall_corner_neg: float,
-                 h: Optional[float] = None, position: Optional[int] = None):
+    def __init__(
+        self,
+        wall_centre_pos: float,
+        wall_centre_neg: float,
+        wall_corner_pos: float,
+        wall_corner_neg: float,
+        h: Optional[float] = None,
+        position: Optional[int] = None,
+    ):
         """
         Initialize the WindZone object.
         :param wall_centre_pos: The positive wind load at the centre of the wall.
@@ -47,9 +55,14 @@ class WindZone:
         Convert the WindZone object to a dictionary.
         :return: A dictionary containing the WindZone object.
         """
-        return {"h": self.h, "wall_centre_pos": self.wall_centre_pos, "wall_centre_neg": self.wall_centre_neg,
-                "wall_corner_pos": self.wall_corner_pos, "wall_corner_neg": self.wall_corner_neg,
-                "position": self.position}
+        return {
+            "h": self.h,
+            "wall_centre_pos": self.wall_centre_pos,
+            "wall_centre_neg": self.wall_centre_neg,
+            "wall_corner_pos": self.wall_corner_pos,
+            "wall_corner_neg": self.wall_corner_neg,
+            "position": self.position,
+        }
 
 
 class SeismicZone:
@@ -57,7 +70,12 @@ class SeismicZone:
     This class is used to store the height zone information.
     """
 
-    def __init__(self, h: Optional[float] = None, load: Optional[float] = None, position: Optional[int] = None):
+    def __init__(
+        self,
+        h: Optional[float] = None,
+        load: Optional[float] = None,
+        position: Optional[int] = None,
+    ):
         """
         Initialize the SeismicZone object.
         :param h: The height of the seismic zone.

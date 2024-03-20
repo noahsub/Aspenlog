@@ -19,10 +19,12 @@ from pydantic import BaseModel
 # MODEL
 ########################################################################################################################
 
+
 class CladdingInput(BaseModel):
     """
     The input model for the cladding object
     """
+
     # The top cladding
     c_top: float
     # The bottom cladding

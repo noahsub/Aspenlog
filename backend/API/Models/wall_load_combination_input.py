@@ -19,10 +19,12 @@ from pydantic import BaseModel
 # MODEL
 ########################################################################################################################
 
+
 class WallLoadCombinationInput(BaseModel):
     """
     The input model for the wall load combination object
     """
+
     # The uls wall type
     uls_wall_type: str
     # The sls wall type

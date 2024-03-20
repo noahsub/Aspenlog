@@ -18,7 +18,10 @@ from fastapi import APIRouter, Depends, HTTPException
 
 from backend.API.Managers.authentication_manager import decode_token
 from backend.API.Managers.dimensions_manager import process_dimension_data
-from backend.API.Managers.user_data_manager import check_user_exists, set_user_dimensions
+from backend.API.Managers.user_data_manager import (
+    check_user_exists,
+    set_user_dimensions,
+)
 from backend.API.Models.dimensions_input import DimensionsInput
 
 ########################################################################################################################
@@ -32,8 +35,11 @@ dimensions_router = APIRouter()
 # ENDPOINTS
 ########################################################################################################################
 
+
 @dimensions_router.post("/dimensions")
-def dimensions_endpoint(dimensions_input: DimensionsInput, username: str = Depends(decode_token)):
+def dimensions_endpoint(
+    dimensions_input: DimensionsInput, username: str = Depends(decode_token)
+):
     """
     Creates a dimensions object for a user
     :param dimensions_input: The input data for the dimensions
@@ -44,10 +50,12 @@ def dimensions_endpoint(dimensions_input: DimensionsInput, username: str = Depen
         # If storage for the user does not exist in memory, create a slot for the user
         check_user_exists(username)
         # Process the dimensions data and create a dimensions object
-        dimensions = process_dimension_data(width=dimensions_input.width,
-                                            height=dimensions_input.height,
-                                            eave_height=dimensions_input.eave_height,
-                                            ridge_height=dimensions_input.ridge_height)
+        dimensions = process_dimension_data(
+            width=dimensions_input.width,
+            height=dimensions_input.height,
+            eave_height=dimensions_input.eave_height,
+            ridge_height=dimensions_input.ridge_height,
+        )
         # Store the dimensions object in the user's memory slot
         set_user_dimensions(username=username, dimensions=dimensions)
         # Return the dimensions object

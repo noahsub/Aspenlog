@@ -21,15 +21,17 @@ from enum import Enum
 # ENUMS
 ########################################################################################################################
 
+
 class Materials(Enum):
     """
     Enum for the materials
     """
-    GLASS = 'glass'
-    GRANITE = 'granite'
-    SANDSTONE = 'sandstone'
-    STEEL = 'steel'
-    OTHER = 'other'
+
+    GLASS = "glass"
+    GRANITE = "granite"
+    SANDSTONE = "sandstone"
+    STEEL = "steel"
+    OTHER = "other"
 
     @classmethod
     def get_materials_list(cls):

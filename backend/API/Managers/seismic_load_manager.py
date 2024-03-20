@@ -19,15 +19,27 @@ from backend.Entities.Building.building import Building
 from backend.Entities.Location.location import Location
 from backend.Entities.Seismic.seismic_factor import SeismicFactorBuilder
 from backend.Entities.Seismic.seismic_load import SeismicLoadBuilder
-from backend.algorithms.seismic_load_algorithms import get_seismic_factor_values, get_height_factor, \
-    get_horizontal_force_factor, get_specified_lateral_earthquake_force
+from backend.algorithms.seismic_load_algorithms import (
+    get_seismic_factor_values,
+    get_height_factor,
+    get_horizontal_force_factor,
+    get_specified_lateral_earthquake_force,
+)
 
 
 ########################################################################################################################
 # MANAGER
 ########################################################################################################################
 
-def process_seismic_load_data(building: Building, location: Location, importance_category: ImportanceFactor, ar: float, rp: float, cp: float):
+
+def process_seismic_load_data(
+    building: Building,
+    location: Location,
+    importance_category: ImportanceFactor,
+    ar: float,
+    rp: float,
+    cp: float,
+):
     """
     Processes the seismic load data and creates a seismic load object
     :param building: The building object
@@ -53,7 +65,13 @@ def process_seismic_load_data(building: Building, location: Location, importance
         # Set the horizontal force factor
         get_horizontal_force_factor(zone_seismic_factor_builder, seismic_load_builder)
         # Set the specified lateral earthquake force
-        get_specified_lateral_earthquake_force(seismic_load_builder, building, height_zone.zone_num, location, importance_category)
+        get_specified_lateral_earthquake_force(
+            seismic_load_builder,
+            building,
+            height_zone.zone_num,
+            location,
+            importance_category,
+        )
         # Get the seismic load
         seismic_load = seismic_load_builder.get_seismic_load()
         # Set the seismic load in the height zone

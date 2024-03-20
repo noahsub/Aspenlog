@@ -18,8 +18,13 @@ from fastapi import APIRouter, Depends, HTTPException
 
 from backend.API.Managers.authentication_manager import decode_token
 from backend.API.Managers.snow_load_manager import process_snow_load_data
-from backend.API.Managers.user_data_manager import check_user_exists, get_user_building, get_user_importance_category, \
-    get_user_location, set_user_snow_load
+from backend.API.Managers.user_data_manager import (
+    check_user_exists,
+    get_user_building,
+    get_user_importance_category,
+    get_user_location,
+    set_user_snow_load,
+)
 from backend.API.Models.snow_load_input import SnowLoadInput
 
 ########################################################################################################################
@@ -34,7 +39,9 @@ snow_load_router = APIRouter()
 
 
 @snow_load_router.post("/set_snow_load")
-def set_snow_load_endpoint(snow_load_input: SnowLoadInput, username: str = Depends(decode_token)):
+def set_snow_load_endpoint(
+    snow_load_input: SnowLoadInput, username: str = Depends(decode_token)
+):
     """
     Creates a snow load object for a user
     :param snow_load_input: The input data for the snow load
@@ -51,7 +58,13 @@ def set_snow_load_endpoint(snow_load_input: SnowLoadInput, username: str = Depen
         # The location of the user
         location = get_user_location(username=username)
         # Process the snow load data and create a snow load object
-        snow_load = process_snow_load_data(building=building, location=location, importance_category=importance_factor, exposure_factor_selection=snow_load_input.exposure_factor_selection, roof_type=snow_load_input.roof_type)
+        snow_load = process_snow_load_data(
+            building=building,
+            location=location,
+            importance_category=importance_factor,
+            exposure_factor_selection=snow_load_input.exposure_factor_selection,
+            roof_type=snow_load_input.roof_type,
+        )
         # Store the snow load object in the user's memory slot
         set_user_snow_load(username=username, snow_load=snow_load)
         # Return the snow load object as a JSON string
