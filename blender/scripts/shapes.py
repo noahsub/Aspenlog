@@ -1,3 +1,17 @@
+########################################################################################################################
+# shapes.py
+# This file contains the code to create the shapes in Blender.
+#
+# Please refer to the LICENSE and DISCLAIMER files for more information regarding the use and distribution of this code.
+# By using this code, you agree to abide by the terms and conditions in those files.
+#
+# Author: [https://github.com/alastairsim]
+########################################################################################################################
+
+########################################################################################################################
+# IMPORTS
+########################################################################################################################
+
 import bpy
 import sys
 import render
@@ -5,12 +19,26 @@ import os
 import math
 import bmesh
 
-def create_wind_cube(length=2.0, width=2.0, height=2.0, position=0, r=1.0, g=1.0):  
+########################################################################################################################
+# FUNCTIONS
+########################################################################################################################
 
+
+def create_wind_cube(length=2.0, width=2.0, height=2.0, position=0, r=1.0, g=1.0):
+    """
+    Create a wind cube in Blender.
+    :param length: The length of the wind cube.
+    :param width: The width of the wind cube.
+    :param height: The height of the wind cube.
+    :param position: The position of the wind cube.
+    :param r: The red value of the wind cube.
+    :param g: The green value of the wind cube.
+    :return: None
+    """
     cube_x = length * 0.9
     cube_y = width * 0.9
-    cube_z = height 
-    
+    cube_z = height
+
     block_z = position
     # Add a cube
     bpy.ops.mesh.primitive_cube_add(scale=(cube_x, cube_y, cube_z), size=1, enter_editmode=False, location=(0, 0, block_z))
@@ -45,9 +73,16 @@ def create_wind_cube(length=2.0, width=2.0, height=2.0, position=0, r=1.0, g=1.0
     bpy.ops.object.select_all(action='DESELECT')
 
 def create_seismic_cube(length=2.0, width=2.0, height=2.0, position=0):
-
-    cube_x = length 
-    cube_y = width 
+    """
+    Create a seismic cube in Blender.
+    :param length: The length of the seismic cube.
+    :param width: The width of the seismic cube.
+    :param height: The height of the seismic cube.
+    :param position: The position of the seismic cube.
+    :return: A reference to the seismic cube.
+    """
+    cube_x = length
+    cube_y = width
     cube_z = height
 
     # Add a cube
@@ -58,7 +93,12 @@ def create_seismic_cube(length=2.0, width=2.0, height=2.0, position=0):
     return cube
 
 def create_simple_cube(angle_degrees=45, total_height=20):
-    
+    """
+    Create a simple cube in Blender.
+    :param angle_degrees: The angle of the cube.
+    :param total_height: The total height of the cube.
+    :return: None
+    """
     if angle_degrees < 90 and angle_degrees!= 0:
 
         base_width = 2.0  # Length of the square base sides
@@ -86,7 +126,7 @@ def create_simple_cube(angle_degrees=45, total_height=20):
             bpy.ops.mesh.normals_make_consistent(inside=False)
             mesh = obj.data
             bm = bmesh.from_edit_mesh(mesh)
-            
+
             for face in bm.faces:
                 face.select = False
             bm.faces[1].select = True
@@ -94,7 +134,7 @@ def create_simple_cube(angle_degrees=45, total_height=20):
             bpy.ops.mesh.extrude_context_move(MESH_OT_extrude_context=None, TRANSFORM_OT_translate={"value":(0,0,-(total_height-triangle_height))})
             #bpy.ops.mesh.extrude_faces_move(TRANSFORM_OT_shrink_fatten={"value":total_height-triangle_height})
             #bpy.ops.mesh.extrude_faces_move(TRANSFORM_OT_shrink_fatten={"value":float(total_height-triangle_height)})
-            
+
             # Switch back to Object Mode if necessary
             bpy.ops.object.mode_set(mode='OBJECT')
     else:
@@ -105,7 +145,14 @@ def create_simple_cube(angle_degrees=45, total_height=20):
     set_cube_colour(obj, rgba=(0.7, 0.5, 0.5, 1.0))
 
 def set_cube_colour(cube, rgba=(1.0, 0.0, 0.0, 1.0), text=False, emit=False):
-
+    """
+    Set the colour of a cube in Blender.
+    :param cube: The cube to set the colour of.
+    :param rgba: The colour to set the cube to.
+    :param text: The text to set the cube to.
+    :param emit: The emission to set the cube to.
+    :return: None
+    """
     # Create a new material
     mat = bpy.data.materials.new(name="CustomMaterial")
     if text:
@@ -136,19 +183,26 @@ def set_cube_colour(cube, rgba=(1.0, 0.0, 0.0, 1.0), text=False, emit=False):
 
 
 def create_axis(radius=0.05, depth=1, location=(0, -3, 2) ):
+    """
+    Create an axis in Blender.
+    :param radius: The radius of the axis.
+    :param depth: The depth of the axis.
+    :param location: The location of the axis.
+    :return: None
+    """
     bpy.ops.object.select_all(action='DESELECT')
     # y
     bpy.ops.mesh.primitive_cylinder_add(radius=0.05, depth=1, enter_editmode=False, location=(0, depth/2, 0), rotation=(math.pi/2, 0 , math.pi))
     y = bpy.context.active_object
     y.name = 'yaxis'
     set_cube_colour(y, rgba=(0.0,1.0,0.0,1.0))
-    
+
     # z
     bpy.ops.mesh.primitive_cylinder_add(radius=0.05, depth=1, enter_editmode=False, location=(0, 0, depth/2), rotation=(0, 0 , math.pi/2))
     z = bpy.context.active_object
     z.name = 'zaxis'
     set_cube_colour(z, rgba=(0.0,0.0,1.0,1.0))
-    
+
     #
 
     # x
@@ -156,36 +210,42 @@ def create_axis(radius=0.05, depth=1, location=(0, -3, 2) ):
     x = bpy.context.active_object
     x.name = 'xaxis'
     set_cube_colour(x, rgba=(1.0,0.0,0.0,1.0))
-   
-    
+
+
     obj = bpy.data.objects['yaxis']
     obj.select_set(True)
     obj = bpy.data.objects['zaxis']
     obj.select_set(True)
     obj = bpy.data.objects['xaxis']
     obj.select_set(True)
-    
+
     #bpy.ops.object.mode_set(mode='OBJECT')
     bpy.ops.object.join()
     axis = bpy.context.active_object
     axis.name='Axis'
     axis.location = location
-    
+
     # add labels
     obj=add_axis_text('Y', location=(location[0], location[1]+depth, location[2]))
     obj.name = 'ylabel'
     set_cube_colour(obj, rgba=(0.0,1.0,0.0,1.0))
-    
+
     obj=add_axis_text('Z', location=(location[0], location[1], location[2]+depth))
     obj.name = 'zlabel'
     set_cube_colour(obj, rgba=(0.0,0.0,1.0,1.0))
-    
+
     obj=add_axis_text('X', location=(location[0]+depth, location[1]-0.3, location[2]))
     obj.name = 'xlabel'
     set_cube_colour(obj, rgba=(1.0,0.0,0.0,1.0))
-    
-def add_axis_text(axis, location, scale=(0.3, 0.3, 0.3)):
 
+def add_axis_text(axis, location, scale=(0.3, 0.3, 0.3)):
+    """
+    Add a text object to the scene.
+    :param axis: The axis value.
+    :param location: The location of the text object.
+    :param scale: The scale of the text object.
+    :return: The text object.
+    """
 
     font_curve = bpy.data.curves.new(type="FONT", name="numberPlate")
 
@@ -201,6 +261,12 @@ def add_axis_text(axis, location, scale=(0.3, 0.3, 0.3)):
     return obj
 
 def max_height_check(height_list, limit=15 ):
+    """
+    Check the maximum height of the wind zones.
+    :param height_list: The heights of the wind zones.
+    :param limit: The limit of the wind zones.
+    :return: The maximum height of the wind zones.
+    """
     total_height = sum(height_list)
     output_heights = []
     if total_height > limit:

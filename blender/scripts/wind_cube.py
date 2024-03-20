@@ -1,3 +1,17 @@
+########################################################################################################################
+# wind_cube.py
+# This file contains the code to create the wind cube in Blender.
+#
+# Please refer to the LICENSE and DISCLAIMER files for more information regarding the use and distribution of this code.
+# By using this code, you agree to abide by the terms and conditions in those files.
+#
+# Author: [https://github.com/alastairsim]
+########################################################################################################################
+
+########################################################################################################################
+# IMPORTS
+########################################################################################################################
+
 import bpy
 import sys
 import os
@@ -20,9 +34,20 @@ from blender_object import *
 from shapes import create_wind_cube, set_cube_colour, create_axis, max_height_check
 from arrow import create_arrow
 
+########################################################################################################################
+# FUNCTIONS
+########################################################################################################################
+
 def add_load_text(load, location, negative=False, scale=(0.3, 0.3, 0.3), arrow=False):
-
-
+    """
+    Add a load text to the Blender scene.
+    :param load: The load value.
+    :param location: The location of the load text.
+    :param negative: True if the load is negative, False otherwise.
+    :param scale: The scale of the load text.
+    :param arrow: True if the load text is an arrow, False otherwise.
+    :return: None
+    """
     font_curve = bpy.data.curves.new(type="FONT", name="numberPlate")
     if negative:
         font_curve.body = str(round(load, 2))
@@ -59,6 +84,9 @@ def add_load_text(load, location, negative=False, scale=(0.3, 0.3, 0.3), arrow=F
     else:
         set_cube_colour(obj, (1.0,0.0,0.0,1.0), text=True)
 
+########################################################################################################################
+# MAIN
+########################################################################################################################
 
 def main():
 
