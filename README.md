@@ -29,7 +29,7 @@ Multidisciplinary Design & Innovation (UT-IMDI) for SEEDA.
 - Export all data to an Excel file
 - User accounts to save and load projects and access them from any device anywhere with an internet connection
 
-![aspenlog2020](assets/images/aspenlog_demo.gif)
+![aspenlog2020](assets/images/aspenlog_demo_slower.gif)
 
 
 ## Hosting the Backend
