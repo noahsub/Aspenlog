@@ -1,28 +1,39 @@
+<!--
+wind_load.html
+This file is the wind load page for the frontend. It is a simple HTML file that displays a form with input fields for
+the topographic factor, exposure factor, gust factor, and internal pressure category.
+
+Please refer to the LICENSE and DISCLAIMER files for more information regarding the use and distribution of this code.
+By using this code, you agree to abide by the terms and conditions in those files.
+
+Author: Noah Subedar [https://github.com/noahsub]
+-->
+
 <hr>
 <h5>Height Zone 1</h5>
 <hr>
 <div class="mb-3">
     <label for="topographic-factor">Topographic Factor (Ct)</label>
     <p>By default the topographic factor is 1</p>
-    <input type="number" id="topographic-factor" class="form-control" value="1"/>
+    <input class="form-control" id="topographic-factor" type="number" value="1"/>
 </div>
 <div class="mb-3">
     <label for="exposure-factor-selection">Exposure Factor (Ce)</label>
     <br>
-    <div class="btn-group btn-group-toggle" id="exposure-factor-selection" data-toggle="buttons">
+    <div class="btn-group btn-group-toggle" data-toggle="buttons" id="exposure-factor-selection">
         <label class="btn btn-secondary">
-            <input type="radio" name="exposure-factor-selection" id="exposure-factor-open-option" autocomplete="off"> Open
+            <input autocomplete="off" id="exposure-factor-open-option" name="exposure-factor-selection" type="radio"> Open
         </label>
         <label class="btn btn-secondary">
-            <input type="radio" name="exposure-factor-selection" id="exposure-factor-rough-option" autocomplete="off"> Rough
+            <input autocomplete="off" id="exposure-factor-rough-option" name="exposure-factor-selection" type="radio"> Rough
         </label>
         <label class="btn btn-secondary">
-            <input type="radio" name="exposure-factor-selection" id="exposure-factor-intermediate-option" autocomplete="off"> Intermediate
+            <input autocomplete="off" id="exposure-factor-intermediate-option" name="exposure-factor-selection" type="radio"> Intermediate
         </label>
     </div>
 </div>
 <div class="mb-3">
-    <input type="number" id="cg-intermediate" class="form-control"/>
+    <input class="form-control" id="cg-intermediate" type="number"/>
 </div>
 <div class="mb-3">
     <label>Gust Factor (Cg)</label>
@@ -31,15 +42,15 @@
 <div class="mb-3">
     <label for="internal-pressure-category-selection">Exposure Factor (Ce)</label>
     <br>
-    <div class="btn-group btn-group-toggle" id="internal-pressure-category-selection" data-toggle="buttons">
+    <div class="btn-group btn-group-toggle" data-toggle="buttons" id="internal-pressure-category-selection">
         <label class="btn btn-secondary">
-            <input type="radio" name="einternal-pressure-category-selection" id="internal-pressure-category-enclosed-option" autocomplete="off"> Enclosed
+            <input autocomplete="off" id="internal-pressure-category-enclosed-option" name="einternal-pressure-category-selection" type="radio"> Enclosed
         </label>
         <label class="btn btn-secondary">
-            <input type="radio" name="internal-pressure-category-selection" id="internal-pressure-category-partially-enclosed-option" autocomplete="off"> Partially Enclosed
+            <input autocomplete="off" id="internal-pressure-category-partially-enclosed-option" name="internal-pressure-category-selection" type="radio"> Partially Enclosed
         </label>
         <label class="btn btn-secondary">
-            <input type="radio" name="internal-pressure-category-selection" id="internal-pressure-category-large-openings-option" autocomplete="off"> Large Openings
+            <input autocomplete="off" id="internal-pressure-category-large-openings-option" name="internal-pressure-category-selection" type="radio"> Large Openings
         </label>
     </div>
 </div>
