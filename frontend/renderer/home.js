@@ -448,7 +448,9 @@ window.onload = function ()
                                     date.toLocaleDateString() + " " + date.toLocaleTimeString();
                                 PROJECT_ARRAY.push(item.ID);
 
-                                const html = `
+                                // if there is a corrupted save file, skip it
+                                try{
+                                    const html = `
                             <div class="list-group-item d-flex justify-content-between align-items-center" id="${index}">
                                 <div>
                                     <h4 class="list-group-item-heading">${data["input_page"]["input"]["project-name"]}</h4>
@@ -463,7 +465,12 @@ window.onload = function ()
                                     </div>
                                 </div>
                             </div>`;
-                                list.innerHTML += html;
+                                    list.innerHTML += html;
+                                }
+
+                                catch(err){
+                                    console.error(err);
+                                }
                             });
                         }
                         else
