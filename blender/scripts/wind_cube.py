@@ -73,10 +73,10 @@ def main():
     except Exception as e:
         print("Failed to decode JSON:", e)
         
-    rgba_decrement = 1.0/(len(data)-1)
+    rgba_decrement = 1.0/(len(data))
     max_height = 0
-    max_hz = max([i['h'] for i in data[:-1]])
-    heights = max_height_check([i['h'] for i in data[:-1]])
+    max_hz = max([i['h'] for i in data])
+    heights = max_height_check([i['h'] for i in data])
 
     text_scaling = min(max_hz*0.05, 0.4)
     scale = (text_scaling,)*3
@@ -84,7 +84,7 @@ def main():
     if scale[0] == 0.4:
         max_scale_chosen = True
     
-    for i in range(len(data)-1):
+    for i in range(len(data)):
         if i == 0:
             if "Cube" in bpy.data.objects:
                 # Deleting Default Cube

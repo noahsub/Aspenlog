@@ -18,6 +18,12 @@ import os
 import jsonpickle
 from shapes import create_seismic_cube, set_cube_colour, create_axis, max_height_check
 
+def color_even_odd(index):
+    '''switches opacity for even and odd index'''
+    if index % 2 == 0:
+        return (0.0 ,0.2, 0.0, 0.5)
+    else:
+        return (0.0,0.4, 0.0, 0.3)
 
 def color_based_on_load(load_value, max_load):
     # Ensure the load value is clamped between 0 and 100
@@ -29,22 +35,26 @@ def color_based_on_load(load_value, max_load):
     # Interpolate between green and red based on the load value
     # Green to Red transition: (0, 1, 0) to (1, 0, 0)
     r = normalized_load
-    g = 1 - normalized_load
+    g = 1 #- normalized_load
     b = 0 # - normalized_load
     a=1.0
     return (r, g, b, a)
 
-def add_load_text(load, z, scale):
+def add_load_text(load, z, scale, location=(-0.5, -1.1), rotation=(math.pi/2, 0, 0)):
 
 
     font_curve = bpy.data.curves.new(type="FONT", name="numberPlate")
-    font_curve.body = str(round(load, 2))
+    try:
+        font_curve.body = str(round(load, 2))
+    except TypeError:
+        font_curve.body = str(load)
+
     obj = bpy.data.objects.new(name="Font Object", object_data=font_curve)
 
     # -- Set scale and location
-    obj.location = (1, -1.1 , z)
+    obj.location = (location[0], location[1] , z)
     obj.scale = (scale,scale,scale)
-    obj.rotation_euler[0] = math.pi/2
+    obj.rotation_euler = rotation
     bpy.context.scene.collection.objects.link(obj)
     obj.visible_shadow=False
     set_cube_colour(obj, (1.0,0.0,1.0,1.0), text=True)
@@ -64,13 +74,13 @@ def main():
         print("Failed to decode JSON:", e)
 
     max_height = 0
-    max_hz = max([i['h'] for i in data[:-1]])
-    max_load = max([i['load'] for i in data[:-1]])
-    heights = max_height_check([i['h'] for i in data[:-1]])
+    max_hz = max([i['h'] for i in data])
+    max_load = max([i['load'] for i in data])
+    heights = max_height_check([i['h'] for i in data])
 
     # text scaling
-    scale = max_hz*0.1
-    for i in range(len(data)-1):
+    scale = max_hz*0.05
+    for i in range(len(data)):
         if i == 0:
             
             if "Cube" in bpy.data.objects:
@@ -82,11 +92,13 @@ def main():
         position = max_height + height/2
         cube = create_seismic_cube(height=height, position=position )
         load_value = data[i]['load']
-        set_cube_colour(cube, color_based_on_load(load_value, max_load))
+        set_cube_colour(cube, color_even_odd(i), emit=True)
 
         cube.visible_shadow=False
-        add_load_text(load_value, max_height, scale)
+        add_load_text(load_value, position, scale)
         max_height += height
+    
+    add_load_text(load="Seismic Load (kPa) \n *Wall Colour is to Distinguish Zones ", z=1, location=(0.8, -3), scale=0.5, rotation=(math.pi/2, 0, math.pi/4))
     create_axis(location=(-3, -max_height/2, max_height/2))
     render_path = "seismic_" + str(id) + ".png"
 
