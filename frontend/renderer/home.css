@@ -10,158 +10,161 @@ Author: Noah Subedar [https://github.com/noahsub]
 
 /* General Styles */
 body {
-    background-color: #f7f4ef;
+  background-color: #f7f4ef;
 }
 
 a {
-    color: #61523D;
-    font-weight: bold;
-    text-decoration: none;
+  color: #61523d;
+  font-weight: bold;
+  text-decoration: none;
 }
 
 a:focus {
-    color: #9d661b;
+  color: #9d661b;
 }
 
 label {
-    font-weight: bold;
-    color: #707070;
+  font-weight: bold;
+  color: #707070;
 }
 
 .right-align {
-    text-align: right;
+  text-align: right;
 }
 
 /* Navbar Styles */
 #navbar {
-    background-color: #efece7 !important;
-    padding: 0 30px;
-    border-bottom: 5px solid #ccac81;
+  background-color: #efece7 !important;
+  padding: 0 30px;
+  border-bottom: 5px solid #ccac81;
 }
 
 .dropdown-menu {
-    background-color: #efece7;
+  background-color: #efece7;
 }
 
 /* Button Styles */
-.btn-primary, .btn-danger, .btn-secondary {
-    border: transparent;
-    border-radius: 12px;
-    font-weight: bold;
-    filter: drop-shadow(2px 2px 2px #cccccc);
+.btn-primary,
+.btn-danger,
+.btn-secondary {
+  border: transparent;
+  border-radius: 12px;
+  font-weight: bold;
+  filter: drop-shadow(2px 2px 2px #cccccc);
 }
 
 .btn-primary {
-    width: 20%;
-    margin: 0 auto;
-    background-color: #9bca6d;
+  width: 20%;
+  margin: 0 auto;
+  background-color: #9bca6d;
 }
 
 .btn-primary:hover {
-    background-color: #85b05a;
+  background-color: #85b05a;
 }
 
 .btn-danger {
-    width: 10%;
-    margin: 0 auto;
-    background-color: #e64f4f;
+  width: 10%;
+  margin: 0 auto;
+  background-color: #e64f4f;
 }
 
 .btn-danger:hover {
-    background-color: #c54242;
+  background-color: #c54242;
 }
 
 .btn-secondary {
-    background-color: #f7f4ef;
-    color: #818687;
-    margin-top: 5px;
-    margin-bottom: 5px;
+  background-color: #f7f4ef;
+  color: #818687;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
-.btn-secondary:hover, .btn-secondary:focus {
-    background-color: #ccac81;
+.btn-secondary:hover,
+.btn-secondary:focus {
+  background-color: #ccac81;
 }
 
 .btn-secondary.selected {
-    background-color: #9ac86c;
-    color: white;
+  background-color: #9ac86c;
+  color: white;
 }
 
-#new-button{
-    width: 100%;
+#new-button {
+  width: 100%;
 }
 
-#open-button{
-    width: 100%;
+#open-button {
+  width: 100%;
 }
 
 /* Form Styles */
 .form-control {
-    background-color: #f7f4ef;
+  background-color: #f7f4ef;
 }
 
 .form-control:focus {
-    background-color: #f7f4ef;
-    outline: none;
+  background-color: #f7f4ef;
+  outline: none;
 }
 
 /* Card Styles */
 .card.mx-auto {
-    background-color: #f7f4ef;
-    border: none;
-    box-shadow: 5px 5px 10px lightgray;
-    border-radius: 12px;
+  background-color: #f7f4ef;
+  border: none;
+  box-shadow: 5px 5px 10px lightgray;
+  border-radius: 12px;
 }
 
 /* Table Styles */
-.table tr td, .table tr th {
-    border: 1px solid #d9d9d9;
+.table tr td,
+.table tr th {
+  border: 1px solid #d9d9d9;
 }
 
 .table th {
-    background-color: #f7f4ef;
-    color: #707070;
+  background-color: #f7f4ef;
+  color: #707070;
 }
 
 .table td {
-    background-color: #f7f4ef;
+  background-color: #f7f4ef;
 }
 
 /* List Styles */
-.list-group-item{
-    background-color: #f7f4ef;
-    border: 1px solid #d9d9d9;
-    color: #707070;
+.list-group-item {
+  background-color: #f7f4ef;
+  border: 1px solid #d9d9d9;
+  color: #707070;
 }
 
-.list-group-item:hover{
-    background-color: #85b05a;
-    color: white;
-    font-weight: bold;
+.list-group-item:hover {
+  background-color: #85b05a;
+  color: white;
+  font-weight: bold;
 }
 
 .list-group-item:hover .btn {
-    filter: None;
-    border: 2px solid #9bca6d;
+  filter: None;
+  border: 2px solid #9bca6d;
 }
 
 /* Skeleton Loader Styles */
 .skeleton-loader {
-    animation: skeleton-loading 1s linear infinite alternate;
-    color: rgba(245, 242, 237, 0) !important;
+  animation: skeleton-loading 1s linear infinite alternate;
+  color: rgba(245, 242, 237, 0) !important;
 }
 
-
 @keyframes skeleton-loading {
-    0% {
-        background-color: hsl(37, 29%, 95%);
-    }
-    100% {
-        background-color: hsl(38, 7%, 78%);
-    }
+  0% {
+    background-color: hsl(37, 29%, 95%);
+  }
+  100% {
+    background-color: hsl(38, 7%, 78%);
+  }
 }
 
 /* Iframe Styles */
 iframe {
-    border: none !important;
+  border: none !important;
 }

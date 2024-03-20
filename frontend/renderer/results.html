@@ -8,220 +8,326 @@ By using this code, you agree to abide by the terms and conditions in those file
 Author: Noah Subedar [https://github.com/noahsub]
 -->
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>ASPENLOG 2020</title>
-    <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" rel="stylesheet">
-    <link href="results.css" rel="stylesheet">
-    <link href="https://unpkg.com/leaflet/dist/leaflet.css" rel="stylesheet"/>
+    <link
+      crossorigin="anonymous"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      rel="stylesheet"
+    />
+    <link href="results.css" rel="stylesheet" />
+    <link href="https://unpkg.com/leaflet/dist/leaflet.css" rel="stylesheet" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-</head>
+  </head>
 
-<body>
-<script crossorigin="anonymous"
-        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
-        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script crossorigin="anonymous"
-        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-        src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
-<nav class="navbar navbar-expand-lg navbar-light bg-light" id="navbar">
-    <img src="../assets/images/logo%20(Large).png" style="width: 75px; height: 75px;">
-    <button aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation"
-            class="navbar-toggler"
-            data-bs-target="#navbarNavDropdown" data-bs-toggle="collapse" type="button">
+  <body>
+    <script
+      crossorigin="anonymous"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    ></script>
+    <script
+      crossorigin="anonymous"
+      integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+    ></script>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" id="navbar">
+      <img
+        src="../assets/images/logo%20(Large).png"
+        style="width: 75px; height: 75px"
+      />
+      <button
+        aria-controls="navbarNavDropdown"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+        class="navbar-toggler"
+        data-bs-target="#navbarNavDropdown"
+        data-bs-toggle="collapse"
+        type="button"
+      >
         <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown">
+      </button>
+      <div
+        class="collapse navbar-collapse justify-content-end"
+        id="navbarNavDropdown"
+      >
         <ul class="navbar-nav">
-            <li class="nav-item dropdown">
-                <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"
-                   href="#" id="navbarDropdownMenuLink" role="button">
-                    Username
-                </a>
-                <div aria-labelledby="navbarDropdownMenuLink" class="dropdown-menu">
-                    <a class="dropdown-item" href="#" id="profile">Profile</a>
-                    <a class="dropdown-item" href="#" id="logout">Logout</a>
-                </div>
-            </li>
+          <li class="nav-item dropdown">
+            <a
+              aria-expanded="false"
+              aria-haspopup="true"
+              class="nav-link dropdown-toggle"
+              data-bs-toggle="dropdown"
+              href="#"
+              id="navbarDropdownMenuLink"
+              role="button"
+            >
+              Username
+            </a>
+            <div aria-labelledby="navbarDropdownMenuLink" class="dropdown-menu">
+              <a class="dropdown-item" href="#" id="profile">Profile</a>
+              <a class="dropdown-item" href="#" id="logout">Logout</a>
+            </div>
+          </li>
         </ul>
-    </div>
-</nav>
-<div style="padding: 40px">
-    <h3>3D Models for Wind and Seismic Loads</h3>
-    <p id="model-render-error" style="font-weight: bold; color: red; display: none"></p>
-    <div class="row gx-5">
+      </div>
+    </nav>
+    <div style="padding: 40px">
+      <h3>3D Models for Wind and Seismic Loads</h3>
+      <p
+        id="model-render-error"
+        style="font-weight: bold; color: red; display: none"
+      ></p>
+      <div class="row gx-5">
         <div class="col-md-6">
-            <h4>Wind Loads</h4>
-            <img alt="grey_background" id="wind-load-image" src="../assets/images/grey_background.png" style="max-width: 100%; background-color: #efe8de">
+          <h4>Wind Loads</h4>
+          <img
+            alt="grey_background"
+            id="wind-load-image"
+            src="../assets/images/grey_background.png"
+            style="max-width: 100%; background-color: #efe8de"
+          />
         </div>
         <div class="col-md-6">
-            <h4>Seismic Loads</h4>
-            <img alt="grey_background" id="seismic-load-image" src="../assets/images/grey_background.png" style="max-width: 100%; background-color: #efe8de">
+          <h4>Seismic Loads</h4>
+          <img
+            alt="grey_background"
+            id="seismic-load-image"
+            src="../assets/images/grey_background.png"
+            style="max-width: 100%; background-color: #efe8de"
+          />
         </div>
-    </div>
-    <br>
-    <h3>Combinations and Results Table for Wall</h3>
-    <div class="row gx-5">
+      </div>
+      <br />
+      <h3>Combinations and Results Table for Wall</h3>
+      <div class="row gx-5">
         <div class="col-md-12">
-            <div class="mb-3">
-                <label for="uls-wall-selection">ULS for Wall</label>
-                <p>Select the ULS wall type to be used in the combination</p>
-                <div class="btn-group btn-group-toggle" data-toggle="buttons" id="uls-wall-selection">
-                    <label class="btn btn-secondary">
-                        <input autocomplete="off" id="uls-wall-selection-dead-only-1-4D-option"
-                               name="uls-wall-selection"
-                               type="radio"> Dead Only 1.4
-                    </label>
-                    <label class="btn btn-secondary">
-                        <input autocomplete="off" id="uls-wall-selection-full-wind-1-25D-1-4Wy-option"
-                               name="uls-wall-selection" type="radio"> Full Wind 1.25D
-                        + 1.4Wy
-                    </label>
-                    <label class="btn btn-secondary">
-                        <input autocomplete="off" id="uls-wall-selection-seismic-1-0D-1-0Ey-option"
-                               name="uls-wall-selection"
-                               type="radio"> Seismic 1.0D + 1.0Ey
-                    </label>
-                    <label class="btn btn-secondary">
-                        <input autocomplete="off" id="uls-wall-selection-seismic-1-0D-1-0Ex-option"
-                               name="uls-wall-selection"
-                               type="radio"> Seismic 1.0D + 1.0Ex
-                    </label>
-                </div>
+          <div class="mb-3">
+            <label for="uls-wall-selection">ULS for Wall</label>
+            <p>Select the ULS wall type to be used in the combination</p>
+            <div
+              class="btn-group btn-group-toggle"
+              data-toggle="buttons"
+              id="uls-wall-selection"
+            >
+              <label class="btn btn-secondary">
+                <input
+                  autocomplete="off"
+                  id="uls-wall-selection-dead-only-1-4D-option"
+                  name="uls-wall-selection"
+                  type="radio"
+                />
+                Dead Only 1.4
+              </label>
+              <label class="btn btn-secondary">
+                <input
+                  autocomplete="off"
+                  id="uls-wall-selection-full-wind-1-25D-1-4Wy-option"
+                  name="uls-wall-selection"
+                  type="radio"
+                />
+                Full Wind 1.25D + 1.4Wy
+              </label>
+              <label class="btn btn-secondary">
+                <input
+                  autocomplete="off"
+                  id="uls-wall-selection-seismic-1-0D-1-0Ey-option"
+                  name="uls-wall-selection"
+                  type="radio"
+                />
+                Seismic 1.0D + 1.0Ey
+              </label>
+              <label class="btn btn-secondary">
+                <input
+                  autocomplete="off"
+                  id="uls-wall-selection-seismic-1-0D-1-0Ex-option"
+                  name="uls-wall-selection"
+                  type="radio"
+                />
+                Seismic 1.0D + 1.0Ex
+              </label>
             </div>
-            <div class="mb-3">
-                <label for="sls-wall-selection">SLS for Wall</label>
-                <p>Select the SLS wall type to be used in the combination</p>
-                <div class="btn-group btn-group-toggle" data-toggle="buttons" id="sls-wall-selection">
-                    <label class="btn btn-secondary">
-                        <input autocomplete="off" id="sls-wall-selection-1-0D-1-0Wy-option" name="sls-wall-selection"
-                               type="radio"> 1.0D + 1.0Wy
-                    </label>
-                </div>
+          </div>
+          <div class="mb-3">
+            <label for="sls-wall-selection">SLS for Wall</label>
+            <p>Select the SLS wall type to be used in the combination</p>
+            <div
+              class="btn-group btn-group-toggle"
+              data-toggle="buttons"
+              id="sls-wall-selection"
+            >
+              <label class="btn btn-secondary">
+                <input
+                  autocomplete="off"
+                  id="sls-wall-selection-1-0D-1-0Wy-option"
+                  name="sls-wall-selection"
+                  type="radio"
+                />
+                1.0D + 1.0Wy
+              </label>
             </div>
+          </div>
         </div>
-    </div>
-    <div class="row gx-5">
+      </div>
+      <div class="row gx-5">
         <div class="mb-3" id="wall-combination-table-container">
-            <label for="wall-combination-table">Wall Combination Table</label>
-            <table class="table" id="wall-combination-table">
-                <thead>
-                <tr>
-                    <th>NA</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-
-                </tr>
-                </tbody>
-            </table>
+          <label for="wall-combination-table">Wall Combination Table</label>
+          <table class="table" id="wall-combination-table">
+            <thead>
+              <tr>
+                <th>NA</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr></tr>
+            </tbody>
+          </table>
         </div>
-    </div>
-    <br>
-    <h3>Combinations and Results Table for Roof</h3>
-    <div class="row gx-5">
+      </div>
+      <br />
+      <h3>Combinations and Results Table for Roof</h3>
+      <div class="row gx-5">
         <div class="col-md-4">
-            <div class="mb-3">
-                <label for="uls-roof-selection">ULS for roof</label>
-                <p>Select the ULS roof type to be used in the combination</p>
-                <div class="btn-group btn-group-toggle" data-toggle="buttons" id="uls-roof-selection">
-                    <label class="btn btn-secondary">
-                        <input autocomplete="off" id="uls-roof-selection-dead-only-1-4D-option"
-                               name="uls-roof-selection"
-                               type="radio"> Dead Only 1.4
-                    </label>
-                    <label class="btn btn-secondary">
-                        <input autocomplete="off" id="uls-roof-selection-full-wind-1-25D-1-4Wy-option"
-                               name="uls-roof-selection" type="radio"> Full Wind 1.25D
-                        + 1.4Wy
-                    </label>
-                    <label class="btn btn-secondary">
-                        <input autocomplete="off" id="uls-roof-selection-seismic-1-0D-1-0Ey-option"
-                               name="uls-roof-selection"
-                               type="radio"> Seismic 1.0D + 1.0Ey(s)
-                    </label>
-                    <label class="btn btn-secondary">
-                        <input autocomplete="off" id="uls-roof-selection-seismic-1-0D-1-0Ex-option"
-                               name="uls-roof-selection"
-                               type="radio"> Seismic 1.0D + 1.0Ex(s)
-                    </label>
-                    <label class="btn btn-secondary">
-                        <input autocomplete="off" id="uls-roof-selection-full-snow-with-wind-1-25D-1-5S-option"
-                               name="uls-roof-selection" type="radio"> Full
-                        Snow with Wind 1.25D + 1.5S
-                    </label>
-                </div>
+          <div class="mb-3">
+            <label for="uls-roof-selection">ULS for roof</label>
+            <p>Select the ULS roof type to be used in the combination</p>
+            <div
+              class="btn-group btn-group-toggle"
+              data-toggle="buttons"
+              id="uls-roof-selection"
+            >
+              <label class="btn btn-secondary">
+                <input
+                  autocomplete="off"
+                  id="uls-roof-selection-dead-only-1-4D-option"
+                  name="uls-roof-selection"
+                  type="radio"
+                />
+                Dead Only 1.4
+              </label>
+              <label class="btn btn-secondary">
+                <input
+                  autocomplete="off"
+                  id="uls-roof-selection-full-wind-1-25D-1-4Wy-option"
+                  name="uls-roof-selection"
+                  type="radio"
+                />
+                Full Wind 1.25D + 1.4Wy
+              </label>
+              <label class="btn btn-secondary">
+                <input
+                  autocomplete="off"
+                  id="uls-roof-selection-seismic-1-0D-1-0Ey-option"
+                  name="uls-roof-selection"
+                  type="radio"
+                />
+                Seismic 1.0D + 1.0Ey(s)
+              </label>
+              <label class="btn btn-secondary">
+                <input
+                  autocomplete="off"
+                  id="uls-roof-selection-seismic-1-0D-1-0Ex-option"
+                  name="uls-roof-selection"
+                  type="radio"
+                />
+                Seismic 1.0D + 1.0Ex(s)
+              </label>
+              <label class="btn btn-secondary">
+                <input
+                  autocomplete="off"
+                  id="uls-roof-selection-full-snow-with-wind-1-25D-1-5S-option"
+                  name="uls-roof-selection"
+                  type="radio"
+                />
+                Full Snow with Wind 1.25D + 1.5S
+              </label>
             </div>
-            <div class="mb-3">
-                <label for="sls-roof-selection">ULS for roof</label>
-                <p>Select the ULS roof type to be used in the combination</p>
-                <div class="btn-group btn-group-toggle" data-toggle="buttons" id="sls-roof-selection">
-                    <label class="btn btn-secondary">
-                        <input autocomplete="off"
-                               id="sls-roof-selection-dead-and-wind-y-normal-to-face-1-0D-1-0Wy-option"
-                               name="sls-roof-selection"
-                               type="radio"> Dead and Wind - Y - normal to face 1.0D+1.0Wy
-                    </label>
-                    <label class="btn btn-secondary">
-                        <input autocomplete="off" id="sls-roof-selection-full-snow-with-wind-y-1-0D-1-0S-option"
-                               name="sls-roof-selection" type="radio"> Full
-                        Snow with Wind (y) 1.0D + 1.0S
-                    </label>
-                    <label class="btn btn-secondary">
-                        <input autocomplete="off" id="sls-roof-selection-dead-and-live-1-0D-1-0L-option"
-                               name="sls-roof-selection" type="radio"> Dead and Live
-                        1.0D+1.0L
-                    </label>
-                </div>
+          </div>
+          <div class="mb-3">
+            <label for="sls-roof-selection">ULS for roof</label>
+            <p>Select the ULS roof type to be used in the combination</p>
+            <div
+              class="btn-group btn-group-toggle"
+              data-toggle="buttons"
+              id="sls-roof-selection"
+            >
+              <label class="btn btn-secondary">
+                <input
+                  autocomplete="off"
+                  id="sls-roof-selection-dead-and-wind-y-normal-to-face-1-0D-1-0Wy-option"
+                  name="sls-roof-selection"
+                  type="radio"
+                />
+                Dead and Wind - Y - normal to face 1.0D+1.0Wy
+              </label>
+              <label class="btn btn-secondary">
+                <input
+                  autocomplete="off"
+                  id="sls-roof-selection-full-snow-with-wind-y-1-0D-1-0S-option"
+                  name="sls-roof-selection"
+                  type="radio"
+                />
+                Full Snow with Wind (y) 1.0D + 1.0S
+              </label>
+              <label class="btn btn-secondary">
+                <input
+                  autocomplete="off"
+                  id="sls-roof-selection-dead-and-live-1-0D-1-0L-option"
+                  name="sls-roof-selection"
+                  type="radio"
+                />
+                Dead and Live 1.0D+1.0L
+              </label>
             </div>
+          </div>
         </div>
         <div class="col-md-8">
-            <label for="roof-combination-table">Roof Combination Table</label>
-            <table class="table" id="roof-combination-table">
-                <thead>
-                <tr>
-                    <th>NA</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                </tr>
-                </tbody>
-            </table>
+          <label for="roof-combination-table">Roof Combination Table</label>
+          <table class="table" id="roof-combination-table">
+            <thead>
+              <tr>
+                <th>NA</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr></tr>
+            </tbody>
+          </table>
         </div>
-    </div>
-    <br>
-    <h3>Ultimate Limit State Load Combination(s)</h3>
-    <p>NOTE: Wy: Wind Load in y-direction, Ex: Seismic Load in x-direction, Ey: Seismic Load in y-direction, D: Dead Load</p>
-    <p id="bar-chart-render-error" style="font-weight: bold; color: red; display: none"></p>
-    <div class="row gx-5">
-        <div class="col-md-4" id="left-bar-chart-container">
-        </div>
-        <div class="col-md-4" id="middle-bar-chart-container">
-        </div>
-        <div class="col-md-4" id="right-bar-chart-container">
-        </div>
-    </div>
-    <hr>
-    <div class="row gx-5 align-items-center">
+      </div>
+      <br />
+      <h3>Ultimate Limit State Load Combination(s)</h3>
+      <p>
+        NOTE: Wy: Wind Load in y-direction, Ex: Seismic Load in x-direction, Ey:
+        Seismic Load in y-direction, D: Dead Load
+      </p>
+      <p
+        id="bar-chart-render-error"
+        style="font-weight: bold; color: red; display: none"
+      ></p>
+      <div class="row gx-5">
+        <div class="col-md-4" id="left-bar-chart-container"></div>
+        <div class="col-md-4" id="middle-bar-chart-container"></div>
+        <div class="col-md-4" id="right-bar-chart-container"></div>
+      </div>
+      <hr />
+      <div class="row gx-5 align-items-center">
         <div class="col-md-6">
-            <button class="btn btn-primary" id="back-button">Back</button>
-            <p></p>
-            <button class="btn btn-primary" id="home-button">Home</button>
+          <button class="btn btn-primary" id="back-button">Back</button>
+          <p></p>
+          <button class="btn btn-primary" id="home-button">Home</button>
         </div>
         <div class="col-md-6 right-align">
-            <button class="btn btn-primary" id="save-button">Save</button>
-            <p id="export-warning"></p>
-            <button class="btn btn-primary" id="export-button">Export</button>
+          <button class="btn btn-primary" id="save-button">Save</button>
+          <p id="export-warning"></p>
+          <button class="btn btn-primary" id="export-button">Export</button>
         </div>
+      </div>
     </div>
-</div>
-</body>
-
+  </body>
 </html>
 <script src="results.js"></script>

@@ -8,268 +8,421 @@ By using this code, you agree to abide by the terms and conditions in those file
 Author: Noah Subedar [https://github.com/noahsub]
 -->
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>ASPENLOG 2020</title>
-    <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" rel="stylesheet">
-    <link href="input.css" rel="stylesheet">
-    <link href="https://unpkg.com/leaflet/dist/leaflet.css" rel="stylesheet"/>
+    <link
+      crossorigin="anonymous"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      rel="stylesheet"
+    />
+    <link href="input.css" rel="stylesheet" />
+    <link href="https://unpkg.com/leaflet/dist/leaflet.css" rel="stylesheet" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-</head>
+  </head>
 
-<body>
-<script crossorigin="anonymous"
-        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
-        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script crossorigin="anonymous"
-        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-        src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
-<nav class="navbar navbar-expand-lg navbar-light bg-light" id="navbar">
-    <img alt="logo-image" src="../assets/images/logo%20(Large).png" style="width: 75px; height: 75px;">
-    <button aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"
-            data-bs-target="#navbarNavDropdown" data-bs-toggle="collapse" type="button">
+  <body>
+    <script
+      crossorigin="anonymous"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    ></script>
+    <script
+      crossorigin="anonymous"
+      integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+    ></script>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" id="navbar">
+      <img
+        alt="logo-image"
+        src="../assets/images/logo%20(Large).png"
+        style="width: 75px; height: 75px"
+      />
+      <button
+        aria-controls="navbarNavDropdown"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+        class="navbar-toggler"
+        data-bs-target="#navbarNavDropdown"
+        data-bs-toggle="collapse"
+        type="button"
+      >
         <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown">
+      </button>
+      <div
+        class="collapse navbar-collapse justify-content-end"
+        id="navbarNavDropdown"
+      >
         <ul class="navbar-nav">
-            <li class="nav-item dropdown">
-                <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"
-                   href="#" id="navbarDropdownMenuLink" role="button">
-                    Username
-                </a>
-                <div aria-labelledby="navbarDropdownMenuLink" class="dropdown-menu">
-                    <a class="dropdown-item" href="#" id="profile">Profile</a>
-                    <a class="dropdown-item" href="#" id="logout">Logout</a>
-                </div>
-            </li>
+          <li class="nav-item dropdown">
+            <a
+              aria-expanded="false"
+              aria-haspopup="true"
+              class="nav-link dropdown-toggle"
+              data-bs-toggle="dropdown"
+              href="#"
+              id="navbarDropdownMenuLink"
+              role="button"
+            >
+              Username
+            </a>
+            <div aria-labelledby="navbarDropdownMenuLink" class="dropdown-menu">
+              <a class="dropdown-item" href="#" id="profile">Profile</a>
+              <a class="dropdown-item" href="#" id="logout">Logout</a>
+            </div>
+          </li>
         </ul>
-    </div>
-</nav>
-<div style="padding: 40px">
-    <h3>Site Parameters</h3>
-    <div class="row gx-5">
+      </div>
+    </nav>
+    <div style="padding: 40px">
+      <h3>Site Parameters</h3>
+      <div class="row gx-5">
         <!-- Increase gutter width for space between columns -->
         <div class="col-md-6" id="map-container">
-            <!--            <iframe width="100%" height="100%" id="map" src="https://www.openstreetmap.org/export/embed.html?bbox=-79.3990543484688%2C43.65844737822922%2C-79.39652234315874%2C43.66096802495045&amp;layer=mapnik&amp;marker=43.65970771481757%2C-79.39778834581375" style="border: 1px solid black"></iframe>-->
-            <div id="map" style="height: 100%; width: 100%; border: none"></div>
+          <!--            <iframe width="100%" height="100%" id="map" src="https://www.openstreetmap.org/export/embed.html?bbox=-79.3990543484688%2C43.65844737822922%2C-79.39652234315874%2C43.66096802495045&amp;layer=mapnik&amp;marker=43.65970771481757%2C-79.39778834581375" style="border: 1px solid black"></iframe>-->
+          <div id="map" style="height: 100%; width: 100%; border: none"></div>
         </div>
         <div class="col-md-6">
-            <div class="mb-3">
-                <!-- Add margin-bottom for space between label and input -->
-                <label for="project-name">Project Name</label>
-                <input class="form-control" id="project-name" type="text">
-                <!-- Add form-control class for full width input -->
+          <div class="mb-3">
+            <!-- Add margin-bottom for space between label and input -->
+            <label for="project-name">Project Name</label>
+            <input class="form-control" id="project-name" type="text" />
+            <!-- Add form-control class for full width input -->
+          </div>
+          <div class="mb-3">
+            <label for="address">Address</label>
+            <input class="form-control" id="address" type="text" />
+          </div>
+          <div class="mb-3">
+            <label for="site-designation-selection">Site Designation</label>
+            <p>
+              Select the site designation in accordance with Article 4.1.8.4. of
+              the NBC 2020. Further guidance is available in the Commentary
+              entitled Design for Seismic Effects in the Structural Commentaries
+              (User’s Guide – NBC 2020: Part 4 of Division B)
+            </p>
+            <div
+              class="btn-group btn-group-toggle"
+              data-toggle="buttons"
+              id="site-designation-selection"
+            >
+              <label class="btn btn-secondary">
+                <input
+                  autocomplete="off"
+                  id="vs30_option"
+                  name="site-designation-selection"
+                  type="radio"
+                />
+                Vs30 value measured in situ between 140 - 3000 m/s
+              </label>
+              <label class="btn btn-secondary">
+                <input
+                  autocomplete="off"
+                  id="xs_option"
+                  name="site-designation-selection"
+                  type="radio"
+                />
+                Site Class (Xs)
+              </label>
             </div>
-            <div class="mb-3">
-                <label for="address">Address</label>
-                <input class="form-control" id="address" type="text">
+          </div>
+          <div class="mb-3" id="site-designation-sub-selection-container"></div>
+          <div class="row" id="location-data">
+            <div class="col">
+              <div class="mb-3">
+                <label>Wind Velocity Pressure, kPa, 1/50 (q)</label>
+                <p id="wind-velocity-pressure">NA</p>
+              </div>
+              <div class="mb-3">
+                <label>Ground Snow Load, kPa, 1/50 (Ss)</label>
+                <p id="ground-snow-load">NA</p>
+              </div>
+              <div class="mb-3">
+                <label>Rain Load, kPa, 1/50 (Sr)</label>
+                <p id="rain-load">NA</p>
+              </div>
             </div>
-            <div class="mb-3">
-                <label for="site-designation-selection">Site Designation</label>
-                <p>Select the site designation in accordance with Article 4.1.8.4. of the NBC 2020. Further guidance is
-                    available in the Commentary entitled Design for Seismic Effects in the Structural Commentaries
-                    (User’s Guide – NBC 2020: Part 4 of Division B)</p>
-                <div class="btn-group btn-group-toggle" data-toggle="buttons" id="site-designation-selection">
-                    <label class="btn btn-secondary">
-                        <input autocomplete="off" id="vs30_option" name="site-designation-selection" type="radio"> Vs30
-                        value measured in situ between 140 - 3000 m/s
-                    </label>
-                    <label class="btn btn-secondary">
-                        <input autocomplete="off" id="xs_option" name="site-designation-selection" type="radio"> Site
-                        Class (Xs)
-                    </label>
-                </div>
+            <div class="col">
+              <div class="mb-3">
+                <label>Design Spectral Acceleration at 0.2 sec</label>
+                <p id="design-spectral-acceleration-0-2">NA</p>
+              </div>
+              <div class="mb-3">
+                <label>Design Spectral Acceleration at 1 sec</label>
+                <p id="design-spectral-acceleration-1">NA</p>
+              </div>
             </div>
-            <div class="mb-3" id="site-designation-sub-selection-container">
-            </div>
-            <div class="row" id="location-data">
-                <div class="col">
-                    <div class="mb-3">
-                        <label>Wind Velocity Pressure, kPa, 1/50 (q)</label>
-                        <p id="wind-velocity-pressure">NA</p>
-                    </div>
-                    <div class="mb-3">
-                        <label>Ground Snow Load, kPa, 1/50 (Ss)</label>
-                        <p id="ground-snow-load">NA</p>
-                    </div>
-                    <div class="mb-3">
-                        <label>Rain Load, kPa, 1/50 (Sr)</label>
-                        <p id="rain-load">NA</p>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="mb-3">
-                        <label>Design Spectral Acceleration at 0.2 sec</label>
-                        <p id="design-spectral-acceleration-0-2">NA</p>
-                    </div>
-                    <div class="mb-3">
-                        <label>Design Spectral Acceleration at 1 sec</label>
-                        <p id="design-spectral-acceleration-1">NA</p>
-                    </div>
-                </div>
-            </div>
-            <p id="location-error-message" style="color: red; font-weight: bold"></p>
-            <button class="btn btn-primary" id="location_button">Get</button>
+          </div>
+          <p
+            id="location-error-message"
+            style="color: red; font-weight: bold"
+          ></p>
+          <button class="btn btn-primary" id="location_button">Get</button>
         </div>
+      </div>
     </div>
-</div>
-<div style="padding: 40px">
-    <h3>Building Parameters</h3>
-    <div class="row gx-5 ">
+    <div style="padding: 40px">
+      <h3>Building Parameters</h3>
+      <div class="row gx-5">
         <div class="col-md-6">
-            <div class="mb-3">
-                <label for="width">Building Width (m)</label>
-                <p>Use width of the widest part of the building.</p>
-                <input class="form-control" id="width" type="number"/>
+          <div class="mb-3">
+            <label for="width">Building Width (m)</label>
+            <p>Use width of the widest part of the building.</p>
+            <input class="form-control" id="width" type="number" />
+          </div>
+          <div class="mb-3">
+            <label for="eave-and-ridge-selection" style="display: block"
+              >Eave and Ridge</label
+            >
+            <p>Does the building have eave and ridge?</p>
+            <div
+              class="btn-group btn-group-toggle"
+              data-toggle="buttons"
+              id="eave-and-ridge-selection"
+            >
+              <label class="btn btn-secondary">
+                <input
+                  autocomplete="off"
+                  id="eave-and-ridge-yes-option"
+                  name="eave-and-ridge-selection"
+                  type="radio"
+                />
+                Yes
+              </label>
+              <label class="btn btn-secondary">
+                <input
+                  autocomplete="off"
+                  id="eave-and-ridge-no-option"
+                  name="eave-and-ridge-selection"
+                  type="radio"
+                />
+                No
+              </label>
             </div>
-            <div class="mb-3">
-                <label for="eave-and-ridge-selection" style="display: block">Eave and Ridge</label>
-                <p>Does the building have eave and ridge?</p>
-                <div class="btn-group btn-group-toggle" data-toggle="buttons" id="eave-and-ridge-selection">
-                    <label class="btn btn-secondary">
-                        <input autocomplete="off" id="eave-and-ridge-yes-option" name="eave-and-ridge-selection"
-                               type="radio"> Yes
-                    </label>
-                    <label class="btn btn-secondary">
-                        <input autocomplete="off" id="eave-and-ridge-no-option" name="eave-and-ridge-selection"
-                               type="radio"> No
-                    </label>
-                </div>
+          </div>
+          <div class="mb-3" id="dimensions-container"></div>
+          <div class="mb-3">
+            <label for="num-floors">Number of Floors</label>
+            <p>This will be used in seismic calculation</p>
+            <input class="form-control" id="num-floors" type="number" />
+          </div>
+          <div class="mb-3">
+            <label for="top-cladding">Top of Cladding (m)</label>
+            <p>
+              Use height of the tallest part of the cladding components (i.e.
+              where it ends)
+            </p>
+            <input class="form-control" id="top-cladding" type="number" />
+          </div>
+          <div class="mb-3">
+            <label for="bottom-cladding">Bottom of Cladding (m)</label>
+            <p>
+              Use height of the lowest part of the cladding components (i.e.
+              where it starts)
+            </p>
+            <input class="form-control" id="bottom-cladding" type="number" />
+          </div>
+          <div class="mb-3">
+            <label for="dominant-opening-selection">Dominant Opening</label>
+            <p>Does the building have dominant Opening?</p>
+            <div
+              class="btn-group btn-group-toggle"
+              data-toggle="buttons"
+              id="dominant-opening-selection"
+            >
+              <label class="btn btn-secondary">
+                <input
+                  autocomplete="off"
+                  id="dominant-opening-yes-option"
+                  name="dominant-opening-selection"
+                  type="radio"
+                />
+                Yes
+              </label>
+              <label class="btn btn-secondary">
+                <input
+                  autocomplete="off"
+                  id="dominant-opening-no-option"
+                  name="dominant-opening-selection"
+                  type="radio"
+                />
+                No
+              </label>
             </div>
-            <div class="mb-3" id="dimensions-container">
+          </div>
+          <div class="mb-3" id="dominant-opening-container"></div>
+          <div class="mb-3">
+            <label for="w-roof">Smaller Plan Dimension of the Roof (m)</label>
+            <input class="form-control" id="w-roof" type="number" />
+          </div>
+          <div class="mb-3">
+            <label for="l-roof">Larger Plan Dimension of the Roof (m)</label>
+            <input class="form-control" id="l-roof" type="number" />
+          </div>
+          <div class="mb-3">
+            <label for="a-roof">Roof Slope (°)</label>
+            <input class="form-control" id="a-roof" type="number" />
+          </div>
+          <div class="mb-3">
+            <label for="roof-uniform-dead-load"
+              >Roof Uniform Dead Load (kPa)</label
+            >
+            <input
+              class="form-control"
+              id="roof-uniform-dead-load"
+              type="number"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="importance-category-selection" style="display: block"
+              >Importance Category</label
+            >
+            <div
+              class="btn-group btn-group-toggle"
+              data-toggle="buttons"
+              id="importance-category-selection"
+            >
+              <label class="btn btn-secondary">
+                <input
+                  autocomplete="off"
+                  id="importance-category-low-option"
+                  name="importance-category-selection"
+                  type="radio"
+                />
+                Low
+              </label>
+              <label class="btn btn-secondary">
+                <input
+                  autocomplete="off"
+                  id="importance-category-normal-option"
+                  name="importance-category-selection"
+                  type="radio"
+                />
+                Normal
+              </label>
+              <label class="btn btn-secondary">
+                <input
+                  autocomplete="off"
+                  id="importance-category-high-option"
+                  name="importance-category-selection"
+                  type="radio"
+                />
+                High
+              </label>
+              <label class="btn btn-secondary">
+                <input
+                  autocomplete="off"
+                  id="importance-category-post-disaster-option"
+                  name="importance-category-selection"
+                  type="radio"
+                />
+                Post Disaster
+              </label>
             </div>
-            <div class="mb-3">
-                <label for="num-floors">Number of Floors</label>
-                <p>This will be used in seismic calculation</p>
-                <input class="form-control" id="num-floors" type="number"/>
-            </div>
-            <div class="mb-3">
-                <label for="top-cladding">Top of Cladding (m)</label>
-                <p>Use height of the tallest part of the cladding components (i.e. where it ends)</p>
-                <input class="form-control" id="top-cladding" type="number"/>
-            </div>
-            <div class="mb-3">
-                <label for="bottom-cladding">Bottom of Cladding (m)</label>
-                <p>Use height of the lowest part of the cladding components (i.e. where it starts)</p>
-                <input class="form-control" id="bottom-cladding" type="number"/>
-            </div>
-            <div class="mb-3">
-                <label for="dominant-opening-selection">Dominant Opening</label>
-                <p>Does the building have dominant Opening?</p>
-                <div class="btn-group btn-group-toggle" data-toggle="buttons" id="dominant-opening-selection">
-                    <label class="btn btn-secondary">
-                        <input autocomplete="off" id="dominant-opening-yes-option" name="dominant-opening-selection"
-                               type="radio"> Yes
-                    </label>
-                    <label class="btn btn-secondary">
-                        <input autocomplete="off" id="dominant-opening-no-option" name="dominant-opening-selection"
-                               type="radio"> No
-                    </label>
-                </div>
-            </div>
-            <div class="mb-3" id="dominant-opening-container">
-            </div>
-            <div class="mb-3">
-                <label for="w-roof">Smaller Plan Dimension of the Roof (m)</label>
-                <input class="form-control" id="w-roof" type="number"/>
-            </div>
-            <div class="mb-3">
-                <label for="l-roof">Larger Plan Dimension of the Roof (m)</label>
-                <input class="form-control" id="l-roof" type="number"/>
-            </div>
-            <div class="mb-3">
-                <label for="a-roof">Roof Slope (°)</label>
-                <input class="form-control" id="a-roof" type="number"/>
-            </div>
-            <div class="mb-3">
-                <label for="roof-uniform-dead-load">Roof Uniform Dead Load (kPa)</label>
-                <input class="form-control" id="roof-uniform-dead-load" type="number"/>
-            </div>
-            <div class="mb-3">
-                <label for="importance-category-selection" style="display: block">Importance Category</label>
-                <div class="btn-group btn-group-toggle" data-toggle="buttons" id="importance-category-selection">
-                    <label class="btn btn-secondary">
-                        <input autocomplete="off" id="importance-category-low-option" name="importance-category-selection"
-                               type="radio"> Low
-                    </label>
-                    <label class="btn btn-secondary">
-                        <input autocomplete="off" id="importance-category-normal-option" name="importance-category-selection"
-                               type="radio"> Normal
-                    </label>
-                    <label class="btn btn-secondary">
-                        <input autocomplete="off" id="importance-category-high-option" name="importance-category-selection"
-                               type="radio"> High
-                    </label>
-                    <label class="btn btn-secondary">
-                        <input autocomplete="off" id="importance-category-post-disaster-option"
-                               name="importance-category-selection" type="radio"> Post Disaster
-                    </label>
-                </div>
-            </div>
+          </div>
         </div>
         <div class="col-md-6">
-            <div class="mb-3">
-                <label for="width">Number of Height Zones</label>
-                <p>The height of each zone is set to 20 meters by default. Meaning, the total number of height zones is
-                    calculated as the ceiling of H/20. Does this configuration meet your requirements?</p>
-                <div class="btn-group btn-group-toggle" data-toggle="buttons" id="number-height-zone-selection">
-                    <label class="btn btn-secondary">
-                        <input autocomplete="off" id="number-height-zone-yes-option" name="number-height-zone-selection"
-                               type="radio"> Yes
-                    </label>
-                    <label class="btn btn-secondary">
-                        <input autocomplete="off" id="number-height-zone-no-option" name="number-height-zone-selection"
-                               type="radio"> No
-                    </label>
-                </div>
+          <div class="mb-3">
+            <label for="width">Number of Height Zones</label>
+            <p>
+              The height of each zone is set to 20 meters by default. Meaning,
+              the total number of height zones is calculated as the ceiling of
+              H/20. Does this configuration meet your requirements?
+            </p>
+            <div
+              class="btn-group btn-group-toggle"
+              data-toggle="buttons"
+              id="number-height-zone-selection"
+            >
+              <label class="btn btn-secondary">
+                <input
+                  autocomplete="off"
+                  id="number-height-zone-yes-option"
+                  name="number-height-zone-selection"
+                  type="radio"
+                />
+                Yes
+              </label>
+              <label class="btn btn-secondary">
+                <input
+                  autocomplete="off"
+                  id="number-height-zone-no-option"
+                  name="number-height-zone-selection"
+                  type="radio"
+                />
+                No
+              </label>
             </div>
-            <div class="mb-3" id="height-zone-elevation-container">
+          </div>
+          <div class="mb-3" id="height-zone-elevation-container"></div>
+          <div class="mb-3">
+            <label for="single-material-selection">Materials</label>
+            <p>Will the material be applied to all height zones?</p>
+            <div
+              class="btn-group btn-group-toggle"
+              data-toggle="buttons"
+              id="single-material-selection"
+            >
+              <label class="btn btn-secondary">
+                <input
+                  autocomplete="off"
+                  id="single-material-yes-option"
+                  name="single-material-selection"
+                  type="radio"
+                />
+                Yes
+              </label>
+              <label class="btn btn-secondary">
+                <input
+                  autocomplete="off"
+                  id="single-material-no-option"
+                  name="single-material-selection"
+                  type="radio"
+                />
+                No
+              </label>
             </div>
-            <div class="mb-3">
-                <label for="single-material-selection">Materials</label>
-                <p>Will the material be applied to all height zones?</p>
-                <div class="btn-group btn-group-toggle" data-toggle="buttons" id="single-material-selection">
-                    <label class="btn btn-secondary">
-                        <input autocomplete="off" id="single-material-yes-option" name="single-material-selection"
-                               type="radio"> Yes
-                    </label>
-                    <label class="btn btn-secondary">
-                        <input autocomplete="off" id="single-material-no-option" name="single-material-selection"
-                               type="radio"> No
-                    </label>
-                </div>
-            </div>
-            <div class="mb-3" id="material-container">
-            </div>
+          </div>
+          <div class="mb-3" id="material-container"></div>
         </div>
-    </div>
-    <hr>
-    <h3>Building View</h3>
-    <div class="d-flex flex-column gx-5">
-        <p id="building-render-error" style="font-weight: bold; color: red; display: none;"></p>
-        <button class="btn btn-primary" id="building-view-button" style="margin-left: 0; max-width: 10%">See Building</button>
-        <br>
-    </div>
-    <div class="d-flex flex-column gx-5 justify-content-center align-items-center" id="building-view-container" style="background-color: #efe8de">
-    </div>
-    <p id="building-render-info" style="display: none;"></p>
-    <hr>
-    <div class="row gx-5 align-items-center">
+      </div>
+      <hr />
+      <h3>Building View</h3>
+      <div class="d-flex flex-column gx-5">
+        <p
+          id="building-render-error"
+          style="font-weight: bold; color: red; display: none"
+        ></p>
+        <button
+          class="btn btn-primary"
+          id="building-view-button"
+          style="margin-left: 0; max-width: 10%"
+        >
+          See Building
+        </button>
+        <br />
+      </div>
+      <div
+        class="d-flex flex-column gx-5 justify-content-center align-items-center"
+        id="building-view-container"
+        style="background-color: #efe8de"
+      ></div>
+      <p id="building-render-info" style="display: none"></p>
+      <hr />
+      <div class="row gx-5 align-items-center">
         <div class="col-md-6">
-            <button class="btn btn-primary" id="back-button">Back</button>
+          <button class="btn btn-primary" id="back-button">Back</button>
         </div>
         <div class="col-md-6 right-align">
-            <button class="btn btn-primary" id="save-button">Save</button>
-            <p id="next-warning"></p>
-            <button class="btn btn-primary" id="next-button">Next</button>
+          <button class="btn btn-primary" id="save-button">Save</button>
+          <p id="next-warning"></p>
+          <button class="btn btn-primary" id="next-button">Next</button>
         </div>
+      </div>
     </div>
-</div>
-</body>
-
+  </body>
 </html>
 <script src="input.js"></script>
