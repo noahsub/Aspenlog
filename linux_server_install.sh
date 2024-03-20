@@ -1,4 +1,13 @@
 #!/bin/bash
+########################################################################################################################
+# linux_server_install.sh
+# This file installs the necessary packages and sets up the environment for the Aspenlog 2020 backend on a Linux server.
+#
+# Please refer to the LICENSE and DISCLAIMER files for more information regarding the use and distribution of this code.
+# By using this code, you agree to abide by the terms and conditions in those files.
+#
+# Author: Noah Subedar [https://github.com/noahsub]
+########################################################################################################################
 
 # Ensure script is not run as sudo
 if [ "$EUID" -eq 0 ]; then
