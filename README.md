@@ -9,7 +9,7 @@
     <img src="https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi">
     <img src="https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white">
     <img src="https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white">
-    <img src="">
+    <img src="https://img.shields.io/badge/blender-%23F5792A.svg?style=for-the-badge&logo=blender&logoColor=white">
 </p>
 
 # Application of Specified Environmental Load Generator
