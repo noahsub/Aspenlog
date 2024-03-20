@@ -20,6 +20,8 @@ Simply install the latest release for your operating system from the releases pa
 ## Features
 ### Automatically Obtain Site Parameters for any Location in Canada
 ![aspenlog2020](assets/images/site_parameters.png)
-### Efficient Building Parameter Input
-![aspenlog2020](assets/images/building_parameters.png)
+
+[//]: # (### Efficient Building Parameter Input)
+
+[//]: # (![aspenlog2020]&#40;assets/images/building_parameters.png&#41;)
 TODO
