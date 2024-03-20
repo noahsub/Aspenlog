@@ -29,5 +29,5 @@ jobs:
     - name: Upload Output
       uses: actions/upload-artifact@v2
       with:
-        name: my-artifact
-        path: .\frontend\dist\*
+        name: aspenlog2020-windows-build
+        path: .\frontend\dist\*.exe
