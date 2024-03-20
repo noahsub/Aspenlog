@@ -1653,6 +1653,9 @@ document.getElementById("back-button").addEventListener("click", async function 
     window.location.href = "home.html";
 });
 
+/**
+ * When the building view button is clicked, send the input data to the backend and display the rendered building
+ */
 document.getElementById('building-view-button').addEventListener('click', function ()
 {
     window.api
@@ -1685,6 +1688,9 @@ document.getElementById('building-view-button').addEventListener('click', functi
                 document.getElementById('building-render-error').style.display = 'block';
                 document.getElementById('building-render-error').innerHTML = "You have been placed in a rendering queue. Please wait for the render to complete...";
 
+                document.getElementById('building-render-info').style.display = 'none';
+                document.getElementById('building-render-info').innerHTML = "";
+
                 fetch(`${connectionAddress}/simple_model`, requestOptions)
                     .then((response) => response.json())
                     .then((result) =>
@@ -1704,11 +1710,17 @@ document.getElementById('building-view-button').addEventListener('click', functi
 
                         document.getElementById('building-render-error').style.display = 'none';
                         document.getElementById('building-render-error').innerHTML = "";
+
+                        document.getElementById('building-render-info').style.display = 'block';
+                        document.getElementById('building-render-info').innerHTML = `Total Elevation: ${totalElevation} m, Roof Angle: ${roofAngle}°`;
                     })
                     .catch((error) => {
                         console.error(error);
                         document.getElementById('building-render-error').style.display = 'block';
                         document.getElementById('building-render-error').innerHTML = "Render failed. Please try again.";
+
+                        document.getElementById('building-render-info').style.display = 'none';
+                        document.getElementById('building-render-info').innerHTML = "";
                     });
             });
     });

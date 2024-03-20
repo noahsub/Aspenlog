@@ -153,11 +153,17 @@ function loadSaveFile()
                                     })
                                     .then((result) =>
                                     {
+                                        // if there is no data to deserialize we still want to generate the load model
+                                        // and bar chart
                                         deserialize(result.JsonData, "result_page").then(() =>
                                         {
                                             generate_load_model();
                                             generate_bar_chart();
                                             window.scrollTo(0, 0);
+                                        }).catch((error) =>
+                                        {
+                                            generate_load_model();
+                                            generate_bar_chart();
                                         });
                                     })
                                     .catch((error) => console.error(error));
@@ -808,9 +814,6 @@ function generate_bar_chart()
                         let data = JSON.parse(result);
                         let id= data['id'];
                         let numBarCharts = data['num_bar_charts'];
-                        // document.getElementById('bar-chart-image').src = `http://localhost:42613/get_bar_chart?id=${id}&zone_num=1`;
-                        // document.getElementById('bar-chart-image2').src = `http://localhost:42613/get_bar_chart?id=${id}&zone_num=1`;
-                        // document.getElementById('bar-chart-image3').src = `http://localhost:42613/get_bar_chart?id=${id}&zone_num=1`;
                         for (let i = 0; i < numBarCharts; i++)
                         {
                             // if i is even
