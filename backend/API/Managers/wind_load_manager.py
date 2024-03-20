@@ -13,22 +13,39 @@
 ########################################################################################################################
 
 from backend.Constants.importance_factor_constants import ImportanceFactor
-from backend.Constants.wind_constants import WindExposureFactorSelections, InternalPressureSelections
+from backend.Constants.wind_constants import (
+    WindExposureFactorSelections,
+    InternalPressureSelections,
+)
 from backend.Entities.Building.building import Building
 from backend.Entities.Building.height_zone import HeightZone
 from backend.Entities.Location.location import Location
 from backend.Entities.Wind.wind_factor import WindFactorBuilder
 from backend.Entities.Wind.wind_load import WindLoadBuilder
 from backend.Entities.Wind.wind_pressure import WindPressureBuilder
-from backend.algorithms.wind_load_algorithms import get_wind_topographic_factor, get_wind_exposure_factor, \
-    get_wind_gust_factor, get_external_pressure, get_internal_pressure
+from backend.algorithms.wind_load_algorithms import (
+    get_wind_topographic_factor,
+    get_wind_exposure_factor,
+    get_wind_gust_factor,
+    get_external_pressure,
+    get_internal_pressure,
+)
 
 ########################################################################################################################
 # MANAGER
 ########################################################################################################################
 
 
-def process_wind_load_data(building: Building, height_zone: HeightZone, importance_category: ImportanceFactor, location: Location, ct: float, exposure_factor: str, internal_pressure_category: str, manual_ce_cei: float=None):
+def process_wind_load_data(
+    building: Building,
+    height_zone: HeightZone,
+    importance_category: ImportanceFactor,
+    location: Location,
+    ct: float,
+    exposure_factor: str,
+    internal_pressure_category: str,
+    manual_ce_cei: float = None,
+):
     """
     Processes the wind load data for a building
     :param building: The building object
@@ -49,10 +66,21 @@ def process_wind_load_data(building: Building, height_zone: HeightZone, importan
     exposure_factor_selection = WindExposureFactorSelections(exposure_factor)
     # If the exposure factor is intermediate, get the exposure factor with the manual value
     if exposure_factor_selection == WindExposureFactorSelections.INTERMEDIATE:
-        get_wind_exposure_factor(wind_factor_builder, exposure_factor_selection, building, height_zone.zone_num, manual_ce_cei)
+        get_wind_exposure_factor(
+            wind_factor_builder,
+            exposure_factor_selection,
+            building,
+            height_zone.zone_num,
+            manual_ce_cei,
+        )
     # Otherwise, get the exposure factor without the manual value
     else:
-        get_wind_exposure_factor(wind_factor_builder, exposure_factor_selection, building, height_zone.zone_num)
+        get_wind_exposure_factor(
+            wind_factor_builder,
+            exposure_factor_selection,
+            building,
+            height_zone.zone_num,
+        )
     # Get the gust factor
     get_wind_gust_factor(wind_factor_builder)
     # Get the wind factor
@@ -62,11 +90,23 @@ def process_wind_load_data(building: Building, height_zone: HeightZone, importan
     # Get the internal pressure
     internal_pressure_selection = InternalPressureSelections(internal_pressure_category)
     # Get the internal pressure
-    get_internal_pressure(wind_factor, wind_pressure_builder, internal_pressure_selection, importance_category, location)
+    get_internal_pressure(
+        wind_factor,
+        wind_pressure_builder,
+        internal_pressure_selection,
+        importance_category,
+        location,
+    )
     # Create a wind load builder object
     wind_load_builder = WindLoadBuilder()
     # Get the external pressure
-    get_external_pressure(wind_factor, wind_pressure_builder, wind_load_builder, importance_category, location)
+    get_external_pressure(
+        wind_factor,
+        wind_pressure_builder,
+        wind_load_builder,
+        importance_category,
+        location,
+    )
     # Get the wind load
     wind_load = wind_load_builder.get_wind_load()
     # Set the wind load for the height zone

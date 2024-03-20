@@ -19,10 +19,12 @@ from pydantic import BaseModel
 # MODEL
 ########################################################################################################################
 
+
 class RoofInput(BaseModel):
     """
     The input model for the roof object
     """
+
     # The width of the roof
     w_roof: float
     # The length of the roof

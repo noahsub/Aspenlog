@@ -19,6 +19,7 @@ from backend.Entities.Building.cladding import CladdingBuilder
 # MANAGER
 ########################################################################################################################
 
+
 def process_cladding_data(c_top: float, c_bot: float):
     """
     Processes the cladding data and creates a cladding object

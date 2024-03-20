@@ -26,7 +26,11 @@ from fastapi import APIRouter, Depends, HTTPException
 from starlette.responses import FileResponse
 
 from backend.API.Managers.authentication_manager import decode_token
-from backend.API.Managers.user_data_manager import check_user_exists, get_user_building, get_user_snow_load
+from backend.API.Managers.user_data_manager import (
+    check_user_exists,
+    get_user_building,
+    get_user_snow_load,
+)
 from backend.API.Models.simple_model_input import SimpleModelInput
 from backend.visualizations.load_combination_bar_chart import generate_bar_chart
 from blender.scripts.blender_object import WindZone, SeismicZone
@@ -59,11 +63,13 @@ def generate_bar_chart_endpoint(username: str = Depends(decode_token)):
         id = str(uuid.uuid4())
         # Get the user's building and snow load
         building = get_user_building(username)
-        snow_load = get_user_snow_load(username)['upwind']
+        snow_load = get_user_snow_load(username)["upwind"]
         # Generate the bar chart
-        num_generated = generate_bar_chart(id=id, building=building, snow_load=snow_load)
+        num_generated = generate_bar_chart(
+            id=id, building=building, snow_load=snow_load
+        )
         # Return the id and the number of bar charts generated
-        return jsonpickle.encode({'id': id, 'num_bar_charts': num_generated})
+        return jsonpickle.encode({"id": id, "num_bar_charts": num_generated})
     # If something goes wrong, raise an error
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -92,23 +98,31 @@ def generate_load_model_endpoint(username: str = Depends(decode_token)):
         prev_elevation = 0
         # For each height zone, create a wind and seismic cube
         for height_zone in sorted(height_zones, key=lambda x: x.zone_num):
-            wind_cubes.append(WindZone(h=height_zone.elevation - prev_elevation,
-                                       wall_centre_pos=height_zone.wind_load.get_zone(4).pressure.pos_uls,
-                                       wall_centre_neg=height_zone.wind_load.get_zone(4).pressure.neg_uls,
-                                       wall_corner_pos=height_zone.wind_load.get_zone(5).pressure.pos_uls,
-                                       wall_corner_neg=height_zone.wind_load.get_zone(5).pressure.neg_uls).to_dict())
-            seismic_cubes.append(SeismicZone(h=height_zone.elevation - prev_elevation,
-                                             load=height_zone.seismic_load.vp).to_dict())
+            wind_cubes.append(
+                WindZone(
+                    h=height_zone.elevation - prev_elevation,
+                    wall_centre_pos=height_zone.wind_load.get_zone(4).pressure.pos_uls,
+                    wall_centre_neg=height_zone.wind_load.get_zone(4).pressure.neg_uls,
+                    wall_corner_pos=height_zone.wind_load.get_zone(5).pressure.pos_uls,
+                    wall_corner_neg=height_zone.wind_load.get_zone(5).pressure.neg_uls,
+                ).to_dict()
+            )
+            seismic_cubes.append(
+                SeismicZone(
+                    h=height_zone.elevation - prev_elevation,
+                    load=height_zone.seismic_load.vp,
+                ).to_dict()
+            )
             # Update the previous elevation
             prev_elevation = height_zone.elevation
 
         # Convert the wind and seismic cubes to JSON
         json_wind = jsonpickle.encode(wind_cubes)
-        path_wind = get_file_path('blender/scripts/wind_cube.py')
+        path_wind = get_file_path("blender/scripts/wind_cube.py")
         run_blender_script(script_path=path_wind, id=id, json_str=json_wind)
 
         json_seismic = jsonpickle.encode(seismic_cubes)
-        path_seismic = get_file_path('blender/scripts/seismic_cube.py')
+        path_seismic = get_file_path("blender/scripts/seismic_cube.py")
         run_blender_script(script_path=path_seismic, id=id, json_str=json_seismic)
         # Return the id of the load models
         return jsonpickle.encode(id)
@@ -117,8 +131,10 @@ def generate_load_model_endpoint(username: str = Depends(decode_token)):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@visualization_router.post('/simple_model')
-def generate_simple_model_endpoint(simple_model_input: SimpleModelInput, username: str = Depends(decode_token)):
+@visualization_router.post("/simple_model")
+def generate_simple_model_endpoint(
+    simple_model_input: SimpleModelInput, username: str = Depends(decode_token)
+):
     """
     Generates a simple model for a user's building
     :param simple_model_input: The input data for the simple model
@@ -134,9 +150,11 @@ def generate_simple_model_endpoint(simple_model_input: SimpleModelInput, usernam
         total_elevation = simple_model_input.total_elevation
         roof_angle = simple_model_input.roof_angle
         # Convert the total elevation and roof angle to JSON
-        json_simple = jsonpickle.encode({'total_elevation': total_elevation, 'roof_angle': roof_angle})
+        json_simple = jsonpickle.encode(
+            {"total_elevation": total_elevation, "roof_angle": roof_angle}
+        )
         # Generate the simple model
-        path_simple = get_file_path('blender/scripts/simple_cube.py')
+        path_simple = get_file_path("blender/scripts/simple_cube.py")
         run_blender_script(script_path=path_simple, id=id, json_str=json_simple)
         # Return the id of the simple model
         return jsonpickle.encode(id)
@@ -155,7 +173,7 @@ def get_bar_chart_endpoint(id: str, zone_num: int):
     """
     try:
         # Get the path of the bar chart
-        output_path = get_file_path(f'backend/output/bar_chart_hz_{zone_num}_{id}.png')
+        output_path = get_file_path(f"backend/output/bar_chart_hz_{zone_num}_{id}.png")
         # Return the bar chart as a png file
         return FileResponse(output_path)
     # If something goes wrong, raise an error
@@ -172,7 +190,7 @@ def get_wind_load_model_endpoint(id: str):
     """
     try:
         # Get the path of the wind load model
-        output_path = get_file_path(f'backend/output/wind_{id}.png')
+        output_path = get_file_path(f"backend/output/wind_{id}.png")
         # Return the wind load model as a png file
         return FileResponse(output_path)
     # If something goes wrong, raise an error
@@ -189,7 +207,7 @@ def get_seismic_load_model_endpoint(id: str):
     """
     try:
         # Get the path of the seismic load model
-        output_path = get_file_path(f'backend/output/seismic_{id}.png')
+        output_path = get_file_path(f"backend/output/seismic_{id}.png")
         # Return the seismic load model as a png file
         return FileResponse(output_path)
     # If something goes wrong, raise an error
@@ -206,7 +224,7 @@ def get_simple_model_endpoint(id: str):
     """
     try:
         # Get the path of the simple model
-        output_path = get_file_path(f'backend/output/simple_{id}.png')
+        output_path = get_file_path(f"backend/output/simple_{id}.png")
         # Return the simple model as a png file
         return FileResponse(output_path)
     # If something goes wrong, raise an error

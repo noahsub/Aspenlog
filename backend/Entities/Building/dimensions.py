@@ -25,6 +25,7 @@ class Dimensions:
     """
     Represents the dimensions of a building
     """
+
     # height of the building
     height: Optional[float]
     # height of the eave
@@ -47,10 +48,12 @@ class Dimensions:
         :return:
         """
         # Print each attribute and its value on a new line
-        return (f"height: {self.height}\n"
-                f"height_eave: {self.height_eave}\n"
-                f"height_ridge: {self.height_ridge}\n"
-                f"width: {self.width}")
+        return (
+            f"height: {self.height}\n"
+            f"height_eave: {self.height_eave}\n"
+            f"height_ridge: {self.height_ridge}\n"
+            f"width: {self.width}"
+        )
 
 
 ########################################################################################################################
@@ -194,7 +197,9 @@ class EaveRidgeDimensionsBuilder(DimensionsBuilderInterface):
         assert self.dimensions.height_eave is not None
         assert self.dimensions.height_ridge is not None
         # Compute the average of the eave and ridge heights
-        self.dimensions.height = (self.dimensions.height_eave + self.dimensions.height_ridge) / 2
+        self.dimensions.height = (
+            self.dimensions.height_eave + self.dimensions.height_ridge
+        ) / 2
 
     def get_height_eave(self):
         """
@@ -235,4 +240,3 @@ class DimensionsDirector:
     @staticmethod
     def construct_eave_ridge_dimensions(builder: DimensionsBuilderInterface):
         raise NotImplementedError
-

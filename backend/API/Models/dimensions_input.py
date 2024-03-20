@@ -20,10 +20,12 @@ from pydantic import BaseModel
 # MODEL
 ########################################################################################################################
 
+
 class DimensionsInput(BaseModel):
     """
     The input model for the dimensions object
     """
+
     # The width of the building
     width: float
     # The height of the building

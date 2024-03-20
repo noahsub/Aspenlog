@@ -20,10 +20,12 @@ from pydantic import BaseModel
 # MODEL
 ########################################################################################################################
 
+
 class RoofLoadCombinationInput(BaseModel):
     """
     The input model for the roof load combination object
     """
+
     # The ULS and SLS roof types
     uls_roof_type: str
     sls_roof_type: str

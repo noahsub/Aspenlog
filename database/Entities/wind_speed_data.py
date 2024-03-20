@@ -27,9 +27,10 @@ BASE = declarative_base()
 # WIND SPEED DATA CLASS
 ########################################################################################################################
 
+
 class WindSpeedData(BASE):
     # The name of the table
-    __tablename__ = 'WindSpeedData'
+    __tablename__ = "WindSpeedData"
     # The ID of the entry
     ID = Column(Integer, primary_key=True)
     # Wind speed columns

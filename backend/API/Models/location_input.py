@@ -23,6 +23,7 @@ class LocationInput(BaseModel):
     """
     The input model for the location object
     """
+
     # The address of the building
     address: str
     # The site designation type (xv, or xs)

@@ -24,6 +24,7 @@ class WindPressure:
     """
     This class is used to store the wind pressure information
     """
+
     # Positive internal pressure
     pi_pos_uls: Optional[float]
     # Negative internal pressure
@@ -77,18 +78,20 @@ class WindPressure:
         :return:
         """
         # Print each attribute and its value on a new line
-        return (f"pi_pos_uls: {self.pi_pos_uls}\n"
-                f"pi_neg_uls: {self.pi_neg_uls}\n"
-                f"pe_pos_uls: {self.pe_pos_uls}\n"
-                f"pe_neg_uls: {self.pe_neg_uls}\n"
-                f"pos_uls: {self.pos_uls}\n"
-                f"neg_uls: {self.neg_uls}\n"
-                f"pi_pos_sls: {self.pi_pos_sls}\n"
-                f"pi_neg_sls: {self.pi_neg_sls}\n"
-                f"pe_pos_sls: {self.pe_pos_sls}\n"
-                f"pe_neg_sls: {self.pe_neg_sls}\n"
-                f"pos_sls: {self.pos_sls}\n"
-                f"neg_sls: {self.neg_sls}")
+        return (
+            f"pi_pos_uls: {self.pi_pos_uls}\n"
+            f"pi_neg_uls: {self.pi_neg_uls}\n"
+            f"pe_pos_uls: {self.pe_pos_uls}\n"
+            f"pe_neg_uls: {self.pe_neg_uls}\n"
+            f"pos_uls: {self.pos_uls}\n"
+            f"neg_uls: {self.neg_uls}\n"
+            f"pi_pos_sls: {self.pi_pos_sls}\n"
+            f"pi_neg_sls: {self.pi_neg_sls}\n"
+            f"pe_pos_sls: {self.pe_pos_sls}\n"
+            f"pe_neg_sls: {self.pe_neg_sls}\n"
+            f"pos_sls: {self.pos_sls}\n"
+            f"neg_sls: {self.neg_sls}"
+        )
 
 
 ########################################################################################################################
@@ -181,6 +184,7 @@ class WindPressureBuilder(WindPressureBuilderInterface):
     """
     Concrete builder class for the WindPressure class
     """
+
     wind_pressure: WindPressure
 
     def __init__(self):
@@ -237,7 +241,9 @@ class WindPressureBuilder(WindPressureBuilderInterface):
         """
         assert self.wind_pressure.pe_pos_uls is not None
         assert self.wind_pressure.pi_neg_uls is not None
-        self.wind_pressure.pos_uls = self.wind_pressure.pe_pos_uls - self.wind_pressure.pi_neg_uls
+        self.wind_pressure.pos_uls = (
+            self.wind_pressure.pe_pos_uls - self.wind_pressure.pi_neg_uls
+        )
 
     def set_neg_uls(self):
         """
@@ -246,7 +252,9 @@ class WindPressureBuilder(WindPressureBuilderInterface):
         """
         assert self.wind_pressure.pe_neg_uls is not None
         assert self.wind_pressure.pi_pos_uls is not None
-        self.wind_pressure.neg_uls = self.wind_pressure.pe_neg_uls - self.wind_pressure.pi_pos_uls
+        self.wind_pressure.neg_uls = (
+            self.wind_pressure.pe_neg_uls - self.wind_pressure.pi_pos_uls
+        )
 
     def set_pi_pos_sls(self, pi_pos_sls: float):
         """
@@ -287,7 +295,9 @@ class WindPressureBuilder(WindPressureBuilderInterface):
         """
         assert self.wind_pressure.pe_pos_sls is not None
         assert self.wind_pressure.pi_neg_sls is not None
-        self.wind_pressure.pos_sls = self.wind_pressure.pe_pos_sls - self.wind_pressure.pi_neg_sls
+        self.wind_pressure.pos_sls = (
+            self.wind_pressure.pe_pos_sls - self.wind_pressure.pi_neg_sls
+        )
 
     def set_neg_sls(self):
         """
@@ -296,7 +306,9 @@ class WindPressureBuilder(WindPressureBuilderInterface):
         """
         assert self.wind_pressure.pe_neg_sls is not None
         assert self.wind_pressure.pi_pos_sls is not None
-        self.wind_pressure.neg_sls = self.wind_pressure.pe_neg_sls - self.wind_pressure.pi_pos_sls
+        self.wind_pressure.neg_sls = (
+            self.wind_pressure.pe_neg_sls - self.wind_pressure.pi_pos_sls
+        )
 
     def get_pi_pos_uls(self) -> float:
         """

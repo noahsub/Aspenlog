@@ -19,10 +19,12 @@ from pydantic import BaseModel
 # MODEL
 ########################################################################################################################
 
+
 class SimpleModelInput(BaseModel):
     """
     The input model for the simple model object
     """
+
     # The total elevation of the building
     total_elevation: float
     # The roof angle of the building

@@ -12,14 +12,23 @@
 # IMPORTS
 ########################################################################################################################
 
-from backend.Entities.Building.dimensions import BasicDimensionsBuilder, EaveRidgeDimensionsBuilder
+from backend.Entities.Building.dimensions import (
+    BasicDimensionsBuilder,
+    EaveRidgeDimensionsBuilder,
+)
 
 
 ########################################################################################################################
 # MANAGER
 ########################################################################################################################
 
-def process_dimension_data(width: float, height: float = None, eave_height: float = None, ridge_height: float = None):
+
+def process_dimension_data(
+    width: float,
+    height: float = None,
+    eave_height: float = None,
+    ridge_height: float = None,
+):
     """
     Processes the dimension data and creates a dimensions object
     :param width: The width of the building

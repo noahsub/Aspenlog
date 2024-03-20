@@ -21,11 +21,12 @@ from backend.Constants.load_constants import LoadTypes
 # ENUMS
 ########################################################################################################################
 
+
 class ImportanceFactor(Enum):
-    LOW: str = 'LOW'
-    NORMAL: str = 'NORMAL'
-    HIGH: str = 'HIGH'
-    POST_DISASTER: str = 'POST_DISASTER'
+    LOW: str = "LOW"
+    NORMAL: str = "NORMAL"
+    HIGH: str = "HIGH"
+    POST_DISASTER: str = "POST_DISASTER"
 
     def get_importance_factor_uls(self, load_type: LoadTypes):
         match self:
@@ -99,14 +100,15 @@ class ImportanceFactor(Enum):
 
 
 class LimitState(Enum):
-    ULS: str = 'ULS'
-    SLS: str = 'SLS'
+    ULS: str = "ULS"
+    SLS: str = "SLS"
 
 
 class WindImportanceFactor(Enum):
     """
     Enum for the wind importance factors
     """
+
     ULS_LOW: float = 0.8
     ULS_NORMAL: float = 1
     ULS_HIGH: float = 1.15
@@ -121,6 +123,7 @@ class SnowImportanceFactor(Enum):
     """
     Enum for the snow importance factors
     """
+
     ULS_LOW: float = 0.8
     ULS_NORMAL: float = 1
     ULS_HIGH: float = 1.15
@@ -136,6 +139,7 @@ class SeismicImportanceFactor(Enum):
     Enum for the seismic importance factors
     Note: The values for ULS and SLS are the same for seismic
     """
+
     ULS_LOW: float = 0.8
     ULS_NORMAL: float = 1
     ULS_HIGH: float = 1.3

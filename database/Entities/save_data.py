@@ -27,12 +27,14 @@ BASE = declarative_base()
 # CANADIAN POSTAL CODE DATA CLASS
 ########################################################################################################################
 
+
 class SaveData(BASE):
     """
     Class for the climatic data
     """
+
     # The name of the table
-    __tablename__ = 'SaveData'
+    __tablename__ = "SaveData"
     # table contains id, date modified, and json data columns
     ID = Column(Integer, primary_key=True)
     Username = Column(String)

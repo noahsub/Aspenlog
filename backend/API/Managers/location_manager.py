@@ -20,7 +20,10 @@ from backend.Entities.Location.location import LocationXvBuilder, LocationXsBuil
 # MANAGER
 ########################################################################################################################
 
-def process_location_data(address: str, site_designation: str, seismic_value: int | str):
+
+def process_location_data(
+    address: str, site_designation: str, seismic_value: int | str
+):
     """
     Processes the location data and creates a location object
     :param address: The address of the location

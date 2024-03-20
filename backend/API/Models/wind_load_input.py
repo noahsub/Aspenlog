@@ -20,10 +20,12 @@ from pydantic import BaseModel
 # MODEL
 ########################################################################################################################
 
+
 class WindLoadInput(BaseModel):
     """
     The input model for the wind load object
     """
+
     # The topographic factor
     ct: List[float]
     # The exposure factor

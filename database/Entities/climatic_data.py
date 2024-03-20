@@ -27,12 +27,14 @@ BASE = declarative_base()
 # ClIMATIC DATA CLASS
 ########################################################################################################################
 
+
 class ClimaticData(BASE):
     """
     Class for the climatic data
     """
+
     # The name of the table
-    __tablename__ = 'ClimaticData'
+    __tablename__ = "ClimaticData"
     # The ID of the entry
     ID = Column(Integer, primary_key=True)
     # The name of the location

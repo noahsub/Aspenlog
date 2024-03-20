@@ -17,6 +17,7 @@ class Profile:
     """
     This class is used to store all the information regarding a user's profile
     """
+
     # The username of the user
     username: str
     # The first name of the user

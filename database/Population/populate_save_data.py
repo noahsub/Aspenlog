@@ -33,6 +33,7 @@ DATABASE = DatabaseConnection(database_name="NBCC-2020")
 # DATABASE FUNCTIONS
 ########################################################################################################################
 
+
 def create_save_data_table():
     """
     Creates the CanadianPostalCodeData table
@@ -42,7 +43,7 @@ def create_save_data_table():
     engine = DATABASE.get_engine(privilege=PrivilegeType.ADMIN)
 
     # Name of the table
-    table_name = 'SaveData'
+    table_name = "SaveData"
     inspector = inspect(engine)
     # If the table already exists, we don't want to create it again
 
@@ -96,9 +97,11 @@ def add_entry(save_data: SaveData):
 
 # ONLY RUN IF DATABASE NEEDS TO BE REPOPULATED
 if __name__ == "__main__":
-    print("WARNING: This script will repopulate the SaveData table. THIS WILL DELETE ALL USERS AND RENDER THEM UNRECOVERABLE.")
+    print(
+        "WARNING: This script will repopulate the SaveData table. THIS WILL DELETE ALL USERS AND RENDER THEM UNRECOVERABLE."
+    )
     choice = input("Are you sure you want to continue? (y/n): ")
-    if choice.lower() == 'y':
+    if choice.lower() == "y":
         create_save_data_table()
         clean_save_data_table()
         DATABASE.close()

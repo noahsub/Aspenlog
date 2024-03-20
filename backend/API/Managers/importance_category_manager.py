@@ -19,6 +19,7 @@ from backend.Constants.importance_factor_constants import ImportanceFactor
 # MANAGER
 ########################################################################################################################
 
+
 def process_importance_category_data(importance_category: str):
     """
     Processes the importance category data and returns the importance factor
@@ -26,11 +27,11 @@ def process_importance_category_data(importance_category: str):
     :return: The importance factor enum
     """
     match importance_category:
-        case 'LOW':
+        case "LOW":
             return ImportanceFactor.LOW
-        case 'NORMAL':
+        case "NORMAL":
             return ImportanceFactor.NORMAL
-        case 'HIGH':
+        case "HIGH":
             return ImportanceFactor.HIGH
-        case 'POST_DISASTER':
+        case "POST_DISASTER":
             return ImportanceFactor.POST_DISASTER

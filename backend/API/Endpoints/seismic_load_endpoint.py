@@ -18,8 +18,12 @@ from fastapi import APIRouter, Depends, HTTPException
 
 from backend.API.Managers.authentication_manager import decode_token
 from backend.API.Managers.seismic_load_manager import process_seismic_load_data
-from backend.API.Managers.user_data_manager import check_user_exists, get_user_building, get_user_importance_category, \
-    get_user_location
+from backend.API.Managers.user_data_manager import (
+    check_user_exists,
+    get_user_building,
+    get_user_importance_category,
+    get_user_location,
+)
 from backend.API.Models.seismic_load_input import SeismicLoadInput
 
 ########################################################################################################################
@@ -32,8 +36,11 @@ seismic_load_router = APIRouter()
 # ENDPOINTS
 ########################################################################################################################
 
+
 @seismic_load_router.post("/set_seismic_load")
-def set_seismic_load_endpoint(seismic_load_input: SeismicLoadInput, username: str = Depends(decode_token)):
+def set_seismic_load_endpoint(
+    seismic_load_input: SeismicLoadInput, username: str = Depends(decode_token)
+):
     """
     Creates a seismic load object for a user
     :param seismic_load_input: The input data for the seismic load
@@ -50,7 +57,14 @@ def set_seismic_load_endpoint(seismic_load_input: SeismicLoadInput, username: st
         # Get the user's building location
         location = get_user_location(username=username)
         # Process the seismic load data
-        process_seismic_load_data(building=building, location=location, importance_category=importance_factor, ar=seismic_load_input.ar, rp=seismic_load_input.rp, cp=seismic_load_input.cp)
+        process_seismic_load_data(
+            building=building,
+            location=location,
+            importance_category=importance_factor,
+            ar=seismic_load_input.ar,
+            rp=seismic_load_input.rp,
+            cp=seismic_load_input.cp,
+        )
     # If something goes wrong, raise an error
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

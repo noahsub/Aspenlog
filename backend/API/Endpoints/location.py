@@ -32,8 +32,11 @@ location_router = APIRouter()
 # ENDPOINTS
 ########################################################################################################################
 
+
 @location_router.post("/location")
-def location_endpoint(location_input: LocationInput, username: str = Depends(decode_token)):
+def location_endpoint(
+    location_input: LocationInput, username: str = Depends(decode_token)
+):
     """
     Sets the location for a user
     :param location_input: The input data for the location
@@ -44,9 +47,11 @@ def location_endpoint(location_input: LocationInput, username: str = Depends(dec
         # If storage for the user does not exist in memory, create a slot for the user
         check_user_exists(username)
         # Process the location data and create a location object
-        location = process_location_data(address=location_input.address,
-                                         site_designation=location_input.site_designation,
-                                         seismic_value=location_input.seismic_value)
+        location = process_location_data(
+            address=location_input.address,
+            site_designation=location_input.site_designation,
+            seismic_value=location_input.seismic_value,
+        )
         # Store the location object in the user's memory slot
         set_user_location(username=username, location=location)
         # Return the location object

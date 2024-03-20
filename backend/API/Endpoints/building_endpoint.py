@@ -32,8 +32,11 @@ building_router = APIRouter()
 # ENDPOINTS
 ########################################################################################################################
 
+
 @building_router.post("/building")
-def building_endpoint(building_input: BuildingInput, username: str = Depends(decode_token)):
+def building_endpoint(
+    building_input: BuildingInput, username: str = Depends(decode_token)
+):
     """
     Creates a building object for a user
     :param building_input: The input data for the building
@@ -45,9 +48,13 @@ def building_endpoint(building_input: BuildingInput, username: str = Depends(dec
         # If storage for the user does not exist in memory, create a slot for the user
         check_user_exists(username)
         # Process the building data and create a building object
-        building = process_building_data(num_floor=building_input.num_floor, h_opening=building_input.h_opening,
-                                         zones=building_input.zones, materials=building_input.materials,
-                                         username=username)
+        building = process_building_data(
+            num_floor=building_input.num_floor,
+            h_opening=building_input.h_opening,
+            zones=building_input.zones,
+            materials=building_input.materials,
+            username=username,
+        )
         # Store the building object in the user's memory slot
         set_user_building(username=username, building=building)
         # Return the building object as a JSON string

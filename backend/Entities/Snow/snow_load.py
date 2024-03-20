@@ -21,10 +21,12 @@ from backend.Entities.Snow.snow_factor import SnowFactor
 # MAIN CLASS
 ########################################################################################################################
 
+
 class SnowLoad:
     """
     This class is used to store all the information regarding snow loads
     """
+
     # The snow factor
     factor: Optional[SnowFactor]
     # The snow load
@@ -42,12 +44,10 @@ class SnowLoad:
         :return:
         """
         # Special formatting for subclasses
-        factor_str = '\n  ' + '\n  '.join(str(self.factor).split('\n'))
+        factor_str = "\n  " + "\n  ".join(str(self.factor).split("\n"))
 
         # Print each attribute and its value on a new line
-        return (f"factor: {factor_str}\n"
-                f"s_uls: {self.s_uls}\n"
-                f"s_sls: {self.s_sls}")
+        return f"factor: {factor_str}\n" f"s_uls: {self.s_uls}\n" f"s_sls: {self.s_sls}"
 
 
 ########################################################################################################################

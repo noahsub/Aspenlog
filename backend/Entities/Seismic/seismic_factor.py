@@ -19,10 +19,12 @@ from typing import Optional
 # MAIN CLASS
 ########################################################################################################################
 
+
 class SeismicFactor:
     """
     This class is used to store the seismic factor information
     """
+
     # Element or component force amplification factor
     ar: Optional[float]
     # Element of component response modification factor
@@ -42,14 +44,13 @@ class SeismicFactor:
         :return:
         """
         # Print each attribute and its value on a new line
-        return (f"ar: {self.ar}\n"
-                f"rp: {self.rp}\n"
-                f"cp: {self.cp}")
+        return f"ar: {self.ar}\n" f"rp: {self.rp}\n" f"cp: {self.cp}"
 
 
 ########################################################################################################################
 # BUILDER CLASSES
 ########################################################################################################################
+
 
 class SeismicFactorBuilderInterface:
     """
@@ -82,6 +83,7 @@ class SeismicFactorBuilder(SeismicFactorBuilderInterface):
     """
     Concrete builder class for the SeismicFactor class
     """
+
     seismic_factor: SeismicFactor
 
     def __init__(self):

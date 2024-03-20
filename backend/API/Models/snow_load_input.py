@@ -19,10 +19,12 @@ from pydantic import BaseModel
 # MODEL
 ########################################################################################################################
 
+
 class SnowLoadInput(BaseModel):
     """
     The input model for the snow load object
     """
+
     # The exposure factor selection
     exposure_factor_selection: str
     # The roof type

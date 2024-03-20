@@ -21,10 +21,12 @@ from backend.Entities.Wind.wind_pressure import WindPressure
 # MAIN CLASS
 ########################################################################################################################
 
+
 class Zone:
     """
     This class is used to store the zone information
     """
+
     # The name of the zone
     name: Optional[str]
     # The zone number
@@ -54,9 +56,9 @@ class Zone:
         """
         # Print each attribute and its value on a new line
 
-        return (f"name: {self.name}\n"
-                f"num: {self.num}\n"
-                f"pressure: {self.pressure}\n")
+        return (
+            f"name: {self.name}\n" f"num: {self.num}\n" f"pressure: {self.pressure}\n"
+        )
 
 
 ########################################################################################################################
@@ -68,6 +70,7 @@ class ZoneBuilderInterface:
     """
     Builder interface for the Zone class
     """
+
     def reset(self):
         pass
 

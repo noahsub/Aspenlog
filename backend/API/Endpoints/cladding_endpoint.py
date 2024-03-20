@@ -31,8 +31,11 @@ cladding_router = APIRouter()
 # ENDPOINTS
 ########################################################################################################################
 
+
 @cladding_router.post("/cladding")
-def cladding_endpoint(cladding_input: CladdingInput, username: str = Depends(decode_token)):
+def cladding_endpoint(
+    cladding_input: CladdingInput, username: str = Depends(decode_token)
+):
     """
     Creates a cladding object for a user
     :param cladding_input: The input data for the cladding
@@ -43,7 +46,9 @@ def cladding_endpoint(cladding_input: CladdingInput, username: str = Depends(dec
         # If storage for the user does not exist in memory, create a slot for the user
         check_user_exists(username)
         # Process the cladding data and create a cladding object
-        cladding = process_cladding_data(c_top=cladding_input.c_top, c_bot=cladding_input.c_bot)
+        cladding = process_cladding_data(
+            c_top=cladding_input.c_top, c_bot=cladding_input.c_bot
+        )
         # Store the cladding object in the user's memory slot
         set_user_cladding(username=username, cladding=cladding)
         # Return the cladding object

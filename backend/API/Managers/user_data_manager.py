@@ -42,6 +42,7 @@ ALL_USER_DATA = dict()
 # MANAGER
 ########################################################################################################################
 
+
 def check_user_exists(username: str) -> None:
     """
     Checks if a user exists in the ALL_USER_DATA dictionary. If not, creates a new user object for the user.
@@ -178,7 +179,9 @@ def set_user_building(username: str, building: Building) -> None:
     ALL_USER_DATA[username].set_building(building)
 
 
-def set_user_importance_category(username: str, importance_category: ImportanceFactor) -> None:
+def set_user_importance_category(
+    username: str, importance_category: ImportanceFactor
+) -> None:
     """
     Sets the importance category for the user
     :param username: The username of the user
@@ -216,8 +219,11 @@ def set_user_save_data(username: str, json_data: str, id: int = None) -> int:
     existing_entry = None
     # If an id is provided, check if the entry exists
     if id is not None:
-        existing_entry = controller.query(SaveData).filter(
-            (SaveData.Username == username) & (SaveData.ID == id)).first()
+        existing_entry = (
+            controller.query(SaveData)
+            .filter((SaveData.Username == username) & (SaveData.ID == id))
+            .first()
+        )
 
     # If the entry exists, modify it. Otherwise, create a new entry
     if existing_entry is not None:
@@ -230,7 +236,9 @@ def set_user_save_data(username: str, json_data: str, id: int = None) -> int:
         existing_entry.DateModified = datetime.now()
     # Create new entry with the current time
     else:
-        new_entry = SaveData(Username=username, DateModified=datetime.now(), JsonData=json_data)
+        new_entry = SaveData(
+            Username=username, DateModified=datetime.now(), JsonData=json_data
+        )
         controller.add(new_entry)
         controller.commit()
         id = new_entry.ID
@@ -382,8 +390,12 @@ def get_all_user_save_data(username: str):
     session = sessionmaker(autocommit=False, autoflush=True, bind=engine)
     controller = session()
     # Get all the save data for the user
-    result = controller.query(SaveData).filter(SaveData.Username == username).order_by(
-        desc(SaveData.DateModified)).all()
+    result = (
+        controller.query(SaveData)
+        .filter(SaveData.Username == username)
+        .order_by(desc(SaveData.DateModified))
+        .all()
+    )
     # Close the connection
     controller.close()
     new_connection.close()
@@ -404,7 +416,11 @@ def get_user_save_file(username: str, id: int):
     session = sessionmaker(autocommit=False, autoflush=True, bind=engine)
     controller = session()
     # Get the save file with the given id
-    result = controller.query(SaveData).filter((SaveData.Username == username) & (SaveData.ID == id)).first()
+    result = (
+        controller.query(SaveData)
+        .filter((SaveData.Username == username) & (SaveData.ID == id))
+        .first()
+    )
     # Close the connection
     controller.close()
     new_connection.close()
@@ -425,7 +441,11 @@ def delete_user_save_file(username: str, id: int):
     session = sessionmaker(autocommit=False, autoflush=True, bind=engine)
     controller = session()
     # Get the save file with the given id
-    result = controller.query(SaveData).filter((SaveData.Username == username) & (SaveData.ID == id)).first()
+    result = (
+        controller.query(SaveData)
+        .filter((SaveData.Username == username) & (SaveData.ID == id))
+        .first()
+    )
     # Delete the save file
     controller.delete(result)
     # Commit and close the connection

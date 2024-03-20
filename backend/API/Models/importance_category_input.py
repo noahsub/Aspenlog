@@ -19,9 +19,11 @@ from pydantic import BaseModel
 # MODEL
 ########################################################################################################################
 
+
 class ImportanceCategoryInput(BaseModel):
     """
     The input model for the importance category object
     """
+
     # The importance category
     importance_category: str

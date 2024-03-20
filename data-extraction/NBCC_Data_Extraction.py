@@ -36,13 +36,14 @@ CANADIAN_PROVINCES_AND_TERRITORIES = {
     "Saskatchewan",
     "Northwest Territories",
     "Nunavut",
-    "Yukon"
+    "Yukon",
 }
 
 
 ########################################################################################################################
 # PDF OPERATIONS
 ########################################################################################################################
+
 
 def pdf_to_text(pdf: str) -> list[list[str]]:
     """
@@ -57,7 +58,7 @@ def pdf_to_text(pdf: str) -> list[list[str]]:
     # Extract the text page by page and line by line.
     text = []
     for page in reader.pages:
-        text.append(page.extract_text().split('\n'))
+        text.append(page.extract_text().split("\n"))
 
     # Return the extracted text.
     return text
@@ -66,6 +67,7 @@ def pdf_to_text(pdf: str) -> list[list[str]]:
 ########################################################################################################################
 # PANDAS DATAFRAME CONVERSIONS
 ########################################################################################################################
+
 
 def dataframe_to_csv(dataframe: pd.DataFrame, filename: str) -> None:
     """
@@ -95,6 +97,7 @@ def dataframe_to_excel(dataframe: pd.DataFrame, filename: str) -> None:
 # DATA EXTRACTION
 ########################################################################################################################
 
+
 def table_c1_extraction() -> pd.DataFrame:
     """
     Extracts data from Table C1 in NBCC2022 on page 649 and stores it as a Pandas dataframe.
@@ -117,20 +120,20 @@ def table_c1_extraction() -> pd.DataFrame:
             # Save data
             if data_regex.match(line):
                 # Convert to list of floats
-                processed.append([float(x) for x in line.split(' ')])
+                processed.append([float(x) for x in line.split(" ")])
             else:
                 errors.append(line)
 
     # Headers for the data
-    layer_one_headers = ['q', 'V', 'q', 'V', 'q', 'V', 'q', 'V']
-    layer_two_headers = ['kPa', 'm/s', 'kPa', 'm/s', 'kPa', 'm/s', 'kPa', 'm/s']
+    layer_one_headers = ["q", "V", "q", "V", "q", "V", "q", "V"]
+    layer_two_headers = ["kPa", "m/s", "kPa", "m/s", "kPa", "m/s", "kPa", "m/s"]
 
     # Assertions to ensure program correctness
     assert len(layer_one_headers) == len(layer_two_headers) == 8
     assert all([len(x) == 8 for x in processed])
 
     # Optional option to display all rows
-    pd.set_option('display.max_rows', None)
+    pd.set_option("display.max_rows", None)
 
     # Save data in the form of a dataframe
     dataframe = pd.DataFrame(processed)
@@ -162,7 +165,9 @@ def table_c2_extraction() -> pd.DataFrame:
     # followed by a sequence of 16 floating point numbers. The numbers are separated by spaces, with 15 of them
     # followed by a space and the last one at the end of the string.
     # Example: 'Vancouver(Granville St. & 41stAve) 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16'
-    data_pattern_2 = r".*\(([^)]*)\)\D*(([-+]?[0-9]*\.?[0-9]+\s){15}([-+]?[0-9]*\.?[0-9]+))"
+    data_pattern_2 = (
+        r".*\(([^)]*)\)\D*(([-+]?[0-9]*\.?[0-9]+\s){15}([-+]?[0-9]*\.?[0-9]+))"
+    )
     data_regex_2 = re.compile(data_pattern_2)
 
     # Analyzed lines deemed usable data are stored.
@@ -172,16 +177,16 @@ def table_c2_extraction() -> pd.DataFrame:
         # Iterating through the lines
         for line in page:
             # Replace '- ' with ' -' to account for negative number errors
-            line = line.replace('- ', ' -')
+            line = line.replace("- ", " -")
             # Replace ')' with ') ' to account for numbers placed adjacent to a closing parenthesis
-            line = line.replace(')', ') ')
+            line = line.replace(")", ") ")
             # Add a space between letters and numbers
-            line = re.sub(r'([a-zA-Z])(\d)', r'\1 \2', line)
+            line = re.sub(r"([a-zA-Z])(\d)", r"\1 \2", line)
             # Add a space between numbers and letters
-            line = re.sub(r'(\d)([a-zA-Z])', r'\1 \2', line)
+            line = re.sub(r"(\d)([a-zA-Z])", r"\1 \2", line)
 
             # Convert line to a list, splitting at spaces
-            data = line.split(' ')
+            data = line.split(" ")
             # Process location line
             # Ex: 'British Columbia' or 'Vancouver Region'
             if "Region" in line or line in CANADIAN_PROVINCES_AND_TERRITORIES:
@@ -193,7 +198,7 @@ def table_c2_extraction() -> pd.DataFrame:
                 # Separate numerical data from the location
                 numerical_data = [float(x) for x in data[-16:]]
                 # Get the location from the data by joining all strings before numerical data
-                location = ' '.join(data[:-16])
+                location = " ".join(data[:-16])
                 location = location.strip()
 
                 numerical_data.insert(0, location)
@@ -203,36 +208,98 @@ def table_c2_extraction() -> pd.DataFrame:
             # There should be very few of these lines, but will require manual correction in the output
             # data, error lines are those whose numerical data is filled with -99
             # Ex: 'Ladner 3  -6  -8 2 7 1 92 6 0 01 0 8 01 0 0 01 . 11 0 5 0 1 6 01 . 3 0 . 20 . 3 7 0 . 4 6'
-            elif len(data) > 10 and "Division" not in line and "National Research" not in line:
+            elif (
+                len(data) > 10
+                and "Division" not in line
+                and "National Research" not in line
+            ):
                 # data = [x for x in data if x not in {'.', '-', ''}]
-                data = [x for x in data if not any(y in {'.', '-'} for y in x) and x != '']
+                data = [
+                    x for x in data if not any(y in {".", "-"} for y in x) and x != ""
+                ]
                 if len(data) == 0:
                     break
                 n = len(data) - 1
-                number_regex = re.compile(r'\b\.?\d+(\.\d+)?\b')
+                number_regex = re.compile(r"\b\.?\d+(\.\d+)?\b")
                 while number_regex.match(data[n]):
                     data.pop(n)
                     n -= 1
 
-                location = ''.join(data)
+                location = "".join(data)
 
                 error_data = [location] + [-99 for _ in range(16)]
                 processed.append(error_data)
 
     # Headers for the data
-    layer_one_headers = ["Province and Location", "Elev., m", "Design Temperature", "", "", "",
-                         "Degree-Days Below 18°C", "15 Min. Rain, mm", "One Day Rain, 1/50, mm",
-                         "Ann. Rain, mm", "Moist Index", "Ann. Tot. Ppn., mm", "Driving Rain Wind Pressures, Pa, 1/5",
-                         "Snow Load, kPa, 1/50", "", "Hourly Wind Pressures, kPa", ""]
-    layer_two_headers = ["", "", "January", "", "July 2.5%", "", "", "", "", "", "", "", "", "Ss", "Sr", "1/10", "1/50"]
-    layer_three_headers = ["", "", "2.5% °C", "1% °C", "Dry °C", "Wet °C", "", "", "", "", "", "", "", "", "", "", ""]
+    layer_one_headers = [
+        "Province and Location",
+        "Elev., m",
+        "Design Temperature",
+        "",
+        "",
+        "",
+        "Degree-Days Below 18°C",
+        "15 Min. Rain, mm",
+        "One Day Rain, 1/50, mm",
+        "Ann. Rain, mm",
+        "Moist Index",
+        "Ann. Tot. Ppn., mm",
+        "Driving Rain Wind Pressures, Pa, 1/5",
+        "Snow Load, kPa, 1/50",
+        "",
+        "Hourly Wind Pressures, kPa",
+        "",
+    ]
+    layer_two_headers = [
+        "",
+        "",
+        "January",
+        "",
+        "July 2.5%",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "Ss",
+        "Sr",
+        "1/10",
+        "1/50",
+    ]
+    layer_three_headers = [
+        "",
+        "",
+        "2.5% °C",
+        "1% °C",
+        "Dry °C",
+        "Wet °C",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+    ]
 
     # Assertions to ensure program correctness
-    assert len(layer_one_headers) == len(layer_two_headers) == len(layer_three_headers) == 17
+    assert (
+        len(layer_one_headers)
+        == len(layer_two_headers)
+        == len(layer_three_headers)
+        == 17
+    )
     assert all([len(x) == 17 for x in processed])
 
     # Optional option to display all rows
-    pd.set_option('display.max_rows', None)
+    pd.set_option("display.max_rows", None)
 
     # Save data in the form of a dataframe
     dataframe = pd.DataFrame(processed)
@@ -243,7 +310,7 @@ def table_c2_extraction() -> pd.DataFrame:
     return dataframe
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     print(table_c1_extraction())
     print(table_c2_extraction())
     dataframe_to_excel(table_c1_extraction(), "table_c1.xlsx")

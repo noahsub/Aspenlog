@@ -19,10 +19,12 @@ from pydantic import BaseModel
 # MODEL
 ########################################################################################################################
 
+
 class LoginInput(BaseModel):
     """
     The input model for the login object
     """
+
     # The username of the user
     username: str
     # The password of the user

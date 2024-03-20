@@ -18,11 +18,13 @@ from enum import Enum
 # ENUMS
 ########################################################################################################################
 
+
 class DefaultSelections(Enum):
     """
     Enum for the default selections
     """
+
     # Default choice
-    DEFAULT: str = 'default'
+    DEFAULT: str = "default"
     # Custom choice
-    CUSTOM: str = 'custom'
+    CUSTOM: str = "custom"

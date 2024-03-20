@@ -27,12 +27,14 @@ BASE = declarative_base()
 # CANADIAN POSTAL CODE DATA CLASS
 ########################################################################################################################
 
+
 class AuthenticationData(BASE):
     """
     Class for the climatic data
     """
+
     # The name of the table
-    __tablename__ = 'AuthenticationData'
+    __tablename__ = "AuthenticationData"
     username = Column(String, primary_key=True)
     first_name = Column(String)
     last_name = Column(String)

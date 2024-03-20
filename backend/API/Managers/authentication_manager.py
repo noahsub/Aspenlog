@@ -29,8 +29,12 @@ from database.Constants.connection_constants import PrivilegeType
 from database.Entities.authentication_data import AuthenticationData
 from database.Entities.database_connection import DatabaseConnection
 from database.Population import populate_authentication_data
-from database.Warnings.database_warnings import not_valid_password_warning, email_taken_warning, username_taken_warning, \
-    username_not_valid_warning
+from database.Warnings.database_warnings import (
+    not_valid_password_warning,
+    email_taken_warning,
+    username_taken_warning,
+    username_not_valid_warning,
+)
 
 ########################################################################################################################
 # GLOBALS AND CONSTANTS
@@ -42,12 +46,13 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 # Secret key to sign and verify JWT tokens
 # Get secret key from environment variable from data/EnvironmentVariables/.env
 load_dotenv(dotenv_path=get_file_path(relative_path="data/EnvironmentVariables/.env"))
-SECRET_KEY = os.getenv('API_SECRET_KEY')
+SECRET_KEY = os.getenv("API_SECRET_KEY")
 ALGORITHM = "HS256"
 
 ########################################################################################################################
 # MANAGER
 ########################################################################################################################
+
 
 def hash_password(password: str) -> tuple[bytes, bytes]:
     """
@@ -56,7 +61,7 @@ def hash_password(password: str) -> tuple[bytes, bytes]:
     :return: The hashed password and the salt used to hash the password
     """
     salt = bcrypt.gensalt()
-    return bcrypt.hashpw(password=password.encode('utf-8'), salt=salt), salt
+    return bcrypt.hashpw(password=password.encode("utf-8"), salt=salt), salt
 
 
 def valid_username(username: str) -> bool:
@@ -72,10 +77,15 @@ def valid_username(username: str) -> bool:
     controller = session()
 
     # Check if the username exists
-    username_exists = controller.query(AuthenticationData).filter_by(username=username).first() is not None
+    username_exists = (
+        controller.query(AuthenticationData).filter_by(username=username).first()
+        is not None
+    )
 
     # Check if the username is alphanumeric and between 5 and 20 characters long
-    username_valid = 5 <= len(username) <= 20 and username.isalnum() and username.isalnum()
+    username_valid = (
+        5 <= len(username) <= 20 and username.isalnum() and username.isalnum()
+    )
 
     # Close the connection to the database
     new_connection.close()
@@ -107,7 +117,9 @@ def valid_email(email: str) -> bool:
     controller = session()
 
     # Check if the email exists
-    email_exists = controller.query(AuthenticationData).filter_by(email=email).first() is not None
+    email_exists = (
+        controller.query(AuthenticationData).filter_by(email=email).first() is not None
+    )
 
     # Close the connection to the database
     new_connection.close()
@@ -166,7 +178,9 @@ def signup(username: str, first_name: str, last_name: str, password: str, email:
     :return: A boolean indicating if the user was signed up
     """
     # Check if the username, email, and password are valid
-    if not all([valid_username(username), valid_email(email), valid_password(password)]):
+    if not all(
+        [valid_username(username), valid_email(email), valid_password(password)]
+    ):
         # Return False to indicate that the user was not signed up
         return False
 
@@ -174,9 +188,15 @@ def signup(username: str, first_name: str, last_name: str, password: str, email:
     hashed_password, salt = hash_password(password)
 
     # Add the user to the database
-    authentication_data = AuthenticationData(username=username, first_name=first_name, last_name=last_name,
-                                             hashed_password=hashed_password, salt=salt, email=email,
-                                             signup_date=datetime.now())
+    authentication_data = AuthenticationData(
+        username=username,
+        first_name=first_name,
+        last_name=last_name,
+        hashed_password=hashed_password,
+        salt=salt,
+        email=email,
+        signup_date=datetime.now(),
+    )
     populate_authentication_data.add_entry(authentication_data)
 
     # Return True to indicate that the user was signed up
@@ -196,15 +216,21 @@ def login(username: str, password: str):
     controller = session()
 
     # Get the user's details from the database
-    authentication_data = controller.query(AuthenticationData).filter_by(username=username).first()
+    authentication_data = (
+        controller.query(AuthenticationData).filter_by(username=username).first()
+    )
 
     # If the user does not exist, return False
     if authentication_data is None:
         return False
 
     # Set the user's profile
-    profile = Profile(username=authentication_data.username, first_name=authentication_data.first_name,
-                      last_name=authentication_data.last_name, email=authentication_data.email)
+    profile = Profile(
+        username=authentication_data.username,
+        first_name=authentication_data.first_name,
+        last_name=authentication_data.last_name,
+        email=authentication_data.email,
+    )
     check_user_exists(username)
     set_user_profile(username, profile)
 
@@ -212,7 +238,9 @@ def login(username: str, password: str):
     new_connection.close()
 
     # Hash the password
-    hashed_password = bcrypt.hashpw(password=password.encode('utf-8'), salt=authentication_data.salt)
+    hashed_password = bcrypt.hashpw(
+        password=password.encode("utf-8"), salt=authentication_data.salt
+    )
 
     # If the hashed password matches the hashed password in the database, return the API token for the user
     if hashed_password == authentication_data.hashed_password:

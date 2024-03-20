@@ -26,10 +26,12 @@ from backend.Entities.Building.roof import Roof
 # MAIN CLASS
 ########################################################################################################################
 
+
 class Building:
     """
     Represents a building
     """
+
     # Dimensions of the building
     dimensions: Optional[Dimensions]
     # Cladding of the building
@@ -63,27 +65,29 @@ class Building:
         :return:
         """
         # Special formatting for subclasses
-        dimensions_str = '\n  ' + '\n  '.join(str(self.dimensions).split('\n'))
-        cladding_str = '\n  ' + '\n  '.join(str(self.cladding).split('\n'))
-        roof_str = '\n  ' + '\n  '.join(str(self.roof).split('\n'))
+        dimensions_str = "\n  " + "\n  ".join(str(self.dimensions).split("\n"))
+        cladding_str = "\n  " + "\n  ".join(str(self.cladding).split("\n"))
+        roof_str = "\n  " + "\n  ".join(str(self.roof).split("\n"))
 
         # Special formatting for height zones
-        zones_str = '\n'
+        zones_str = "\n"
         for zone in self.height_zones:
             zones_str += f"  height zone {zone.zone_num}\n"
-            zone_lst = str(zone).split('\n')
+            zone_lst = str(zone).split("\n")
             for i in zone_lst:
                 zones_str += f"    {i.lstrip(', ')}\n"
         zones_str = zones_str[:-1]
 
         # Print each attribute and its value on a new line
-        return (f"dimensions: {dimensions_str}\n"
-                f"cladding: {cladding_str}\n"
-                f"roof: {roof_str}\n"
-                f"hz_num: {self.hz_num}\n"
-                f"num_floor: {self.num_floor}\n"
-                f"h_opening: {self.h_opening}\n"
-                f"zones: {zones_str}\n")
+        return (
+            f"dimensions: {dimensions_str}\n"
+            f"cladding: {cladding_str}\n"
+            f"roof: {roof_str}\n"
+            f"hz_num: {self.hz_num}\n"
+            f"num_floor: {self.num_floor}\n"
+            f"h_opening: {self.h_opening}\n"
+            f"zones: {zones_str}\n"
+        )
 
     def get_height_zone(self, zone_num: int):
         for height_zone in self.height_zones:
@@ -239,7 +243,9 @@ class BuildingDefaultHeightDefaultMaterialBuilder(BuildingBuilderInterface):
         +---------+     ----+
         """
 
-        self.building.hz_num = math.ceil(self.building.dimensions.height / default_zone_height)
+        self.building.hz_num = math.ceil(
+            self.building.dimensions.height / default_zone_height
+        )
 
         # compute the elevation of each height zone
         self.building.height_zones = []
@@ -252,7 +258,9 @@ class BuildingDefaultHeightDefaultMaterialBuilder(BuildingBuilderInterface):
             else:
                 height_sum += 20
 
-            self.building.height_zones.append(HeightZone(zone_num=i, elevation=height_sum))
+            self.building.height_zones.append(
+                HeightZone(zone_num=i, elevation=height_sum)
+            )
 
     def set_material_load(self, material_load: List[float] | float):
         """

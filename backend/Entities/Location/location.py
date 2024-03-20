@@ -65,6 +65,7 @@ class Location:
     """
     This class is used to store all the information about a location
     """
+
     # The address of the location
     address: Optional[str]
     # The latitude and longitude of the location
@@ -131,11 +132,15 @@ class Location:
             engine = database.get_engine(privilege=PrivilegeType.ADMIN)
             session = sessionmaker(autocommit=False, autoflush=True, bind=engine)
             controller = session()
-            location_info = controller.query(CanadianPostalCodeData).filter_by(postal_code=postal_code).first()
+            location_info = (
+                controller.query(CanadianPostalCodeData)
+                .filter_by(postal_code=postal_code)
+                .first()
+            )
             self.latitude = location_info.latitude
             self.longitude = location_info.longitude
         else:
-            geolocator = Nominatim(user_agent=str(uuid.uuid4()).replace('-', ''))
+            geolocator = Nominatim(user_agent=str(uuid.uuid4()).replace("-", ""))
             geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1)
             location_info = geocode(address, timeout=10)
 
@@ -157,9 +162,7 @@ class Location:
 
         # The payload and headers containing the data we want to use in our POST request
         payload = f'{{"query":"query{{\\n NBC2020(latitude: {self.latitude}, longitude: {self.longitude}){{\\n X148: siteDesignationsXv(vs30: {self.xv}, poe50: [2.0]){{\\n sa0p2\\n sa1p0\\n }}\\n }}\\n}}","variables":{{}}}}'
-        headers = {
-            'Content-Type': 'application/json'
-        }
+        headers = {"Content-Type": "application/json"}
 
         # The response received from the POST request
         response = requests.request("POST", url, headers=headers, data=payload)
@@ -168,9 +171,12 @@ class Location:
         data = json.loads(response.text)
 
         # Assign the data to the attributes
-        self.design_spectral_acceleration_0_2 = data.get('data', {}).get('NBC2020', {}).get('X148', [{}])[0].get(
-            'sa0p2')
-        self.design_spectral_acceleration_1 = data.get('data', {}).get('NBC2020', {}).get('X148', [{}])[0].get('sa1p0')
+        self.design_spectral_acceleration_0_2 = (
+            data.get("data", {}).get("NBC2020", {}).get("X148", [{}])[0].get("sa0p2")
+        )
+        self.design_spectral_acceleration_1 = (
+            data.get("data", {}).get("NBC2020", {}).get("X148", [{}])[0].get("sa1p0")
+        )
 
     def get_seismic_data_xs(self):
         """
@@ -182,9 +188,7 @@ class Location:
 
         # The payload and headers containing the data we want to use in our POST request
         payload = f'{{"query":"query{{\\n NBC2020(latitude: {self.latitude}, longitude: {self.longitude}){{\\n XC: siteDesignationsXs(siteClass: C, poe50: [2.0]){{\\n sa0p2\\n sa1p0\\n }}\\n }}\\n}}","variables":{{}}}}'
-        headers = {
-            'Content-Type': 'application/json'
-        }
+        headers = {"Content-Type": "application/json"}
 
         # The response received from the POST request
         response = requests.request("POST", url, headers=headers, data=payload)
@@ -196,8 +200,10 @@ class Location:
         # {'data': {'NBC2020': {'XC': [{'sa0p2': 0.658, 'sa1p0': 0.209}]}}}
 
         # Assign the data to the attributes
-        self.design_spectral_acceleration_0_2 = data['data']['NBC2020']['XC'][0]['sa0p2']
-        self.design_spectral_acceleration_1 = data['data']['NBC2020']['XC'][0]['sa1p0']
+        self.design_spectral_acceleration_0_2 = data["data"]["NBC2020"]["XC"][0][
+            "sa0p2"
+        ]
+        self.design_spectral_acceleration_1 = data["data"]["NBC2020"]["XC"][0]["sa1p0"]
 
     def get_climatic_data(self):
         """
@@ -219,7 +225,9 @@ class Location:
             # TODO: manually review database to ensure all entries have a valid Latitude and Longitude
             if entry.Latitude is None or entry.Longitude is None:
                 continue
-            distance = haversine_distance(entry.Latitude, entry.Longitude, self.latitude, self.longitude)
+            distance = haversine_distance(
+                entry.Latitude, entry.Longitude, self.latitude, self.longitude
+            )
             if distance < min_distance:
                 min_distance = distance
                 min_entry = entry
@@ -238,22 +246,25 @@ class Location:
         :return:
         """
         # Print each attribute and its value on a new line
-        return (f"address: {self.address}\n"
-                f"latitude: {self.latitude}\n"
-                f"longitude: {self.longitude}\n"
-                f"site_designation: {self.site_designation}\n"
-                f"xv: {self.xv}\n"
-                f"xs: {self.xs}\n"
-                f"wind_velocity_pressure: {self.wind_velocity_pressure}\n"
-                f"snow_load: {self.snow_load}\n"
-                f"rain_load: {self.rain_load}\n"
-                f"design_spectral_acceleration_0_2: {self.design_spectral_acceleration_0_2}\n"
-                f"design_spectral_acceleration_1: {self.design_spectral_acceleration_1}")
+        return (
+            f"address: {self.address}\n"
+            f"latitude: {self.latitude}\n"
+            f"longitude: {self.longitude}\n"
+            f"site_designation: {self.site_designation}\n"
+            f"xv: {self.xv}\n"
+            f"xs: {self.xs}\n"
+            f"wind_velocity_pressure: {self.wind_velocity_pressure}\n"
+            f"snow_load: {self.snow_load}\n"
+            f"rain_load: {self.rain_load}\n"
+            f"design_spectral_acceleration_0_2: {self.design_spectral_acceleration_0_2}\n"
+            f"design_spectral_acceleration_1: {self.design_spectral_acceleration_1}"
+        )
 
 
 ########################################################################################################################
 # BUILDER CLASSES
 ########################################################################################################################
+
 
 class LocationBuilderInterface:
     """
@@ -313,6 +324,7 @@ class LocationXvBuilder:
     """
     Concrete builder class for the Location class
     """
+
     location: Location
 
     def __init__(self):
@@ -448,6 +460,7 @@ class LocationXsBuilder:
     """
     Concrete builder class for the Location class
     """
+
     location: Location
 
     def __init__(self):

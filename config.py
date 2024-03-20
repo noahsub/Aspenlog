@@ -24,6 +24,7 @@ PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 # CONFIG FUNCTIONS
 ########################################################################################################################
 
+
 def get_file_path(relative_path):
     """
     Gets the absolute file path from the relative path

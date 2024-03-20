@@ -14,17 +14,29 @@
 
 from typing import List, Tuple, Optional
 
-from backend.API.Managers.user_data_manager import get_user_dimensions, get_user_cladding, get_user_roof
-from backend.Entities.Building.building import BuildingDefaultHeightDefaultMaterialBuilder, \
-    BuildingCustomHeightDefaultMaterialBuilder
+from backend.API.Managers.user_data_manager import (
+    get_user_dimensions,
+    get_user_cladding,
+    get_user_roof,
+)
+from backend.Entities.Building.building import (
+    BuildingDefaultHeightDefaultMaterialBuilder,
+    BuildingCustomHeightDefaultMaterialBuilder,
+)
 from backend.Entities.Building.height_zone import HeightZone
 
 ########################################################################################################################
 # MANAGER
 ########################################################################################################################
 
-def process_building_data(num_floor: int, h_opening: Optional[float], zones: Optional[List[Tuple[int, float]]],
-                          materials: List[Tuple[int, float]], username):
+
+def process_building_data(
+    num_floor: int,
+    h_opening: Optional[float],
+    zones: Optional[List[Tuple[int, float]]],
+    materials: List[Tuple[int, float]],
+    username,
+):
     """
     Processes the building data and creates a building object
     :param num_floor: The number of floors in the building

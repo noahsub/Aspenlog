@@ -37,7 +37,7 @@ def user_data_endpoint():
     """
     try:
         # Get the file path for the server status page
-        path = get_file_path('backend/API/Pages/StatusPage/statusPage.html')
+        path = get_file_path("backend/API/Pages/StatusPage/statusPage.html")
         # Return the server status page
         return FileResponse(path)
     # If something goes wrong, raise an error

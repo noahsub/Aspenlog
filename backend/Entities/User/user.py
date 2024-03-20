@@ -35,6 +35,7 @@ class User:
     """
     This class is used to store all the information regarding a user
     """
+
     username: str
     profile: Optional[Profile]
     current_save_file: Optional[int]
@@ -48,7 +49,7 @@ class User:
     height_zones: Optional[List[HeightZone]]
     building: Optional[Building]
     importance_category: Optional[ImportanceFactor]
-    snow_load: Optional[Dict['str', SnowLoad]]
+    snow_load: Optional[Dict["str", SnowLoad]]
 
     def __init__(self, username: str):
         """
