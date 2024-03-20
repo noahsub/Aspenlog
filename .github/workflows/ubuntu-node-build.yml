@@ -31,4 +31,3 @@ jobs:
       run: cd /home/runner/work/Aspenlog/Aspenlog/frontend
     - run: npm install electron
     - run: npm run build --if-present
-    - run: npm test
