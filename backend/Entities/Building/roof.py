@@ -1,5 +1,23 @@
+########################################################################################################################
+# roof.py
+# This file contains classes that represent the roof of a building.
+#
+# Please refer to the LICENSE and DISCLAIMER files for more information regarding the use and distribution of this code.
+# By using this code, you agree to abide by the terms and conditions in those files.
+#
+# Author: Noah Subedar [https://github.com/noahsub]
+########################################################################################################################
+
+########################################################################################################################
+# IMPORTS
+########################################################################################################################
+
 from typing import Optional
 
+
+########################################################################################################################
+# MAIN CLASS
+########################################################################################################################
 
 class Roof:
     """
@@ -37,6 +55,11 @@ class Roof:
                 f"slope: {self.slope}\n"
                 f"wall_slope: {self.wall_slope}\n"
                 f"wp: {self.wp}")
+
+
+########################################################################################################################
+# BUILDER CLASSES
+########################################################################################################################
 
 
 class RoofBuilderInterface:
@@ -142,5 +165,3 @@ class RoofDirector:
     @staticmethod
     def construct_roof(builder: RoofBuilderInterface):
         raise NotImplementedError
-
-

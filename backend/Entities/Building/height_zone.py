@@ -1,7 +1,25 @@
+########################################################################################################################
+# height_zone.py
+# This file contains classes that represent the height zones of a building.
+#
+# Please refer to the LICENSE and DISCLAIMER files for more information regarding the use and distribution of this code.
+# By using this code, you agree to abide by the terms and conditions in those files.
+#
+# Author: Noah Subedar [https://github.com/noahsub]
+########################################################################################################################
+
+########################################################################################################################
+# IMPORTS
+########################################################################################################################
+
 from typing import Optional
 from backend.Entities.Seismic.seismic_load import SeismicLoad
 from backend.Entities.Wind.wind_load import WindLoad
 
+
+########################################################################################################################
+# MAIN CLASS
+########################################################################################################################
 
 class HeightZone:
     """
