@@ -1,4 +1,23 @@
+########################################################################################################################
+# wind_pressure.py
+# This file contains classes that represent the wind pressure.
+#
+# Please refer to the LICENSE and DISCLAIMER files for more information regarding the use and distribution of this code.
+# By using this code, you agree to abide by the terms and conditions in those files.
+#
+# Author: Noah Subedar [https://github.com/noahsub]
+########################################################################################################################
+
+########################################################################################################################
+# IMPORTS
+########################################################################################################################
+
 from typing import Optional
+
+
+########################################################################################################################
+# MAIN CLASS
+########################################################################################################################
 
 
 class WindPressure:
@@ -70,6 +89,11 @@ class WindPressure:
                 f"pe_neg_sls: {self.pe_neg_sls}\n"
                 f"pos_sls: {self.pos_sls}\n"
                 f"neg_sls: {self.neg_sls}")
+
+
+########################################################################################################################
+# BUILDER CLASSES
+######################################################################################################################## None
 
 
 class WindPressureBuilderInterface:
@@ -169,7 +193,7 @@ class WindPressureBuilder(WindPressureBuilderInterface):
     def reset(self):
         """
         Resets the WindPressureBuilder object
-        :return:
+        :return: None
         """
         # Create a new WindPressure object
         self.wind_pressure = WindPressure()
@@ -178,7 +202,7 @@ class WindPressureBuilder(WindPressureBuilderInterface):
         """
         Sets the positive internal pressure
         :param pi_pos: The positive internal pressure
-        :return:
+        :return: None
         """
         self.wind_pressure.pi_pos_uls = pi_pos_uls
 
@@ -186,7 +210,7 @@ class WindPressureBuilder(WindPressureBuilderInterface):
         """
         Sets the negative internal pressure
         :param pi_neg: The negative internal pressure
-        :return:
+        :return: None
         """
         self.wind_pressure.pi_neg_uls = pi_neg_uls
 
@@ -194,7 +218,7 @@ class WindPressureBuilder(WindPressureBuilderInterface):
         """
         Sets the positive external pressure
         :param pe_pos: The positive external pressure
-        :return:
+        :return: None
         """
         self.wind_pressure.pe_pos_uls = pe_pos_uls
 
@@ -202,16 +226,24 @@ class WindPressureBuilder(WindPressureBuilderInterface):
         """
         Sets the negative external pressure
         :param pe_neg: The negative external pressure
-        :return:
+        :return: None
         """
         self.wind_pressure.pe_neg_uls = pe_neg_uls
 
     def set_pos_uls(self):
+        """
+        Sets the positive ULS pressure
+        :return: None
+        """
         assert self.wind_pressure.pe_pos_uls is not None
         assert self.wind_pressure.pi_neg_uls is not None
         self.wind_pressure.pos_uls = self.wind_pressure.pe_pos_uls - self.wind_pressure.pi_neg_uls
 
     def set_neg_uls(self):
+        """
+        Sets the negative ULS pressure
+        :return: None
+        """
         assert self.wind_pressure.pe_neg_uls is not None
         assert self.wind_pressure.pi_pos_uls is not None
         self.wind_pressure.neg_uls = self.wind_pressure.pe_neg_uls - self.wind_pressure.pi_pos_uls
@@ -220,7 +252,7 @@ class WindPressureBuilder(WindPressureBuilderInterface):
         """
         Sets the positive internal pressure
         :param pi_pos: The positive internal pressure
-        :return:
+        :return: None
         """
         self.wind_pressure.pi_pos_sls = pi_pos_sls
 
@@ -228,7 +260,7 @@ class WindPressureBuilder(WindPressureBuilderInterface):
         """
         Sets the negative internal pressure
         :param pi_neg: The negative internal pressure
-        :return:
+        :return: None
         """
         self.wind_pressure.pi_neg_sls = pi_neg_sls
 
@@ -236,7 +268,7 @@ class WindPressureBuilder(WindPressureBuilderInterface):
         """
         Sets the positive external pressure
         :param pe_pos: The positive external pressure
-        :return:
+        :return: None
         """
         self.wind_pressure.pe_pos_sls = pe_pos_sls
 
@@ -244,16 +276,24 @@ class WindPressureBuilder(WindPressureBuilderInterface):
         """
         Sets the negative external pressure
         :param pe_neg: The negative external pressure
-        :return:
+        :return: None
         """
         self.wind_pressure.pe_neg_sls = pe_neg_sls
 
     def set_pos_sls(self):
+        """
+        Sets the positive SLS pressure
+        :return: None
+        """
         assert self.wind_pressure.pe_pos_sls is not None
         assert self.wind_pressure.pi_neg_sls is not None
         self.wind_pressure.pos_sls = self.wind_pressure.pe_pos_sls - self.wind_pressure.pi_neg_sls
 
     def set_neg_sls(self):
+        """
+        Sets the negative SLS pressure
+        :return: None
+        """
         assert self.wind_pressure.pe_neg_sls is not None
         assert self.wind_pressure.pi_pos_sls is not None
         self.wind_pressure.neg_sls = self.wind_pressure.pe_neg_sls - self.wind_pressure.pi_pos_sls
