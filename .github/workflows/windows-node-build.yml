@@ -24,6 +24,7 @@ jobs:
     - name: Build Application
       run: |
         cd .\frontend
+        npm i --package-lock-only
         npm install electron
         npm run build --if-present
     - name: Upload Output

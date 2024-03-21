@@ -24,6 +24,8 @@ jobs:
     - name: Build Application
       run: |
         cd frontend
+        npm i --package-lock-only
+        npm i dmg-license
         npm install electron
         npm run build --if-present
     - name: Upload Output

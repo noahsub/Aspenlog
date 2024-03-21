@@ -26,11 +26,12 @@ jobs:
         cache-dependency-path: frontend/package-lock.json
     - name: Build Application
       run: |
-        cd /home/runner/work/Aspenlog/Aspenlog/frontend
+        cd frontend
+        npm i --package-lock-only
         npm install electron
         npm run build --if-present
-    - name: Upload Ouput
+    - name: Upload Output
       uses: actions/upload-artifact@v2
       with:
         name: aspenlog2020-ubuntu-build
-        path: /home/runner/work/Aspenlog/Aspenlog/frontend/dist/*.deb
+        path: frontend/dist/*.deb
