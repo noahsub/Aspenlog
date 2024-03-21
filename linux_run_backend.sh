@@ -16,7 +16,13 @@ if [ "$EUID" -eq 0 ]; then
 fi
 
 # Kill any existing processes on port 42613
-sudo kill $(lsof -t -i:42613) > /dev/null
+
+pid=$(lsof -t -i:42613)
+# if pid is not empty
+if [ -n "$pid" ]; then
+    sudo kill "$pid" > /dev/null
+fi
+
 # Kill any existing screen sessions named 'aspenlog-backend'
 screen -S aspenlog-backend -X quit > /dev/null
 # Start the backend in a new screen session
