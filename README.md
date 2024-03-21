@@ -12,6 +12,11 @@
     <img src="https://img.shields.io/badge/blender-%23F5792A.svg?style=for-the-badge&logo=blender&logoColor=white">
 </p>
 
+<p align="center">
+    <a href="https://github.com/psf/black"><img src="https://img.shields.io/badge/code%20style-black-000000.svg" alt="Code style: black"></a>
+    <a href="https://github.com/prettier/prettier"><img src="https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square" alt="code style: prettier"></a>
+</p>
+
 # Application of Specified Environmental Load Generator
 The Application of Specified Environmental Load Generator (Aspenlog 2020) is an
 online desktop application designed to calculate environmental loads (wind,
