@@ -33,7 +33,7 @@ Multidisciplinary Design & Innovation (UT-IMDI) for SEEDA.
 
 
 ## Hosting the Backend
-Refer to the backend guide in the `installation` directory.
+Refer to the `guide` file.
 
 ## Running the Application
 To run the frontend application simply install the latest release for your operating system from the releases page.
