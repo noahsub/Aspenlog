@@ -1,7 +1,8 @@
 # Aspenlog 2020 Guide
-This guide is meant to provide instructions on how to set up and run the Aspenlog 2020 backend. Due to the complexity of
-the backend, it is strongly recommended that you have a basic understanding of Linux and computer networks before
-continuing.
+This guide is meant to provide instructions on how to set up and run the Aspenlog 2020 mainly the backend component. Due 
+to the complexity of the backend, it is strongly recommended that you have a basic understanding of Linux and computer 
+networks before continuing.
+
 ## Setting Up the Server Environment
 ### Prerequisites
 You must run the backend on a linux server. If you are using a Windows machine, you can use the Windows Subsystem for
