@@ -35,7 +35,7 @@ echo "INSTALLING NECESSARY PACKAGES"
 echo "_________________________________________________________________________________________________________________"
 # Update and install necessary packages
 sudo apt-get update > /dev/null
-sudo apt-get install -y ca-certificates curl software-properties-common xorg openbox snapd python3.11 python3-pip > /dev/null
+sudo apt-get install -y ca-certificates curl software-properties-common xorg openbox snapd python3.11 python3-pip screen > /dev/null
 echo "Packages installed successfully."
 
 echo "_________________________________________________________________________________________________________________"

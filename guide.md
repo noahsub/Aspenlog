@@ -35,14 +35,15 @@ Once the installation script has been run, the backend is ready to be started. T
 script from the root directory of the repository as follows:
 
 ```bash
-./run_backend.sh
+./linux_run_backend.sh
 ```
 The backend will now be running on the server in a `screen`. If it shuts down or you would like to restart it, simply run 
 the command again. however it will not be accessible from the internet. To make it accessible from the internet, you must follow
 the networking instructions in the next section.
 
 If you want more control over how the backend is run, you can manually run the `main.py` file with its associated
-arguments. The arguments are as follows:
+arguments. Simply running `main.py` without arguments prompts user for required details before starting The arguments 
+are as follows:
 
 ```
 usage: main.py [-h] [-i] [-ip HOST] [-p PORT] [-du ADMIN_USERNAME] [-dp ADMIN_PASSWORD]
