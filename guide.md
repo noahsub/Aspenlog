@@ -36,9 +36,34 @@ script from the root directory of the repository as follows:
 ```bash
 ./run_backend.sh
 ```
-The backend will now be running on the server. If it shuts down or you would like to restart it, simply run the command 
-again. however it will not be accessible from the internet. To make it accessible from the internet, you must follow
+The backend will now be running on the server in a `screen`. If it shuts down or you would like to restart it, simply run 
+the command again. however it will not be accessible from the internet. To make it accessible from the internet, you must follow
 the networking instructions in the next section.
+
+If you want more control over how the backend is run, you can manually run the `main.py` file with its associated
+arguments. The arguments are as follows:
+
+```
+usage: main.py [-h] [-i] [-ip HOST] [-p PORT] [-du ADMIN_USERNAME] [-dp ADMIN_PASSWORD]
+
+options:
+  -h, --help            show this help message and exit
+  -i, --install         Installation mode only, no server will be started
+  -ip HOST, --host HOST
+                        Database ip Address (HTTPS is Not Supported Here)
+  -p PORT, --port PORT  Port Number
+  -du ADMIN_USERNAME, --admin_username ADMIN_USERNAME
+                        Admin Username for the Database
+  -dp ADMIN_PASSWORD, --admin_password ADMIN_PASSWORD
+                        Admin Password for the Database
+```
+
+You can run the `main.py` file with the arguments (ensuring the installation script has been run) as follows:
+
+```bash
+source seeda_python_virtual_environment/bin/activate
+python3.11 main.py <arguments>
+```
 
 ## Networking
 ### Server Firewall
@@ -132,3 +157,8 @@ Everything should now be set up and you should be able to access the backend fro
 downloading the latest release of the frontend from the releases page and running it. You can then enter the domain of
 in the `Connection Details` page and click `Connect`. If the frontend connects to the backend, everything is set up
 correctly. If it does not connect, ensure that you have followed all the steps in this guide correctly.
+
+## Debugging the Frontend
+If for some reason requests are failing to communicate with the backend, you can see what is causing the issue by
+pressing ctrl + shift + i in the frontend application to open the developer tools. You can then navigate to the
+`Network` tab to see the requests being made and their responses.
