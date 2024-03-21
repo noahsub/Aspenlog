@@ -1256,11 +1256,20 @@ function loadSaveFile() {
                       window.scrollTo(0, 0);
                     });
                   })
-                  .catch((error) => console.error(error));
+                  .catch((error) => {
+                    console.error(error);
+                    window.reload();
+                  });
               })
-              .catch((error) => console.error(error));
+              .catch((error) => {
+                console.error(error);
+                window.reload();
+              });
           })
-          .catch((error) => console.error(error));
+          .catch((error) => {
+            console.error(error);
+            window.reload();
+          });
       });
   });
 }

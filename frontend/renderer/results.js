@@ -36,6 +36,126 @@ function toggleMenuColors(toggleMenu) {
   });
 }
 
+/**
+ * Sets the wind load model image, if the image is not found, it will attempt to fetch the image again
+ * @param connectionAddress
+ * @param id
+ * @param attempt
+ */
+function setWindLoadModelImage(connectionAddress, id, attempt = 10)
+{
+    fetch(`${connectionAddress}/get_wind_load_model?id=${id}`)
+                  .then((response) =>
+                  {
+                      if (response.status === 200)
+                      {
+                            document.getElementById("wind-load-image").src = `${connectionAddress}/get_wind_load_model?id=${id}`;
+                      }
+
+                      else
+                      {
+                          if (attempt > 0)
+                          {
+                                return setWindLoadModelImage(connectionAddress, id, attempt - 1)
+                          }
+
+                          else
+                          {
+                                throw new Error("Wind Load Image Not Found")
+                          }
+                      }
+                  })
+                  .catch((error) => console.error(error));
+}
+
+/**
+ * Sets the seismic load model image, if the image is not found, it will attempt to fetch the image again
+ * @param connectionAddress
+ * @param id
+ * @param attempt
+ */
+function setSeismicLoadModelImage(connectionAddress, id, attempt = 10)
+{
+    fetch(`${connectionAddress}/get_seismic_load_model?id=${id}`)
+                  .then((response) =>
+                  {
+                      if (response.status === 200)
+                      {
+                            document.getElementById("seismic-load-image").src = `${connectionAddress}/get_seismic_load_model?id=${id}`;
+                      }
+
+                      else
+                      {
+                          if (attempt > 0)
+                          {
+                                return setWindLoadModelImage(connectionAddress, id, attempt - 1)
+                          }
+
+                          else
+                          {
+                                throw new Error("Seismic Load Image Not Found")
+                          }
+                      }
+                  })
+                  .catch((error) => console.error(error));
+}
+
+/**
+ * Sets the bar chart image, if the image is not found, it will attempt to fetch the image again
+ * @param connectionAddress
+ * @param id
+ * @param i
+ * @param img
+ * @param position
+ * @param attempt
+ */
+function setBarChartImage(connectionAddress, id, i, img, position, attempt = 10)
+{
+    fetch(`${connectionAddress}/get_bar_chart?id=${id}&zone_num=${i + 1}`)
+        .then((response) =>{
+           if (response.status === 200)
+           {
+               img.src = `${connectionAddress}/get_bar_chart?id=${id}&zone_num=${i + 1}`;
+               img.style.maxWidth = "100%";
+
+               if (position === 'left')
+               {
+                    document
+                      .getElementById("left-bar-chart-container")
+                      .appendChild(img);
+               }
+
+               else if (position === 'middle')
+               {
+                    document
+                      .getElementById("middle-bar-chart-container")
+                      .appendChild(img);
+               }
+
+               else if (position === 'right')
+               {
+                    document
+                      .getElementById("right-bar-chart-container")
+                      .appendChild(img);
+               }
+           }
+
+           else
+           {
+               if (attempt > 0)
+              {
+                    return setBarChartImage(connectionAddress, id, i, img, position, attempt - 1)
+              }
+
+              else
+              {
+                    throw new Error("Bar Chart Image Not Found")
+              }
+            }
+        })
+        .catch((error) => console.error(error));
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // SERIALIZATION
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -140,11 +260,20 @@ function loadSaveFile() {
                         generate_bar_chart();
                       });
                   })
-                  .catch((error) => console.error(error));
+                  .catch((error) => {
+                      console.error(error);
+                      window.reload();
+                  });
               })
-              .catch((error) => console.error(error));
+              .catch((error) => {
+                  console.error(error);
+                  window.reload();
+              });
           })
-          .catch((error) => console.error(error));
+          .catch((error) => {
+              console.error(error);
+              window.reload();
+          });
       });
   });
 }
@@ -761,25 +890,13 @@ function generate_bar_chart() {
               // if i is even
               if (i % 3 === 0) {
                 let img = document.createElement("img");
-                img.src = `${connectionAddress}/get_bar_chart?id=${id}&zone_num=${i + 1}`;
-                img.style.maxWidth = "100%";
-                document
-                  .getElementById("left-bar-chart-container")
-                  .appendChild(img);
+                  setBarChartImage(connectionAddress, id, i, img, "left");
               } else if (i % 3 === 1) {
                 let img = document.createElement("img");
-                img.src = `${connectionAddress}/get_bar_chart?id=${id}&zone_num=${i + 1}`;
-                img.style.maxWidth = "100%";
-                document
-                  .getElementById("middle-bar-chart-container")
-                  .appendChild(img);
+                  setBarChartImage(connectionAddress, id, i, img, "middle");
               } else {
                 let img = document.createElement("img");
-                img.src = `${connectionAddress}/get_bar_chart?id=${id}&zone_num=${i + 1}`;
-                img.style.maxWidth = "100%";
-                document
-                  .getElementById("right-bar-chart-container")
-                  .appendChild(img);
+                  setBarChartImage(connectionAddress, id, i, img, "right");
               }
             }
 
@@ -821,10 +938,9 @@ function generate_load_model() {
           .then((response) => response.json())
           .then((result) => {
             let id = JSON.parse(result);
-            document.getElementById("wind-load-image").src =
-              `${connectionAddress}/get_wind_load_model?id=${id}`;
-            document.getElementById("seismic-load-image").src =
-              `${connectionAddress}/get_seismic_load_model?id=${id}`;
+
+            setWindLoadModelImage(connectionAddress, id);
+            setSeismicLoadModelImage(connectionAddress, id);
 
             document.getElementById("model-render-error").style.display =
               "none";
