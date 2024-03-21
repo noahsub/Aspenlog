@@ -217,7 +217,11 @@ document.getElementById("register").addEventListener("click", function (event) {
     fetch(`${connectionAddress}/register`, requestOptions)
       .then((response) => response.json())
       .then((result) => {
-        window.location.href = "login.html";
+        if (result.status === 200) {
+          window.location.href = "login.html";
+        } else {
+          alert("There already exists a user with that username or email");
+        }
       })
       .catch((error) => console.error(error));
   });
