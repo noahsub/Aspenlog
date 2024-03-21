@@ -162,7 +162,29 @@ downloading the latest release of the frontend from the releases page and runnin
 in the `Connection Details` page and click `Connect`. If the frontend connects to the backend, everything is set up
 correctly. If it does not connect, ensure that you have followed all the steps in this guide correctly.
 
-## Debugging the Frontend
+## Installing the Frontend
+To install the frontend, you must download the latest release for your operating system from the releases page. If you
+want to run the frontend on a platform that is not supported, you can run the following commands from the root directory
+of the repository assuming that you have `nodejs` (`v20.x`) installed on your system:
+
+```bash
+cd frontend
+npm install electron
+npm start
+```
+
+## Creating a New Build of the Frontend
+If you have made changes to the frontend and would like to create a new build, you can do so by running the following
+GitHub Actions workflows:
+- `Build Windows`
+- `Build MacOS`
+- `Build Linux`
+You can get the generated build from the `Artifacts` section of each workflow.
+
+If you would like to change the default server that the frontend connects to, you can do so by changing the host and
+port found in the `frontend/main.js` file, more specifically in the `app.whenReady()` function.
+
+## Debugging Network Issues
 If for some reason requests are failing to communicate with the backend, you can see what is causing the issue by
 pressing ctrl + shift + i in the frontend application to open the developer tools. You can then navigate to the
 `Network` tab to see the requests being made and their responses.
