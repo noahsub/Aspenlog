@@ -731,17 +731,25 @@ function locationCall(address, siteDesignation, seismicValue) {
               "design-spectral-acceleration-1",
             ).textContent = result.design_spectral_acceleration_1;
 
-            if (document.getElementById('wind-velocity-pressure').textContent === "")
-            {
-               document.getElementById('wind-velocity-pressure').textContent = 'NA';
-               document.getElementById('ground-snow-load').textContent = 'NA';
-               document.getElementById('rain-load').textContent = 'NA';
-               document.getElementById('design-spectral-acceleration-0-2').textContent = 'NA';
-               document.getElementById('design-spectral-acceleration-1').textContent = 'NA';
+            if (
+              document.getElementById("wind-velocity-pressure").textContent ===
+              ""
+            ) {
+              document.getElementById("wind-velocity-pressure").textContent =
+                "NA";
+              document.getElementById("ground-snow-load").textContent = "NA";
+              document.getElementById("rain-load").textContent = "NA";
+              document.getElementById(
+                "design-spectral-acceleration-0-2",
+              ).textContent = "NA";
+              document.getElementById(
+                "design-spectral-acceleration-1",
+              ).textContent = "NA";
 
-               setMap(-70.73964, -8.91217, "unknown");
-               document.getElementById("location-error-message").innerText = "Please provide a more specific address";
-               return;
+              setMap(-70.73964, -8.91217, "unknown");
+              document.getElementById("location-error-message").innerText =
+                "Please provide a more specific address";
+              return;
             }
 
             // set the map as long as we have a valid latitude and longitude
