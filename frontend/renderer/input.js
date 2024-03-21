@@ -115,38 +115,29 @@ function getSeismicParameters() {
  * @param img
  * @param attempt
  */
-function setSimpleModelImage(connectionAddress, id, img, attempt = 10)
-{
-    fetch(`${connectionAddress}/get_simple_model?id=${id}`)
-        .then((response) => {
-          if (response.status === 200)
-          {
-              img.src = `${connectionAddress}/get_simple_model?id=${id}`;
-              img.style.maxWidth = "50%";
-              img.style.backgroundColor = "#efe8de";
-              let images = document
-                .getElementById("building-view-container")
-                .getElementsByTagName("img");
-              while (images.length > 0) {
-                images[0].parentNode.removeChild(images[0]);
-              }
-              document
-                .getElementById("building-view-container")
-                .appendChild(img)
-          }
-          else{
-            if (attempt > 0)
-            {
-                return setSimpleModelImage(connectionAddress, id, img, attempt - 1)
-            }
-
-            else
-            {
-              throw new Error("Simple Model Image Not Found")
-            }
-          }
-        })
-        .catch((error) => console.error(error));
+function setSimpleModelImage(connectionAddress, id, img, attempt = 10) {
+  fetch(`${connectionAddress}/get_simple_model?id=${id}`)
+    .then((response) => {
+      if (response.status === 200) {
+        img.src = `${connectionAddress}/get_simple_model?id=${id}`;
+        img.style.maxWidth = "50%";
+        img.style.backgroundColor = "#efe8de";
+        let images = document
+          .getElementById("building-view-container")
+          .getElementsByTagName("img");
+        while (images.length > 0) {
+          images[0].parentNode.removeChild(images[0]);
+        }
+        document.getElementById("building-view-container").appendChild(img);
+      } else {
+        if (attempt > 0) {
+          return setSimpleModelImage(connectionAddress, id, img, attempt - 1);
+        } else {
+          throw new Error("Simple Model Image Not Found");
+        }
+      }
+    })
+    .catch((error) => console.error(error));
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
