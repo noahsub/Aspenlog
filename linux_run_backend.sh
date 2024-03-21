@@ -29,3 +29,5 @@ screen -S aspenlog-backend -X quit > /dev/null
 screen -dmS aspenlog-backend
 screen -S aspenlog-backend -X stuff 'source seeda_python_virtual_environment/bin/activate\n'
 screen -S aspenlog-backend -X stuff 'python3.11 main.py\n'
+
+echo "Backend starting up. Please wait a few seconds before attempting to access the server."

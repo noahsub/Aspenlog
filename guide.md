@@ -28,6 +28,7 @@ the necessary software and configure the server environment. It can be run as fo
 repository:
 
 ```bash
+chmod +x linux_server_install.sh
 ./linux_server_install.sh
 ```
 ## Running the Backend
@@ -35,6 +36,7 @@ Once the installation script has been run, the backend is ready to be started. T
 script from the root directory of the repository as follows:
 
 ```bash
+chmod +x linux_run_backend.sh
 ./linux_run_backend.sh
 ```
 The backend will now be running on the server in a `screen`. If it shuts down or you would like to restart it, simply run 
