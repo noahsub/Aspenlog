@@ -16,8 +16,10 @@ if [ "$EUID" -eq 0 ]; then
 fi
 
 # Kill any existing processes on port 42613
-sudo kill -9 $(lsof -t -i:42613)
+sudo kill $(lsof -t -i:42613) > /dev/null
 # Kill any existing screen sessions named 'aspenlog-backend'
-screen -S aspenlog-backend -X quit
+screen -S aspenlog-backend -X quit > /dev/null
 # Start the backend in a new screen session
-screen -S aspenlog-backend -p 0 -X stuff \"source seeda_python_virtual_environment/bin/activate ; python3.11 main.py^M\"
+screen -dmS aspenlog-backend
+screen -S aspenlog-backend -X stuff 'source seeda_python_virtual_environment/bin/activate\n'
+screen -S aspenlog-backend -X stuff 'python3.11 main.py\n'
