@@ -14,5 +14,5 @@ document
     }
 
     console.log("accept-button clicked");
-    window.location.href = "login.html";
+    window.location.href = "register.html";
   });
