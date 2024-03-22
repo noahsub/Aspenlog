@@ -127,7 +127,7 @@ function checkServer() {
           serverStatus.innerHTML = "Server Online ✓";
           serverStatus.style.color = "#9bca6d";
 
-          await delay(5000);
+          await delay(2500);
           checkServer();
         } else {
           serverStatus.innerHTML = "Server Offline ✕";
