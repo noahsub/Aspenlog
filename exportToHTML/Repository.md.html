@@ -1,0 +1,53 @@
+<html>
+<head>
+<title>Repository.md</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+.s3 { color: #d5b778;}
+.s4 { color: #7a7e85;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+Repository.md</font>
+</center></td></tr></table>
+<pre><span class="s0"># </span><span class="s2">Repository Structure</span>
+
+<span class="s2">This section provides a detailed overview of the repository structure, helping users navigate and understand the various components of the project.</span>
+
+<span class="s0">- </span><span class="s1">**</span><span class="s2">Root Directory</span><span class="s1">**</span>
+    <span class="s0">- </span><span class="s2">`.gitignore`</span><span class="s1">: </span><span class="s2">Specifies files to be ignored by Git.</span>
+    <span class="s0">- </span><span class="s2">`config.py`</span><span class="s1">: </span><span class="s2">Configuration file for the project.</span>
+    <span class="s0">- </span><span class="s2">`README.md`</span><span class="s1">: </span><span class="s2">Introduction and overview of the project.</span>
+    <span class="s0">- </span><span class="s2">`requirements.txt`</span><span class="s1">: </span><span class="s2">Lists dependencies required for the project.</span>
+
+<span class="s0">- </span><span class="s1">**</span><span class="s2">Backend Directory</span><span class="s1">**</span>
+    <span class="s0">- </span><span class="s2">`test.py`</span><span class="s1">: </span><span class="s2">Script for testing backend functionalities.</span>
+    <span class="s0">- </span><span class="s2">`algorithms`</span><span class="s1">: </span><span class="s2">Contains algorithms for load calculations </span><span class="s1">(</span><span class="s2">`snow_load_algorithms.py`, `wind_load_algorithms.py`</span><span class="s1">)</span><span class="s2">.</span>
+    <span class="s0">- </span><span class="s2">`Constants`</span><span class="s1">: </span><span class="s2">Includes constants </span><span class="s1">(</span><span class="s2">`importance_factor_constants.py`, `snow_constants.py`, `wind_constants.py`</span><span class="s1">)</span><span class="s2">.</span>
+    <span class="s0">- </span><span class="s2">`Entities`</span><span class="s1">: </span><span class="s2">Defines entities like `building.py`, `snow.py`, `wind.py`.</span>
+
+<span class="s0">- </span><span class="s1">**</span><span class="s2">Data Extraction Directory</span><span class="s1">**</span>
+    <span class="s0">- </span><span class="s2">`NBCC_Data_Extraction.py`</span><span class="s1">: </span><span class="s2">Script for extracting data from NBCC tables.</span>
+    <span class="s0">- </span><span class="s2">`input`</span><span class="s1">: </span><span class="s2">Contains input files like `NBCC2020-Table-C-1.pdf`.</span>
+    <span class="s0">- </span><span class="s2">`output`</span><span class="s1">: </span><span class="s2">Stores extracted data in formats like CSV, XLSX.</span>
+
+<span class="s0">- </span><span class="s1">**</span><span class="s2">Database Directory</span><span class="s1">**</span>
+    <span class="s0">- </span><span class="s2">`Constants`</span><span class="s1">: </span><span class="s2">Houses database connection constants </span><span class="s1">(</span><span class="s2">`connection_constants.py`</span><span class="s1">)</span><span class="s2">.</span>
+    <span class="s0">- </span><span class="s2">`Entities`</span><span class="s1">: </span><span class="s2">Includes database entities and connection setup </span><span class="s1">(</span><span class="s2">`climatic_data.py`, `database_connection.py`, `wind_speed_data.py`</span><span class="s1">)</span><span class="s2">.</span>
+    <span class="s0">- </span><span class="s2">`Population`</span><span class="s1">: </span><span class="s2">Scripts to populate the database </span><span class="s1">(</span><span class="s2">`populate_climate_data.py`, `populate_database.py`, `populate_wind_speed_data.py`</span><span class="s1">)</span><span class="s2">.</span>
+    <span class="s0">- </span><span class="s2">`Warnings`</span><span class="s1">: </span><span class="s2">Contains database warnings </span><span class="s1">(</span><span class="s2">`database_warnings.py`</span><span class="s1">)</span><span class="s2">.</span>
+
+<span class="s2">This structure ensures a clear separation of concerns and easy navigation for contributors and users alike.</span>
+
+
+<span class="s3">&lt;seealso&gt;</span>
+    <span class="s4">&lt;!--Provide links to related how-to guides, overviews, and tutorials.--&gt;</span>
+<span class="s3">&lt;/seealso&gt;</span></pre>
+</body>
+</html>

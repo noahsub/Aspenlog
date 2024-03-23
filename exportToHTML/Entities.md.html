@@ -1,0 +1,90 @@
+<html>
+<head>
+<title>Entities.md</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+Entities.md</font>
+</center></td></tr></table>
+<pre><span class="s0"># </span><span class="s2">Entities</span>
+<span class="s0">## </span><span class="s2">Building Entities</span>
+<span class="s1">_</span><span class="s2">These classes are used to model the physical attributes of a building for load calculations.</span><span class="s1">_</span>
+
+<span class="s0">### </span><span class="s2">Dimensions Class</span>
+<span class="s0">- </span><span class="s2">Represents the height and width of a structure.</span>
+<span class="s0">- </span><span class="s2">`height`</span><span class="s1">: </span><span class="s2">Float, vertical dimension of the building.</span>
+<span class="s0">- </span><span class="s2">`width`</span><span class="s1">: </span><span class="s2">Float, horizontal dimension of the building.</span>
+
+<span class="s0">### </span><span class="s2">Cladding Class</span>
+<span class="s0">- </span><span class="s2">Defines cladding factors for the top and bottom of a structure.</span>
+<span class="s0">- </span><span class="s2">`c_top`</span><span class="s1">: </span><span class="s2">Float, cladding factor for the top.</span>
+<span class="s0">- </span><span class="s2">`c_bot`</span><span class="s1">: </span><span class="s2">Float, cladding factor for the bottom.</span>
+
+<span class="s0">### </span><span class="s2">Roof Class</span>
+<span class="s0">- </span><span class="s2">Represents various attributes of a building's roof.</span>
+<span class="s0">- </span><span class="s2">`w_roof`</span><span class="s1">: </span><span class="s2">Float, width of the roof.</span>
+<span class="s0">- </span><span class="s2">`l_roof`</span><span class="s1">: </span><span class="s2">Float, length of the roof.</span>
+<span class="s0">- </span><span class="s2">`slope`</span><span class="s1">: </span><span class="s2">Float, slope angle of the roof.</span>
+
+<span class="s0">### </span><span class="s2">Building Class</span>
+<span class="s0">- </span><span class="s2">Main class representing a building with dimensions, cladding, and roof.</span>
+<span class="s0">- </span><span class="s2">`dimensions`</span><span class="s1">: </span><span class="s2">Instance of Dimensions class.</span>
+<span class="s0">- </span><span class="s2">`cladding`</span><span class="s1">: </span><span class="s2">Instance of Cladding class.</span>
+<span class="s0">- </span><span class="s2">`roof`</span><span class="s1">: </span><span class="s2">Instance of Roof class.</span>
+<span class="s0">- </span><span class="s2">`hz_num`</span><span class="s1">: </span><span class="s2">Integer, hazard number for the building.</span>
+<span class="s0">- </span><span class="s2">`h_opening`</span><span class="s1">: </span><span class="s2">Float, height of openings in the building.</span>
+
+<span class="s0">## </span><span class="s2">Snow Entities</span>
+
+<span class="s0">### </span><span class="s2">SnowFactor Class</span>
+<span class="s0">- </span><span class="s2">Represents the factors influencing snow load on a structure.</span>
+<span class="s0">- </span><span class="s2">`cs`</span><span class="s1">: </span><span class="s2">Float, slope factor of the snow load.</span>
+<span class="s0">- </span><span class="s2">`ca`</span><span class="s1">: </span><span class="s2">Float, accumulation factor of the snow load.</span>
+<span class="s0">- </span><span class="s2">`cw`</span><span class="s1">: </span><span class="s2">Float, wind exposure factor for the snow load.</span>
+<span class="s0">- </span><span class="s2">`cb`</span><span class="s1">: </span><span class="s2">Float, basic roof snow load factor.</span>
+
+<span class="s0">### </span><span class="s2">SnowLoad Class</span>
+<span class="s0">- </span><span class="s2">Models the snow load on a structure.</span>
+<span class="s0">- </span><span class="s2">`factor`</span><span class="s1">: </span><span class="s2">Instance of SnowFactor class, encapsulating various snow load factors.</span>
+<span class="s0">- </span><span class="s2">`s`</span><span class="s1">: </span><span class="s2">Float, total calculated snow load on the structure.</span>
+
+<span class="s0">## </span><span class="s2">Wind Entities</span>
+
+<span class="s0">### </span><span class="s2">WindFactor Class</span>
+<span class="s0">- </span><span class="s2">Represents the factors affecting wind load on a structure.</span>
+<span class="s0">- </span><span class="s2">`ct`</span><span class="s1">: </span><span class="s2">Float, topographic factor.</span>
+<span class="s0">- </span><span class="s2">`ce`</span><span class="s1">: </span><span class="s2">Float, wind exposure factor.</span>
+<span class="s0">- </span><span class="s2">`cei`</span><span class="s1">: </span><span class="s2">Float, internal wind exposure factor.</span>
+<span class="s0">- </span><span class="s2">`cg`</span><span class="s1">: </span><span class="s2">Float, gust factor.</span>
+
+<span class="s0">### </span><span class="s2">WindPressure Class</span>
+<span class="s0">- </span><span class="s2">Models the wind pressure on different zones of a building.</span>
+<span class="s0">- </span><span class="s2">`pi_pos`</span><span class="s1">: </span><span class="s2">Float, positive internal pressure.</span>
+<span class="s0">- </span><span class="s2">`pi_neg`</span><span class="s1">: </span><span class="s2">Float, negative internal pressure.</span>
+<span class="s0">- </span><span class="s2">`pe_pos`</span><span class="s1">: </span><span class="s2">Float, positive external pressure.</span>
+<span class="s0">- </span><span class="s2">`pe_neg`</span><span class="s1">: </span><span class="s2">Float, negative external pressure.</span>
+
+<span class="s0">### </span><span class="s2">Zone Class</span>
+<span class="s0">- </span><span class="s2">Represents a specific zone of a building for wind load analysis.</span>
+<span class="s0">- </span><span class="s2">`name`</span><span class="s1">: </span><span class="s2">String, name of the zone.</span>
+<span class="s0">- </span><span class="s2">`num`</span><span class="s1">: </span><span class="s2">Integer, number identifier for the zone.</span>
+<span class="s0">- </span><span class="s2">`pressure`</span><span class="s1">: </span><span class="s2">Instance of WindPressure class.</span>
+<span class="s0">- </span><span class="s2">`wind_load`</span><span class="s1">: </span><span class="s2">Float, calculated wind load for the zone.</span>
+
+<span class="s0">### </span><span class="s2">WindLoad Class</span>
+<span class="s0">- </span><span class="s2">Main class for modeling wind load on a structure.</span>
+<span class="s0">- </span><span class="s2">`factor`</span><span class="s1">: </span><span class="s2">Instance of WindFactor class.</span>
+<span class="s0">- </span><span class="s2">`pressure`</span><span class="s1">: </span><span class="s2">Instance of WindPressure class.</span>
+<span class="s0">- </span><span class="s2">`zones`</span><span class="s1">: </span><span class="s2">Set of Zone objects, representing different parts of the building.</span>
+
+</pre>
+</body>
+</html>

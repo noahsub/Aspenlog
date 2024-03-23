@@ -1,0 +1,47 @@
+<html>
+<head>
+<title>Database.md</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+Database.md</font>
+</center></td></tr></table>
+<pre><span class="s0"># </span><span class="s2">Database</span>
+
+<span class="s0">## </span><span class="s2">Database Structure</span>
+<span class="s2">The database contains tables for storing climatic data </span><span class="s1">(</span><span class="s2">such as temperature, rainfall, and wind speed</span><span class="s1">) </span><span class="s2">and wind speed data, which likely relate to different geographical regions or conditions. The database is designed to be populated through specific scripts, suggesting a dynamic and updatable structure. This setup is ideal for applications requiring real-time or regularly updated environmental data, particularly in the context of building design or environmental analysis.</span>
+
+<span class="s0">## </span><span class="s2">Repository Structure</span>
+<span class="s0">- </span><span class="s2">Organized into four main subdirectories</span><span class="s1">: </span><span class="s2">Constants, Entities, Population, and Warnings.</span>
+
+<span class="s0">### </span><span class="s2">Constants Directory</span>
+<span class="s0">- </span><span class="s2">`connection_constants.py`</span><span class="s1">: </span><span class="s2">Defines constants for database connections.</span>
+
+<span class="s0">### </span><span class="s2">Entities Directory</span>
+<span class="s0">- </span><span class="s2">Contains Python scripts modeling database entities.</span>
+    <span class="s0">- </span><span class="s2">`climatic_data.py`</span><span class="s1">: </span><span class="s2">Defines climatic data structure.</span>
+    <span class="s0">- </span><span class="s2">`database_connection.py`</span><span class="s1">: </span><span class="s2">Manages database connections.</span>
+    <span class="s0">- </span><span class="s2">`wind_speed_data.py`</span><span class="s1">: </span><span class="s2">Defines wind speed data structure.</span>
+
+<span class="s0">### </span><span class="s2">Population Directory</span>
+<span class="s0">- </span><span class="s2">Scripts for populating the database.</span>
+    <span class="s0">- </span><span class="s2">`populate_climate_data.py`</span><span class="s1">: </span><span class="s2">Populates climate data.</span>
+    <span class="s0">- </span><span class="s2">`populate_database.py`</span><span class="s1">: </span><span class="s2">General database population script.</span>
+    <span class="s0">- </span><span class="s2">`populate_wind_speed_data.py`</span><span class="s1">: </span><span class="s2">Populates wind speed data.</span>
+
+<span class="s0">### </span><span class="s2">Warnings Directory</span>
+<span class="s0">- </span><span class="s2">`database_warnings.py`</span><span class="s1">: </span><span class="s2">Handles warning messages related to the database.</span>
+
+<span class="s0">## </span><span class="s2">Purpose</span>
+<span class="s0">- </span><span class="s2">This structure enables organized management of database components, including connection settings, entity definitions, data population scripts, and warning handling.</span>
+</pre>
+</body>
+</html>
