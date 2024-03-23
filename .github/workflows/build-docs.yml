@@ -4,8 +4,8 @@ on:
   workflow_dispatch:
 
 env:
-  INSTANCE: 'Aspenlog/Writerside'
-  ARTIFACT: 'webHelpWRITERSIDE2-all.zip'
+  INSTANCE: 'Writerside/hi'
+  ARTIFACT: 'webHelpHI2-all.zip'
   DOCKER_VERSION: '233.14938'
 
 jobs:
