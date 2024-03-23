@@ -1,0 +1,60 @@
+<html>
+<head>
+<title>Snow-Load-Algorithm.md</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+Snow-Load-Algorithm.md</font>
+</center></td></tr></table>
+<pre><span class="s0"># </span><span class="s2">Snow Load Algorithm</span>
+
+<span class="s2">This document outlines the algorithms used for calculating snow loads in the software. The algorithms consider various factors like roof type, slope, wind exposure, and more.</span>
+
+<span class="s0">## </span><span class="s2">get_slope_factor</span>
+<span class="s1">**</span><span class="s2">Implementation</span><span class="s1">**: </span><span class="s2">This function uses a match case structure to determine the slope factor </span><span class="s1">(</span><span class="s2">`cs`</span><span class="s1">) </span><span class="s2">based on the roof type </span><span class="s1">(</span><span class="s2">`RoofType`</span><span class="s1">) </span><span class="s2">and building's roof slope. It adjusts the snow load factor differently for unobstructed slippery roofs and other roof types.</span>
+<span class="s0">- </span><span class="s1">**</span><span class="s2">Purpose</span><span class="s1">**: </span><span class="s2">Calculates the slope factor for snow load based on the roof type and slope.</span>
+<span class="s0">- </span><span class="s1">**</span><span class="s2">Parameters</span><span class="s1">**: </span><span class="s2">`snow_load`, `selection` </span><span class="s1">(</span><span class="s2">roof type</span><span class="s1">)</span><span class="s2">, `building`</span>
+<span class="s0">- </span><span class="s1">**</span><span class="s2">Algorithm</span><span class="s1">**:</span>
+    <span class="s0">- </span><span class="s2">Different calculations based on `RoofType`.</span>
+    <span class="s0">- </span><span class="s2">Adjusts `snow_load.factor.cs` based on roof slope.</span>
+
+<span class="s0">## </span><span class="s2">get_accumulation_factor</span>
+<span class="s1">**</span><span class="s2">Implementation</span><span class="s1">**: </span><span class="s2">A straightforward function that sets the accumulation factor </span><span class="s1">(</span><span class="s2">`ca`</span><span class="s1">) </span><span class="s2">for the snow load to a constant value, reflecting a standard accumulation condition.</span>
+<span class="s0">- </span><span class="s1">**</span><span class="s2">Purpose</span><span class="s1">**: </span><span class="s2">Determines the accumulation factor for snow load.</span>
+<span class="s0">- </span><span class="s1">**</span><span class="s2">Algorithm</span><span class="s1">**:</span>
+    <span class="s0">- </span><span class="s2">Sets `snow_load.factor.ca` to a constant value.</span>
+
+<span class="s0">## </span><span class="s2">get_wind_exposure_factor</span>
+<span class="s1">**</span><span class="s2">Implementation</span><span class="s1">**: </span><span class="s2">It evaluates the wind exposure factor </span><span class="s1">(</span><span class="s2">`cw`</span><span class="s1">) </span><span class="s2">based on the importance of wind load </span><span class="s1">(</span><span class="s2">`WindImportanceFactor`</span><span class="s1">) </span><span class="s2">and the wind exposure factor selection. The function adjusts `cw` using predefined conditions and selections.</span>
+
+<span class="s0">- </span><span class="s1">**</span><span class="s2">Purpose</span><span class="s1">**: </span><span class="s2">Calculates the wind exposure factor for snow load.</span>
+<span class="s0">- </span><span class="s1">**</span><span class="s2">Parameters</span><span class="s1">**: </span><span class="s2">`snow_load`, `importance_selection`, `wind_exposure_factor_selection`</span>
+<span class="s0">- </span><span class="s1">**</span><span class="s2">Algorithm</span><span class="s1">**:</span>
+    <span class="s0">- </span><span class="s2">Adjusts `snow_load.factor.cw` based on wind importance factor and exposure.</span>
+
+<span class="s0">## </span><span class="s2">get_basic_roof_now_load_factor</span>
+<span class="s1">**</span><span class="s2">Implementation</span><span class="s1">**: </span><span class="s2">This function calculates the basic roof snow load factor </span><span class="s1">(</span><span class="s2">`cb`</span><span class="s1">) </span><span class="s2">using the roof dimensions and a mathematical formula. It incorporates an exponential function to determine `cb` based on the building's roof width and length, and the wind exposure factor.</span>
+
+<span class="s0">- </span><span class="s1">**</span><span class="s2">Purpose</span><span class="s1">**: </span><span class="s2">Computes the basic roof snow load factor.</span>
+<span class="s0">- </span><span class="s1">**</span><span class="s2">Parameters</span><span class="s1">**: </span><span class="s2">`snow_load`, `building`</span>
+<span class="s0">- </span><span class="s1">**</span><span class="s2">Algorithm</span><span class="s1">**:</span>
+    <span class="s0">- </span><span class="s2">Uses building dimensions to adjust `snow_load.factor.cb`.</span>
+
+<span class="s0">## </span><span class="s2">get_snow_load</span>
+<span class="s1">**</span><span class="s2">Implementation</span><span class="s1">**: </span><span class="s2">This is the primary function for calculating the total snow load </span><span class="s1">(</span><span class="s2">`s`</span><span class="s1">)</span><span class="s2">. It combines local snow load </span><span class="s1">(</span><span class="s2">`ls`</span><span class="s1">)</span><span class="s2">, snow density </span><span class="s1">(</span><span class="s2">`ss`</span><span class="s1">)</span><span class="s2">, roof snow load </span><span class="s1">(</span><span class="s2">`sr`</span><span class="s1">)</span><span class="s2">, and manual adjustments if provided. The total snow load is calculated by multiplying these factors with the previously calculated snow load factors.</span>
+
+<span class="s0">- </span><span class="s1">**</span><span class="s2">Purpose</span><span class="s1">**: </span><span class="s2">Final calculation of snow load.</span>
+<span class="s0">- </span><span class="s1">**</span><span class="s2">Parameters</span><span class="s1">**: </span><span class="s2">`snow_load`, `ls`, `ss`, `sr`, `manual`</span>
+<span class="s0">- </span><span class="s1">**</span><span class="s2">Algorithm</span><span class="s1">**:</span>
+    <span class="s0">- </span><span class="s2">Combines all factors to compute the total snow load.</span>
+</pre>
+</body>
+</html>

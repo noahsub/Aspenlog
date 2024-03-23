@@ -1,0 +1,37 @@
+<html>
+<head>
+<title>Testing.md</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+Testing.md</font>
+</center></td></tr></table>
+<pre><span class="s0"># </span><span class="s2">Test API Implementation</span>
+
+<span class="s0">## </span><span class="s2">Overview</span>
+<span class="s2">This document describes the basic setup and functionalities of a FastAPI application for the SEEDA-UOFT Backend.</span>
+
+<span class="s0">## </span><span class="s2">FastAPI Setup</span>
+<span class="s0">- </span><span class="s2">Utilizes the FastAPI framework.</span>
+<span class="s0">- </span><span class="s2">Configured to run with Uvicorn.</span>
+
+<span class="s0">## </span><span class="s2">Endpoints</span>
+<span class="s0">- </span><span class="s2">`GET /`</span><span class="s1">: </span><span class="s2">Returns a message indicating that the SEEDA-UOFT Backend is running.</span>
+<span class="s0">- </span><span class="s2">`GET /table_c2`</span><span class="s1">: </span><span class="s2">Serves the `table_c2.csv` file located in the `./output` directory.</span>
+
+<span class="s0">## </span><span class="s2">Running the Application</span>
+<span class="s0">- </span><span class="s2">The application is set to run on `host=0.0.0.0` and `port=42613`.</span>
+<span class="s0">- </span><span class="s2">Uvicorn is used to run the application, making it accessible via the specified host and port.</span>
+
+<span class="s1">_</span><span class="s2">Note</span><span class="s1">: </span><span class="s2">This setup is for testing purposes and demonstrates the basic functionality of serving files and responses through a FastAPI application.</span><span class="s1">_</span>
+</pre>
+</body>
+</html>

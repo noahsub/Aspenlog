@@ -1,0 +1,48 @@
+<html>
+<head>
+<title>Wind-Load-Algorithm.md</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+Wind-Load-Algorithm.md</font>
+</center></td></tr></table>
+<pre><span class="s0"># </span><span class="s2">Wind Load Algorithm</span>
+
+<span class="s0">## </span><span class="s2">Overview</span>
+<span class="s2">This document describes the functions for calculating wind loads in a building structure. The calculations consider factors like wind exposure, internal pressure, and specific building characteristics.</span>
+
+<span class="s0">## </span><span class="s2">get_wind_topographic_factor</span>
+<span class="s1">**</span><span class="s2">Implementation</span><span class="s1">**: </span><span class="s2">Assigns the provided `ct` value to `wind_load.factor.ct`.</span>
+
+<span class="s0">- </span><span class="s1">**</span><span class="s2">Purpose</span><span class="s1">**: </span><span class="s2">Sets the topographic factor for wind load.</span>
+<span class="s0">- </span><span class="s1">**</span><span class="s2">Parameters</span><span class="s1">**: </span><span class="s2">`wind_load`, `ct` </span><span class="s1">(</span><span class="s2">default = 1</span><span class="s1">)</span>
+
+<span class="s0">## </span><span class="s2">get_wind_exposure_factor</span>
+<span class="s1">**</span><span class="s2">Implementation</span><span class="s1">**: </span><span class="s2">Determines `ce` and `cei` based on building height, openings, and `WindExposureFactorSelections`.</span>
+
+<span class="s0">- </span><span class="s1">**</span><span class="s2">Purpose</span><span class="s1">**: </span><span class="s2">Calculates the wind exposure factor.</span>
+<span class="s0">- </span><span class="s1">**</span><span class="s2">Parameters</span><span class="s1">**: </span><span class="s2">`wind_load`, `selection`, `building`, `manual`</span>
+
+<span class="s0">## </span><span class="s2">get_internal_pressure</span>
+<span class="s1">**</span><span class="s2">Implementation</span><span class="s1">**: </span><span class="s2">Uses `lw`, `q`, and other factors to calculate positive and negative internal pressure based on `InternalPressureSelections`.</span>
+
+<span class="s0">- </span><span class="s1">**</span><span class="s2">Purpose</span><span class="s1">**: </span><span class="s2">Computes the internal pressure of a building.</span>
+<span class="s0">- </span><span class="s1">**</span><span class="s2">Parameters</span><span class="s1">**: </span><span class="s2">`wind_load`, `selection`, `lw`, `q`</span>
+
+<span class="s0">## </span><span class="s2">get_external_pressure</span>
+<span class="s1">**</span><span class="s2">Implementation</span><span class="s1">**: </span><span class="s2">Determines the external pressure on various building zones </span><span class="s1">(</span><span class="s2">roof, walls</span><span class="s1">) </span><span class="s2">using a match case structure and assigns them to respective zones in `wind_load`.</span>
+
+<span class="s0">- </span><span class="s1">**</span><span class="s2">Purpose</span><span class="s1">**: </span><span class="s2">Calculates the external pressure on different zones of a building.</span>
+<span class="s0">- </span><span class="s1">**</span><span class="s2">Parameters</span><span class="s1">**: </span><span class="s2">`wind_load`, `lw`, `q`</span>
+
+</pre>
+</body>
+</html>

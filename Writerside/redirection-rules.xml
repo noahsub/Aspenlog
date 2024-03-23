@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE rules SYSTEM "https://resources.jetbrains.com/writerside/1.0/redirection-rules.dtd">
+<rules>
+    <!-- format is as follows
+    <rule id="<unique id>">
+        <accepts>page.html</accepts>
+    </rule>
+    -->
+    <rule id="432eab34">
+        <description>Created after removal of "Starter" from Help Instance</description>
+        <accepts>Starter.html</accepts>
+    </rule>
+    <rule id="5a23dff3">
+        <description>Created after removal of "Backend" from Help Instance</description>
+        <accepts>Backend.html</accepts>
+    </rule>
+    <rule id="ba14992">
+        <description>Created after removal of "Populating Database" from Help Instance</description>
+        <accepts>Populating-Database.html</accepts>
+    </rule>
+</rules>

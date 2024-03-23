@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE instance-profile
+        SYSTEM "https://resources.jetbrains.com/writerside/1.0/product-profile.dtd">
+
+<instance-profile id="hi" name="Help Instance"
+                 start-page="Overview.md">
+
+    <toc-element topic="Overview.md">
+        <toc-element topic="Scope.md"/>
+    </toc-element>
+    <toc-element topic="Repository.md"/>
+    <toc-element topic="Setup-and-Installation.md"/>
+    <toc-element topic="Backend-Development.md">
+        <toc-element topic="Snow-Load-Algorithm.md"/>
+        <toc-element topic="Wind-Load-Algorithm.md"/>
+        <toc-element topic="Constants.md"/>
+        <toc-element topic="Entities.md"/>
+        <toc-element topic="3dbarchart.md"/>
+        <toc-element topic="Testing.md"/>
+    </toc-element>
+    <toc-element topic="Data-Extraction.md">
+        <toc-element topic="Data-Extraction-Script.md"/>
+    </toc-element>
+    <toc-element topic="Database.md">
+        <toc-element topic="ad.md"/>
+        <toc-element topic="asdasd.md"/>
+        <toc-element topic="Database-Entities.md"/>
+        <toc-element topic="Connection-Constants.md"/>
+    </toc-element>
+    <toc-element topic="Blender.md">
+        <toc-element topic="blender_object.md"/>
+        <toc-element topic="blender_request.md"/>
+        <toc-element topic="shapes.md"/>
+        <toc-element topic="wind_cube.md"/>
+        <toc-element topic="arrow.md"/>
+        <toc-element topic="seismic_cube.md"/>
+        <toc-element topic="simple_cube.md"/>
+        <toc-element topic="render.md"/>
+    <toc-element topic="docker.md">
+    <toc-element topic="frontend.md">
+    </toc-element>
+</instance-profile>
