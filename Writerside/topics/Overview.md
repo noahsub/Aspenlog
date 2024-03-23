@@ -1,5 +1,5 @@
 # Overview
-This project requires the development of two software components: the Specified Environmental Load Generator (SPENLOG 2020) and a yet-to-be-named application capable of visualizing 3D models under various loads.
+The University of Toronto Capstone Team (ID: SEEDA) was retained by SEEDA (“Client”) to design an online desktop application for calculating environmental loads (Wind, Seismic and Snow) on the building cladding component based on the National Building Code of Canada (NBCC) 2020 Chapter 4. This project delivery is the Application of Specified Environmental Load Generator (ASPENLOG 2020) that includes 3D model visualization features. The ASPENLOG 2020  streamlines the design process for cladding components in Canadian buildings ensuring compliance with NBCC 2020 Standards. 
 Given the intricate nature of this task, we need a comprehensive programming solution that includes a database, backend, and two frontends. This involves not only hosting our own database and APISs but also leveraging public APIs and frameworks.
 The diagram below provides a more detailed overview of this process:
 
@@ -32,7 +32,6 @@ Breaking down the software development into such components instead of placing e
 - Save and resume functionality using JSON serialization.
 
 ### Frontend
-- Two separate frontends for the applications.
 - Built using Electron platform and JavaScript.
 - Compatibility across major platforms.
 - Notable Electron framework use (e.g., Microsoft Teams, VS Code, Slack).

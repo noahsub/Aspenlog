@@ -21,12 +21,14 @@
     <toc-element topic="Data-Extraction.md">
         <toc-element topic="Data-Extraction-Script.md"/>
     </toc-element>
+
     <toc-element topic="Database.md">
         <toc-element topic="ad.md"/>
         <toc-element topic="asdasd.md"/>
         <toc-element topic="Database-Entities.md"/>
         <toc-element topic="Connection-Constants.md"/>
     </toc-element>
+
     <toc-element topic="Blender.md">
         <toc-element topic="blender_object.md"/>
         <toc-element topic="blender_request.md"/>
@@ -36,7 +38,9 @@
         <toc-element topic="seismic_cube.md"/>
         <toc-element topic="simple_cube.md"/>
         <toc-element topic="render.md"/>
+    </toc-element>    
     <toc-element topic="docker.md">
+    </toc-element>
     <toc-element topic="frontend.md">
     </toc-element>
 </instance-profile>
