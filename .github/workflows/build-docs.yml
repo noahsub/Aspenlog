@@ -41,10 +41,29 @@ jobs:
     # Requires build job results
     permissions:
       id-token: write
+      pages: write
     needs: build
     runs-on: ubuntu-latest
 
     steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: docs
+
+      - name: Unzip artifact
+        run: unzip -O UTF-8 -qq ${{ env.ARTIFACT }} -d dir
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4.0.0
+        with:
+          enablement: true
+      
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3.0.1
+        with:
+          path: dir
+      
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v4.0.4
