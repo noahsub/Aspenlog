@@ -3,6 +3,10 @@ name: Build documentation
 on:
   workflow_dispatch:
 
+permissions:
+  id-token: write
+  pages: write
+
 env:
   INSTANCE: 'Writerside/hi'
   ARTIFACT: 'webHelpHI2-all.zip'
@@ -28,6 +32,7 @@ jobs:
           name: docs
           path: |
             artifacts/${{ env.ARTIFACT }}
+            artifacts/report.json
           retention-days: 7
   test:
     needs: build
