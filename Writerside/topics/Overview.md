@@ -6,9 +6,9 @@ The diagram below provides a more detailed overview of this process:
 ![ASPENLOG Architecture](programming_overview.png)
 
 Breaking down the software development into such components instead of placing everything into a single offline application greatly increases the modularity of the program allowing for easier maintenance, better scalability, and improved flexibility. By leveraging databases and APIs, we can ensure that each component of the software can be developed, tested, and updated independently allowing for multiple developers to work on different parts of the program simultaneously without making disruptions to the entire application.
-### Project Components
-- **Specified Environmental Load Generator (SPENLOG 2020)**
-- **Unnamed 3D Model Visualization Application**
+
+## **Application of Specified Environmental Load Generator (ASPENLOG 2020)**
+
 
 ### Programming Solution
 - Requires a database backend.
@@ -28,16 +28,14 @@ Breaking down the software development into such components instead of placing e
 - Python code integrated with REST API.
 - Frontend applications will retrieve data in JSON format.
 - Use of Python modules (Seaborn, Matplotlib) and public APIs through the backend.
+- Capability to export data in Excel format.
+- Save and resume functionality using JSON serialization.
 
 ### Frontend
 - Two separate frontends for the applications.
 - Built using Electron platform and JavaScript.
 - Compatibility across major platforms.
 - Notable Electron framework use (e.g., Microsoft Teams, VS Code, Slack).
-
-### SPENLOG 2020 Application
-- Capability to export data in Excel format.
-- Save and resume functionality using JSON serialization.
 
 ### Graphics
 - Graphical User Interface (GUI) for interaction.
