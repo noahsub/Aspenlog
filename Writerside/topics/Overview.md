@@ -3,7 +3,7 @@ This project requires the development of two software components: the Specified 
 Given the intricate nature of this task, we need a comprehensive programming solution that includes a database, backend, and two frontends. This involves not only hosting our own database and APISs but also leveraging public APIs and frameworks.
 The diagram below provides a more detailed overview of this process:
 
-![Alt text](https://cdn.discordapp.com/attachments/353323689359572993/1188533796413382656/image.png?ex=659adf5a&is=65886a5a&hm=f405d73da52f087d385494652189ff17e9dee5fb67b6dc4d3d7c13c8fe4b5692& "a title")
+![ASPENLOG Architecture](programming_overview.png)
 
 Breaking down the software development into such components instead of placing everything into a single offline application greatly increases the modularity of the program allowing for easier maintenance, better scalability, and improved flexibility. By leveraging databases and APIs, we can ensure that each component of the software can be developed, tested, and updated independently allowing for multiple developers to work on different parts of the program simultaneously without making disruptions to the entire application.
 ### Project Components
