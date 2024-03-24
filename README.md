@@ -54,3 +54,25 @@ npm start
 ## Documentation
 You can see how the program is structured and how to use it in the `documentation` directory.
 
+## Authors
+<style>
+  .author img {
+    border-radius: 50%;
+  }
+</style>
+
+
+<table>
+  <tr>
+    <td align="center" class="author"><a href="https://github.com/noahsub"><img src="assets/images/profile/noahsub.png" alt=""/><br /><sub><b>noahsub</b></sub></a><br /></td>
+    <td align="center" class="author"><a href="https://github.com/alastairsim"><img src="assets/images/profile/alastairsim.png" alt=""/><br /><sub><b>alastairsim</b></sub></a><br /></td>
+    <td align="center" class="author"><a href="https://github.com/kinheychan"><img src="assets/images/profile/kinheychan.png" alt=""/><br /><sub><b>kinheychan</b></sub></a><br /></td>
+    <td align="center" class="author"><a href="https://github.com/lishujie2000"><img src="assets/images/profile/lishujie2000.png" alt=""/><br /><sub><b>lishujie2000</b></sub></a><br /></td>
+    <td align="center" class="author"><a href="https://github.com/myraliym"><img src="assets/images/profile/myraliym.png" alt=""/><br /><sub><b>myraliym</b></sub></a><br /></td>
+  </tr>
+</table>
+
+
+
+
+
