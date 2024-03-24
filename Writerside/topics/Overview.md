@@ -8,8 +8,7 @@ Breaking down the software development into components instead of placing everyt
 
 
 ### Programming Solution
-- Requires a database backend.
-- Two frontends.
+- Requires a database and a backend running on a server.
 - Utilization of both private and public APIs.
 
 ### Software Development Approach
