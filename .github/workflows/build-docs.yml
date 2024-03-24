@@ -3,10 +3,6 @@ name: Build documentation
 on:
   workflow_dispatch:
 
-permissions:
-  id-token: write
-  pages: write
-
 env:
   # Name of module and id separated by a slash
   INSTANCE: Writerside/hi
@@ -20,6 +16,8 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Build Writerside docs using Docker
         uses: JetBrains/writerside-github-action@v4
@@ -41,6 +39,9 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     # Requires build job results
+    permissions:
+      id-token: write
+      pages: write
     needs: build
     runs-on: ubuntu-latest
 
@@ -55,6 +56,8 @@ jobs:
 
       - name: Setup Pages
         uses: actions/configure-pages@v4.0.0
+        with:
+          enablement: true
       
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3.0.1
