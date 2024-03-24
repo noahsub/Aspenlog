@@ -34,8 +34,8 @@ echo "__________________________________________________________________________
 echo "INSTALLING NECESSARY PACKAGES"
 echo "_________________________________________________________________________________________________________________"
 # Update and install necessary packages
-sudo apt-get update > /dev/null
-sudo apt-get install -y ca-certificates curl software-properties-common xorg openbox snapd python3.11 python3-pip screen > /dev/null
+sudo apt-get update
+sudo apt-get install -y ca-certificates curl software-properties-common xorg openbox snapd python3.11 python3-pip screen
 echo "Packages installed successfully."
 
 echo "_________________________________________________________________________________________________________________"
@@ -51,10 +51,10 @@ echo \
   "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
   $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
   sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-sudo apt-get update > /dev/null
+sudo apt-get update
 
 # Install Docker and its plugins
-sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin > /dev/null
+sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
 echo "Installed Docker version:"
 sudo docker --version | grep Docker
@@ -64,8 +64,8 @@ echo "STOPPING AND REMOVING EXISTING DOCKER CONTAINER IF IT EXISTS"
 echo "_________________________________________________________________________________________________________________"
 
 # Stop and remove any existing Docker container
-sudo docker stop aspenlog2020-database > /dev/null 2>&1 || true
-sudo docker rm aspenlog2020-database > /dev/null 2>&1 || true
+sudo docker stop aspenlog2020-database 2>&1 || true
+sudo docker rm aspenlog2020-database 2>&1 || true
 echo "Stopped and removed existing Docker container if it existed"
 
 echo "_________________________________________________________________________________________________________________"
@@ -73,7 +73,7 @@ echo "SETUP DOCKER CONTAINER FOR POSTGRES DATABASE"
 echo "_________________________________________________________________________________________________________________"
 
 # Pull the latest Docker image for Postgres
-sudo docker pull postgres:11.22-bullseye > /dev/null
+sudo docker pull postgres:11.22-bullseye
 
 # Prompt for database password and port
 read -p "Please enter the password you would like to use for the database: " POSTGRES_PASSWORD
@@ -82,14 +82,14 @@ read -p "Please enter the port you would like to use for the database: " POSTGRE
 # Kill any process using the selected port
 pid=$(sudo lsof -t -i:$POSTGRES_PORT)
 if [ -n "$pid" ]; then
-    sudo kill -9 $pid > /dev/null
+    sudo kill -9 $pid
     echo "Killed process $pid on port $POSTGRES_PORT"
 else
     echo "No process using port $POSTGRES_PORT was found"
 fi
 
 # Run the Docker container
-sudo docker run --name aspenlog2020-database -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD -p $POSTGRES_PORT:5432 -d --restart postgres:11.22-bullseye > /dev/null
+sudo docker run --name aspenlog2020-database -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD -p $POSTGRES_PORT:5432 -d --restart postgres:11.22-bullseye
 
 # Set maximum number of attempts to prevent infinite loop
 max_attempts=30
@@ -97,7 +97,7 @@ count=0
 
 # Wait for the Postgres service to start accepting connections
 echo "Waiting for the PostgreSQL to start..."
-until sudo docker exec -it aspenlog2020-database pg_isready -U postgres -h localhost > /dev/null 2>&1 || [ $count -eq $max_attempts ]; do
+until sudo docker exec -it aspenlog2020-database pg_isready -U postgres -h localhost 2>&1 || [ $count -eq $max_attempts ]; do
     sleep 1
     count=$((count+1))
 done
@@ -105,7 +105,7 @@ done
 # Create the database if the service started, otherwise print an error message
 if [ $count -lt $max_attempts ]; then
     echo "PostgreSQL started successfully, creating NBCC-2020 database..."
-    sudo docker exec -it aspenlog2020-database psql -U postgres -c "CREATE DATABASE \"NBCC-2020\";" > /dev/null
+    sudo docker exec -it aspenlog2020-database psql -U postgres -c "CREATE DATABASE \"NBCC-2020\";"
 else
     echo "PostgreSQL did not start within the expected time."
     exit 1
@@ -115,8 +115,8 @@ echo "__________________________________________________________________________
 echo "INSTALLING BLENDER"
 echo "_________________________________________________________________________________________________________________"
 # Install Blender
-sudo apt install -y snapd > /dev/null
-sudo snap install blender --classic > /dev/null
+sudo apt install -y snapd
+sudo snap install blender --classic
 echo "Installed Blender version:"
 blender --version | grep Blender
 
@@ -124,13 +124,13 @@ echo "__________________________________________________________________________
 echo "SETUP PYTHON 3.11 VIRTUAL ENVIRONMENT"
 echo "_________________________________________________________________________________________________________________"
 # Upgrade pip
-sudo python3.11 -m pip install --upgrade pip > /dev/null
+sudo python3.11 -m pip install --upgrade pip
 
 # Install python venv
-sudo apt-get install python3.11-venv > /dev/null
+sudo apt-get install python3.11-venv
 
 # Setup Python virtual environment
-python3.11 -m venv seeda_python_virtual_environment > /dev/null
+python3.11 -m venv seeda_python_virtual_environment
 source seeda_python_virtual_environment/bin/activate
 echo "Installing Python packages, this may take a while..."
 pip install --no-cache-dir -r requirements_linux.txt -q
