@@ -38,7 +38,7 @@ Multidisciplinary Design & Innovation (UT-IMDI) for SEEDA.
 
 
 ## Hosting the Backend
-Refer to the [guide](guide.md) file.
+Refer to [Setup and Installation](https://noahsub.github.io/Aspenlog/setup-and-installation.html) in the documentation.
 
 ## Running the Application
 To run the frontend application simply install the latest release for your operating system from the releases page.
@@ -52,7 +52,7 @@ npm start
 ```
 
 ## Documentation
-You can see how the program is structured and how to use it in the `documentation` directory.
+You can see how the program is structured and how to use here: [Documentation](https://noahsub.github.io/Aspenlog/)
 
 ## Authors
 <table>
@@ -64,6 +64,11 @@ You can see how the program is structured and how to use it in the `documentatio
     <td align="center" class="author"><a href="https://github.com/myraliym"><img src="assets/images/profile/myraliym.png" alt=""/><br /><sub><b>myraliym</b></sub></a><br /></td>
   </tr>
 </table>
+
+## LICENSE
+This project is licensed under the Mozilla Public License 2.0 - see the [LICENSE](LICENSE) and [DISCLAIMER](DISCLAIMER) files for details.
+
+
 
 
 
