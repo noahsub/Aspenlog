@@ -55,13 +55,6 @@ npm start
 You can see how the program is structured and how to use it in the `documentation` directory.
 
 ## Authors
-<style>
-  .author img {
-    border-radius: 50%;
-  }
-</style>
-
-
 <table>
   <tr>
     <td align="center" class="author"><a href="https://github.com/noahsub"><img src="assets/images/profile/noahsub.png" alt=""/><br /><sub><b>noahsub</b></sub></a><br /></td>
