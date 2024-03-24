@@ -748,7 +748,7 @@ function locationCall(address, siteDesignation, seismicValue) {
 
               setMap(-70.73964, -8.91217, "unknown");
               document.getElementById("location-error-message").innerText =
-                "Please provide a more specific address";
+                "Please provide a more specific address. Perhaps use a postal code instead.";
               return;
             }
 
