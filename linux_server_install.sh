@@ -89,7 +89,7 @@ else
 fi
 
 # Run the Docker container
-sudo docker run --name aspenlog2020-database -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD -p $POSTGRES_PORT:5432 -d postgres:11.22-bullseye > /dev/null
+sudo docker run --name aspenlog2020-database -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD -p $POSTGRES_PORT:5432 -d --restart postgres:11.22-bullseye > /dev/null
 
 # Set maximum number of attempts to prevent infinite loop
 max_attempts=30
