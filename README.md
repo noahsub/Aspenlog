@@ -43,7 +43,7 @@ Refer to [Setup and Installation](https://noahsub.github.io/Aspenlog/setup-and-i
 ## Running the Application
 To run the frontend application simply install the latest release for your operating system from the releases page.
 Currently, there is support for x86 architecture on Windows, MacOS, and Linux however, the application can be run on
-many other platforms by running the following:
+many other platforms by running the following (assuming node is installed):
 
 ```bash
 cd frontend
