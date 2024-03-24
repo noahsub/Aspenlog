@@ -215,15 +215,21 @@ document.getElementById("register").addEventListener("click", function (event) {
     };
 
     fetch(`${connectionAddress}/register`, requestOptions)
-      .then((response) => response.json())
-      .then((result) => {
-        if (result.status === 200) {
+        .then((response) => {
+          if (!response.ok) { // Check if the response was successful
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then((result) => {
+          console.log("triggered");
           window.location.href = "login.html";
-        } else {
+        })
+        .catch((error) => {
+          console.log("triggered 2");
           alert("There already exists a user with that username or email");
-        }
-      })
-      .catch((error) => console.error(error));
+          console.error('There has been a problem with your fetch operation:', error);
+        });
   });
 });
 
