@@ -80,16 +80,16 @@ read -p "Please enter the password you would like to use for the database: " POS
 read -p "Please enter the port you would like to use for the database: " POSTGRES_PORT
 
 # Kill any process using the selected port
-pid=$(sudo lsof -t -i:$POSTGRES_PORT)
+pid=$(sudo lsof -t -i:"$POSTGRES_PORT")
 if [ -n "$pid" ]; then
-    sudo kill -9 $pid
+    sudo kill -9 "$pid"
     echo "Killed process $pid on port $POSTGRES_PORT"
 else
     echo "No process using port $POSTGRES_PORT was found"
 fi
 
 # Run the Docker container
-sudo docker run --name aspenlog2020-database -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD -p $POSTGRES_PORT:5432 -d --restart postgres:11.22-bullseye
+sudo docker run --name aspenlog2020-database -e POSTGRES_PASSWORD="$POSTGRES_PASSWORD" -p "$POSTGRES_PORT":5432 -d --restart postgres:11.22-bullseye
 
 # Set maximum number of attempts to prevent infinite loop
 max_attempts=30
@@ -144,7 +144,7 @@ echo "__________________________________________________________________________
 sudo rm -f database/.env data/EnvironmentVariables/.env
 
 # Set up environment variables
-python3.11 main.py --install --host 127.0.0.1 --port $POSTGRES_PORT --admin_username postgres --admin_password $POSTGRES_PASSWORD
+python3.11 main.py --install --host 127.0.0.1 --port "$POSTGRES_PORT" --admin_username postgres --admin_password "$POSTGRES_PASSWORD"
 
 echo "Environment variables set successfully."
 
