@@ -134,9 +134,11 @@ float_dir=$(find "$integer_dir" -type d -name "*.*" | sort -n | head -1)
 python_version=$(ls "$float_dir"/python/bin | grep -P '^python3\.\d+$' | sort -V | head -1)
 
 # Construct the pip install command
-json_pickle_install="$float_dir/python/bin/$python_version -m pip install jsonpickle"
+sudo blender_pip_update="$float_dir/python/bin/$python_version pip install --upgrade pip"
+sudo json_pickle_install="$float_dir/python/bin/$python_version -m pip install jsonpickle"
 
 # Execute the pip install command
+$blender_pip_update
 $json_pickle_install
 
 echo "_________________________________________________________________________________________________________________"
