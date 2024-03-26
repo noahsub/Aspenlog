@@ -121,6 +121,25 @@ echo "Installed Blender version:"
 blender --version | grep Blender
 
 echo "_________________________________________________________________________________________________________________"
+echo "INSTALLING REQUIRED BLENDER PACKAGES"
+echo "_________________________________________________________________________________________________________________"
+
+# Get the first integer labelled directory
+integer_dir=$(find /snap/blender -type d -name "*[0-9]*" | sort -n | head -1)
+
+# Get the first float labelled directory
+float_dir=$(find "$integer_dir" -type d -name "*.*" | sort -n | head -1)
+
+# Get the first python version
+python_version=$(ls "$float_dir"/python/bin | grep -P '^python3\.\d+$' | sort -V | head -1)
+
+# Construct the pip install command
+json_pickle_install="$float_dir/python/bin/$python_version -m pip install jsonpickle"
+
+# Execute the pip install command
+$json_pickle_install
+
+echo "_________________________________________________________________________________________________________________"
 echo "SETUP PYTHON 3.11 VIRTUAL ENVIRONMENT"
 echo "_________________________________________________________________________________________________________________"
 # Upgrade pip
