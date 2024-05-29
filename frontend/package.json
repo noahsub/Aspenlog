@@ -6,7 +6,8 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "build": "electron-builder"
+    "build": "electron-builder",
+    "build-arch": "electron-builder build --linux pacman"
   },
   "author": "github.com/noahsub <noahsub@gmail.com>",
   "homepage": "https://github.com/noahsub/Aspenlog",
