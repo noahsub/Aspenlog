@@ -138,8 +138,8 @@ blender_pip_update="$float_dir/python/bin/$python_version -m pip install --upgra
 json_pickle_install="$float_dir/python/bin/$python_version -m pip install jsonpickle"
 
 # Execute the pip install command
-sudo $blender_pip_update
-sudo $json_pickle_install
+$blender_pip_update
+$json_pickle_install
 
 echo "_________________________________________________________________________________________________________________"
 echo "SETUP PYTHON 3.11 VIRTUAL ENVIRONMENT"
